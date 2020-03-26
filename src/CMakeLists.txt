@@ -1,12 +1,12 @@
 file(GLOB SOURCES ${SRC_DIR}/*.cpp)
 
-add_executable(executable ${SOURCES})
+add_executable(DM_Detection ${SOURCES})
 
-target_link_libraries(executable
+target_link_libraries(DM_Detection
 	PUBLIC coverage_config 
 	PUBLIC libphys)
 
-add_test(NAME executable_test COMMAND executable)
+add_test(NAME DM_Detection_test COMMAND DM_Detection)
 
-install(TARGETS executable DESTINATION ${BIN_DIR})
+install(TARGETS DM_Detection DESTINATION ${BIN_DIR})
 
