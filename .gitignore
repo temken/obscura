@@ -1,0 +1,19 @@
+*.DS_Store
+.depend
+coverage.info
+
+build/
+
+#Ignore executables
+bin/executable
+
+# Ignore build files
+*.o
+
+# Ignore codecove files
+*.gcov
+*.gcda
+*.gcno
+
+
+
