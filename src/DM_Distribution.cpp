@@ -4,8 +4,11 @@
 #include <cmath>
 #include <functional>
 
+//Headers from libphys library
 #include "Numerics.hpp"
 #include "Natural_Units.hpp"
+
+#include "Astronomy.hpp"
 
 //1. Abstract base class for DM distributions that can be used to compute direct detection recoil spectra.
 	//Constructors:
@@ -130,7 +133,11 @@
 	}
 	void Standard_Halo_Model::Set_Observer_Velocity(int day, int month, int year, int hour, int minute)
 	{
-		//Todo
+		double nJ2000 = Fractional_Days_since_J2000(day, month, year, hour, minute);
+		vel_observer = Earth_Velocity(nJ2000);
+		v_observer = vel_observer.Norm();
+
+		v_domain[1] = v_esc + v_observer;
 	}
 
 	//Compute N_esc

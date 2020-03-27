@@ -3,6 +3,7 @@
 coverage.info
 
 build/
+external/
 
 #Ignore executables
 bin/executable

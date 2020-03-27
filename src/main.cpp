@@ -4,8 +4,10 @@
 
 //Headers from libphys library
 #include "Natural_Units.hpp"
+#include "Linear_Algebra.hpp"
 
 #include "DM_Distribution.hpp"
+#include "Astronomy.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -16,6 +18,9 @@ int main(int argc, char *argv[])
 	SHM.Print_Summary();
 	std::cout <<SHM.PDF_Speed(300*km/sec)<<std::endl;
 	std::cout <<In_Units(SHM.Average_Speed(),km/sec)<<std::endl;
+
+	Vector vEarth = Earth_Velocity(0.0);
+	std::cout<<"vEarth = "<<In_Units(vEarth,km/sec)<<std::endl;
 	
 	//Ending time and computing time
 	std::chrono::high_resolution_clock::time_point time_end = std::chrono::high_resolution_clock::now();
