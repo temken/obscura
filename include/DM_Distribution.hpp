@@ -6,34 +6,66 @@
 #include "Linear_Algebra.hpp"
 
 //1. Abstract base class for DM distributions that can be used to compute direct detection recoil spectra.
-class DM_Distribution
-{
-	protected:
-		std::string name;
-		
-		void Print_Summary_Base() const;
-		
-	public:
-		double DM_density;		//Local DM density
-		std::vector<double> v_domain;
+	class DM_Distribution
+	{
+		protected:
+			std::string name;
+			
+			void Print_Summary_Base() const;
+			
+		public:
+			double DM_density;		//Local DM density
+			std::vector<double> v_domain;
 
-		//Constructor:
-		DM_Distribution();
-		DM_Distribution(std::string label, double rhoDM, double vMax = 1.0, double vMin = 0.0);
+			//Constructors:
+			DM_Distribution();
+			DM_Distribution(std::string label, double rhoDM, double vMin, double vMax);
 
-		//Distribution functions
-		virtual double PDF_Velocity(Vector v) const {return 0.0;};
-		virtual double PDF_Speed(double v) const {return 0.0;};
-		virtual double CDF_Speed(double v) const;
+			//Distribution functions
+			virtual double PDF_Velocity(Vector vel) const {return 0.0;};
+			virtual double PDF_Speed(double v) const {return 0.0;};
+			virtual double CDF_Speed(double v) const;
 
-		virtual Vector Average_Velocity() const;
-		virtual double Average_Speed() const;
+			virtual Vector Average_Velocity() const;
+			virtual double Average_Speed() const;
 
-		//Eta-function for direct detection
-		virtual double Eta_Function(double vMin) const;
+			//Eta-function for direct detection
+			virtual double Eta_Function(double vMin) const;
 
-		virtual void Print_Summary() const {Print_Summary_Base();};
-};
+			virtual void Print_Summary() const {Print_Summary_Base();};
+	};
+
+//2. Standard halo model (SHM)
+	class Standard_Halo_Model : public DM_Distribution
+	{
+		protected:
+			double v_0, v_esc, v_observer;
+			Vector vel_observer;
+			double N_esc;
+		public:
+			//Constructors:
+			Standard_Halo_Model();
+			Standard_Halo_Model(double rho, double v0, double vesc, double vobs);
+			Standard_Halo_Model(double rho, double v0, double vesc, Vector& vel_obs);
+
+			//Set SHM parameters
+			void Set_Speed_Dispersion(double v0);
+			void Set_Escape_Velocity(double vesc);
+			void Set_Observer_Velocity(Vector& vObserver);
+			void Set_Observer_Velocity(int day, int month, int year, int hour = 0, int minute = 0);
+
+			//Compute N_esc
+			void Normalize_PDF();
+
+			//Distribution functions
+			virtual double PDF_Velocity(Vector vel) const override;
+			virtual double PDF_Speed(double v) const override;
+
+			//Eta-function for direct detection
+			virtual double Eta_Function(double vMin) const override;
+
+			virtual void Print_Summary() const override;
+	};
 
 
 #endif

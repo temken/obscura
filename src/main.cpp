@@ -12,10 +12,10 @@ int main(int argc, char *argv[])
 	//Starting time
 		std::chrono::high_resolution_clock::time_point time_start = std::chrono::high_resolution_clock::now();
 
-	
-	DM_Distribution test("test",0.4*GeV/cm/cm/cm);
-	test.Print_Summary();
-	std::cout <<test.Average_Speed()<<std::endl;
+	Standard_Halo_Model SHM;
+	SHM.Print_Summary();
+	std::cout <<SHM.PDF_Speed(300*km/sec)<<std::endl;
+	std::cout <<In_Units(SHM.Average_Speed(),km/sec)<<std::endl;
 	
 	//Ending time and computing time
 	std::chrono::high_resolution_clock::time_point time_end = std::chrono::high_resolution_clock::now();
