@@ -15,6 +15,16 @@ int main(int argc, char *argv[])
 	//Starting time
 		std::chrono::high_resolution_clock::time_point time_start = std::chrono::high_resolution_clock::now();
 
+	Standard_Halo_Model SHM;
+	SHM.Print_Summary();
+	std::cout <<SHM.PDF_Speed(300*km/sec)<<std::endl;
+	std::cout <<In_Units(SHM.Average_Speed(),km/sec)<<std::endl;
+
+	Vector vEarth = Earth_Velocity(0.0);
+	std::cout<<"vEarth = "<<In_Units(vEarth,km/sec)<<std::endl;
+
+	Import_Nuclear_Data();
+	Get_Element(2).Print_Summary();
 	
 	//Ending time and computing time
 	std::chrono::high_resolution_clock::time_point time_end = std::chrono::high_resolution_clock::now();
