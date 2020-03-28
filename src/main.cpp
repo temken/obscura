@@ -8,6 +8,7 @@
 
 #include "DM_Distribution.hpp"
 #include "Astronomy.hpp"
+#include "Target_Nucleus.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -21,6 +22,9 @@ int main(int argc, char *argv[])
 
 	Vector vEarth = Earth_Velocity(0.0);
 	std::cout<<"vEarth = "<<In_Units(vEarth,km/sec)<<std::endl;
+
+	Import_Nuclear_Data();
+	Get_Element(2).Print_Summary();
 	
 	//Ending time and computing time
 	std::chrono::high_resolution_clock::time_point time_end = std::chrono::high_resolution_clock::now();
