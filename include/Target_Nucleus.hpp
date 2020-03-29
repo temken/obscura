@@ -18,6 +18,7 @@ struct Isotope
 		Isotope(unsigned int z, unsigned int a,double abund=1.0,double Spin=0.0,double Sp=0.0,double Sn=0.0);
 
 		double Thomas_Fermi_Radius() const;
+		double Helm_Form_Factor(double q) const;
 };
 
 class Element

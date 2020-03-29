@@ -30,6 +30,18 @@
 	{
 		return pow(9*M_PI*M_PI/2.0/Z,1.0/3.0)/4.0*Bohr_Radius;
 	}
+	
+	double Isotope::Helm_Form_Factor(double q) const
+	{
+		double a = 0.52*fm;
+		double c = (1.23 * pow(A,1.0/3.0) - 0.6)*fm;
+		double s = 0.9*fm;
+		double rn = sqrt(c*c + 7.0/3.0*pow(M_PI*a,2.0) - 5.0*s*s);
+		double qr = q*rn;
+		return 3.0 * ( sin(qr) / pow(qr,3.0) - cos(qr) / pow(qr,2.0) ) * exp(-q*q*s*s/2.0);
+	}
+
+	
 
 //Class for elements containing all isotopes occuring in nature
 	Element::Element()
@@ -70,7 +82,7 @@
 	void Element::Print_Summary() const
 	{
 		double total=0.0;
-		std::cout <<std::endl<<name<<std::endl<<"Isotope\tZ\tA\tAbund.[\%]\tSpin\t<sp>\t<sn>"<<std::endl;
+		std::cout <<std::endl<<name<<std::endl<<"Isotope\tZ\tA\tAbund.[%]\tSpin\t<sp>\t<sn>"<<std::endl;
 		std::cout <<"------------------------------------------------------------"<<std::endl;
 		for(unsigned int i=0;i<Number_of_Isotopes();i++)
 		{
