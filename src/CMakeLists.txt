@@ -1,6 +1,7 @@
 add_library(darkmatter STATIC
     Astronomy.cpp
     DM_Distribution.cpp
+    DM_Particle.cpp
     Target_Nucleus.cpp
 )
 
