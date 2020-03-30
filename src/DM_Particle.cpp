@@ -34,26 +34,8 @@
 		fractional_density = f;
 	}
 
-	void DM_Particle::Print_Summary_Base() const
-	{
-		std::cout 	<<std::endl
-			<<"----------------------------------------"<<std::endl
-			<<"DM particle summary:"<<std::endl;
 
-		double massunit = (mass<keV)? eV: ( (mass<MeV)? keV : ((mass<GeV)? MeV : GeV) );
-		std::string massunitstr = (mass<keV)? "eV": ( (mass<MeV)? "keV" : ((mass<GeV)? "MeV" : "GeV") );
-		std::cout 	<<"\tMass:\t\t\t" <<In_Units(mass,massunit)<<" "<<massunitstr<<std::endl
-					<<"\tSpin:\t\t\t" <<spin<<std::endl
-					<<"\tLow mass:\t\t" <<((low_mass)? "[x]" : "[ ]")	<<std::endl;
-	}
-	
-	double DM_Particle::dSigma_dER_Nucleus(double ER,const Isotope& target,double vDM) const
-	{
-		double q = sqrt(2.0*target.mass*ER);
-		return 2.0 * target.mass * dSigma_dq2_Nucleus(q,target,vDM);
-	}
-
-	double DM_Particle::Sigma_Nucleus(const Isotope& target, double vDM) const
+	double DM_Particle::Sigma_Nucleus_Base(const Isotope& target, double vDM) const
 	{
 		//Numerically integrate the differential cross section
 		double q2min = 0;
@@ -66,3 +48,23 @@
 	  	double sigmatot = Integrate(dodq2,q2min,q2max,eps);
 		return sigmatot;
 	}
+
+	void DM_Particle::Print_Summary_Base() const
+	{
+		std::cout 	<<std::endl
+			<<"----------------------------------------"<<std::endl
+			<<"DM particle summary:"<<std::endl;
+
+		double massunit = (mass<keV)? eV: ( (mass<MeV)? keV : ((mass<GeV)? MeV : GeV) );
+		std::string massunitstr = (mass<keV)? "eV": ( (mass<MeV)? "keV" : ((mass<GeV)? "MeV" : "GeV") );
+		std::cout 	<<"\tMass:\t\t\t" <<In_Units(mass,massunit)<<" "<<massunitstr<<std::endl
+					<<"\tSpin:\t\t\t" <<spin<<std::endl
+					<<"\tLow mass:\t\t" <<((low_mass)? "[x]" : "[ ]")	<<std::endl;
+	}
+
+	double DM_Particle::dSigma_dER_Nucleus(double ER,const Isotope& target,double vDM) const
+	{
+		double q = sqrt(2.0*target.mass*ER);
+		return 2.0 * target.mass * dSigma_dq2_Nucleus(q,target,vDM);
+	}
+

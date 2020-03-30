@@ -33,6 +33,7 @@
 	
 	double Isotope::Helm_Form_Factor(double q) const
 	{
+		if(q < 1.0e-6*MeV) return 1.0;
 		double a = 0.52*fm;
 		double c = (1.23 * pow(A,1.0/3.0) - 0.6)*fm;
 		double s = 0.9*fm;

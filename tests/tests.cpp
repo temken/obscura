@@ -9,6 +9,8 @@
 #include "DM_Distribution.hpp"
 #include "Astronomy.hpp"
 #include "Target_Nucleus.hpp"
+#include "DM_Particle.hpp"
+#include "DM_Particle_Standard.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -24,7 +26,14 @@ int main(int argc, char *argv[])
 	std::cout<<"vEarth = "<<In_Units(vEarth,km/sec)<<std::endl;
 
 	Import_Nuclear_Data();
-	Get_Element(2).Print_Summary();
+	Get_Element(54).Print_Summary();
+
+	DM_Particle_SI DM(100.0*GeV, 1.0e-35*cm*cm);
+	DM.Fix_fn_over_fp(0.7);
+	DM.Print_Summary();
+	std::cout<<In_Units(DM.Sigma_Nucleus(Get_Element(54)[5], 300*km/sec),cm*cm)<<std::endl;
+	DM.Set_Low_Mass_Mode(true);
+	std::cout<<In_Units(DM.Sigma_Nucleus(Get_Element(54)[5], 300*km/sec),cm*cm)<<std::endl;
 	
 	//Ending time and computing time
 	std::chrono::high_resolution_clock::time_point time_end = std::chrono::high_resolution_clock::now();
