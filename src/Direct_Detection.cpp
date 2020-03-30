@@ -1,5 +1,7 @@
 #include "Direct_Detection.hpp"
 
+#include <cmath>
+
 //Headers from libphys library
 #include "Natural_Units.hpp"
 #include "Utilities.hpp"
@@ -52,7 +54,7 @@
 		observed_signals = n;
 	}
 
-	std::vector<std::vector<double>> Detector::Limit_Curve(DM_Particle& DM, const DM_Distribution& DM_distr, double mMin,double mMax, int points, double certainty)
+	std::vector<std::vector<double>> Detector::Limit_Curve(DM_Particle& DM, DM_Distribution& DM_distr, double mMin,double mMax, int points, double certainty)
 	{
 		double mOriginal = DM.mass;
 		std::vector<std::vector<double>> limit(points,std::vector<double>(2,0.0));
@@ -67,4 +69,22 @@
 
 		DM.Set_Mass(mOriginal);
 		return limit;
+	}
+
+//2. Functions for statistical analysis
+	double CDF_Maximum_Gap(double x,double mu)
+	{
+		if(x==mu) return 1.0-exp(-mu);
+		else
+		{
+			int m = mu/x;
+			double sum=0.0;
+			for(int k=0;k<=m;k++) 
+			{
+				double term = pow(k*x-mu,k) / Factorial(k) * exp(-k*x) * (1.0 + k/(mu-k*x));
+				sum+= term ;
+				if (fabs(term)<1e-20) break;
+			}
+			return sum;
+		}
 	}

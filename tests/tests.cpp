@@ -11,6 +11,7 @@
 #include "Target_Nucleus.hpp"
 #include "DM_Particle.hpp"
 #include "DM_Particle_Standard.hpp"
+#include "Direct_Detection_Nucleus.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -35,6 +36,11 @@ int main(int argc, char *argv[])
 	DM.Set_Low_Mass_Mode(true);
 	std::cout<<In_Units(DM.Sigma_Nucleus(Get_Element(54)[5], 300*km/sec),cm*cm)<<std::endl;
 	
+	Detector_Nucleus detector;
+	detector.Set_Observed_Signals(100);
+	detector.Print_Summary();
+	std::cout<<detector.Upper_Bound(DM,SHM)/cm/cm<<std::endl;
+
 	//Ending time and computing time
 	std::chrono::high_resolution_clock::time_point time_end = std::chrono::high_resolution_clock::now();
 	double durationTotal =1e-6*std::chrono::duration_cast<std::chrono::microseconds>( time_end - time_start ).count();

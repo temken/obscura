@@ -23,6 +23,9 @@ class DM_Particle
 		void Set_Low_Mass_Mode(bool ldm);
 		void Set_Fractional_Density(double f);
 
+		virtual void Set_Sigma_Proton(double sigma) {};
+		virtual void Set_Sigma_Neutron(double sigma) {};
+		virtual void Set_Sigma_Electron(double sigma) {};
 
 		//Differential cross sections
 		virtual double dSigma_dq2_Nucleus(double q, const Isotope& target, double vDM) const {return 0.0;};

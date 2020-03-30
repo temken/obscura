@@ -1,6 +1,7 @@
 add_library(darkmatter STATIC
     Astronomy.cpp
     Direct_Detection.cpp
+    Direct_Detection_Nucleus.cpp
     DM_Distribution.cpp
     DM_Particle.cpp
     DM_Particle_Standard.cpp

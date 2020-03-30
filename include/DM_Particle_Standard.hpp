@@ -33,9 +33,9 @@ class DM_Particle_Standard : public DM_Particle
 		DM_Particle_Standard();
 		DM_Particle_Standard(double mDM,double pre);
 
-		virtual void Set_Sigma_Proton(double sigma);
-		virtual void Set_Sigma_Neutron(double sigma);
-		virtual void Set_Sigma_Electron(double sigma);
+		virtual void Set_Sigma_Proton(double sigma) override;
+		virtual void Set_Sigma_Neutron(double sigma) override;
+		virtual void Set_Sigma_Electron(double sigma) override;
 
 		void Fix_Coupling_Ratio(double fp_rel, double fn_rel);
 		void Fix_fn_over_fp(double ratio);
