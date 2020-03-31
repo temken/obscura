@@ -39,6 +39,19 @@
 		}
 	}
 
+	//Primary interaction parameter, in this case the proton or neutron cross section
+	double DM_Particle_Standard::Get_Interaction_Parameter() const
+	{
+		if(fp_relative > 0.0) return Sigma_Proton();
+		else return Sigma_Neutron();
+	}
+
+	void DM_Particle_Standard::Set_Interaction_Parameter(double par)
+	{
+		if(fp_relative > 0.0) Set_Sigma_Proton(par);
+		else Set_Sigma_Neutron(par);
+	}
+
 	void DM_Particle_Standard::Set_Sigma_Neutron(double sigma) 
 	{
 		fn= sqrt(M_PI*sigma/prefactor)/Reduced_Mass(mass,mProton);
@@ -121,17 +134,17 @@
 
 	//Reference cross sections
 
-	double DM_Particle_Standard::Sigma_Proton(double vDM) const
+	double DM_Particle_Standard::Sigma_Proton() const
 	{
 		return prefactor * fp * fp * Reduced_Mass(mass,mProton) * Reduced_Mass(mass,mProton)/M_PI;
 	}
 
-	double DM_Particle_Standard::Sigma_Neutron(double vDM) const
+	double DM_Particle_Standard::Sigma_Neutron() const
 	{
 		return prefactor * fn * fn * Reduced_Mass(mass,mProton) * Reduced_Mass(mass,mProton)/M_PI;
 	}
 
-	double DM_Particle_Standard::Sigma_Electron(double vDM) const
+	double DM_Particle_Standard::Sigma_Electron() const
 	{
 		return sigma_electron;
 	}	

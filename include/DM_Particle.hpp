@@ -23,6 +23,10 @@ class DM_Particle
 		void Set_Low_Mass_Mode(bool ldm);
 		void Set_Fractional_Density(double f);
 
+		//Primary interaction parameter, such as a coupling constant or cross section
+		virtual double Get_Interaction_Parameter() const {return 0.0;};
+		virtual void Set_Interaction_Parameter(double par) {};
+		
 		virtual void Set_Sigma_Proton(double sigma) {};
 		virtual void Set_Sigma_Neutron(double sigma) {};
 		virtual void Set_Sigma_Electron(double sigma) {};
@@ -33,9 +37,9 @@ class DM_Particle
 		double dSigma_dER_Nucleus(double ER,const Isotope& target,double vDM) const;
 		
 		//Cross sections
-		virtual double Sigma_Proton(double vDM = 1.0e-3) const {return 0.0;};
-		virtual double Sigma_Neutron(double vDM = 1.0e-3) const {return 0.0;};
-		virtual double Sigma_Electron(double vDM = 1.0e-3) const {return 0.0;};
+		virtual double Sigma_Proton() const {return 0.0;};
+		virtual double Sigma_Neutron() const {return 0.0;};
+		virtual double Sigma_Electron() const {return 0.0;};
 		
 		virtual double Sigma_Nucleus(const Isotope& target, double vDM) const {return Sigma_Nucleus_Base(target,vDM);};
 

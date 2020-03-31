@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 	Import_Nuclear_Data();
 	Get_Element(54).Print_Summary();
 
-	DM_Particle_SI DM(100.0*GeV, 1.0e-35*cm*cm);
+	DM_Particle_SI DM(5.0*GeV, 1.0e-35*cm*cm);
 	DM.Fix_fn_over_fp(0.7);
 	DM.Print_Summary();
 	std::cout<<In_Units(DM.Sigma_Nucleus(Get_Element(54)[5], 300*km/sec),cm*cm)<<std::endl;
@@ -37,8 +37,10 @@ int main(int argc, char *argv[])
 	std::cout<<In_Units(DM.Sigma_Nucleus(Get_Element(54)[5], 300*km/sec),cm*cm)<<std::endl;
 	
 	Detector_Nucleus detector;
-	detector.Set_Observed_Signals(100);
+	detector.Set_Background(100);
 	detector.Print_Summary();
+	std::cout<<detector.Upper_Bound(DM,SHM)/cm/cm<<std::endl;
+	DM.Set_Low_Mass_Mode(false);
 	std::cout<<detector.Upper_Bound(DM,SHM)/cm/cm<<std::endl;
 
 	//Ending time and computing time

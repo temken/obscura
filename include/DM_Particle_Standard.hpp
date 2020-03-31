@@ -33,6 +33,10 @@ class DM_Particle_Standard : public DM_Particle
 		DM_Particle_Standard();
 		DM_Particle_Standard(double mDM,double pre);
 
+		//Primary interaction parameter, in this case the proton or neutron cross section
+		virtual double Get_Interaction_Parameter() const override;
+		virtual void Set_Interaction_Parameter(double par) override;
+
 		virtual void Set_Sigma_Proton(double sigma) override;
 		virtual void Set_Sigma_Neutron(double sigma) override;
 		virtual void Set_Sigma_Electron(double sigma) override;
@@ -47,9 +51,9 @@ class DM_Particle_Standard : public DM_Particle
 		virtual double dSigma_dq2_Electron(double q,double vDM) const override {return 0;};
 
 		//Reference cross sections
-		virtual double Sigma_Proton(double vDM = 1.0e-3) const override;
-		virtual double Sigma_Neutron(double vDM = 1.0e-3) const override;
-		virtual double Sigma_Electron(double vDM = 1.0e-3) const override;
+		virtual double Sigma_Proton() const override;
+		virtual double Sigma_Neutron() const override;
+		virtual double Sigma_Electron() const override;
 
 		//Total cross sections with nuclear isotopes, elements, and electrons
 		virtual double Sigma_Nucleus(const Isotope& target,double vDM=1e-3) const  override {return 0;};
