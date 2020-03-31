@@ -46,8 +46,8 @@
 		public:
 			//Constructors:
 			Standard_Halo_Model();
-			Standard_Halo_Model(double rho, double v0, double vesc, double vobs);
-			Standard_Halo_Model(double rho, double v0, double vesc, Vector& vel_obs);
+			Standard_Halo_Model(double rho, double v0, double vobs, double vesc = 1.0);
+			Standard_Halo_Model(double rho, double v0, Vector& vel_obs, double vesc = 1.0);
 
 			//Set SHM parameters
 			void Set_Speed_Dispersion(double v0);

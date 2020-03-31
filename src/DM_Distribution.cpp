@@ -90,21 +90,21 @@
 //2. Standard halo model (SHM)
 	//Constructors:
 	Standard_Halo_Model::Standard_Halo_Model()
-	: DM_Distribution("Standard halo model", 0.4*GeV/cm/cm/cm, 0.0, (544.0+232.58)*km/sec), v_0(220.0*km/sec), v_esc(544.0*km/sec) 
+	: DM_Distribution("Standard halo model (SHM)", 0.4*GeV/cm/cm/cm, 0.0, (544.0+232.58)*km/sec), v_0(220.0*km/sec), v_esc(544.0*km/sec) 
 	{
 		vel_observer = Vector({0, 220.0*km/sec, 0}) + Vector({11.1*km/sec, 12.2*km/sec, 7.3*km/sec});
 		v_observer = vel_observer.Norm();
 		Normalize_PDF();
 	}
 
-	Standard_Halo_Model::Standard_Halo_Model(double rho, double v0, double vesc, double vobs)
-	: DM_Distribution("Standard halo model", rho, 0.0, vesc+vobs), v_0(v0), v_esc(vesc), v_observer(vobs)
+	Standard_Halo_Model::Standard_Halo_Model(double rho, double v0, double vobs, double vesc)
+	: DM_Distribution("Standard halo model (SHM)", rho, 0.0, vesc+vobs), v_0(v0), v_esc(vesc), v_observer(vobs)
 	{
 		vel_observer = Vector({0, vobs, 0});
 		Normalize_PDF();
 	}
 
-	Standard_Halo_Model::Standard_Halo_Model(double rho, double v0, double vesc, Vector& vel_obs)
+	Standard_Halo_Model::Standard_Halo_Model(double rho, double v0, Vector& vel_obs, double vesc)
 	: DM_Distribution("Standard halo model", rho, 0.0, vesc+vel_obs.Norm()), v_0(v0), v_esc(vesc), vel_observer(vel_obs)
 	{
 		v_observer = vel_observer.Norm();
