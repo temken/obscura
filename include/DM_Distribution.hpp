@@ -12,7 +12,7 @@
 		protected:
 			std::string name;
 			
-			void Print_Summary_Base() const;
+			void Print_Summary_Base(int MPI_rank = 0) const;
 			
 		public:
 			double DM_density;		//Local DM density
@@ -33,7 +33,7 @@
 			//Eta-function for direct detection
 			virtual double Eta_Function(double vMin) const;
 
-			virtual void Print_Summary() const {Print_Summary_Base();};
+			virtual void Print_Summary(int MPI_rank = 0) const {Print_Summary_Base(MPI_rank);};
 	};
 
 //2. Standard halo model (SHM)
@@ -65,7 +65,7 @@
 			//Eta-function for direct detection
 			virtual double Eta_Function(double vMin) const override;
 
-			virtual void Print_Summary() const override;
+			virtual void Print_Summary(int MPI_rank = 0) const override;
 	};
 
 

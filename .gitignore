@@ -4,6 +4,8 @@ coverage.info
 
 build/
 external/
+lib/
+*tests
 
 #Ignore executables
 bin/executable

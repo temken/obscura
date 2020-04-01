@@ -10,3 +10,5 @@
 ## To-do
 
 - Nuclear form factor for SD interactions.
+- Add a list of included experiments with references
+- constraint plots for readme

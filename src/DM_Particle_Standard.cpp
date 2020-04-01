@@ -149,17 +149,20 @@
 		return sigma_electron;
 	}	
 
-	void DM_Particle_Standard::Print_Summary_Standard() const
+	void DM_Particle_Standard::Print_Summary_Standard(int MPI_rank) const
 	{
-		std::cout 	<<"\tCoupling ratio fixed:\t"	<<(fixed_coupling_relation? "[x]" : "[ ]")	<<std::endl
-				 	<<"\tIsospin conservation:\t"	<<((fn==fp)? "[x]" : "[ ]")	<<std::endl;
-		if(fixed_coupling_relation)
+		if(MPI_rank == 0)
 		{
-			std::cout <<"\tCoupling ratio:\t\t" <<((fp!=0.0)? "fn/fp = " : "fp/fn = ") <<((fp!=0.0)? Round(fn/fp) : Round(fp/fn))<<std::endl<<std::endl;
+			std::cout 	<<"\tCoupling ratio fixed:\t"	<<(fixed_coupling_relation? "[x]" : "[ ]")	<<std::endl
+					 	<<"\tIsospin conservation:\t"	<<((fn==fp)? "[x]" : "[ ]")	<<std::endl;
+			if(fixed_coupling_relation)
+			{
+				std::cout <<"\tCoupling ratio:\t\t" <<((fp!=0.0)? "fn/fp = " : "fp/fn = ") <<((fp!=0.0)? Round(fn/fp) : Round(fp/fn))<<std::endl<<std::endl;
+			}
+			std::cout  	<<"\tSigma_P[cm^2]:\t\t" <<In_Units(Sigma_Proton(),cm*cm)	<<std::endl
+						<<"\tSigma_N[cm^2]:\t\t" <<In_Units(Sigma_Neutron(),cm*cm)	<<std::endl
+						<<"\tSigma_E[cm^2]:\t\t" <<In_Units(Sigma_Electron(),cm*cm)	<<std::endl<<std::endl;			
 		}
-		std::cout  	<<"\tSigma_P[cm^2]:\t\t" <<In_Units(Sigma_Proton(),cm*cm)	<<std::endl
-					<<"\tSigma_N[cm^2]:\t\t" <<In_Units(Sigma_Neutron(),cm*cm)	<<std::endl
-					<<"\tSigma_E[cm^2]:\t\t" <<In_Units(Sigma_Electron(),cm*cm)	<<std::endl<<std::endl;
 	}
 
 //2. Spin-independent (SI) interactions
@@ -245,20 +248,24 @@
  	}
 
 
-	void DM_Particle_SI::Print_Summary() const
+	void DM_Particle_SI::Print_Summary(int MPI_rank) const
 	{
-		Print_Summary_Base();
-		std::cout 	<<std::endl 
-					<<"\tInteraction:\t\tSpin-Independent (SI)"<<std::endl<<std::endl;
-		Print_Summary_Standard();
-		std::cout 	<<"\tInt. type:\t\t" <<FF_DM <<std::endl;
-		if(FF_DM=="General")
+		if(MPI_rank == 0)
 		{
-			double massunit = (mMediator<keV)? eV: ( (mMediator<MeV)? keV : ((mMediator<GeV)? MeV : GeV) );
-			std::string massunitstr = (mMediator<keV)? "eV": ( (mMediator<MeV)? "keV" : ((mMediator<GeV)? "MeV" : "GeV") );
-			std::cout<<"\t\tMediator mass:\t" <<In_Units(mMediator,massunit)<<" "<<massunitstr<<std::endl;
+			Print_Summary_Base();
+			std::cout 	<<std::endl 
+						<<"\tInteraction:\t\tSpin-Independent (SI)"<<std::endl<<std::endl;
+			Print_Summary_Standard();
+			std::cout 	<<"\tInt. type:\t\t" <<FF_DM <<std::endl;
+			if(FF_DM=="General")
+			{
+				double massunit = (mMediator<keV)? eV: ( (mMediator<MeV)? keV : ((mMediator<GeV)? MeV : GeV) );
+				std::string massunitstr = (mMediator<keV)? "eV": ( (mMediator<MeV)? "keV" : ((mMediator<GeV)? "MeV" : "GeV") );
+				std::cout<<"\t\tMediator mass:\t" <<In_Units(mMediator,massunit)<<" "<<massunitstr<<std::endl;
+			}
+			std::cout	<<"----------------------------------------"<<std::endl;		
 		}
-		std::cout	<<"----------------------------------------"<<std::endl;
+	
 	}
 
 //3. Spin-dependent (SD) interactions
@@ -291,12 +298,15 @@
 		return (isotope.spin!=0)? 4.0*pow(Reduced_Mass(mass,isotope.mass),2.0)/M_PI*(isotope.spin+1.0)/isotope.spin*pow(fp*isotope.sp+fn*isotope.sn,2.0) : 0.0;
 	}
 
-	void DM_Particle_SD::Print_Summary() const
+	void DM_Particle_SD::Print_Summary(int MPI_rank) const
 	{
-		Print_Summary_Base();
-		std::cout 	<<"Interaction:\t\tSpin-Dependent (SD)"<<std::endl<<std::endl;
-		Print_Summary_Standard();
-		std::cout <<"----------------------------------------"<<std::endl<<std::endl;
+		if(MPI_rank == 0)
+		{
+			Print_Summary_Base(MPI_rank);
+			std::cout 	<<"Interaction:\t\tSpin-Dependent (SD)"<<std::endl<<std::endl;
+			Print_Summary_Standard();
+			std::cout <<"----------------------------------------"<<std::endl<<std::endl;
+		}
 	}
 
 

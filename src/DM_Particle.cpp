@@ -24,6 +24,11 @@
 		mass = mDM;
 	}
 
+	void DM_Particle::Set_Spin(double s)
+	{
+		spin = s;
+	}
+
 	void DM_Particle::Set_Low_Mass_Mode(bool ldm)
 	{
 		low_mass = ldm;
@@ -49,17 +54,20 @@
 		return sigmatot;
 	}
 
-	void DM_Particle::Print_Summary_Base() const
+	void DM_Particle::Print_Summary_Base(int MPI_rank) const
 	{
-		std::cout 	<<std::endl
+		if(MPI_rank == 0)
+		{
+			std::cout 	<<std::endl
 			<<"----------------------------------------"<<std::endl
 			<<"DM particle summary:"<<std::endl;
 
-		double massunit = (mass<keV)? eV: ( (mass<MeV)? keV : ((mass<GeV)? MeV : GeV) );
-		std::string massunitstr = (mass<keV)? "eV": ( (mass<MeV)? "keV" : ((mass<GeV)? "MeV" : "GeV") );
-		std::cout 	<<"\tMass:\t\t\t" <<In_Units(mass,massunit)<<" "<<massunitstr<<std::endl
-					<<"\tSpin:\t\t\t" <<spin<<std::endl
-					<<"\tLow mass:\t\t" <<((low_mass)? "[x]" : "[ ]")	<<std::endl;
+			double massunit = (mass<keV)? eV: ( (mass<MeV)? keV : ((mass<GeV)? MeV : GeV) );
+			std::string massunitstr = (mass<keV)? "eV": ( (mass<MeV)? "keV" : ((mass<GeV)? "MeV" : "GeV") );
+			std::cout 	<<"\tMass:\t\t\t" <<In_Units(mass,massunit)<<" "<<massunitstr<<std::endl
+						<<"\tSpin:\t\t\t" <<spin<<std::endl
+						<<"\tLow mass:\t\t" <<((low_mass)? "[x]" : "[ ]")	<<std::endl;
+		}
 	}
 
 	double DM_Particle::dSigma_dER_Nucleus(double ER,const Isotope& target,double vDM) const

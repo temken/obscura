@@ -77,14 +77,17 @@
 		
 	}
 
-	void DM_Distribution::Print_Summary_Base() const
+	void DM_Distribution::Print_Summary_Base(int MPI_rank) const
 	{
-		std::cout<<"Dark matter distribution - Summary" <<std::endl
+		if(MPI_rank == 0)
+		{
+			std::cout<<"Dark matter distribution - Summary" <<std::endl
 				<<"\t"<<name <<std::endl<<std::endl
 				<<"\tLocal DM density[GeV/cm^3]:\t" <<In_Units(DM_density,GeV/cm/cm/cm)<<std::endl
 				<<"\tSpeed domain [km/sec]:\t\t[" <<In_Units(v_domain[0],km/sec)<<","<<In_Units(v_domain[1],km/sec)<<"]"<<std::endl
 				<<"\tAverage DM velocity [km/sec]:\t" <<In_Units(Average_Velocity(),km/sec)<<std::endl
 				<<"\tAverage DM speed [km/sec]:\t" <<In_Units(Average_Speed(),km/sec)<<std::endl<<std::endl;
+		}
 	}
 
 //2. Standard halo model (SHM)
@@ -174,11 +177,14 @@
 		else return 1.0/v_0/xE;
 	}
 
-	void Standard_Halo_Model::Print_Summary() const
+	void Standard_Halo_Model::Print_Summary(int MPI_rank) const
 	{
-		Print_Summary_Base();
-		std::cout<<"\tSpeed dispersion v_0[km/sec]:\t"<<In_Units(v_0,km/sec) <<std::endl
-					<<"\tGal. escape velocity [km/sec]:\t"<<In_Units(v_esc,km/sec) <<std::endl
-					<<"\tObserver's velocity [km/sec]:\t"<<In_Units(vel_observer,km/sec) <<std::endl
-					<<"\tObserver's speed [km/sec]:\t"<<In_Units(v_observer,km/sec) <<std::endl<<std::endl;
+		if(MPI_rank == 0)
+		{
+			Print_Summary_Base(MPI_rank);
+			std::cout<<"\tSpeed dispersion v_0[km/sec]:\t"<<In_Units(v_0,km/sec) <<std::endl
+						<<"\tGal. escape velocity [km/sec]:\t"<<In_Units(v_esc,km/sec) <<std::endl
+						<<"\tObserver's velocity [km/sec]:\t"<<In_Units(vel_observer,km/sec) <<std::endl
+						<<"\tObserver's speed [km/sec]:\t"<<In_Units(v_observer,km/sec) <<std::endl<<std::endl;
+		}
 	}

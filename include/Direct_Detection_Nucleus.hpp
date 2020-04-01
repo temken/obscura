@@ -43,6 +43,6 @@
 			virtual double dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr) override;
 			virtual double Minimum_DM_Speed(const DM_Particle& DM) const override;
 			
-			virtual void Print_Summary() const override;
+			virtual void Print_Summary(int MPI_rank = 0) const override;
 	};
 #endif

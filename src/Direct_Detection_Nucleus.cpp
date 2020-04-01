@@ -177,18 +177,22 @@
 		return vcut;
 	}
 
-	void DM_Detector_Nucleus::Print_Summary() const
+	void DM_Detector_Nucleus::Print_Summary(int MPI_rank) const
 	{
-		Print_Summary_Base();
-		std::cout 	<<std::endl<<"Nuclear recoil experiment." <<std::endl
-					<<"Nuclear targets:"	<<std::endl;
-		for(unsigned int i=0 ; i < target_elements.size() ; i++)
+		if(MPI_rank == 0)
 		{
-			std::cout <<"\t" <<target_elements[i].name<<"\t"<<Round(100.0*relative_mass_fractions[i])<<"%"<<std::endl;
-			// target_elements[i].Print_Summary();
+			Print_Summary_Base(MPI_rank);
+			std::cout 	<<std::endl<<"Nuclear recoil experiment." <<std::endl
+						<<"Nuclear targets:"	<<std::endl;
+			for(unsigned int i=0 ; i < target_elements.size() ; i++)
+			{
+				std::cout <<"\t" <<target_elements[i].name<<"\t"<<Round(100.0*relative_mass_fractions[i])<<"%"<<std::endl;
+				// target_elements[i].Print_Summary();
+			}
+			std::cout 	<<"Threshold [keV]:\t"<<In_Units(energy_threshold,keV)<<std::endl
+						<<"ER_max [keV]:\t\t"<<In_Units(energy_max,keV)<<std::endl
+						<<"Energy resolution [eV]:\t"<<In_Units(energy_resolution,eV)<<std::endl
+			 			<<"----------------------------------------"<<std::endl<<std::endl;		
 		}
-		std::cout 	<<"Threshold [keV]:\t"<<In_Units(energy_threshold,keV)<<std::endl
-					<<"ER_max [keV]:\t\t"<<In_Units(energy_max,keV)<<std::endl
-					<<"Energy resolution [eV]:\t"<<In_Units(energy_resolution,eV)<<std::endl
-		 			<<"----------------------------------------"<<std::endl<<std::endl;
+	
 	}

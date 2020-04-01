@@ -41,26 +41,30 @@
 		return llh;
 	}
 
-	void DM_Detector::Print_Summary_Base() const
+	void DM_Detector::Print_Summary_Base(int MPI_rank) const
 	{
-		std::cout 	<<std::endl
-					<<"----------------------------------------"<<std::endl
-					<<"Experiment summary:\t"<<name<<std::endl
-					<<"Target particles:\t" <<targets <<std::endl
-					<<"Exposure [kg day]:\t" <<In_Units(exposure,kg*day)<<std::endl
-					<<"Flat efficiency [%]:\t"<<Round(100.0*flat_efficiency)<<std::endl
-					<<"Observed events:\t"<<background_events<<std::endl
-					<<"Statistical analysis:\t" <<statistical_analysis <<std::endl;
-		if(statistical_analysis == "Binned Poisson")
+		if(MPI_rank == 0)
 		{
-			std::cout <<"\tNumber of bins:\t" <<number_of_bins <<std::endl;
-			if(!binned_background.empty())
+			std::cout 	<<std::endl
+						<<"----------------------------------------"<<std::endl
+						<<"Experiment summary:\t"<<name<<std::endl
+						<<"Target particles:\t" <<targets <<std::endl
+						<<"Exposure [kg day]:\t" <<In_Units(exposure,kg*day)<<std::endl
+						<<"Flat efficiency [%]:\t"<<Round(100.0*flat_efficiency)<<std::endl
+						<<"Observed events:\t"<<background_events<<std::endl
+						<<"Statistical analysis:\t" <<statistical_analysis <<std::endl;
+			if(statistical_analysis == "Binned Poisson")
 			{
-				std::cout <<"\tBin\tBackground events"<<std::endl;
-				for(unsigned int i = 0; i < binned_background.size(); i++) std::cout <<"\t"<<i<<"\t"<<binned_background[i]<<std::endl;
+				std::cout <<"\tNumber of bins:\t" <<number_of_bins <<std::endl;
+				if(!binned_background.empty())
+				{
+					std::cout <<"\tBin\tBackground events"<<std::endl;
+					for(unsigned int i = 0; i < binned_background.size(); i++) std::cout <<"\t"<<i<<"\t"<<binned_background[i]<<std::endl;
+				}
 			}
+			std::cout <<std::endl;			
 		}
-		std::cout <<std::endl;
+
 	}
 
 	void DM_Detector::Set_Flat_Efficiency(double eff)

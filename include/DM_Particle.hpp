@@ -9,7 +9,7 @@ class DM_Particle
 	protected:
 		bool low_mass;
 
-		void Print_Summary_Base() const;
+		void Print_Summary_Base(int MPI_rank = 0) const;
 		double Sigma_Nucleus_Base(const Isotope& target, double vDM) const;
 
 	public:
@@ -20,6 +20,7 @@ class DM_Particle
 		DM_Particle(double m, double s = 1.0/2.0);
 
 		void Set_Mass(double mDM);
+		void Set_Spin(double s);
 		void Set_Low_Mass_Mode(bool ldm);
 		void Set_Fractional_Density(double f);
 
@@ -43,7 +44,7 @@ class DM_Particle
 		
 		virtual double Sigma_Nucleus(const Isotope& target, double vDM) const {return Sigma_Nucleus_Base(target,vDM);};
 
-		virtual void Print_Summary() const {Print_Summary_Base();};
+		virtual void Print_Summary(int MPI_rank = 0) const {Print_Summary_Base(MPI_rank);};
 };
 
 #endif

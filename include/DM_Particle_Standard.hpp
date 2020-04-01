@@ -27,7 +27,7 @@ class DM_Particle_Standard : public DM_Particle
 		//Reference electron cross section
 		double sigma_electron;
 
-		void Print_Summary_Standard() const;
+		void Print_Summary_Standard(int MPI_rank = 0) const;
 
 	public:
 		DM_Particle_Standard();
@@ -83,7 +83,7 @@ class DM_Particle_SI : public DM_Particle_Standard
 		//Total cross sections with nuclear isotopes, elements, and electrons
 		virtual double Sigma_Nucleus(const Isotope& isotope,double vDM=1e-3) const override;
 
-		virtual void Print_Summary() const override;
+		virtual void Print_Summary(int MPI_rank = 0) const override;
 };
 
 //3. Spin-dependent (SD) interactions
@@ -103,7 +103,7 @@ class DM_Particle_SD : public DM_Particle_Standard
 		//Total cross sections with nuclear isotopes, elements, and electrons
 		virtual double Sigma_Nucleus(const Isotope& isotope,double vDM=1e-3) const override;
 
-		virtual void Print_Summary() const override;
+		virtual void Print_Summary(int MPI_rank = 0) const override;
 };
 
 #endif

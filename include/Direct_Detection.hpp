@@ -36,7 +36,7 @@ class DM_Detector
 		std::vector<double> background_energy_data_sorted;
 		double Likelihood_Maximum_Gap(const DM_Particle& DM, DM_Distribution& DM_distr);
 
-		void Print_Summary_Base() const;
+		void Print_Summary_Base(int MPI_rank = 0) const;
 		
 	public:
 		DM_Detector() : name("base name"), targets("base targets"), exposure(0.0), flat_efficiency(1.0), energy_threshold(0), energy_max(0), statistical_analysis("Poisson"), background_events(0), number_of_bins(0) {};
@@ -62,7 +62,7 @@ class DM_Detector
 		//c) Maximum gap
 		void Use_Maximum_Gap(std::string filename_energy_data,double dim = keV);
 
-		virtual void Print_Summary() const {Print_Summary_Base();};
+		virtual void Print_Summary(int MPI_rank = 0) const {Print_Summary_Base(MPI_rank);};
 };
 
 //2. Functions for statistical analysis
