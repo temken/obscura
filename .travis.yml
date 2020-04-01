@@ -21,7 +21,11 @@ before_install:
   - sudo pip install codecov
 
 install:
- 
+  #Install libconfig
+  - wget https://hyperrealm.github.io/libconfig/dist/libconfig-1.7.2.tar.gz
+  - tar -xvzf libconfig-1.7.2.tar.gz
+  - pushd libconfig-1.7.2 && ./configure && make && sudo make install && popd
+  
   #Codecov
   - sudo apt-get install -qq g++-5
   - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
