@@ -4,10 +4,12 @@
 
 //Headers from libphys library
 #include "Natural_Units.hpp"
+#include "Numerics.hpp"
 #include "Linear_Algebra.hpp"
 
 #include "DM_Distribution.hpp"
 #include "Astronomy.hpp"
+#include "Configuration.hpp"
 #include "Target_Nucleus.hpp"
 #include "DM_Particle.hpp"
 #include "DM_Particle_Standard.hpp"
@@ -16,7 +18,9 @@
 int main(int argc, char *argv[])
 {
 	//Starting time
-		std::chrono::high_resolution_clock::time_point time_start = std::chrono::high_resolution_clock::now();
+	auto time_start = std::chrono::system_clock::now();
+	auto time_start_t = std::chrono::system_clock::to_time_t(time_start);
+	std::cout 	<<"Started at " <<std::ctime(&time_start_t)<<std::endl;
 
 	Standard_Halo_Model SHM;
 	SHM.Print_Summary();
@@ -44,10 +48,11 @@ int main(int argc, char *argv[])
 	std::cout<<detector.Upper_Bound(DM,SHM)/cm/cm<<std::endl;
 
 	//Ending time and computing time
-	std::chrono::high_resolution_clock::time_point time_end = std::chrono::high_resolution_clock::now();
+	auto time_end = std::chrono::system_clock::now();
 	double durationTotal =1e-6*std::chrono::duration_cast<std::chrono::microseconds>( time_end - time_start ).count();
-	std::cout <<"\nProcessing Time:\t"<< durationTotal<<"s ("<< floor(durationTotal/3600.0)<<":"<<floor(fmod(durationTotal/60.0,60.0))<<":"<<floor(fmod(durationTotal,60.0))<<":"<<floor(fmod(1000*durationTotal,1000.0))<<")."<<std::endl
-	<<"##############################"<<std::endl;
+	std::cout 	<<"\n[Finished in "<< Round(durationTotal,2)<<"s";
+	if(durationTotal > 60.0) std::cout <<" ("<<floor(durationTotal/3600.0)<<":"<<floor(fmod(durationTotal/60.0,60.0))<<":"<<floor(fmod(durationTotal,60.0))<<")]."<<std::endl;
+	else std::cout <<"]"<<std::endl;
 	
 	return 0;
 }
