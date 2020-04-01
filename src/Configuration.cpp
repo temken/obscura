@@ -133,8 +133,12 @@ using namespace libconfig;
 			DM->Print_Summary(MPI_rank);
 			DM_distr->Print_Summary(MPI_rank);
 			DM_detector->Print_Summary(MPI_rank);
-			std::cout <<line <<std::endl;
-		}
+			std::cout<<"Direct detection constraints"<<std::endl
+						<<"\tCertainty level [%]:\t" <<100.0*constraints_certainty <<std::endl
+						<<"\tMass range [GeV]:\t[" <<constraints_mass_min<<","<<constraints_mass_max<<"]" <<std::endl
+						<<"\tMass steps:\t" <<constraints_masses <<std::endl
+						<<line<<std::endl<<std::endl;
+		}	
 	}
 
 	void Configuration::Read_Config_File()
