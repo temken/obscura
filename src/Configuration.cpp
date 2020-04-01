@@ -78,7 +78,6 @@ using namespace libconfig;
 
 		Create_Result_Folder(MPI_rank);
 		Copy_Config_File(MPI_rank);
-		Print_Summary(MPI_rank);
 	}
 
 	void Configuration::Create_Result_Folder(int MPI_rank)

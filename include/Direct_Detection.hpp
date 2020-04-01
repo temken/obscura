@@ -14,7 +14,7 @@
 class DM_Detector
 {
 	protected:
-		std::string name, targets;
+		std::string targets;
 		double exposure, flat_efficiency;
 		double energy_threshold, energy_max;
 
@@ -39,8 +39,9 @@ class DM_Detector
 		void Print_Summary_Base(int MPI_rank = 0) const;
 		
 	public:
-		DM_Detector() : name("base name"), targets("base targets"), exposure(0.0), flat_efficiency(1.0), energy_threshold(0), energy_max(0), statistical_analysis("Poisson"), background_events(0), number_of_bins(0) {};
-		DM_Detector(std::string label, double expo,std::string target_type) : name(label), targets(target_type), exposure(expo) , flat_efficiency(1.0), energy_threshold(0), energy_max(0), statistical_analysis("Poisson"), background_events(0), number_of_bins(0) {};
+		std::string name;
+		DM_Detector() :  targets("base targets"), exposure(0.0), flat_efficiency(1.0), energy_threshold(0), energy_max(0), statistical_analysis("Poisson"), background_events(0), number_of_bins(0), name("base name") {};
+		DM_Detector(std::string label, double expo,std::string target_type) : targets(target_type), exposure(expo) , flat_efficiency(1.0), energy_threshold(0), energy_max(0), statistical_analysis("Poisson"), background_events(0), number_of_bins(0), name(label) {};
 
 		void Set_Flat_Efficiency(double eff);
 

@@ -22,12 +22,19 @@ int main(int argc, char *argv[])
 	auto time_start_t = std::chrono::system_clock::to_time_t(time_start);
 	std::cout 	<<"Started at " <<std::ctime(&time_start_t)<<std::endl;
 
-	//Import configuration file
+	//Import nuclear data and configuration file
 	Import_Nuclear_Data();
 	Configuration cfg("test.cfg");
-
+	cfg.Print_Summary();
+	
 	Vector vEarth = Earth_Velocity(0.0);
 	std::cout<<"vEarth = "<<In_Units(vEarth,km/sec)<<std::endl;
+
+	std::vector<std::vector<double>> exclusion_limits = cfg.DM_detector->Limit_Curve(*(cfg.DM), *(cfg.DM_distr), cfg.constraints_mass_min, cfg.constraints_mass_max, cfg.constraints_masses, cfg.constraints_certainty);
+	for(int i = 0; i < exclusion_limits.size(); i++)
+	{
+		std::cout <<i+1 <<")\t" <<Round(exclusion_limits[i][0]) <<" GeV\t" <<Round(In_Units(exclusion_limits[i][1],cm*cm)) <<" cm^2" <<std::endl;
+	}
 
 	//Ending time and computing time
 	auto time_end = std::chrono::system_clock::now();
