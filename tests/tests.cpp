@@ -22,30 +22,12 @@ int main(int argc, char *argv[])
 	auto time_start_t = std::chrono::system_clock::to_time_t(time_start);
 	std::cout 	<<"Started at " <<std::ctime(&time_start_t)<<std::endl;
 
-	Standard_Halo_Model SHM;
-	SHM.Print_Summary();
-	std::cout <<SHM.PDF_Speed(300*km/sec)<<std::endl;
-	std::cout <<In_Units(SHM.Average_Speed(),km/sec)<<std::endl;
+	//Import configuration file
+	Import_Nuclear_Data();
+	Configuration cfg("test.cfg");
 
 	Vector vEarth = Earth_Velocity(0.0);
 	std::cout<<"vEarth = "<<In_Units(vEarth,km/sec)<<std::endl;
-
-	Import_Nuclear_Data();
-	Get_Element(54).Print_Summary();
-
-	DM_Particle_SI DM(5.0*GeV, 1.0e-35*cm*cm);
-	DM.Fix_fn_over_fp(0.7);
-	DM.Print_Summary();
-	std::cout<<In_Units(DM.Sigma_Nucleus(Get_Element(54)[5], 300*km/sec),cm*cm)<<std::endl;
-	DM.Set_Low_Mass_Mode(true);
-	std::cout<<In_Units(DM.Sigma_Nucleus(Get_Element(54)[5], 300*km/sec),cm*cm)<<std::endl;
-	
-	DM_Detector_Nucleus detector;
-	detector.Set_Background(100);
-	detector.Print_Summary();
-	std::cout<<detector.Upper_Bound(DM,SHM)/cm/cm<<std::endl;
-	DM.Set_Low_Mass_Mode(false);
-	std::cout<<detector.Upper_Bound(DM,SHM)/cm/cm<<std::endl;
 
 	//Ending time and computing time
 	auto time_end = std::chrono::system_clock::now();

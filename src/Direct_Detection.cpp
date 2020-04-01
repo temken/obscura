@@ -49,7 +49,7 @@
 						<<"----------------------------------------"<<std::endl
 						<<"Experiment summary:\t"<<name<<std::endl
 						<<"Target particles:\t" <<targets <<std::endl
-						<<"Exposure [kg day]:\t" <<In_Units(exposure,kg*day)<<std::endl
+						<<"Exposure [kg year]:\t" <<In_Units(exposure,kg*yr)<<std::endl
 						<<"Flat efficiency [%]:\t"<<Round(100.0*flat_efficiency)<<std::endl
 						<<"Observed events:\t"<<background_events<<std::endl
 						<<"Statistical analysis:\t" <<statistical_analysis <<std::endl;
