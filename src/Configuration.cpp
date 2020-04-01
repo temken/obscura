@@ -48,6 +48,7 @@ using namespace libconfig;
 			std::cerr << "No 'constraints_certainty' setting in configuration file." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
+		
 		try
 		{
 			constraints_mass_min = config.lookup("constraints_mass_min");
@@ -57,6 +58,7 @@ using namespace libconfig;
 			std::cerr << "No 'constraints_mass_min' setting in configuration file." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
+		
 		try
 		{
 			constraints_mass_max = config.lookup("constraints_mass_max");
@@ -66,6 +68,7 @@ using namespace libconfig;
 			std::cerr << "No 'constraints_mass_max' setting in configuration file." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
+		
 		try
 		{
 			constraints_masses = config.lookup("constraints_masses");
@@ -173,6 +176,7 @@ using namespace libconfig;
 			std::cerr << "No 'DM_mass' setting in configuration file." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
+		
 		try
 		{
 			DM_spin = config.lookup("DM_spin");
@@ -182,6 +186,7 @@ using namespace libconfig;
 			std::cerr << "No 'DM_spin' setting in configuration file." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
+		
 		try
 		{
 			DM_fraction = config.lookup("DM_fraction");
@@ -191,6 +196,7 @@ using namespace libconfig;
 			std::cerr << "No 'DM_fraction' setting in configuration file." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
+		
 		try
 		{
 			DM_light = config.lookup("DM_light");
@@ -339,6 +345,7 @@ using namespace libconfig;
 			std::cerr << "No 'DM_distribution' setting in configuration file." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
+		
 		try
 		{
 			DM_local_density = config.lookup("DM_local_density");
@@ -388,7 +395,7 @@ using namespace libconfig;
 		}
 		else
 		{
-			std::cerr << "Error: 'DM_distribution' setting "<<DM_distribution <<" in configuration file not recognized." << std::endl;
+			std::cerr << "Error in Configuration::Construct_DM_Distribution(): 'DM_distribution' setting "<<DM_distribution <<" in configuration file not recognized." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 	}
@@ -670,7 +677,7 @@ using namespace libconfig;
 		}
 		else
 		{
-			std::cerr << "Error: Experiment " <<DD_experiment<<" not recognized." << std::endl;
+			std::cerr << "Error in Configuration::Construct_DM_Detector(): Experiment " <<DD_experiment<<" not recognized." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 	}
