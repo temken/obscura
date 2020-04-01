@@ -1,7 +1,6 @@
 #include "Configuration.hpp"
 
 #include <fstream>
-#include <libconfig.h++>
 // #include <sys/types.h> // required for stat.h
 #include <sys/stat.h>	//required to create a folder
 
@@ -17,28 +16,12 @@ using namespace libconfig;
 	Configuration::Configuration(std::string cfg_filename, int MPI_rank)
 	: cfg_file(cfg_filename), results_path("./")
 	{
-		Config cfg;
-
-		//1. Read the file. If there is an error, report it and std::exit.
-		try
-		{		
-			cfg.readFile(cfg_filename.c_str());
-		}
-		catch(const FileIOException &fioex)
-		{
-			std::cerr << "Error in Configuration::Configuration(std::string): I/O error while reading configuration file." << std::endl;
-			std::exit(EXIT_FAILURE);
-		}
-		catch(const ParseException &pex)
-		{
-			std::cerr << "Error in Configuration::Configuration(std::string): Configurate file parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << std::endl;
-			std::exit(EXIT_FAILURE);
-		}
+		Read_Config_File();
 
 		//2. Identifier for the program's run.
 		try
 		{
-			ID = cfg.lookup("ID").c_str();
+			ID = config.lookup("ID").c_str();
 		}
 		catch(const SettingNotFoundException &nfex)
 		{
@@ -47,12 +30,139 @@ using namespace libconfig;
 		}
 
 		//3. DM particle
+		Construct_DM_Particle();
+		
+		//4. DM Distribution
+		Construct_DM_Distribution();
+
+		//5. DM-detection experiment
+		Construct_DM_Detector();
+
+		// 6. Computation of exclusion limits
+		try
+		{
+			constraints_certainty = config.lookup("constraints_certainty");
+		}
+		catch(const SettingNotFoundException &nfex)
+		{
+			std::cerr << "No 'constraints_certainty' setting in configuration file." << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		try
+		{
+			constraints_mass_min = config.lookup("constraints_mass_min");
+		}
+		catch(const SettingNotFoundException &nfex)
+		{
+			std::cerr << "No 'constraints_mass_min' setting in configuration file." << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		try
+		{
+			constraints_mass_max = config.lookup("constraints_mass_max");
+		}
+		catch(const SettingNotFoundException &nfex)
+		{
+			std::cerr << "No 'constraints_mass_max' setting in configuration file." << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		try
+		{
+			constraints_masses = config.lookup("constraints_masses");
+		}
+		catch(const SettingNotFoundException &nfex)
+		{
+			std::cerr << "No 'constraints_masses' setting in configuration file." << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+
+		Create_Result_Folder(MPI_rank);
+		Copy_Config_File(MPI_rank);
+		Print_Summary(MPI_rank);
+	}
+
+	void Configuration::Create_Result_Folder(int MPI_rank)
+	{
+		if(MPI_rank == 0) 
+		{
+			//1. Create the /results/ folder if necessary
+			std::string results_folder = "../results";
+			mode_t nMode = 0733; // UNIX style permissions
+			int nError_1 = 0;
+			#if defined(_WIN32)
+				nError_1 = _mkdir(results_folder.c_str()); // can be used on Windows
+			#else
+				nError_1 = mkdir(results_folder.c_str(),nMode); // can be used on non-Windows
+			#endif
+
+			//2. Create a /result/<ID>/ folder for result files.
+			results_path = results_folder + "/" + ID + "/";
+			int nError = 0;
+			#if defined(_WIN32)
+				nError = _mkdir(results_path.c_str()); // can be used on Windows
+			#else
+			  nError = mkdir(results_path.c_str(),nMode); // can be used on non-Windows
+			#endif
+			if (nError != 0) 
+			{
+				std::cerr <<"\nWarning in Configuration::Create_Result_Folder(int): The folder exists already, data will be overwritten."<< std::endl;
+			}
+		}
+	}
+	void Configuration::Copy_Config_File(int MPI_rank)
+	{
+		if(MPI_rank == 0)
+		{
+			std::ifstream inFile;
+			std::ofstream outFile;
+			inFile.open(cfg_file);
+	    	outFile.open("../results/"+ID+"/"+ID+".cfg");
+			outFile << inFile.rdbuf();
+			inFile.close();
+			outFile.close();
+		}
+	}
+
+	void Configuration::Print_Summary(int MPI_rank)
+	{
+		if(MPI_rank == 0)
+		{
+			std::string line="----------------------------------------";
+			std::cout <<std::endl<<line<<std::endl <<"Config file:\t\t"<<cfg_file<< std::endl<< std::endl;
+			std::cout <<"\tID:\t\t" <<ID << std::endl;
+			DM->Print_Summary(MPI_rank);
+			DM_distr->Print_Summary(MPI_rank);
+			DM_detector->Print_Summary(MPI_rank);
+			std::cout <<line <<std::endl;
+		}
+	}
+
+	void Configuration::Read_Config_File()
+	{
+		try
+		{		
+			config.readFile(cfg_file.c_str());
+		}
+		catch(const FileIOException &fioex)
+		{
+			std::cerr << "Error in Configuration::Read_Config_File(): I/O error while reading configuration file." << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		catch(const ParseException &pex)
+		{
+			std::cerr << "Error in Configuration::Read_Config_File(): Configurate file parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+	}
+
+	void Configuration::Construct_DM_Particle()
+	{
 		double DM_mass, DM_spin, DM_fraction;
 		bool DM_light;
 		//3.1 General properties
 		try
 		{
-			DM_mass = cfg.lookup("DM_mass");
+			DM_mass = config.lookup("DM_mass");
 			DM_mass *= GeV;
 		}
 		catch(const SettingNotFoundException &nfex)
@@ -62,7 +172,7 @@ using namespace libconfig;
 		}
 		try
 		{
-			DM_spin = cfg.lookup("DM_spin");
+			DM_spin = config.lookup("DM_spin");
 		}
 		catch(const SettingNotFoundException &nfex)
 		{
@@ -71,7 +181,7 @@ using namespace libconfig;
 		}
 		try
 		{
-			DM_fraction = cfg.lookup("DM_fraction");
+			DM_fraction = config.lookup("DM_fraction");
 		}
 		catch(const SettingNotFoundException &nfex)
 		{
@@ -80,7 +190,7 @@ using namespace libconfig;
 		}
 		try
 		{
-			DM_light = cfg.lookup("DM_light");
+			DM_light = config.lookup("DM_light");
 		}
 		catch(const SettingNotFoundException &nfex)
 		{
@@ -93,7 +203,7 @@ using namespace libconfig;
 		std::string DM_interaction;
 		try
 		{
-			DM_interaction = cfg.lookup("DM_interaction").c_str();
+			DM_interaction = config.lookup("DM_interaction").c_str();
 		}
 		catch(const SettingNotFoundException &nfex)
 		{
@@ -114,7 +224,7 @@ using namespace libconfig;
 				double DM_mediator_mass = -1.0;
 				try
 				{
-					DM_form_factor = cfg.lookup("DM_form_factor").c_str();
+					DM_form_factor = config.lookup("DM_form_factor").c_str();
 				}
 				catch(const SettingNotFoundException &nfex)
 				{
@@ -125,7 +235,7 @@ using namespace libconfig;
 				{
 					try
 					{
-						DM_mediator_mass = cfg.lookup("DM_mediator_mass");
+						DM_mediator_mass = config.lookup("DM_mediator_mass");
 						DM_mediator_mass *= MeV;
 					}
 					catch(const SettingNotFoundException &nfex)
@@ -147,7 +257,7 @@ using namespace libconfig;
 			bool DM_isospin_conserved;
 			try
 			{
-				DM_isospin_conserved = cfg.lookup("DM_isospin_conserved");
+				DM_isospin_conserved = config.lookup("DM_isospin_conserved");
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
@@ -164,8 +274,8 @@ using namespace libconfig;
 			{
 				try
 				{
-					fp_rel = cfg.lookup("DM_relative_couplings")[0];
-					fn_rel = cfg.lookup("DM_relative_couplings")[1];
+					fp_rel = config.lookup("DM_relative_couplings")[0];
+					fn_rel = config.lookup("DM_relative_couplings")[1];
 				}
 				catch(const SettingNotFoundException &nfex)
 				{
@@ -178,7 +288,7 @@ using namespace libconfig;
 			double DM_cross_section_nucleon;
 			try
 			{
-				DM_cross_section_nucleon = cfg.lookup("DM_cross_section_nucleon");
+				DM_cross_section_nucleon = config.lookup("DM_cross_section_nucleon");
 				DM_cross_section_nucleon *= cm*cm;
 			}
 			catch(const SettingNotFoundException &nfex)
@@ -191,7 +301,7 @@ using namespace libconfig;
 			double DM_cross_section_electron;
 			try
 			{
-				DM_cross_section_electron = cfg.lookup("DM_cross_section_electron");
+				DM_cross_section_electron = config.lookup("DM_cross_section_electron");
 				DM_cross_section_electron *= cm*cm;
 			}
 			catch(const SettingNotFoundException &nfex)
@@ -203,7 +313,7 @@ using namespace libconfig;
 		}
 		else
 		{
-			std::cerr << "Error: 'DM_interaction' setting "<<DM_interaction <<" in configuration file not recognized." << std::endl;
+			std::cerr << "Error in Configuration::Construct_DM_Particle(): 'DM_interaction' setting "<<DM_interaction <<" in configuration file not recognized." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 
@@ -211,13 +321,15 @@ using namespace libconfig;
 		DM->Set_Spin(DM_spin);
 		DM->Set_Fractional_Density(DM_fraction);
 		DM->Set_Low_Mass_Mode(DM_light);
-		
-		//4. DM Distribution
+	}
+
+	void Configuration::Construct_DM_Distribution()
+	{
 		std::string DM_distribution;
 		double DM_local_density;
 		try
 		{
-			DM_distribution = cfg.lookup("DM_distribution").c_str();
+			DM_distribution = config.lookup("DM_distribution").c_str();
 		}
 		catch(const SettingNotFoundException &nfex)
 		{
@@ -226,7 +338,7 @@ using namespace libconfig;
 		}
 		try
 		{
-			DM_local_density = cfg.lookup("DM_local_density");
+			DM_local_density = config.lookup("DM_local_density");
 			DM_local_density *= GeV /cm/cm/cm;
 		}
 		catch(const SettingNotFoundException &nfex)
@@ -241,7 +353,7 @@ using namespace libconfig;
 			double SHM_v0, SHM_vEarth, SHM_vEscape;
 			try
 			{
-				SHM_v0 = cfg.lookup("SHM_v0");
+				SHM_v0 = config.lookup("SHM_v0");
 				SHM_v0 *= km/sec;
 			}
 			catch(const SettingNotFoundException &nfex)
@@ -251,7 +363,7 @@ using namespace libconfig;
 			}
 			try
 			{
-				SHM_vEarth = cfg.lookup("SHM_vEarth");
+				SHM_vEarth = config.lookup("SHM_vEarth");
 				SHM_vEarth *= km/sec;
 			}
 			catch(const SettingNotFoundException &nfex)
@@ -261,7 +373,7 @@ using namespace libconfig;
 			}
 			try
 			{
-				SHM_vEscape = cfg.lookup("SHM_vEscape");
+				SHM_vEscape = config.lookup("SHM_vEscape");
 				SHM_vEscape *= km/sec;
 			}
 			catch(const SettingNotFoundException &nfex)
@@ -276,12 +388,14 @@ using namespace libconfig;
 			std::cerr << "Error: 'DM_distribution' setting "<<DM_distribution <<" in configuration file not recognized." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
+	}
 
-		//5. DM-detection experiment
+	void Configuration::Construct_DM_Detector()
+	{
 		std::string DD_experiment;
 		try
 		{
-			DD_experiment = cfg.lookup("DD_experiment").c_str();
+			DD_experiment = config.lookup("DD_experiment").c_str();
 		}
 		catch(const SettingNotFoundException &nfex)
 		{
@@ -294,11 +408,11 @@ using namespace libconfig;
 			std::vector<double>  DD_targets_nuclear_abundances;
 			try
 			{
-				int element_count=cfg.lookup("DD_targets_nuclear").getLength();
+				int element_count=config.lookup("DD_targets_nuclear").getLength();
 				for(int j=0;j<element_count;j++)
 				{
-					double abund = cfg.lookup("DD_targets_nuclear")[j][0];
-					int Z = cfg.lookup("DD_targets_nuclear")[j][1];
+					double abund = config.lookup("DD_targets_nuclear")[j][0];
+					int Z = config.lookup("DD_targets_nuclear")[j][1];
 					DD_targets_nuclear_abundances.push_back(abund);
 					DD_targets_nuclear.push_back( Get_Element(Z) );
 				}
@@ -313,7 +427,7 @@ using namespace libconfig;
 			unsigned int DD_background_nuclear;
 			try
 			{
-				DD_threshold_nuclear = cfg.lookup("DD_threshold_nuclear");
+				DD_threshold_nuclear = config.lookup("DD_threshold_nuclear");
 				DD_threshold_nuclear *= keV;
 			}
 			catch(const SettingNotFoundException &nfex)
@@ -323,7 +437,7 @@ using namespace libconfig;
 			}
 			try
 			{
-				DD_Emax_nuclear = cfg.lookup("DD_Emax_nuclear");
+				DD_Emax_nuclear = config.lookup("DD_Emax_nuclear");
 				DD_Emax_nuclear *= keV;
 			}
 			catch(const SettingNotFoundException &nfex)
@@ -333,7 +447,7 @@ using namespace libconfig;
 			}
 			try
 			{
-				DD_exposure_nuclear = cfg.lookup("DD_exposure_nuclear");
+				DD_exposure_nuclear = config.lookup("DD_exposure_nuclear");
 				DD_exposure_nuclear *= kg*yr;
 			}
 			catch(const SettingNotFoundException &nfex)
@@ -343,7 +457,7 @@ using namespace libconfig;
 			}
 			try
 			{
-				DD_efficiency_nuclear = cfg.lookup("DD_efficiency_nuclear");
+				DD_efficiency_nuclear = config.lookup("DD_efficiency_nuclear");
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
@@ -352,7 +466,7 @@ using namespace libconfig;
 			}
 			try
 			{
-				DD_background_nuclear = cfg.lookup("DD_background_nuclear");
+				DD_background_nuclear = config.lookup("DD_background_nuclear");
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
@@ -487,7 +601,7 @@ using namespace libconfig;
 			// double DD_exposure_semiconductor, DD_efficiency_semiconductor;
 			// try
 			// {
-			// 	DD_target_semiconductor = cfg.lookup("DD_target_semiconductor").c_str();
+			// 	DD_target_semiconductor = config.lookup("DD_target_semiconductor").c_str();
 			// }
 			// catch(const SettingNotFoundException &nfex)
 			// {
@@ -496,7 +610,7 @@ using namespace libconfig;
 			// }
 			// try
 			// {
-			// 	DD_threshold_semiconductor = cfg.lookup("DD_threshold_semiconductor");
+			// 	DD_threshold_semiconductor = config.lookup("DD_threshold_semiconductor");
 			// }
 			// catch(const SettingNotFoundException &nfex)
 			// {
@@ -505,7 +619,7 @@ using namespace libconfig;
 			// }
 			// try
 			// {
-			// 	DD_exposure_semiconductor = cfg.lookup("DD_exposure_semiconductor");
+			// 	DD_exposure_semiconductor = config.lookup("DD_exposure_semiconductor");
 			// 	DD_exposure_semiconductor *= gram*yr;
 			// }
 			// catch(const SettingNotFoundException &nfex)
@@ -515,7 +629,7 @@ using namespace libconfig;
 			// }
 			// try
 			// {
-			// 	DD_efficiency_semiconductor = cfg.lookup("DD_efficiency_semiconductor");
+			// 	DD_efficiency_semiconductor = config.lookup("DD_efficiency_semiconductor");
 			// }
 			// catch(const SettingNotFoundException &nfex)
 			// {
@@ -524,7 +638,7 @@ using namespace libconfig;
 			// }
 			// try
 			// {
-			// 	DD_background_semiconductor = cfg.lookup("DD_background_semiconductor");
+			// 	DD_background_semiconductor = config.lookup("DD_background_semiconductor");
 			// }
 			// catch(const SettingNotFoundException &nfex)
 			// {
@@ -556,102 +670,5 @@ using namespace libconfig;
 			std::cerr << "Error: Experiment " <<DD_experiment<<" not recognized." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
-
-		// 6. Computation of exclusion limits
-		try
-		{
-			constraints_certainty = cfg.lookup("constraints_certainty");
-		}
-		catch(const SettingNotFoundException &nfex)
-		{
-			std::cerr << "No 'constraints_certainty' setting in configuration file." << std::endl;
-			std::exit(EXIT_FAILURE);
-		}
-		try
-		{
-			constraints_mass_min = cfg.lookup("constraints_mass_min");
-		}
-		catch(const SettingNotFoundException &nfex)
-		{
-			std::cerr << "No 'constraints_mass_min' setting in configuration file." << std::endl;
-			std::exit(EXIT_FAILURE);
-		}
-		try
-		{
-			constraints_mass_max = cfg.lookup("constraints_mass_max");
-		}
-		catch(const SettingNotFoundException &nfex)
-		{
-			std::cerr << "No 'constraints_mass_max' setting in configuration file." << std::endl;
-			std::exit(EXIT_FAILURE);
-		}
-		try
-		{
-			constraints_masses = cfg.lookup("constraints_masses");
-		}
-		catch(const SettingNotFoundException &nfex)
-		{
-			std::cerr << "No 'constraints_masses' setting in configuration file." << std::endl;
-			std::exit(EXIT_FAILURE);
-		}
-
-		Create_Result_Folder(MPI_rank);
-		Copy_Config_File(MPI_rank);
-		Print_Summary(MPI_rank);
 	}
 
-	void Configuration::Create_Result_Folder(int MPI_rank)
-	{
-		if(MPI_rank == 0) 
-		{
-			//1. Create the /results/ folder if necessary
-			std::string results_folder = "../results";
-			mode_t nMode = 0733; // UNIX style permissions
-			int nError_1 = 0;
-			#if defined(_WIN32)
-				nError_1 = _mkdir(results_folder.c_str()); // can be used on Windows
-			#else
-				nError_1 = mkdir(results_folder.c_str(),nMode); // can be used on non-Windows
-			#endif
-
-			//2. Create a /result/<ID>/ folder for result files.
-			results_path = results_folder + "/" + ID + "/";
-			int nError = 0;
-			#if defined(_WIN32)
-				nError = _mkdir(results_path.c_str()); // can be used on Windows
-			#else
-			  nError = mkdir(results_path.c_str(),nMode); // can be used on non-Windows
-			#endif
-			if (nError != 0) 
-			{
-				std::cerr <<"\nWarning in Configuration::Create_Result_Folder(int): The folder exists already, data will be overwritten."<< std::endl;
-			}
-		}
-	}
-	void Configuration::Copy_Config_File(int MPI_rank)
-	{
-		if(MPI_rank == 0)
-		{
-			std::ifstream inFile;
-			std::ofstream outFile;
-			inFile.open(cfg_file);
-	    	outFile.open("../results/"+ID+"/"+ID+".cfg");
-			outFile << inFile.rdbuf();
-			inFile.close();
-			outFile.close();
-		}
-	}
-
-	void Configuration::Print_Summary(int MPI_rank)
-	{
-		if(MPI_rank == 0)
-		{
-			std::string line="----------------------------------------";
-			std::cout <<std::endl<<line<<std::endl <<"Config file:\t\t"<<cfg_file<< std::endl<< std::endl;
-			std::cout <<"\tID:\t\t" <<ID << std::endl;
-			DM->Print_Summary(MPI_rank);
-			DM_distr->Print_Summary(MPI_rank);
-			DM_detector->Print_Summary(MPI_rank);
-			std::cout <<line <<std::endl;
-		}
-	}
