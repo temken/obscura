@@ -56,15 +56,14 @@
 			if(statistical_analysis == "Binned Poisson")
 			{
 				std::cout <<"\tNumber of bins:\t" <<number_of_bins <<std::endl;
-				if(!binned_background.empty())
+				if(!bin_background.empty() && !bin_background.empty())
 				{
-					std::cout <<"\tBin\tBackground events"<<std::endl;
-					for(unsigned int i = 0; i < binned_background.size(); i++) std::cout <<"\t"<<i<<"\t"<<binned_background[i]<<std::endl;
+					std::cout <<"\tBin\tBackground events\tEfficiency [%]"<<std::endl;
+					for(unsigned int i = 0; i < bin_background.size(); i++) std::cout <<"\t"<<i+1<<"\t"<<bin_background[i] <<"\t" <<100.0 * bin_efficiencies[i]<<std::endl;
 				}
 			}
 			std::cout <<std::endl;			
 		}
-
 	}
 
 	void DM_Detector::Set_Flat_Efficiency(double eff)
@@ -83,7 +82,7 @@
 		else if(statistical_analysis == "Binned Poisson")
 		{
 			std::vector<double> expectation_values = Binned_Number_of_Signals(DM, DM_distr);
-			llh = Likelihood_Poisson_Binned(expectation_values, binned_background);
+			llh = Likelihood_Poisson_Binned(expectation_values, bin_background);
 		}
 		else if(statistical_analysis == "Maximum-Gap")
 		{
@@ -155,25 +154,33 @@
 	{
 		statistical_analysis = "Binned Poisson";
 		number_of_bins = bins;
-		bins_energy = Linear_Space(Emin, Emax, bins+1);
-		if(binned_background.empty()) binned_background = std::vector<unsigned long int>(bins,0);
+		bin_energies = Linear_Space(Emin, Emax, bins+1);
+		if(bin_background.size() != number_of_bins) bin_background = std::vector<unsigned long int>(bins,0);
+		if(bin_efficiencies.size() != number_of_bins) bin_efficiencies = std::vector<double>(bins, 1.0);
+	}
+	
+	void DM_Detector::Set_Bin_Efficiencies(const std::vector<double>& eff)
+	{
+		if(statistical_analysis != "Binned Poisson" || eff.size() != number_of_bins)
+		{
+			std::cerr<<"Error in DM_Detector::Set_Bin_Efficiencies(const std::vector<double>&): Length of the efficiency vector is not equal to the number of bins."<<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		else bin_efficiencies = eff;
 	}
 
 	void DM_Detector::Set_Background(std::vector<unsigned long int> Bi)
 	{
-		if(number_of_bins > 0 && number_of_bins != Bi.size())
+		if(statistical_analysis != "Binned Poisson" || Bi.size() != number_of_bins)
 		{
 			std::cerr<<"Error in DM_Detector::Set_Background(std::vector<unsigned long int>): Length of the background vector is not equal to the number of bins."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		else
 		{
-			statistical_analysis = "Binned Poisson";
-			number_of_bins = Bi.size();
-			binned_background = Bi;
-			background_events = std::accumulate(binned_background.begin(),binned_background.end(),0);
-		}
-		
+			bin_background = Bi;
+			background_events = std::accumulate(bin_background.begin(),bin_background.end(),0);
+		}		
 	}
 
 	std::vector<double> DM_Detector::Binned_Number_of_Signals(const DM_Particle& DM, DM_Distribution& DM_distr)
@@ -183,7 +190,7 @@
 			std::cerr<<"Error in DM_Detector::Binned_Number_of_Signals(const DM_Particle&, DM_Distribution&): The analysis is not binned Poisson."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
-		else if(bins_energy.empty())
+		else if(bin_energies.empty())
 		{
 			std::cerr<<"Error in DM_Detector::Binned_Number_of_Signals(const DM_Particle&, DM_Distribution&): No energy bins defined."<<std::endl;
 			std::exit(EXIT_FAILURE);
@@ -199,9 +206,9 @@
 			for(unsigned int i = 0; i < number_of_bins; i++)
 			{
 				
-				double epsilon = Find_Epsilon(spectrum, bins_energy[i], bins_energy[i+1], 1e-4);
-				double mu = Integrate(spectrum, bins_energy[i], bins_energy[i+1], epsilon);
-				mu_i.push_back(mu);
+				double epsilon = Find_Epsilon(spectrum, bin_energies[i], bin_energies[i+1], 1e-4);
+				double mu = Integrate(spectrum, bin_energies[i], bin_energies[i+1], epsilon);
+				mu_i.push_back(bin_efficiencies[i] * mu);
 			}
 			return mu_i;
 		}

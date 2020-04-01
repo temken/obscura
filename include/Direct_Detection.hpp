@@ -29,8 +29,9 @@ class DM_Detector
 
 		//b) Binned Poisson statistics
 		unsigned int number_of_bins;
-		std::vector<double> bins_energy;
-		std::vector<unsigned long int> binned_background;
+		std::vector<double> bin_energies;
+		std::vector<double> bin_efficiencies;
+		std::vector<unsigned long int> bin_background;
 
 		//c) Maximum gap a'la Yellin
 		std::vector<double> background_energy_data_sorted;
@@ -58,6 +59,7 @@ class DM_Detector
 		virtual double Total_Number_of_Signals(const DM_Particle& DM, DM_Distribution& DM_distr);
 		//b) Binned Poisson
 		void Define_Energy_Bins(double Emin, double Emax, int bins);
+		void Set_Bin_Efficiencies(const std::vector<double>& eff);
 		void Set_Background(std::vector<unsigned long int> Bi);
 		virtual std::vector<double> Binned_Number_of_Signals(const DM_Particle& DM, DM_Distribution& DM_distr);
 		//c) Maximum gap
