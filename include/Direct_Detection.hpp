@@ -10,8 +10,8 @@
 #include "DM_Particle.hpp"
 #include "DM_Distribution.hpp"
 
-//1. Detector base class
-class Detector
+//1. DM Detector base class
+class DM_Detector
 {
 	protected:
 		std::string name, targets;
@@ -39,8 +39,8 @@ class Detector
 		void Print_Summary_Base() const;
 		
 	public:
-		Detector() : name("base name"), targets("base targets"), exposure(0.0), flat_efficiency(1.0), energy_threshold(0), energy_max(0), statistical_analysis("Poisson"), background_events(0), number_of_bins(0) {};
-		Detector(std::string label, double expo,std::string target_type) : name(label), targets(target_type), exposure(expo) , flat_efficiency(1.0), energy_threshold(0), energy_max(0), statistical_analysis("Poisson"), background_events(0), number_of_bins(0) {};
+		DM_Detector() : name("base name"), targets("base targets"), exposure(0.0), flat_efficiency(1.0), energy_threshold(0), energy_max(0), statistical_analysis("Poisson"), background_events(0), number_of_bins(0) {};
+		DM_Detector(std::string label, double expo,std::string target_type) : name(label), targets(target_type), exposure(expo) , flat_efficiency(1.0), energy_threshold(0), energy_max(0), statistical_analysis("Poisson"), background_events(0), number_of_bins(0) {};
 
 		void Set_Flat_Efficiency(double eff);
 

@@ -11,9 +11,9 @@
 #include "Statistics.hpp"
 #include "Utilities.hpp"
 
-//1. Detector base class
+//1. DM_Detector base class
 
-	double Detector::Likelihood_Maximum_Gap(const DM_Particle& DM, DM_Distribution& DM_distr)
+	double DM_Detector::Likelihood_Maximum_Gap(const DM_Particle& DM, DM_Distribution& DM_distr)
 	{
 		// Interpolation spectrum = Spectrum(DM);
 		std::function<double(double)> spectrum = [this, &DM, &DM_distr] (double E)
@@ -41,7 +41,7 @@
 		return llh;
 	}
 
-	void Detector::Print_Summary_Base() const
+	void DM_Detector::Print_Summary_Base() const
 	{
 		std::cout 	<<std::endl
 					<<"----------------------------------------"<<std::endl
@@ -63,12 +63,12 @@
 		std::cout <<std::endl;
 	}
 
-	void Detector::Set_Flat_Efficiency(double eff)
+	void DM_Detector::Set_Flat_Efficiency(double eff)
 	{
 		flat_efficiency = eff;
 	}
 
-	double Detector::Likelihood(const DM_Particle& DM, DM_Distribution& DM_distr)
+	double DM_Detector::Likelihood(const DM_Particle& DM, DM_Distribution& DM_distr)
 	{
 		double llh;
 		if(statistical_analysis=="Poisson")
@@ -87,13 +87,13 @@
 		}
 		else
 		{
-			std::cerr<<"Error in Detector_Nucleus::Likelihood(): Analysis "<<statistical_analysis <<" not recognized."<<std::endl;
+			std::cerr<<"Error in DM_Detector_Nucleus::Likelihood(): Analysis "<<statistical_analysis <<" not recognized."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		return llh;
 	}
 
-	double Detector::Upper_Bound(DM_Particle& DM, DM_Distribution& DM_distr, double certainty)
+	double DM_Detector::Upper_Bound(DM_Particle& DM, DM_Distribution& DM_distr, double certainty)
 	{
 		double interaction_parameter_original = DM.Get_Interaction_Parameter();
 		
@@ -110,7 +110,7 @@
 		return pow(10.0, log10_upper_bound);
 	}
 
-	std::vector<std::vector<double>> Detector::Limit_Curve(DM_Particle& DM, DM_Distribution& DM_distr, double mMin,double mMax, int points, double certainty)
+	std::vector<std::vector<double>> DM_Detector::Limit_Curve(DM_Particle& DM, DM_Distribution& DM_distr, double mMin,double mMax, int points, double certainty)
 	{
 		double mOriginal = DM.mass;
 		double lowest_mass = Minimum_DM_Mass(DM, DM_distr);
@@ -130,13 +130,13 @@
 	}
 
 	//a) Poisson
-	void Detector::Set_Background(unsigned long int n)
+	void DM_Detector::Set_Background(unsigned long int n)
 	{
 		statistical_analysis = "Poisson";
 		background_events = n;
 	}
 
-	double Detector::Total_Number_of_Signals(const DM_Particle& DM, DM_Distribution& DM_distr)
+	double DM_Detector::Total_Number_of_Signals(const DM_Particle& DM, DM_Distribution& DM_distr)
 	{
 		std::function<double(double)> spectrum = [this, &DM, &DM_distr] (double E)
 		{
@@ -147,7 +147,7 @@
 	}
 
 	//b) Binned Poisson
-	void Detector::Define_Energy_Bins(double Emin, double Emax, int bins)
+	void DM_Detector::Define_Energy_Bins(double Emin, double Emax, int bins)
 	{
 		statistical_analysis = "Binned Poisson";
 		number_of_bins = bins;
@@ -155,11 +155,11 @@
 		if(binned_background.empty()) binned_background = std::vector<unsigned long int>(bins,0);
 	}
 
-	void Detector::Set_Background(std::vector<unsigned long int> Bi)
+	void DM_Detector::Set_Background(std::vector<unsigned long int> Bi)
 	{
 		if(number_of_bins > 0 && number_of_bins != Bi.size())
 		{
-			std::cerr<<"Error in Detector::Set_Background(std::vector<unsigned long int>): Length of the background vector is not equal to the number of bins."<<std::endl;
+			std::cerr<<"Error in DM_Detector::Set_Background(std::vector<unsigned long int>): Length of the background vector is not equal to the number of bins."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		else
@@ -172,16 +172,16 @@
 		
 	}
 
-	std::vector<double> Detector::Binned_Number_of_Signals(const DM_Particle& DM, DM_Distribution& DM_distr)
+	std::vector<double> DM_Detector::Binned_Number_of_Signals(const DM_Particle& DM, DM_Distribution& DM_distr)
 	{
 		if(statistical_analysis != "Binned Poisson" || number_of_bins == 0)
 		{
-			std::cerr<<"Error in Detector::Binned_Number_of_Signals(const DM_Particle&, DM_Distribution&): The analysis is not binned Poisson."<<std::endl;
+			std::cerr<<"Error in DM_Detector::Binned_Number_of_Signals(const DM_Particle&, DM_Distribution&): The analysis is not binned Poisson."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		else if(bins_energy.empty())
 		{
-			std::cerr<<"Error in Detector::Binned_Number_of_Signals(const DM_Particle&, DM_Distribution&): No energy bins defined."<<std::endl;
+			std::cerr<<"Error in DM_Detector::Binned_Number_of_Signals(const DM_Particle&, DM_Distribution&): No energy bins defined."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		else
@@ -203,7 +203,7 @@
 		}
 	}
 
-	void Detector::Use_Maximum_Gap(std::string filename_energy_data,double dim)
+	void DM_Detector::Use_Maximum_Gap(std::string filename_energy_data,double dim)
 	{
 		statistical_analysis = "Maximum-Gap";
 

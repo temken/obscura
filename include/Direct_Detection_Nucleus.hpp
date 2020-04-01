@@ -17,7 +17,7 @@
 	extern double dRdER_Nucleus(double ER, const DM_Particle& DM, DM_Distribution& DM_distr, const Element& target_element);
 
 //2. Nuclear recoil direct detection experiment
-	class Detector_Nucleus : public Detector
+	class DM_Detector_Nucleus : public DM_Detector
 	{
 		private:
 			//Target material
@@ -33,8 +33,8 @@
 			virtual double Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const override;
 		
 		public:
-			Detector_Nucleus();
-			Detector_Nucleus(std::string label, double expo,std::vector<Element> elements, double thr,double emax,std::vector<double> abund = {});
+			DM_Detector_Nucleus();
+			DM_Detector_Nucleus(std::string label, double expo,std::vector<Element> elements, double thr,double emax,std::vector<double> abund = {});
 
 			void Set_Resolution(double res);
 			void Import_Efficiency(std::string filename,double dim = keV);

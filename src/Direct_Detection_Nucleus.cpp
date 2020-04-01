@@ -38,15 +38,15 @@
 
 //2. Nuclear recoil direct detection experiment
 	//Constructors
-	Detector_Nucleus::Detector_Nucleus()
-	: Detector("Nuclear recoil experiment", kg*day,"Nuclei"), target_elements({Get_Element(54)}), relative_mass_fractions({1.0}), energy_resolution(0.0), using_efficiency_tables(false)
+	DM_Detector_Nucleus::DM_Detector_Nucleus()
+	: DM_Detector("Nuclear recoil experiment", kg*day,"Nuclei"), target_elements({Get_Element(54)}), relative_mass_fractions({1.0}), energy_resolution(0.0), using_efficiency_tables(false)
 	{
 		energy_threshold = 1.0*keV;
 		energy_max = 100.0*keV;
 	}
 
-	Detector_Nucleus::Detector_Nucleus(std::string label, double expo,std::vector<Element> elements, double thr, double emax,std::vector<double> abund)
-	: Detector(label, expo,"Nuclei"), target_elements(elements), energy_resolution(0.0), using_efficiency_tables(false)
+	DM_Detector_Nucleus::DM_Detector_Nucleus(std::string label, double expo,std::vector<Element> elements, double thr, double emax,std::vector<double> abund)
+	: DM_Detector(label, expo,"Nuclei"), target_elements(elements), energy_resolution(0.0), using_efficiency_tables(false)
 	{
 		energy_threshold = thr;
 		energy_max = emax;
@@ -66,7 +66,7 @@
 		else relative_mass_fractions = abund;
 	}
 	
-	double Detector_Nucleus::Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const
+	double DM_Detector_Nucleus::Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const
 	{
 		double vDM = DM_distr.v_domain[1];
 		double Emax = 0.0;
@@ -81,7 +81,7 @@
 		return Emax + 6.0 * energy_resolution;
 	}
 
-	double Detector_Nucleus::Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const
+	double DM_Detector_Nucleus::Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const
 	{
 		std::vector<double> aux;
 		double vMax = DM_distr.v_domain[1];
@@ -97,25 +97,25 @@
 		return *std::min_element(aux.begin(),aux.end());
 	}
 
-	void Detector_Nucleus::Set_Resolution(double res)
+	void DM_Detector_Nucleus::Set_Resolution(double res)
 	{
 		energy_resolution = res;
 	}
 
-	void Detector_Nucleus::Import_Efficiency(std::string filename,double dim)
+	void DM_Detector_Nucleus::Import_Efficiency(std::string filename,double dim)
 	{
 		using_efficiency_tables = true;
 		Interpolation eff(filename,dim);
 		efficiencies.push_back(eff);
 	}
 
-	void Detector_Nucleus::Import_Efficiency(std::vector<std::string> filenames,double dim)
+	void DM_Detector_Nucleus::Import_Efficiency(std::vector<std::string> filenames,double dim)
 	{
 		efficiencies.clear();
 		for(unsigned int i =0; i<filenames.size() ; i++) Import_Efficiency(filenames[i],dim);
 	}
 
-	double Detector_Nucleus::dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr)
+	double DM_Detector_Nucleus::dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr)
 	{
 
 		double dR = 0.0;
@@ -162,7 +162,7 @@
 		return dR;
 	}
 
-	double Detector_Nucleus::Minimum_DM_Speed(const DM_Particle& DM) const
+	double DM_Detector_Nucleus::Minimum_DM_Speed(const DM_Particle& DM) const
 	{
 		double Emin = energy_threshold - 2.0*energy_resolution;
 		double vcut = 1.0;
@@ -177,7 +177,7 @@
 		return vcut;
 	}
 
-	void Detector_Nucleus::Print_Summary() const
+	void DM_Detector_Nucleus::Print_Summary() const
 	{
 		Print_Summary_Base();
 		std::cout 	<<std::endl<<"Nuclear recoil experiment." <<std::endl

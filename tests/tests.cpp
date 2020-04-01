@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 	DM.Set_Low_Mass_Mode(true);
 	std::cout<<In_Units(DM.Sigma_Nucleus(Get_Element(54)[5], 300*km/sec),cm*cm)<<std::endl;
 	
-	Detector_Nucleus detector;
+	DM_Detector_Nucleus detector;
 	detector.Set_Background(100);
 	detector.Print_Summary();
 	std::cout<<detector.Upper_Bound(DM,SHM)/cm/cm<<std::endl;
