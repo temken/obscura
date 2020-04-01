@@ -153,8 +153,12 @@
 	void DM_Detector::Define_Energy_Bins(double Emin, double Emax, int bins)
 	{
 		statistical_analysis = "Binned Poisson";
+		energy_threshold = Emin;
+		energy_max = Emax;
+
 		number_of_bins = bins;
-		bin_energies = Linear_Space(Emin, Emax, bins+1);
+		bin_energies = Linear_Space(energy_threshold, energy_max, bins+1);
+		
 		if(bin_background.size() != number_of_bins) bin_background = std::vector<unsigned long int>(bins,0);
 		if(bin_efficiencies.size() != number_of_bins) bin_efficiencies = std::vector<double>(bins, 1.0);
 	}
