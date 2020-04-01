@@ -6,9 +6,16 @@
 # DM_Detection
 
 
+## Included experiments
+
+### Nuclear recoil experiments
+
+### Electron recoil experiments
 
 ## To-do
 
 - Nuclear form factor for SD interactions.
-- Add a list of included experiments with references
+- Add a list of included experiments with references and use defining experiment labels.
 - constraint plots for readme
+- Define vEarth by date in config file.
+- Binned events in cfg file for generic experiments
