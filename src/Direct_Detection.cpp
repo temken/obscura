@@ -25,7 +25,7 @@
 			double s = DM_Signals_Total(DM, DM_distr);
 			unsigned long int n = observed_events;
 			double b = expected_background;
-			if(b < 1.0e-4 && (n > s)) b = n-s;	// see eq.(29) of [arXiv:1705.07920]
+			// if(b < 1.0e-4 && (n > s)) b = n-s;	// see eq.(29) of [arXiv:1705.07920]
 			return Log_Likelihood_Poisson(s, n, b);
 		}
 		else if(statistical_analysis == "Binned Poisson")
@@ -33,10 +33,10 @@
 			std::vector<double> s = DM_Signals_Binned(DM, DM_distr);
 			std::vector<unsigned long int> n = bin_observed_events;
 			std::vector<double> b = bin_expected_background;
-			for(unsigned int i = 0; i < b.size(); i++)
-			{
-				if(b[i] < 1.0e-4 && (n[i] > s[i])) b[i] = n[i]-s[i]; // see eq.(29) of [arXiv:1705.07920]
-			}
+			// for(unsigned int i = 0; i < b.size(); i++)
+			// {
+			// 	if(b[i] < 1.0e-4 && (n[i] > s[i])) b[i] = n[i]-s[i]; // see eq.(29) of [arXiv:1705.07920]
+			// }
 			return Log_Likelihood_Poisson_Binned(s, n, b);
 		}
 		else if(statistical_analysis == "Maximum-Gap")

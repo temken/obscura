@@ -3,9 +3,11 @@ add_library(darkmatter STATIC
     Configuration.cpp
     Direct_Detection.cpp
     Direct_Detection_Nucleus.cpp
+    Direct_Detection_Semiconductor.cpp
     DM_Distribution.cpp
     DM_Particle.cpp
     DM_Particle_Standard.cpp
+    Target_Electron.cpp
     Target_Nucleus.cpp
 )
 
