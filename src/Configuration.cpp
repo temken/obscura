@@ -107,7 +107,7 @@ using namespace libconfig;
 			#endif
 			if (nError != 0) 
 			{
-				std::cerr <<"\nWarning in Configuration::Create_Result_Folder(int): The folder exists already, data will be overwritten."<< std::endl;
+				std::cerr <<"\nWarning in Configuration::Create_Result_Folder(int): The folder exists already, data will be overwritten."<< std::endl <<std::endl;
 			}
 		}
 	}
@@ -433,8 +433,8 @@ using namespace libconfig;
 				std::exit(EXIT_FAILURE);
 			}
 
-			double DD_threshold_nuclear, DD_Emax_nuclear, DD_exposure_nuclear,  DD_efficiency_nuclear;
-			unsigned int DD_background_nuclear;
+			double DD_threshold_nuclear, DD_Emax_nuclear, DD_exposure_nuclear,  DD_efficiency_nuclear, DD_expected_background_nuclear;
+			unsigned int DD_observed_events_nuclear;
 			try
 			{
 				DD_threshold_nuclear = config.lookup("DD_threshold_nuclear");
@@ -476,17 +476,26 @@ using namespace libconfig;
 			}
 			try
 			{
-				DD_background_nuclear = config.lookup("DD_background_nuclear");
+				DD_observed_events_nuclear = config.lookup("DD_observed_events_nuclear");
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
-				std::cerr << "No 'DD_background_nuclear' setting in configuration file." << std::endl;
+				std::cerr << "No 'DD_observed_events_nuclear' setting in configuration file." << std::endl;
 				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_expected_background_nuclear = config.lookup("DD_expected_background_nuclear");
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_expected_background_nuclear' setting in configuration file." << std::endl;
 			}
 			// DM_detector = new DM_Detector_Nucleus(DD_targets_nuclear, DD_exposure_nuclear, DD_threshold_nuclear, DD_Emax_nuclear,DD_targets_nuclear_abundances);
 			DM_detector = new DM_Detector_Nucleus("Nuclear Recoil", DD_exposure_nuclear, DD_targets_nuclear, DD_threshold_nuclear, DD_Emax_nuclear,DD_targets_nuclear_abundances);
 			DM_detector->Set_Flat_Efficiency(DD_efficiency_nuclear);
-			DM_detector->Set_Background(DD_background_nuclear);
+			DM_detector->Set_Observed_Events(DD_observed_events_nuclear);
+			DM_detector->Set_Expected_Background(DD_expected_background_nuclear);
 		}
 		else if(DD_experiment == "DAMIC")
 		{
@@ -494,10 +503,10 @@ using namespace libconfig;
 			std::vector<Element> DAMIC_targets = {Get_Element(14)};
 			double DAMIC_threshold = 0.55*keV;
 			double DAMIC_Emax = 7.0*keV;
-			unsigned int DAMIC_background = 106;
+			unsigned int DAMIC_observed_events = 106;
 			
 			DM_detector = new DM_Detector_Nucleus(DD_experiment, DAMIC_exposure, DAMIC_targets, DAMIC_threshold, DAMIC_Emax);
-			DM_detector->Set_Background(DAMIC_background);
+			DM_detector->Set_Observed_Events(DAMIC_observed_events);
 		}
 		else if(DD_experiment == "XENON1T")
 		{
@@ -506,10 +515,10 @@ using namespace libconfig;
 			double XENON1T_threshold = 5.0*keV;
 			double XENON1T_Emax = 40.0*keV;
 			double XENON1T_efficiency = 0.82;
-			unsigned int XENON1T_background = 0;
+			unsigned int XENON1T_observed_events = 0;
 			
 			DM_detector = new DM_Detector_Nucleus(DD_experiment, XENON1T_exposure, XENON1T_targets, XENON1T_threshold, XENON1T_Emax);
-			DM_detector->Set_Background(XENON1T_background);
+			DM_detector->Set_Observed_Events(XENON1T_observed_events);
 			DM_detector->Set_Flat_Efficiency(XENON1T_efficiency);
 		}
 		else if(DD_experiment == "CRESST-II")
@@ -607,7 +616,7 @@ using namespace libconfig;
 		else if(DD_experiment == "Semiconductor")
 		{
 			// std::string DD_target_semiconductor;
-			// unsigned int DD_threshold_semiconductor, DD_background_semiconductor;
+			// unsigned int DD_threshold_semiconductor, DD_observed_events_semiconductor;
 			// double DD_exposure_semiconductor, DD_efficiency_semiconductor;
 			// try
 			// {
@@ -648,17 +657,17 @@ using namespace libconfig;
 			// }
 			// try
 			// {
-			// 	DD_background_semiconductor = config.lookup("DD_background_semiconductor");
+			// 	DD_observed_events_semiconductor = config.lookup("DD_observed_events_semiconductor");
 			// }
 			// catch(const SettingNotFoundException &nfex)
 			// {
-			// 	std::cerr << "No 'DD_background_semiconductor' setting in configuration file." << std::endl;
+			// 	std::cerr << "No 'DD_observed_events_semiconductor' setting in configuration file." << std::endl;
 			// 	std::exit(EXIT_FAILURE);
 			// }
 			
 			// DM_detector = new Detector_Semiconductor(DD_experiment, DD_exposure_semiconductor, DD_target_semiconductor, DD_threshold_semiconductor);
 			// DM_detector->Set_Flat_Efficiency(DD_efficiency_semiconductor);
-			// DM_detector->Set_Background(DD_background_semiconductor);
+			// DM_detector->Set_Observed_Events(DD_observed_events_semiconductor);
 		}
 		else if(DD_experiment == "SENSEI-surface")
 		{

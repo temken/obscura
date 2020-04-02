@@ -183,7 +183,8 @@
 		{
 			Print_Summary_Base(MPI_rank);
 			std::cout 	<<std::endl<<"Nuclear recoil experiment." <<std::endl
-						<<"Nuclear targets:"	<<std::endl;
+						<<"Nuclear targets:"	<<std::endl
+						<<"\tNucl.\tabund."<<std::endl;
 			for(unsigned int i=0 ; i < target_elements.size() ; i++)
 			{
 				std::cout <<"\t" <<target_elements[i].name<<"\t"<<Round(100.0*relative_mass_fractions[i])<<"%"<<std::endl;

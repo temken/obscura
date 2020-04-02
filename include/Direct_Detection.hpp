@@ -25,43 +25,51 @@ class DM_Detector
 		std::string statistical_analysis;
 
 		//a) Poisson statistics
-		unsigned long int background_events;
+		unsigned long int observed_events;
+		double expected_background;
 
 		//b) Binned Poisson statistics
 		unsigned int number_of_bins;
 		std::vector<double> bin_energies;
 		std::vector<double> bin_efficiencies;
-		std::vector<unsigned long int> bin_background;
+		std::vector<unsigned long int> bin_observed_events;
+		std::vector<double> bin_expected_background;
 
 		//c) Maximum gap a'la Yellin
-		std::vector<double> background_energy_data_sorted;
-		double Likelihood_Maximum_Gap(const DM_Particle& DM, DM_Distribution& DM_distr);
+		std::vector<double> maximum_gap_energy_data;
+		double P_Value_Maximum_Gap(const DM_Particle& DM, DM_Distribution& DM_distr);
 
 		void Print_Summary_Base(int MPI_rank = 0) const;
 		
 	public:
 		std::string name;
-		DM_Detector() :  targets("base targets"), exposure(0.0), flat_efficiency(1.0), energy_threshold(0), energy_max(0), statistical_analysis("Poisson"), background_events(0), number_of_bins(0), name("base name") {};
-		DM_Detector(std::string label, double expo,std::string target_type) : targets(target_type), exposure(expo) , flat_efficiency(1.0), energy_threshold(0), energy_max(0), statistical_analysis("Poisson"), background_events(0), number_of_bins(0), name(label) {};
+		DM_Detector() :  targets("base targets"), exposure(0.0), flat_efficiency(1.0), energy_threshold(0), energy_max(0), statistical_analysis("Poisson"), observed_events(0), expected_background(0.0), number_of_bins(0), name("base name") {};
+		DM_Detector(std::string label, double expo,std::string target_type) : targets(target_type), exposure(expo) , flat_efficiency(1.0), energy_threshold(0), energy_max(0), statistical_analysis("Poisson"), observed_events(0), expected_background(0.0), number_of_bins(0), name(label) {};
 
 		void Set_Flat_Efficiency(double eff);
 
 		virtual double dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr) { return 0.0;};
 		virtual double Minimum_DM_Speed(const DM_Particle& DM) const {return 0.0;};
 
-		//Statistics for upper bounds
+		//Statistics
+		virtual double Log_Likelihood(const DM_Particle& DM, DM_Distribution& DM_distr);
 		virtual double Likelihood(const DM_Particle& DM, DM_Distribution& DM_distr);
-		virtual double Upper_Bound(DM_Particle& DM, DM_Distribution& DM_distr, double certainty = 0.95);
-		std::vector<std::vector<double>> Limit_Curve(DM_Particle& DM, DM_Distribution& DM_distr, double mMin,double mMax, int points = 50,double certainty = 0.95);
+		virtual double P_Value(const DM_Particle& DM, DM_Distribution& DM_distr);
+		virtual double Upper_Limit(DM_Particle& DM, DM_Distribution& DM_distr, double certainty = 0.95);
+		std::vector<std::vector<double>> Upper_Limit_Curve(DM_Particle& DM, DM_Distribution& DM_distr, double mMin,double mMax, int points = 50,double certainty = 0.95);
 		
 		//a) Poisson
-		void Set_Background(unsigned long int B);
-		virtual double Total_Number_of_Signals(const DM_Particle& DM, DM_Distribution& DM_distr);
+		void Set_Observed_Events(unsigned long int N, double B = 0.0);
+		void Set_Expected_Background(double B);
+		virtual double DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr);
+		
 		//b) Binned Poisson
-		void Define_Energy_Bins(double Emin, double Emax, int bins);
+		void Use_Energy_Bins(double Emin, double Emax, int bins);
+		void Set_Observed_Events(std::vector<unsigned long int> Ni);
 		void Set_Bin_Efficiencies(const std::vector<double>& eff);
-		void Set_Background(std::vector<unsigned long int> Bi);
-		virtual std::vector<double> Binned_Number_of_Signals(const DM_Particle& DM, DM_Distribution& DM_distr);
+		void Set_Expected_Background(const std::vector<double>& Bi);
+		virtual std::vector<double> DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr);
+		
 		//c) Maximum gap
 		void Use_Maximum_Gap(std::string filename_energy_data,double dim = keV);
 
