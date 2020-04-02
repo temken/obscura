@@ -6,6 +6,7 @@
 
 #include "DM_Particle_Standard.hpp"
 #include "Direct_Detection_Nucleus.hpp"
+#include "Direct_Detection_Semiconductor.hpp"
 
 using namespace libconfig;
 // Read in the configuration file
@@ -615,66 +616,79 @@ using namespace libconfig;
 		}
 		else if(DD_experiment == "Semiconductor")
 		{
-			// std::string DD_target_semiconductor;
-			// unsigned int DD_threshold_semiconductor, DD_observed_events_semiconductor;
-			// double DD_exposure_semiconductor, DD_efficiency_semiconductor;
-			// try
-			// {
-			// 	DD_target_semiconductor = config.lookup("DD_target_semiconductor").c_str();
-			// }
-			// catch(const SettingNotFoundException &nfex)
-			// {
-			// 	std::cerr << "No 'DD_target_semiconductor' setting in configuration file." << std::endl;
-			// 	std::exit(EXIT_FAILURE);
-			// }
-			// try
-			// {
-			// 	DD_threshold_semiconductor = config.lookup("DD_threshold_semiconductor");
-			// }
-			// catch(const SettingNotFoundException &nfex)
-			// {
-			// 	std::cerr << "No 'DD_threshold_semiconductor' setting in configuration file." << std::endl;
-			// 	std::exit(EXIT_FAILURE);
-			// }
-			// try
-			// {
-			// 	DD_exposure_semiconductor = config.lookup("DD_exposure_semiconductor");
-			// 	DD_exposure_semiconductor *= gram*yr;
-			// }
-			// catch(const SettingNotFoundException &nfex)
-			// {
-			// 	std::cerr << "No 'DD_exposure_semiconductor' setting in configuration file." << std::endl;
-			// 	std::exit(EXIT_FAILURE);
-			// }
-			// try
-			// {
-			// 	DD_efficiency_semiconductor = config.lookup("DD_efficiency_semiconductor");
-			// }
-			// catch(const SettingNotFoundException &nfex)
-			// {
-			// 	std::cerr << "No 'DD_efficiency_semiconductor' setting in configuration file." << std::endl;
-			// 	std::exit(EXIT_FAILURE);
-			// }
-			// try
-			// {
-			// 	DD_observed_events_semiconductor = config.lookup("DD_observed_events_semiconductor");
-			// }
-			// catch(const SettingNotFoundException &nfex)
-			// {
-			// 	std::cerr << "No 'DD_observed_events_semiconductor' setting in configuration file." << std::endl;
-			// 	std::exit(EXIT_FAILURE);
-			// }
+			std::string DD_target_semiconductor;
+			unsigned int DD_threshold_semiconductor, DD_observed_events_semiconductor;
+			double DD_exposure_semiconductor, DD_efficiency_semiconductor, DD_expected_background_semiconductor;
+			try
+			{
+				DD_target_semiconductor = config.lookup("DD_target_semiconductor").c_str();
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_target_semiconductor' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_threshold_semiconductor = config.lookup("DD_threshold_semiconductor");
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_threshold_semiconductor' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_exposure_semiconductor = config.lookup("DD_exposure_semiconductor");
+				DD_exposure_semiconductor *= gram*yr;
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_exposure_semiconductor' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_efficiency_semiconductor = config.lookup("DD_efficiency_semiconductor");
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_efficiency_semiconductor' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_observed_events_semiconductor = config.lookup("DD_observed_events_semiconductor");
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_observed_events_semiconductor' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_expected_background_semiconductor = config.lookup("DD_expected_background_semiconductor");
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_expected_background_semiconductor' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
 			
-			// DM_detector = new Detector_Semiconductor(DD_experiment, DD_exposure_semiconductor, DD_target_semiconductor, DD_threshold_semiconductor);
-			// DM_detector->Set_Flat_Efficiency(DD_efficiency_semiconductor);
-			// DM_detector->Set_Observed_Events(DD_observed_events_semiconductor);
+			DM_detector = new DM_Detector_Semiconductor("label", kg*yr, "Si", 1);
+			DM_detector = new DM_Detector_Semiconductor(DD_experiment, DD_exposure_semiconductor, DD_target_semiconductor, DD_threshold_semiconductor);
+			DM_detector->Set_Flat_Efficiency(DD_efficiency_semiconductor);
+			DM_detector->Set_Observed_Events(DD_observed_events_semiconductor);
+			DM_detector->Set_Expected_Background(DD_expected_background_semiconductor);
 		}
 		else if(DD_experiment == "SENSEI-surface")
 		{
-		// 		detector = new Detector_Semiconductor("Si",0.07*gram*456*minute,1);
-		// 		std::vector<double> eff={0.668,0.41,0.32,0.27,0.24};
-		// 		std::vector<unsigned long int> data ={140302,4676,131,1,0};
-		// 		dynamic_cast<Detector_Semiconductor*>(detector)->Set_Binned_Events(data,eff);
+				// double SENSEI_surface_exposure = 0.07*gram*456*minute;
+				// unsigned int SENSEI_surface_Q_threshold = 1;
+				// detector = new DM_Detector_Semiconductor(DD_experiment,SENSEI_surface_exposure, "Si" ,SENSEI_surface_Q_threshold);
+				// std::vector<double> eff={0.668,0.41,0.32,0.27,0.24};
+				// std::vector<unsigned long int> data ={140302,4676,131,1,0};
+				// dynamic_cast<Detector_Semiconductor*>(detector)->Set_Binned_Events(data,eff);
 		}
 		else if(DD_experiment == "SuperCDMS")
 		{

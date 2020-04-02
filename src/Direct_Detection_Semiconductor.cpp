@@ -2,7 +2,6 @@
 
 #include <cmath>
 
-
 //1. Event spectra and rates
 	//Minimal velocity
 	double vMinimal_Semiconductor(double q,double Ee,double mDM)
@@ -66,7 +65,7 @@
 
 
 //2. Electron recoil direct detection experiment with semiconductor target
-DM_Detector_Semiconductor::DM_Detector_Semiconductor(std::string label, std::string crys,double expo, unsigned int Q_min)
+DM_Detector_Semiconductor::DM_Detector_Semiconductor(std::string label, double expo, std::string crys, unsigned int Q_min)
 : DM_Detector(label, expo, "Electrons"), semiconductor_target(Semiconductor(crys)), Q_threshold(Q_min)
 {
 	energy_threshold= semiconductor_target.epsilon * (Q_threshold-1.0) + semiconductor_target.energy_gap;
@@ -99,7 +98,12 @@ double DM_Detector_Semiconductor::DM_Signals_Total(const DM_Particle& DM, DM_Dis
 
 std::vector<double> DM_Detector_Semiconductor::DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr)
 {
-	return {};
+	std::vector<double> signals;
+	for(int Q = Q_threshold; Q < Q_threshold + number_of_bins; Q++)
+	{
+		signals.push_back(dRdQ_Semiconductor(Q, DM, DM_distr, semiconductor_target));
+	}
+	return signals;
 }
 
 void DM_Detector_Semiconductor::Print_Summary(int MPI_rank) const

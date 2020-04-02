@@ -1,6 +1,9 @@
 #ifndef __Direct_Detection_Semiconductor_hpp_
 #define __Direct_Detection_Semiconductor_hpp_
 
+#include <string>
+#include <vector>
+
 #include "Direct_Detection.hpp"
 #include "DM_Distribution.hpp"
 #include "DM_Particle.hpp"
@@ -23,7 +26,7 @@
 			virtual double Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const override;
 		
 		public:
-			DM_Detector_Semiconductor(std::string label, std::string crys,double expo, unsigned int Q_min);
+			DM_Detector_Semiconductor(std::string label, double expo, std::string crys, unsigned int Q_min);
 
 			virtual double dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr) override;
 			virtual double Minimum_DM_Speed(const DM_Particle& DM) const override;
