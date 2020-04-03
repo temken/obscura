@@ -181,8 +181,8 @@
 		double xE=v_observer/v_0;
 		if(xMin > (xE+xEsc)) return 0.0;
 		else if(fabs(xMin-xE-xEsc) < 1e-8) return 0.0;
-		else if(xMin > fabs(xE-xEsc)) return pow(M_PI,1.5)*v_0*v_0/2.0/N_esc/xE*(erf(xEsc)-erf(xMin-xE)-2.0/sqrt(M_PI)*(xE+xEsc-xMin)*exp(-xEsc*xEsc));
-		else if (xEsc > xE) return pow(M_PI,1.5)*v_0*v_0/2.0/N_esc/xE*(erf(xMin+xE)-erf(xMin-xE)-4.0/sqrt(M_PI)*xE*exp(-xEsc*xEsc));
+		else if(xMin > fabs(xE-xEsc)) return 1.0/v_0/2.0/N_esc/xE*(erf(xEsc)-erf(xMin-xE)-2.0/sqrt(M_PI)*(xE+xEsc-xMin)*exp(-xEsc*xEsc));
+		else if (xEsc > xE) return 1.0/v_0/2.0/N_esc/xE*(erf(xMin+xE)-erf(xMin-xE)-4.0/sqrt(M_PI)*xE*exp(-xEsc*xEsc));
 		else return 1.0/v_0/xE;
 	}
 
