@@ -26,13 +26,14 @@
 			virtual double Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const override;
 		
 		public:
-			DM_Detector_Semiconductor(std::string label, double expo, std::string crys, unsigned int Q_min);
+			DM_Detector_Semiconductor(std::string label, double expo, std::string crys, unsigned int Q_thr);
 
 			virtual double dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr) override;
 			virtual double Minimum_DM_Speed(const DM_Particle& DM) const override;
 
 			virtual double DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr) override;
 
+			void Use_Q_Bins(unsigned int Q_thr, unsigned int N_bins = 0);
 			virtual std::vector<double> DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr) override;
 
 			virtual void Print_Summary(int MPI_rank = 0) const override;

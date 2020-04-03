@@ -11,17 +11,19 @@
 	{
 		protected:
 			std::string name;
+			std::vector<double> v_domain;
 			
 			void Print_Summary_Base(int MPI_rank = 0) const;
 			
 		public:
 			double DM_density;		//Local DM density
-			std::vector<double> v_domain;
 
 			//Constructors:
 			DM_Distribution();
 			DM_Distribution(std::string label, double rhoDM, double vMin, double vMax);
 
+			double Minimum_DM_Speed() const;
+			double Maximum_DM_Speed() const;
 			//Distribution functions
 			virtual double PDF_Velocity(Vector vel) const {return 0.0;};
 			virtual double PDF_Speed(double v) const {return 0.0;};

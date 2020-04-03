@@ -10,6 +10,7 @@
 		double dE,dq;
 		double M_cell;
 		double energy_gap, epsilon;
+		unsigned int Q_max;
 		double Crystal_Form_Factor[900][500];
 		Semiconductor(std::string target);
 	};

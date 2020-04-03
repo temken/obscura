@@ -9,6 +9,16 @@
 		return (Ee/q+q/2.0/mDM);
 	}
 
+	double Minimum_Electron_Energy(int Q, const Semiconductor& target)
+	{
+		return target.epsilon * (Q - 1) + target.energy_gap;
+	}
+
+	unsigned int Electron_Hole_Pairs(double Ee, const Semiconductor& target)
+	{
+		return std::floor( (Ee-target.energy_gap) / target.epsilon +1 );
+	}
+
 	double dRdEe_Semiconductor(double Ee, const DM_Particle& DM,DM_Distribution& DM_distr, const Semiconductor& target_crystal)
 	{
 		//Integrate by summing over the tabulated form factors
@@ -36,8 +46,8 @@
 	double dRdQ_Semiconductor(int Q, const DM_Particle& DM,DM_Distribution& DM_distr, const Semiconductor& target_crystal)
 	{
 		//Energy threshold
-		double Emin = target_crystal.epsilon * (Q-1) + target_crystal.energy_gap;
-		double Emax = target_crystal.epsilon * Q + target_crystal.energy_gap;
+		double Emin = Minimum_Electron_Energy(Q, target_crystal);
+		double Emax = Minimum_Electron_Energy(Q+1, target_crystal);
 		//Integrate over energies
 		double sum =0.0;
 		for(int Ei = (Emin/target_crystal.dE); Ei<500; Ei++)
@@ -52,10 +62,10 @@
 	double R_total_Semiconductor(int Qthreshold, const DM_Particle& DM,DM_Distribution& DM_distr, const Semiconductor& target_crystal)
 	{
 		//Energy threshold
-		double Ethr= target_crystal.epsilon * (Qthreshold-1) + target_crystal.energy_gap;
+		double E_min = Minimum_Electron_Energy(Qthreshold, target_crystal);
 		//Integrate over energies
 		double sum =0.0;
-		for(int Ei = (Ethr/target_crystal.dE); Ei<500; Ei++)
+		for(int Ei = (E_min /target_crystal.dE); Ei<500; Ei++)
 		{
 			double E = (Ei+1) * target_crystal.dE;
 			sum+=target_crystal.dE * dRdEe_Semiconductor(E, DM, DM_distr, target_crystal);
@@ -65,53 +75,69 @@
 
 
 //2. Electron recoil direct detection experiment with semiconductor target
-DM_Detector_Semiconductor::DM_Detector_Semiconductor(std::string label, double expo, std::string crys, unsigned int Q_min)
-: DM_Detector(label, expo, "Electrons"), semiconductor_target(Semiconductor(crys)), Q_threshold(Q_min)
-{
-	energy_threshold= semiconductor_target.epsilon * (Q_threshold-1.0) + semiconductor_target.energy_gap;
-}
-
-double DM_Detector_Semiconductor::Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const
-{
-	return DM.mass/2.0 * pow(DM_distr.v_domain[1],2.0);
-}
-
-double DM_Detector_Semiconductor::Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const
-{
-	return 2.0 * energy_threshold * pow(DM_distr.v_domain[1], -2.0);
-}
-
-double DM_Detector_Semiconductor::dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr)
-{
-	return flat_efficiency * dRdEe_Semiconductor(E, DM, DM_distr, semiconductor_target);
-}
-
-double DM_Detector_Semiconductor::Minimum_DM_Speed(const DM_Particle& DM) const
-{
-	return sqrt( 2.0 * energy_threshold / DM.mass);
-}
-
-double DM_Detector_Semiconductor::DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr)
-{
-	return exposure * flat_efficiency * R_total_Semiconductor(Q_threshold, DM, DM_distr, semiconductor_target);
-}
-
-std::vector<double> DM_Detector_Semiconductor::DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr)
-{
-	std::vector<double> signals;
-	for(int Q = Q_threshold; Q < Q_threshold + number_of_bins; Q++)
+	DM_Detector_Semiconductor::DM_Detector_Semiconductor(std::string label, double expo, std::string crys, unsigned int Q_thr)
+	: DM_Detector(label, expo, "Electrons"), semiconductor_target(Semiconductor(crys)), Q_threshold(Q_thr)
 	{
-		signals.push_back(dRdQ_Semiconductor(Q, DM, DM_distr, semiconductor_target));
+		energy_threshold= Minimum_Electron_Energy(Q_threshold, semiconductor_target);
+		energy_max= Minimum_Electron_Energy(semiconductor_target.Q_max, semiconductor_target);
 	}
-	return signals;
-}
 
-void DM_Detector_Semiconductor::Print_Summary(int MPI_rank) const
-{
-		Print_Summary_Base();
-		std::cout 	<<std::endl <<"Electron scattering experiment."<<std::endl
-					<<"Target:\t\t\t"	<<semiconductor_target.name <<" semiconductor"<<std::endl;
-		std::cout 	<<"eh pair threshold:\t"<<Q_threshold<<std::endl
-					<<"----------------------------------------"<<std::endl<<std::endl;
-}
+	double DM_Detector_Semiconductor::Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const
+	{
+		return DM.mass/2.0 * pow(DM_distr.Maximum_DM_Speed(),2.0);
+	}
+
+	double DM_Detector_Semiconductor::Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const
+	{
+		return 2.0 * energy_threshold * pow(DM_distr.Maximum_DM_Speed(), -2.0);
+	}
+
+	double DM_Detector_Semiconductor::dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr)
+	{
+		return flat_efficiency * dRdEe_Semiconductor(E, DM, DM_distr, semiconductor_target);
+	}
+
+	double DM_Detector_Semiconductor::Minimum_DM_Speed(const DM_Particle& DM) const
+	{
+		return sqrt( 2.0 * energy_threshold / DM.mass);
+	}
+
+	double DM_Detector_Semiconductor::DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr)
+	{
+		return exposure * flat_efficiency * R_total_Semiconductor(Q_threshold, DM, DM_distr, semiconductor_target);
+	}
+
+	void DM_Detector_Semiconductor::Use_Q_Bins(unsigned int Q_thr, unsigned int N_bins)
+	{
+		statistical_analysis = "Binned Poisson";
+		Q_threshold = Q_thr;
+		unsigned int Q_max = (N_bins == 0)? semiconductor_target.Q_max : N_bins - Q_threshold + 1;
+		number_of_bins = Q_max - Q_threshold + 1;
+		
+		energy_threshold = Minimum_Electron_Energy(Q_threshold, semiconductor_target);
+		energy_max = Minimum_Electron_Energy(Q_max, semiconductor_target);
+		
+		if(bin_observed_events.size() != number_of_bins)		bin_observed_events = std::vector<unsigned long int>(number_of_bins, 0);
+		if(bin_expected_background.size() != number_of_bins)	bin_expected_background = std::vector<double>(number_of_bins, 0.0);
+		if(bin_efficiencies.size() != number_of_bins) 			bin_efficiencies = std::vector<double>(number_of_bins,  1.0);
+	}
+
+	std::vector<double> DM_Detector_Semiconductor::DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr)
+	{
+		std::vector<double> signals;
+		for(int Q = Q_threshold; Q < Q_threshold + number_of_bins; Q++)
+		{
+			signals.push_back(exposure * flat_efficiency * dRdQ_Semiconductor(Q, DM, DM_distr, semiconductor_target));
+		}
+		return signals;
+	}
+
+	void DM_Detector_Semiconductor::Print_Summary(int MPI_rank) const
+	{
+			Print_Summary_Base();
+			std::cout 	<<std::endl <<"Electron scattering experiment."<<std::endl
+						<<"Target:\t\t\t"	<<semiconductor_target.name <<" semiconductor"<<std::endl;
+			std::cout 	<<"eh pair threshold:\t"<<Q_threshold<<std::endl
+						<<"----------------------------------------"<<std::endl<<std::endl;
+	}
 

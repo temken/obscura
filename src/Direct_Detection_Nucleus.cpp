@@ -68,7 +68,7 @@
 	
 	double DM_Detector_Nucleus::Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const
 	{
-		double vDM = DM_distr.v_domain[1];
+		double vDM = DM_distr.Maximum_DM_Speed();
 		double Emax = 0.0;
 		for(unsigned int i = 0 ; i<target_elements.size() ; i++)
 		{
@@ -84,7 +84,7 @@
 	double DM_Detector_Nucleus::Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const
 	{
 		std::vector<double> aux;
-		double vMax = DM_distr.v_domain[1];
+		double vMax = DM_distr.Maximum_DM_Speed();
 		for(unsigned int i = 0 ; i<target_elements.size() ; i++)
 		{
 			for(unsigned int j = 0 ; j < target_elements[i].Number_of_Isotopes() ; j++)

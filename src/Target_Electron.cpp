@@ -1,5 +1,6 @@
 #include "Target_Electron.hpp"
 
+#include <cmath>
 #include <fstream>
 
 //Headers from libphys library
@@ -17,6 +18,7 @@
 			epsilon = 3.6*eV;
 			M_cell = 2.0*28.08*mNucleon;
 			prefactor = 2.0*eV;
+			Q_max = std::floor( (50*eV - energy_gap + epsilon)/epsilon);
 		}
 		else if(name == "Ge")
 		{
@@ -24,6 +26,7 @@
 			epsilon = 2.9*eV;
 			M_cell = 2.0*72.6*mNucleon;
 			prefactor = 1.8*eV;
+			Q_max = std::floor( (50*eV - energy_gap + epsilon)/epsilon);
 		}
 		else
 		{

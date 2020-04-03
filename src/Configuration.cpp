@@ -139,7 +139,7 @@ using namespace libconfig;
 			std::cout<<"Direct detection constraints"<<std::endl
 						<<"\tCertainty level [%]:\t" <<100.0*constraints_certainty <<std::endl
 						<<"\tMass range [GeV]:\t[" <<constraints_mass_min<<","<<constraints_mass_max<<"]" <<std::endl
-						<<"\tMass steps:\t" <<constraints_masses <<std::endl
+						<<"\tMass steps:\t\t" <<constraints_masses <<std::endl
 						<<line<<std::endl<<std::endl;
 		}	
 	}
@@ -492,7 +492,6 @@ using namespace libconfig;
 			{
 				std::cerr << "No 'DD_expected_background_nuclear' setting in configuration file." << std::endl;
 			}
-			// DM_detector = new DM_Detector_Nucleus(DD_targets_nuclear, DD_exposure_nuclear, DD_threshold_nuclear, DD_Emax_nuclear,DD_targets_nuclear_abundances);
 			DM_detector = new DM_Detector_Nucleus("Nuclear Recoil", DD_exposure_nuclear, DD_targets_nuclear, DD_threshold_nuclear, DD_Emax_nuclear,DD_targets_nuclear_abundances);
 			DM_detector->Set_Flat_Efficiency(DD_efficiency_nuclear);
 			DM_detector->Set_Observed_Events(DD_observed_events_nuclear);
@@ -675,7 +674,6 @@ using namespace libconfig;
 				std::exit(EXIT_FAILURE);
 			}
 			
-			DM_detector = new DM_Detector_Semiconductor("label", kg*yr, "Si", 1);
 			DM_detector = new DM_Detector_Semiconductor(DD_experiment, DD_exposure_semiconductor, DD_target_semiconductor, DD_threshold_semiconductor);
 			DM_detector->Set_Flat_Efficiency(DD_efficiency_semiconductor);
 			DM_detector->Set_Observed_Events(DD_observed_events_semiconductor);
@@ -683,20 +681,44 @@ using namespace libconfig;
 		}
 		else if(DD_experiment == "SENSEI-surface")
 		{
-				// double SENSEI_surface_exposure = 0.07*gram*456*minute;
-				// unsigned int SENSEI_surface_Q_threshold = 1;
-				// detector = new DM_Detector_Semiconductor(DD_experiment,SENSEI_surface_exposure, "Si" ,SENSEI_surface_Q_threshold);
-				// std::vector<double> eff={0.668,0.41,0.32,0.27,0.24};
-				// std::vector<unsigned long int> data ={140302,4676,131,1,0};
-				// dynamic_cast<Detector_Semiconductor*>(detector)->Set_Binned_Events(data,eff);
+				double SENSEI_surface_exposure = 0.07*gram*456*minute;
+				unsigned int SENSEI_surface_Q_threshold = 1;
+				unsigned int SENSEI_surface_N_bins = 5;
+				std::vector<double> SENSEI_surface_efficiencies = {0.668,0.41,0.32,0.27,0.24};
+				std::vector<unsigned long int> SENSEI_surface_observed_events = {140302,4676,131,1,0};
+
+				DM_detector = new DM_Detector_Semiconductor(DD_experiment,SENSEI_surface_exposure, "Si" ,SENSEI_surface_Q_threshold);
+				dynamic_cast<DM_Detector_Semiconductor*>(DM_detector)->Use_Q_Bins(SENSEI_surface_Q_threshold, SENSEI_surface_N_bins);
+				DM_detector->Set_Observed_Events(SENSEI_surface_observed_events);
+				DM_detector->Set_Bin_Efficiencies(SENSEI_surface_efficiencies);
+		}
+		else if(DD_experiment == "SENSEI")
+		{
+				double SENSEI_exposure = 0.246*gram*day;
+				unsigned int SENSEI_Q_threshold = 1;
+				unsigned int SENSEI_N_bins = 3;
+				std::vector<double> SENSEI_efficiencies = {1.0,0.62,0.48};
+				std::vector<unsigned long int> SENSEI_observed_events = {8516,87,0};
+
+				DM_detector = new DM_Detector_Semiconductor(DD_experiment,SENSEI_exposure, "Si" ,SENSEI_Q_threshold);
+				dynamic_cast<DM_Detector_Semiconductor*>(DM_detector)->Use_Q_Bins(SENSEI_Q_threshold, SENSEI_N_bins);
+				DM_detector->Set_Observed_Events(SENSEI_observed_events);
+				DM_detector->Set_Bin_Efficiencies(SENSEI_efficiencies);
 		}
 		else if(DD_experiment == "SuperCDMS")
 		{
-		// 		detector = new Detector_Semiconductor("Si",0.487*gram*day,1);
-		// 		std::vector<double>  eff={0.88,0.91,0.91,0.91,0.91,0.91};
-		// 		std::vector<unsigned long int> data ={53000, 400, 74, 18, 7, 14};
-		// 		dynamic_cast<Detector_Semiconductor*>(detector)->Set_Binned_Events(data,eff);
-		// 		detector->Set_Flat_Efficiency(0.9545);
+			double SuperCDMS_exposure = 0.487*gram*day;
+			double SuperCDMS_flat_efficiency = 0.9545;
+			unsigned int SuperCDMS_Q_threshold = 1;
+			unsigned int SuperCDMS_N_bins = 6;
+			std::vector<double> SuperCDMS_efficiencies = {0.88,0.91,0.91,0.91,0.91,0.91};
+			std::vector<unsigned long int> SuperCDMS_observed_events = {53000, 400, 74, 18, 7, 14};
+
+			DM_detector = new DM_Detector_Semiconductor(DD_experiment,SuperCDMS_exposure, "Si" ,SuperCDMS_Q_threshold);
+			DM_detector->Set_Flat_Efficiency(SuperCDMS_flat_efficiency);
+			dynamic_cast<DM_Detector_Semiconductor*>(DM_detector)->Use_Q_Bins(SuperCDMS_Q_threshold, SuperCDMS_N_bins);
+			DM_detector->Set_Observed_Events(SuperCDMS_observed_events);
+			DM_detector->Set_Bin_Efficiencies(SuperCDMS_efficiencies);
 		}
 		else
 		{

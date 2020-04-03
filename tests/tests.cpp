@@ -11,9 +11,11 @@
 #include "Astronomy.hpp"
 #include "Configuration.hpp"
 #include "Target_Nucleus.hpp"
+#include "Target_Electron.hpp"
 #include "DM_Particle.hpp"
 #include "DM_Particle_Standard.hpp"
 #include "Direct_Detection_Nucleus.hpp"
+#include "Direct_Detection_Semiconductor.hpp"
 
 int main(int argc, char *argv[])
 {

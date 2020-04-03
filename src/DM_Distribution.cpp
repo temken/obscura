@@ -13,12 +13,21 @@
 //1. Abstract base class for DM distributions that can be used to compute direct detection recoil spectra.
 	//Constructors:
 	DM_Distribution::DM_Distribution()
-	: name("DM base distribution"), DM_density(0.0), v_domain(std::vector<double>{0.0, 1.0})
+	: name("DM base distribution"), v_domain(std::vector<double>{0.0, 1.0}), DM_density(0.0)
 	{
 	}
 	DM_Distribution::DM_Distribution(std::string label, double rhoDM, double vMin, double vMax)
-	: name(label), DM_density(rhoDM), v_domain(std::vector<double>{vMin, vMax})
+	: name(label), v_domain(std::vector<double>{vMin, vMax}), DM_density(rhoDM)
 	{
+	}
+
+	double DM_Distribution::Minimum_DM_Speed() const
+	{
+		return v_domain[0];
+	}
+	double DM_Distribution::Maximum_DM_Speed() const
+	{
+		return v_domain[1];
 	}
 
 	double DM_Distribution::CDF_Speed(double v) const
