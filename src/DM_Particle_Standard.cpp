@@ -40,16 +40,43 @@
 	}
 
 	//Primary interaction parameter, in this case the proton or neutron cross section
-	double DM_Particle_Standard::Get_Interaction_Parameter() const
+	double DM_Particle_Standard::Get_Interaction_Parameter(std::string target) const
 	{
-		if(fp_relative > 0.0) return Sigma_Proton();
-		else return Sigma_Neutron();
+		if(target == "Nuclei")
+		{
+			if(fp_relative > 0.0) return Sigma_Proton();
+			else return Sigma_Neutron();
+		}
+		else if(target == "Electrons")
+		{
+			return Sigma_Electron();
+		}
+		else
+		{
+			std::cerr <<"Error in DM_Particle_Standard::Get_Interaction_Parameter(std::string): Target "<<target <<" not recognized."<<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		
 	}
 
-	void DM_Particle_Standard::Set_Interaction_Parameter(double par)
+	void DM_Particle_Standard::Set_Interaction_Parameter(double par, std::string target)
 	{
-		if(fp_relative > 0.0) Set_Sigma_Proton(par);
-		else Set_Sigma_Neutron(par);
+		if(target == "Nuclei")
+		{
+			if(fp_relative > 0.0) Set_Sigma_Proton(par);
+			else Set_Sigma_Neutron(par);
+		}
+		else if(target == "Electrons")
+		{
+			Set_Sigma_Electron(par);
+		}
+		else
+		{
+			std::cerr <<"Error in DM_Particle_Standard::Get_Interaction_Parameter(std::string): Target "<<target <<" not recognized."<<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+
+		
 	}
 
 	void DM_Particle_Standard::Set_Sigma_Neutron(double sigma) 
@@ -215,7 +242,6 @@
 	double DM_Particle_SI::dSigma_dq2_Nucleus(double q,const Isotope& target,double vDM) const
 	{
 		double nuclear_form_factor = (low_mass)? 1.0 : target.Helm_Form_Factor(q);
-		if(std::isnan(nuclear_form_factor)) std::cout <<"\t"<<nuclear_form_factor<<std::endl;
 		return 1.0/4.0/M_PI/vDM/vDM*  pow((fp*target.Z + fn*(target.A-target.Z)),2.0) * FormFactor2_DM(q) * nuclear_form_factor * nuclear_form_factor;
 	}
 

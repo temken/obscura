@@ -306,7 +306,7 @@ using namespace libconfig;
 				std::cerr << "No 'DM_cross_section_nucleon' setting in configuration file." << std::endl;
 				std::exit(EXIT_FAILURE);
 			}
-			DM->Set_Interaction_Parameter(DM_cross_section_nucleon);
+			DM->Set_Interaction_Parameter(DM_cross_section_nucleon, "Nuclei");
 
 			double DM_cross_section_electron;
 			try

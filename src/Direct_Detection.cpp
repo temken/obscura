@@ -104,18 +104,18 @@
 
 	double DM_Detector::Upper_Limit(DM_Particle& DM, DM_Distribution& DM_distr, double certainty)
 	{
-		double interaction_parameter_original = DM.Get_Interaction_Parameter();
+		double interaction_parameter_original = DM.Get_Interaction_Parameter(targets);
 		
 		std::function<double(double)> func = [this, &DM, &DM_distr, certainty] (double log10_parameter)
 		{
 			double parameter = pow(10.0, log10_parameter);
-			DM.Set_Interaction_Parameter(parameter);
+			DM.Set_Interaction_Parameter(parameter, targets);
 			double p_value = P_Value(DM, DM_distr);
 			return p_value-(1.0-certainty);
 		};
 		double log10_upper_bound = Find_Root(func, -30.0, 10.0, 1.0e-6);
 
-		DM.Set_Interaction_Parameter(interaction_parameter_original);
+		DM.Set_Interaction_Parameter(interaction_parameter_original, targets);
 		return pow(10.0, log10_upper_bound);
 	}
 
@@ -123,15 +123,14 @@
 	{
 		double mOriginal = DM.mass;
 		double lowest_mass = Minimum_DM_Mass(DM, DM_distr);
-		std::vector<std::vector<double>> limit(points,std::vector<double>(2,0.0));
+		std::vector<std::vector<double>> limit;
 		std::vector<double> masses = Log_Space(mMin,mMax,points);
 
 		for(unsigned int i = 0; i < masses.size(); i++)
 		{
 			if(masses[i] < lowest_mass) continue;
 			DM.Set_Mass(masses[i]);
-			limit[i][0] = masses[i];
-			limit[i][1] = Upper_Limit(DM, DM_distr, certainty);
+			limit.push_back(std::vector<double>{masses[i], Upper_Limit(DM, DM_distr, certainty)});
 		}
 
 		DM.Set_Mass(mOriginal);
