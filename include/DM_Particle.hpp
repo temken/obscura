@@ -27,8 +27,8 @@ class DM_Particle
 		void Set_Fractional_Density(double f);
 
 		//Primary interaction parameter, such as a coupling constant or cross section
-		virtual double Get_Interaction_Parameter(std::string target = "Nuclei") const {return 0.0;};
-		virtual void Set_Interaction_Parameter(double par, std::string target = "Nuclei") {};
+		virtual double Get_Interaction_Parameter(std::string target) const {return 0.0;};
+		virtual void Set_Interaction_Parameter(double par, std::string target) {};
 		
 		virtual void Set_Sigma_Proton(double sigma) {};
 		virtual void Set_Sigma_Neutron(double sigma) {};

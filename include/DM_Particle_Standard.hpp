@@ -34,8 +34,8 @@ class DM_Particle_Standard : public DM_Particle
 		DM_Particle_Standard(double mDM,double pre);
 
 		//Primary interaction parameter, in this case the proton or neutron cross section
-		virtual double Get_Interaction_Parameter(std::string target = "Nuclei") const override;
-		virtual void Set_Interaction_Parameter(double par, std::string target = "Nuclei") override;
+		virtual double Get_Interaction_Parameter(std::string target) const override;
+		virtual void Set_Interaction_Parameter(double par, std::string target) override;
 
 		virtual void Set_Sigma_Proton(double sigma) override;
 		virtual void Set_Sigma_Neutron(double sigma) override;
