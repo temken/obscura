@@ -36,6 +36,9 @@ int main(int argc, char *argv[])
 	for(int i = 0; i < exclusion_limits.size(); i++)
 	{
 		std::cout <<i+1 <<")\t" <<Round(exclusion_limits[i][0]) <<" GeV\t" <<Round(In_Units(exclusion_limits[i][1],cm*cm)) <<" cm^2" <<std::endl;
+		cfg.DM->Set_Mass(exclusion_limits[i][0]);
+		cfg.DM->Set_Interaction_Parameter(exclusion_limits[i][1],"Nuclei");
+		std::cout<<"N = "<<cfg.DM_detector->DM_Signals_Total(*(cfg.DM),*(cfg.DM_distr))<<std::endl;
 	}
 	
 

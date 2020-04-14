@@ -54,6 +54,7 @@
 		{
 			double E = (Ei+1) * target_crystal.dE;
 			if(E > Emax) break;
+			// std::cout <<"\tAdd " <<Ei<<"\t"<<E/eV <<" between ["<<Emin/eV<<","<<Emax/eV<<"]"<<std::endl;
 			sum+=target_crystal.dE * dRdEe_Semiconductor(E, DM, DM_distr, target_crystal);
 		}
 		return sum;
@@ -127,7 +128,7 @@
 		std::vector<double> signals;
 		for(int Q = Q_threshold; Q < Q_threshold + number_of_bins; Q++)
 		{
-			signals.push_back(exposure * flat_efficiency * dRdQ_Semiconductor(Q, DM, DM_distr, semiconductor_target));
+			signals.push_back(exposure * flat_efficiency * bin_efficiencies[Q-1] * dRdQ_Semiconductor(Q, DM, DM_distr, semiconductor_target));
 		}
 		return signals;
 	}

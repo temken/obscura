@@ -38,7 +38,7 @@
 			f.open("../data/Semiconductors/C."+target+"137.dat");
 			//Prefactors:
 			double wk = 2.0/137.0;
-			for(int Ei=1;Ei<=500;Ei++)
+			for(int Ei = 1; Ei <= 500; Ei++)
 			{
 				for(int qi=1;qi<=900;qi++)
 				{
