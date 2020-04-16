@@ -20,9 +20,8 @@
 	};
 
 //3. Bound electrons in isolated atoms
-	class Atomic_Electron
+	struct Atomic_Electron
 	{
-		private:
 			// Ionization form factor tables
 			double k_min,k_max,q_min,q_max;
 			double dlogk, dlogq;
@@ -31,7 +30,6 @@
 			std::vector<double> q_Grid={};
 			std::vector< std::vector<double>> Form_Factor_Tables;
 
-		public:
 			unsigned int n,l;
 			std::string name;
 			double binding_energy;
@@ -40,7 +38,10 @@
 
 			Atomic_Electron(std::string element,double A, int N, int L, double Ebinding, double kMin,double kMax, double qMin, double qMax, unsigned int neSecondary = 0);
 
-			double Ionization_Form_Factor(double q, double E) const;		
+			//Squared ionization form factor.
+			double Ionization_Form_Factor(double q, double E) const;
+
+			void Print_Summary(unsigned int MPI_rank = 0) const;		
 	};
 
 	struct Atom
@@ -57,7 +58,7 @@
 		std::vector<Atomic_Electron> electrons;
 
 		//Constructor
-		Atom(std::string element_name, int z, double a, std::vector<Atomic_Electron> shells = {});
+		Atom(std::string element_name, int z, double a, double w, std::vector<Atomic_Electron> shells = {});
 
 		double Lowest_Binding_Energy() const;
 
@@ -73,7 +74,7 @@
 			return electrons[i];
 		}
 
-		void Print_Summary(unsigned int MPI_rank = 0);
+		void Print_Summary(unsigned int MPI_rank = 0) const;
 
 	};
 
