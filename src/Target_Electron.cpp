@@ -7,7 +7,14 @@
 #include "Natural_Units.hpp"
 #include "Utilities.hpp"
 
-//1. Semiconductor crystal target
+
+//1. Kinematic functions
+	double vMinimal_Electrons(double q,double Delta_E, double mDM)
+	{
+		return (Delta_E / q + q / 2.0 / mDM);
+	}
+	
+//2. Semiconductor crystal target
 	Semiconductor::Semiconductor(std::string target)
 	: name(target) , dE(0.1*eV) , dq(0.02*aEM*mElectron) 
 	{
@@ -49,7 +56,7 @@
 			f.close();
 	}
 
-//2. Bound electrons in isolated atoms
+//3. Bound electrons in isolated atoms
 	std::string s_names[5] = {"s","p","d","f","g"};
 
 	Atomic_Electron::Atomic_Electron(std::string element,double A, int N, int L,double Ebinding, double kMin,double kMax, double qMin, double qMax, unsigned int neSecondary)

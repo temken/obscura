@@ -3,11 +3,6 @@
 #include <cmath>
 
 //1. Event spectra and rates
-	//Minimal velocity
-	double vMinimal_Semiconductor(double q,double Ee,double mDM)
-	{
-		return (Ee/q+q/2.0/mDM);
-	}
 
 	double Minimum_Electron_Energy(int Q, const Semiconductor& target)
 	{
@@ -36,7 +31,7 @@
 			for(int qi=0; qi<900; qi++) 
 			{
 				double q = (qi+1) * target_crystal.dq;
-				sum += target_crystal.dq / q / q * DM_distr.Eta_Function(vMinimal_Semiconductor(q,Ee,DM.mass)) * target_crystal.Crystal_Form_Factor[qi][Ei] * 4.0*vDM*vDM * DM.dSigma_dq2_Electron(q,vDM);
+				sum += target_crystal.dq / q / q * DM_distr.Eta_Function(vMinimal_Electrons(q,Ee,DM.mass)) * target_crystal.Crystal_Form_Factor[qi][Ei] * 4.0*vDM*vDM * DM.dSigma_dq2_Electron(q,vDM);
 			}
 			return prefactor * sum;
 		}

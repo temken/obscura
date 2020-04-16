@@ -8,10 +8,20 @@
 #include "Numerics.hpp"
 #include "Natural_Units.hpp"
 
-//Auxiliary list with element names
+//1. Kinematic functions
+	double vMinimal_Nucleus(double ER, double mDM, double mNucleus)
+	{
+		return sqrt(mNucleus*ER/2.0/pow(Reduced_Mass(mDM,mNucleus),2.0));
+	}
+	double Maximum_Nuclear_Recoil_Energy(double vDM, double mDM, double mNucleus)
+	{
+		return 2.0*vDM*vDM*pow(Reduced_Mass(mDM,mNucleus),2.0)/mNucleus;
+	}
+
+//2. Class for nuclear isotopes.
+	//Auxiliary list with element names
 	std::vector<std::string> ElementNames={"H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg","Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr","Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br","Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd","Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La","Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er","Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au","Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th","Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md","No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn","Nh", "Fl", "Mc", "Lv", "Ts", "Og"};
 
-//Class for isotopes
 	Isotope::Isotope()
 	: Z(1), A(1), abundance(1.0), spin(0.5), sp(0.5), sn(0)
 	{
@@ -44,7 +54,7 @@
 
 	
 
-//Class for elements containing all isotopes occuring in nature
+//3. Class for elements containing all isotopes occuring in nature
 	Element::Element()
 	{
 		isotopes = {};
@@ -93,6 +103,7 @@
 		std::cout <<"Total:\t\t"<<Average_Nuclear_Mass()/mNucleon<<"\t"<<total<<std::endl<<std::endl;
 	}
 
+//4. Nuclear data
 	//Import the nuclear data from a file
 	std::vector<Element> Elements;
 	void Import_Nuclear_Data()

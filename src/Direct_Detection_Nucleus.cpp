@@ -9,15 +9,6 @@
 #include "Utilities.hpp"
 
 //1. Theoretical nuclear recoil spectrum
-	double vMinimal_Nucleus(double ER, double mDM, double mNucleus)
-	{
-		return sqrt(mNucleus*ER/2.0/pow(Reduced_Mass(mDM,mNucleus),2.0));
-	}
-	double Maximum_Nuclear_Recoil_Energy(double vDM, double mDM, double mNucleus)
-	{
-		return 2.0*vDM*vDM*pow(Reduced_Mass(mDM,mNucleus),2.0)/mNucleus;
-	}
-
 	double dRdER_Nucleus(double ER, const DM_Particle& DM, DM_Distribution& DM_distr, const Isotope& target_isotope)
 	{
 		double vMin = vMinimal_Nucleus(ER, DM.mass, target_isotope.mass);

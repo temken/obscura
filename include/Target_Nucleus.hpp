@@ -4,62 +4,68 @@
 #include <vector>
 #include <string>
 
-struct Isotope
-{
-		unsigned int Z,A;
-		double abundance;
-		double spin;
-		double sp,sn;
-		
-		std::string name;
-		double mass;
+//1. Kinematic functions
+	extern double vMinimal_Nucleus(double ER, double mDM, double mNucleus);
+	extern double Maximum_Nuclear_Recoil_Energy(double vDM, double mDM, double mNucleus);
 
-		Isotope();
-		Isotope(unsigned int z, unsigned int a,double abund=1.0,double Spin=0.0,double Sp=0.0,double Sn=0.0);
+//2. Class for nuclear isotopes.
+	struct Isotope
+	{
+			unsigned int Z,A;
+			double abundance;
+			double spin;
+			double sp,sn;
+			
+			std::string name;
+			double mass;
 
-		double Thomas_Fermi_Radius() const;
+			Isotope();
+			Isotope(unsigned int z, unsigned int a,double abund=1.0,double Spin=0.0,double Sp=0.0,double Sn=0.0);
 
-		//Nuclear form factor for SI interactions
-		double Helm_Form_Factor(double q) const;
+			double Thomas_Fermi_Radius() const;
 
-		//Nuclear form factor for SD interactions
-		// to do
-};
+			//Nuclear form factor for SI interactions
+			double Helm_Form_Factor(double q) const;
 
-class Element
-{
-	private:
-		std::vector<Isotope> isotopes;
+			//Nuclear form factor for SD interactions
+			// to do
+	};
 
-	public:
-		std::string name;
+//3. Class for elements containing all isotopes occuring in nature
+	class Element
+	{
+		private:
+			std::vector<Isotope> isotopes;
 
-		Element();
-		Element(std::vector<Isotope>& iso);
-		Element(const Isotope& iso);
+		public:
+			std::string name;
 
-		unsigned int Number_of_Isotopes() const;
+			Element();
+			Element(std::vector<Isotope>& iso);
+			Element(const Isotope& iso);
 
-		void Add_Isotope(Isotope& isotope);
+			unsigned int Number_of_Isotopes() const;
 
-		Isotope& operator[](int i) 
-		{	
-			return isotopes[i];
-		}
-		const Isotope& operator[](int i) const 
-		{
-			return isotopes[i];
-		}
+			void Add_Isotope(Isotope& isotope);
 
-		double Average_Nuclear_Mass() const;
+			Isotope& operator[](int i) 
+			{	
+				return isotopes[i];
+			}
+			const Isotope& operator[](int i) const 
+			{
+				return isotopes[i];
+			}
 
-		void Print_Summary() const;
-};
+			double Average_Nuclear_Mass() const;
 
-extern void Import_Nuclear_Data();
+			void Print_Summary() const;
+	};
 
-extern std::vector<Element> Elements;
-extern Element Get_Element(int Z);
-extern Element Get_Element(std::string name);
+//4. Nuclear data
+	extern void Import_Nuclear_Data();
+	extern std::vector<Element> Elements;
+	extern Element Get_Element(int Z);
+	extern Element Get_Element(std::string name);
 
 #endif

@@ -4,7 +4,10 @@
 #include <string>
 #include <vector>
 
-//1. Semiconductor crystal target
+//1. Kinematic functions
+	extern double vMinimal_Electrons(double q,double Delta_E, double mDM);
+	
+//2. Semiconductor crystal target
 	struct Semiconductor 
 	{
 		std::string name;
@@ -16,8 +19,7 @@
 		Semiconductor(std::string target);
 	};
 
-//2. Bound electrons in isolated atoms
-
+//3. Bound electrons in isolated atoms
 	class Atomic_Electron
 	{
 		private:
