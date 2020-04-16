@@ -2,6 +2,7 @@ add_library(darkmatter STATIC
     Astronomy.cpp
     Configuration.cpp
     Direct_Detection.cpp
+    Direct_Detection_Ionization.cpp
     Direct_Detection_Nucleus.cpp
     Direct_Detection_Semiconductor.cpp
     DM_Distribution.cpp

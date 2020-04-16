@@ -40,7 +40,11 @@ int main(int argc, char *argv[])
 		cfg.DM->Set_Interaction_Parameter(exclusion_limits[i][1],"Nuclei");
 		std::cout<<"N = "<<cfg.DM_detector->DM_Signals_Total(*(cfg.DM),*(cfg.DM_distr))<<std::endl;
 	}
-	
+
+ 	Atom a = Import_Ionization_Form_Factors("Xe");
+ 	a.Print_Summary();
+ 	double k =0.1*keV;
+ 	std::cout<<a[0].Ionization_Form_Factor(400*keV, k*k/2/mElectron)<<std::endl;
 
 	//Ending time and computing time
 	auto time_end = std::chrono::system_clock::now();

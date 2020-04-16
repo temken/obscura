@@ -59,8 +59,8 @@
 //3. Bound electrons in isolated atoms
 	std::string s_names[5] = {"s","p","d","f","g"};
 
-	Atomic_Electron::Atomic_Electron(std::string element,double A, int N, int L,double Ebinding, double kMin,double kMax, double qMin, double qMax, unsigned int neSecondary)
-	: k_min(kMin), k_max(kMax), q_min(qMin), q_max(qMax), n(N), l(L), binding_energy(Ebinding), nucleus_mass(A * mNucleon), number_of_secondary_electrons(neSecondary)
+	Atomic_Electron::Atomic_Electron(std::string element,double A, int N, int L,double Ebinding, double kMin,double kMax, double qMin, double qMax, double w, unsigned int neSecondary)
+	: k_min(kMin), k_max(kMax), q_min(qMin), q_max(qMax), n(N), l(L), binding_energy(Ebinding), nucleus_mass(A * mNucleon), W(w), number_of_secondary_electrons(neSecondary)
 	{
 		name = element + "_" + std::to_string(n) + s_names[l];
 		//Import the table.
@@ -167,11 +167,11 @@
 			// Atomic_Electron Xe_3s("Xe", A, 3, 0, 1093.24*eV, k_min, k_max, q_min, q_max);
 			// Atomic_Electron Xe_3p("Xe", A, 3, 1, 958.43*eV, k_min, k_max, q_min, q_max);
 			// Atomic_Electron Xe_3d("Xe", A, 3, 2, 710.73*eV, k_min, k_max, q_min, q_max);
-			Atomic_Electron Xe_4s("Xe", A, 4, 0, 213.781*eV, k_min, k_max, q_min, q_max,3);
-			Atomic_Electron Xe_4p("Xe", A, 4, 1, 163.495*eV, k_min, k_max, q_min, q_max,6);
-			Atomic_Electron Xe_4d("Xe", A, 4, 2, 75.5897*eV, k_min, k_max, q_min, q_max,4);
-			Atomic_Electron Xe_5s("Xe", A, 5, 0, 25.6986*eV, k_min, k_max, q_min, q_max,0);
-			Atomic_Electron Xe_5p("Xe", A, 5, 1, 12.4433*eV, k_min, k_max, q_min, q_max,0);
+			Atomic_Electron Xe_4s("Xe", A, 4, 0, 213.781*eV, k_min, k_max, q_min, q_max, W, 3);
+			Atomic_Electron Xe_4p("Xe", A, 4, 1, 163.495*eV, k_min, k_max, q_min, q_max, W, 6);
+			Atomic_Electron Xe_4d("Xe", A, 4, 2, 75.5897*eV, k_min, k_max, q_min, q_max, W, 4);
+			Atomic_Electron Xe_5s("Xe", A, 5, 0, 25.6986*eV, k_min, k_max, q_min, q_max, W, 0);
+			Atomic_Electron Xe_5p("Xe", A, 5, 1, 12.4433*eV, k_min, k_max, q_min, q_max, W, 0);
 			return Atom("Xenon",Z,A,W,{Xe_5p,Xe_5s,Xe_4d,Xe_4p,Xe_4s});
 		}
 		else if (element == "Ar" || element == "Argon")
@@ -184,11 +184,11 @@
 			double q_max = 1000.0 * keV;
 			double k_min = 0.1 * keV;
 			double k_max = 100.0 * keV;
-			Atomic_Electron Ar_1s("Ar", A, 1, 0, 3227.55*eV, k_min, k_max, q_min, q_max,0);
-			Atomic_Electron Ar_2s("Ar", A, 2, 0, 335.303*eV, k_min, k_max, q_min, q_max,0);
-			Atomic_Electron Ar_2p("Ar", A, 2, 1, 260.453*eV, k_min, k_max, q_min, q_max,0);
-			Atomic_Electron Ar_3s("Ar", A, 3, 0, 34.7585*eV, k_min, k_max, q_min, q_max,0);
-			Atomic_Electron Ar_3p("Ar", A, 3, 1, 16.0824*eV, k_min, k_max, q_min, q_max,0);
+			Atomic_Electron Ar_1s("Ar", A, 1, 0, 3227.55*eV, k_min, k_max, q_min, q_max, W, 0);
+			Atomic_Electron Ar_2s("Ar", A, 2, 0, 335.303*eV, k_min, k_max, q_min, q_max, W, 0);
+			Atomic_Electron Ar_2p("Ar", A, 2, 1, 260.453*eV, k_min, k_max, q_min, q_max, W, 0);
+			Atomic_Electron Ar_3s("Ar", A, 3, 0, 34.7585*eV, k_min, k_max, q_min, q_max, W, 0);
+			Atomic_Electron Ar_3p("Ar", A, 3, 1, 16.0824*eV, k_min, k_max, q_min, q_max, W, 0);
 			return Atom("Argon",Z,A,W,{Ar_3p,Ar_3s,Ar_2p,Ar_2s,Ar_1s});
 		}
 		else

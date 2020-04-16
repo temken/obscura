@@ -34,9 +34,10 @@
 			std::string name;
 			double binding_energy;
 			double nucleus_mass;
+			double W;
 			unsigned int number_of_secondary_electrons;
 
-			Atomic_Electron(std::string element,double A, int N, int L, double Ebinding, double kMin,double kMax, double qMin, double qMax, unsigned int neSecondary = 0);
+			Atomic_Electron(std::string element,double A, int N, int L, double Ebinding, double kMin,double kMax, double qMin, double qMax, double w, unsigned int neSecondary = 0);
 
 			//Squared ionization form factor.
 			double Ionization_Form_Factor(double q, double E) const;
