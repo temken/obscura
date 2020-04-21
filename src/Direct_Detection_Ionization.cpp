@@ -13,8 +13,8 @@
 		double vDM = 1.0e-3; 	//cancels in the product with dSigma_dq^2 
 								//-> THIS NEEDS TO BE UPDATED WHEN IMPLEMENTING VELOCITY DEPENDING CROSS SECTIONS
 		
-		// Integration over q
-		// (a) Using numerical integration function.
+		// // Integration over q
+		// // (a) Using numerical integration function.
 		// double vMax = DM_distr.Maximum_DM_Speed();
 		// double qMin = DM.mass * vMax - sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
 		// double qMax = DM.mass * vMax + sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
@@ -31,23 +31,27 @@
 		// (b) Simply summing up the table entries
 		double integral = 0.0;
 		double k = sqrt(2.0 * mElectron * Ee);
-		int ki = std::floor(log10(k / shell.k_min) / shell.dlogk);
-
-		// double vMax = DM_distr.Maximum_DM_Speed();
-		// double qMin = DM.mass * vMax - sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
-		// double qMax = DM.mass * vMax + sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
-		// int qi_min = std::floor(log10(qMin / shell.q_min) / shell.dlogq);
-		// int qi_max = std::floor(log10(qMax / shell.q_min) / shell.dlogq);
-		// if(qi_max > shell.Nq) qi_max = shell.Nq;
-
-		int qi_min = 0;
-		int qi_max = shell.Nq;
+		int ki = std::round(log10(k / shell.k_min) / shell.dlogk);
+		if(ki >= shell.Nk || ki < 0) 
+		{
+ 			std::cerr <<"Warning in dRdEe_Ionization(double,const DM_Particle&,DM_Distribution&,const Atomic_Electron&): Index ki = "<<ki<<" out of bounds. Function returns 0.0."<<std::endl;
+ 			return 0.0;
+		}
+		double vMax = DM_distr.Maximum_DM_Speed();
+		double qMin = DM.mass * vMax - sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
+		double qMax = DM.mass * vMax + sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
+		int qi_min = std::floor(log10(qMin / shell.q_min) / shell.dlogq);
+		int qi_max = std::floor(log10(qMax / shell.q_min) / shell.dlogq);
+		if(qi_max > shell.Nq) qi_max = shell.Nq;
+		// int qi_min = 0;
+		// int qi_max = shell.Nq;
 		for(int qi = qi_min; qi < qi_max; qi++)
 		{
 			double q = shell.q_Grid[qi];
 			double vMin = vMinimal_Electrons(q, shell.binding_energy + Ee, DM.mass);
-			integral += shell.dlogq * q * q * DM.dSigma_dq2_Electron(q,vDM) * vDM * vDM * DM_distr.Eta_Function(vMin) * shell.Form_Factor_Tables[ki][qi];//shell.Ionization_Form_Factor(q,Ee);
+			integral += log(10.0) * shell.dlogq * q * q * DM.dSigma_dq2_Electron(q,vDM) * vDM * vDM * DM_distr.Eta_Function(vMin) *shell.Ionization_Form_Factor(q,Ee);//* shell.Ionization_Form_Factor[ki][qi];//
 		}
+
 		return prefactor * integral;
 	}
 
@@ -77,7 +81,7 @@
 		{
 			double k = shell.k_Grid[ki];
 			double Ee = k*k / 2.0 / mElectron;
-			sum += shell.dlogk * k*k/mElectron * PDF_ne(ne,Ee,shell) * dRdEe_Ionization(Ee, DM, DM_distr, shell);
+			sum += log(10.0) * shell.dlogk * k*k/mElectron * PDF_ne(ne,Ee,shell) * dRdEe_Ionization(Ee, DM, DM_distr, shell);
 		}
 		return sum;
 	}
@@ -176,7 +180,7 @@
 				{
 					double k = target_atom[i].k_Grid[ki];
 					double Ee = k*k / 2.0 / mElectron;
-					R += target_atom[i].dlogk * k*k/mElectron * dRdEe_Ionization(Ee, DM, DM_distr, target_atom[i]);
+					R += log(10.0) * target_atom[i].dlogk * k*k/mElectron * dRdEe_Ionization(Ee, DM, DM_distr, target_atom[i]);
 				}
 			}
 			N = exposure * R;
