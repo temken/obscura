@@ -229,7 +229,6 @@
 		}
 		else
 		{
-			// Interpolation spectrum = Spectrum(DM);
 			std::function<double(double)> spectrum = [this, &DM, &DM_distr] (double E)
 			{
 				return dRdE(E, DM, DM_distr);
