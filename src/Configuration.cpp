@@ -6,6 +6,7 @@
 
 #include "DM_Particle_Standard.hpp"
 #include "Direct_Detection_Nucleus.hpp"
+#include "Direct_Detection_Ionization.hpp"
 #include "Direct_Detection_Semiconductor.hpp"
 
 using namespace libconfig;
@@ -492,7 +493,7 @@ using namespace libconfig;
 			{
 				std::cerr << "No 'DD_expected_background_nuclear' setting in configuration file." << std::endl;
 			}
-			DM_detector = new DM_Detector_Nucleus("Nuclear Recoil", DD_exposure_nuclear, DD_targets_nuclear, DD_threshold_nuclear, DD_Emax_nuclear,DD_targets_nuclear_abundances);
+			DM_detector = new DM_Detector_Nucleus(DD_experiment, DD_exposure_nuclear, DD_targets_nuclear, DD_threshold_nuclear, DD_Emax_nuclear,DD_targets_nuclear_abundances);
 			DM_detector->Set_Flat_Efficiency(DD_efficiency_nuclear);
 			DM_detector->Set_Observed_Events(DD_observed_events_nuclear);
 			DM_detector->Set_Expected_Background(DD_expected_background_nuclear);
@@ -569,49 +570,136 @@ using namespace libconfig;
 			dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Set_Resolution(CRESST_III_resolution);
 			dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Import_Efficiency(efficiency_files);
 		}
+		else if(DD_experiment == "Ionization")
+		{
+			// std::string DD_target_ionization;
+			// unsigned int DD_threshold_ionization, DD_observed_events_ionization;
+			// double DD_exposure_ionization, DD_efficiency_ionization, DD_expected_background_ionization;
+			// try
+			// {
+			// 	DD_target_ionization = config.lookup("DD_target_ionization").c_str();
+			// }
+			// catch(const SettingNotFoundException &nfex)
+			// {
+			// 	std::cerr << "No 'DD_target_ionization' setting in configuration file." << std::endl;
+			// 	std::exit(EXIT_FAILURE);
+			// }
+			// try
+			// {
+			// 	DD_threshold_ionization = config.lookup("DD_threshold_ionization");
+			// }
+			// catch(const SettingNotFoundException &nfex)
+			// {
+			// 	std::cerr << "No 'DD_threshold_ionization' setting in configuration file." << std::endl;
+			// 	std::exit(EXIT_FAILURE);
+			// }
+			// try
+			// {
+			// 	DD_exposure_ionization = config.lookup("DD_exposure_ionization");
+			// 	DD_exposure_ionization *= kg*yr;
+			// }
+			// catch(const SettingNotFoundException &nfex)
+			// {
+			// 	std::cerr << "No 'DD_exposure_ionization' setting in configuration file." << std::endl;
+			// 	std::exit(EXIT_FAILURE);
+			// }
+			// try
+			// {
+			// 	DD_efficiency_ionization = config.lookup("DD_efficiency_ionization");
+			// }
+			// catch(const SettingNotFoundException &nfex)
+			// {
+			// 	std::cerr << "No 'DD_efficiency_ionization' setting in configuration file." << std::endl;
+			// 	std::exit(EXIT_FAILURE);
+			// }
+			// try
+			// {
+			// 	DD_observed_events_ionization = config.lookup("DD_observed_events_ionization");
+			// }
+			// catch(const SettingNotFoundException &nfex)
+			// {
+			// 	std::cerr << "No 'DD_observed_events_ionization' setting in configuration file." << std::endl;
+			// 	std::exit(EXIT_FAILURE);
+			// }
+			// try
+			// {
+			// 	DD_expected_background_ionization = config.lookup("DD_expected_background_ionization");
+			// }
+			// catch(const SettingNotFoundException &nfex)
+			// {
+			// 	std::cerr << "No 'DD_expected_background_ionization' setting in configuration file." << std::endl;
+			// 	std::exit(EXIT_FAILURE);
+			// }
+			
+			// DM_detector = new DM_Detector_Ionization(DD_experiment, DD_exposure_ionization, DD_target_ionization);
+			// DM_detector->Use_Electron_Bins(DD_threshold_ionization);
+			// DM_detector->Set_Flat_Efficiency(DD_efficiency_ionization);
+			// DM_detector->Set_Observed_Events(DD_observed_events_ionization);
+			// DM_detector->Set_Expected_Background(DD_expected_background_ionization);
+		}
 		else if(DD_experiment == "XENON10e")
 		{
-		// 		detector = new Detector_Ionization("Xe",15*kg*day);
-		// 		detector->Set_Flat_Efficiency(0.92);
-		// 		std::vector<unsigned long int> data={126, 60, 12, 3, 2, 0, 2};
-		// 		dynamic_cast<Detector_Ionization*> (detector)->Set_Binned_Events(data);
-		// 		double muPE=27.0;
-		// 		double sigPE=6.7;
-		// 		std::vector<int> binsizes ={14,41,68,95,122,149,176,203};
-		// 		dynamic_cast<Detector_Ionization*> (detector)->Set_PE_Distribution(muPE,sigPE,binsizes);
-		// 		dynamic_cast<Detector_Ionization*> (detector)->Import_Trigger_Efficiency_PE("../data/XENON10e/PE_Trigger_Efficiency.txt");
+			std::string target_name = "Xenon";
+			Atom target = Import_Ionization_Form_Factors(target_name);
+			double exposure = 15*kg*day;
+			double flat_efficiency = 0.92;
+			std::vector<unsigned long int> observed_event_bins = {126, 60, 12, 3, 2, 0, 2};
+			double muPE = 27.0;
+			double sigPE = 6.7;
+			std::vector<int> S2_bin_ranges = {14,41,68,95,122,149,176,203};
+			std::string trigger_efficiency = "../data/XENON10e/PE_Trigger_Efficiency.txt";
+
+			DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target);
+			DM_detector->Set_Flat_Efficiency(flat_efficiency);
+			DM_detector->Set_Observed_Events(observed_event_bins);
+			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Trigger_Efficiency_PE(trigger_efficiency);
 		}
 		else if(DD_experiment == "XENON100e")
 		{
-		// 		detector = new Detector_Ionization("Xe",30*kg*year);
-		// 		std::vector<unsigned long int> data100={794, 1218, 924, 776, 669, 630, 528, 488, 433, 387};
-		// 		dynamic_cast<Detector_Ionization*> (detector)->Set_Binned_Events(data100);
-		// 		double muPE100=19.7;
-		// 		double sigPE100=6.2;
-		// 		std::vector<int> binsizes100 ={80, 90, 110,130,150,170,190,210,230,250,270};
-		// 		dynamic_cast<Detector_Ionization*> (detector)->Set_PE_Distribution(muPE100,sigPE100,binsizes100);
-		// 		dynamic_cast<Detector_Ionization*> (detector)->Import_Trigger_Efficiency_PE("../data/XENON100e/PE_Trigger_Efficiency.txt");
-		// 		dynamic_cast<Detector_Ionization*> (detector)->Import_Acceptance_Efficiency_PE("../data/XENON100e/PE_Acceptance_Efficiency.txt");
+			std::string target_name = "Xenon";
+			Atom target = Import_Ionization_Form_Factors(target_name);
+			double exposure = 30*kg*yr;
+			std::vector<unsigned long int> observed_event_bins = {794, 1218, 924, 776, 669, 630, 528, 488, 433, 387};
+			double muPE = 19.7;
+			double sigPE = 6.2;
+			std::vector<int> S2_bin_ranges = {80, 90, 110,130,150,170,190,210,230,250,270};
+			std::string trigger_efficiency = "../data/XENON100e/PE_Trigger_Efficiency.txt";
+			std::string acceptance_efficiency = "../data/XENON100e/PE_Acceptance_Efficiency.txt";
+
+			DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target);
+			DM_detector->Set_Observed_Events(observed_event_bins);
+			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Trigger_Efficiency_PE(trigger_efficiency);
+			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Acceptance_Efficiency_PE(acceptance_efficiency);
 		}
 		else if(DD_experiment == "XENON1Te")
 		{
-		// 		// detector = new Detector_Ionization("Xe",22000*kg*day);
-		// 		detector = new Detector_Ionization("Xe",80755.2*kg*day);
-		// 	  	detector->Set_Name("XENON1T");
-		// 		std::vector<unsigned long int> data_X1T={8, 7, 2, 1};
-		// 		dynamic_cast<Detector_Ionization*> (detector)->Set_Binned_Events(data_X1T);
-		// 		double muPE_X1T=33.0;
-		// 		double sigPE_X1T=7.0;
-		// 		std::vector<int> binsizes_X1T ={150,200,250,300,350};
-		// 		dynamic_cast<Detector_Ionization*> (detector)->Set_PE_Distribution(muPE_X1T,sigPE_X1T,binsizes_X1T);
-		// 		dynamic_cast<Detector_Ionization*> (detector)->Import_Trigger_Efficiency_PE("../data/XENON1Te/XENON1T_TotalEfficiency.txt");
+			std::string target_name = "Xenon";
+			Atom target = Import_Ionization_Form_Factors(target_name);
+			double exposure = 80755.2*kg*day;
+			std::vector<unsigned long int> observed_event_bins = {8, 7, 2, 1};
+			double muPE = 33.0;
+			double sigPE = 7.0;
+			std::vector<int> S2_bin_ranges = {150,200,250,300,350};
+			std::string trigger_efficiency = "../data/XENON1Te/XENON1T_TotalEfficiency.txt";
+
+			DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target);
+			DM_detector->Set_Observed_Events(observed_event_bins);
+			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Trigger_Efficiency_PE(trigger_efficiency);
 		}
 		else if(DD_experiment == "DarkSide-50")
 		{
-		// 		detector = new Detector_Ionization("Ar",6786.0*kg*day);
-		// 		dynamic_cast<Detector_Ionization*> (detector)->Set_Electron_Threshold(3);
-		// 		std::vector<unsigned long int>data={118643, 219893, 6131, 673, 252, 227, 198, 199, 189, 247, 230, 261,249, 329, 336, 349, 351, 352, 384, 411, 405, 461, 460, 436, 500, 546, 538, 536, 556, 583, 573, 630, 603, 635, 639, 682, 736, 755, 804, 811, 809, 882, 934, 935, 871, 965, 946, 1072, 997, 1060};
-		// 		dynamic_cast<Detector_Ionization*> (detector)->Set_Binned_Events(data);
+			std::string target_name = "Argon";
+			Atom target = Import_Ionization_Form_Factors(target_name);
+			double exposure = 6786.0*kg*day;
+			unsigned int ne_threshold = 3;
+			std::vector<unsigned long int> observed_event_bins = {118643, 219893, 6131, 673, 252, 227, 198, 199, 189, 247, 230, 261,249, 329, 336, 349, 351, 352, 384, 411, 405, 461, 460, 436, 500, 546, 538, 536, 556, 583, 573, 630, 603, 635, 639, 682, 736, 755, 804, 811, 809, 882, 934, 935, 871, 965, 946, 1072, 997, 1060};
+
+			DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target);
+			DM_detector->Set_Observed_Events(observed_event_bins);
+			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_Electron_Bins(ne_threshold,15);
 		}
 		else if(DD_experiment == "Semiconductor")
 		{

@@ -46,7 +46,7 @@
 
 			void Use_Electron_Bins(unsigned int ne_thr, unsigned int N_bins);
 			
-			void Use_PE_Bins(unsigned int ne_thr, double S2mu, double S2sigma, const std::vector<int> &bin_ranges);
+			void Use_PE_Bins(double S2mu, double S2sigma, const std::vector<int> &bin_ranges);
 			void Import_Trigger_Efficiency_PE(std::string filename);
 			void Import_Acceptance_Efficiency_PE(std::string filename);
 

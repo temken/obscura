@@ -197,7 +197,7 @@
 		number_of_bins = N_bins;
 	}
 
-	void DM_Detector_Ionization::Use_PE_Bins(unsigned int ne_thr, double S2mu, double S2sigma, const std::vector<int> &bin_ranges)
+	void DM_Detector_Ionization::Use_PE_Bins(double S2mu, double S2sigma, const std::vector<int> &bin_ranges)
 	{
 		using_S2_bins = true;
 		using_electron_bins = false;
