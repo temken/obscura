@@ -18,34 +18,36 @@ class DM_Detector
 		double exposure, flat_efficiency;
 		double energy_threshold, energy_max;
 
-		virtual double Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const { return 0.0; };
-		virtual double Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const {return 0.0;};
-		
 		//Statistics
 		std::string statistical_analysis;
-
 		//a) Poisson statistics
 		unsigned long int observed_events;
 		double expected_background;
-
 		//b) Binned Poisson statistics
 		void Use_Binned_Poisson(unsigned bins);
 		unsigned int number_of_bins;
-		std::vector<double> bin_energies;
 		std::vector<double> bin_efficiencies;
 		std::vector<unsigned long int> bin_observed_events;
 		std::vector<double> bin_expected_background;
-
 		//c) Maximum gap a'la Yellin
 		std::vector<double> maximum_gap_energy_data;
 		double P_Value_Maximum_Gap(const DM_Particle& DM, DM_Distribution& DM_distr);
+
+		// Binned Poisson: Energy bins
+		bool using_energy_bins;
+		std::vector<double> bin_energies;
+		std::vector<double> DM_Signals_Energy_Bins(const DM_Particle& DM, DM_Distribution& DM_distr);
+
+		//DM functions
+		virtual double Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const { return 0.0; };
+		virtual double Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const {return 0.0;};
 
 		void Print_Summary_Base(int MPI_rank = 0) const;
 		
 	public:
 		std::string name;
-		DM_Detector() :  targets("base targets"), exposure(0.0), flat_efficiency(1.0), energy_threshold(0), energy_max(0), statistical_analysis("Poisson"), observed_events(0), expected_background(0.0), number_of_bins(0), name("base name") {};
-		DM_Detector(std::string label, double expo,std::string target_type) : targets(target_type), exposure(expo) , flat_efficiency(1.0), energy_threshold(0), energy_max(0), statistical_analysis("Poisson"), observed_events(0), expected_background(0.0), number_of_bins(0), name(label) {};
+		DM_Detector() :  targets("base targets"), exposure(0.0), flat_efficiency(1.0), energy_threshold(0), energy_max(0), statistical_analysis("Poisson"), observed_events(0), expected_background(0.0), number_of_bins(0), using_energy_bins(false), name("base name") {};
+		DM_Detector(std::string label, double expo,std::string target_type) : targets(target_type), exposure(expo) , flat_efficiency(1.0), energy_threshold(0), energy_max(0), statistical_analysis("Poisson"), observed_events(0), expected_background(0.0), number_of_bins(0), using_energy_bins(false), name(label) {};
 
 		void Set_Flat_Efficiency(double eff);
 
@@ -61,7 +63,7 @@ class DM_Detector
 		double P_Value(const DM_Particle& DM, DM_Distribution& DM_distr);
 		
 		//a) Poisson
-		void Use_Poisson_Statistics();
+		virtual void Use_Poisson_Statistics();
 		void Set_Observed_Events(unsigned long int N);
 		void Set_Expected_Background(double B);
 		

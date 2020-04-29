@@ -18,26 +18,11 @@
 	}
 
 	// DM functions
-	double DM_Detector::DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr)
+	std::vector<double> DM_Detector::DM_Signals_Energy_Bins(const DM_Particle& DM, DM_Distribution& DM_distr)
 	{
-		std::function<double(double)> spectrum = [this, &DM, &DM_distr] (double E)
+		if(!using_energy_bins)
 		{
-			return dRdE(E, DM, DM_distr);
-		};
-		double epsilon = Find_Epsilon(spectrum, energy_threshold, energy_max, 1e-6);
-		return exposure*Integrate(spectrum, energy_threshold, energy_max, epsilon);
-	}
-
-	std::vector<double> DM_Detector::DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr)
-	{
-		if(statistical_analysis != "Binned Poisson" || number_of_bins == 0)
-		{
-			std::cerr<<"Error in DM_Detector::DM_Signals_Binned(const DM_Particle&, DM_Distribution&): The analysis is not binned Poisson."<<std::endl;
-			std::exit(EXIT_FAILURE);
-		}
-		else if(bin_energies.empty())
-		{
-			std::cerr<<"Error in DM_Detector::DM_Signals_Binned(const DM_Particle&, DM_Distribution&): No energy bins defined."<<std::endl;
+			std::cerr <<"Error in DM_Detector::DM_Signals_Energy_Bins(const DM_Particle&,DM_Distribution&): Not using energy bins." <<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		else
@@ -55,6 +40,44 @@
 				mu_i.push_back(bin_efficiencies[i] * mu);
 			}
 			return mu_i;
+		}
+	}
+	
+	double DM_Detector::DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr)
+	{
+		double N=0;
+		if(statistical_analysis == "Binned Poisson")
+		{
+			std::vector<double> binned_events = DM_Signals_Binned(DM, DM_distr);
+			N = std::accumulate(binned_events.begin(), binned_events.end(), 0.0);
+		}
+		else
+		{
+			std::function<double(double)> spectrum = [this, &DM, &DM_distr] (double E)
+			{
+				return dRdE(E, DM, DM_distr);
+			};
+			double epsilon = Find_Epsilon(spectrum, energy_threshold, energy_max, 1e-6);
+			N = exposure * Integrate(spectrum, energy_threshold, energy_max, epsilon);
+		}
+		return N;
+	}
+
+	std::vector<double> DM_Detector::DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr)
+	{
+		if(statistical_analysis != "Binned Poisson")
+		{
+			std::cerr<<"Error in DM_Detector::DM_Signals_Binned(const DM_Particle&, DM_Distribution&): The statistical analysis is " <<statistical_analysis <<", not 'Binned Poisson'."<<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		else if(using_energy_bins)
+		{
+			return DM_Detector::DM_Signals_Energy_Bins(DM, DM_distr);
+		}
+		else
+		{
+			std::cerr <<"Error in DM_Detector::DM_Signals_Binned(): Statistical analysis is 'Binned Poisson' but no bins have been defined. This should not happen ever." <<std::endl;
+			std::exit(EXIT_FAILURE);
 		}
 	}
 
@@ -146,7 +169,9 @@
 	//a) Poisson statistics
 	void DM_Detector::Use_Poisson_Statistics()
 	{
-		statistical_analysis = "Binned Poisson";
+		statistical_analysis = "Poisson";
+		using_energy_bins = false;
+		
 		observed_events = 0;
 		expected_background = 0;
 	}
@@ -190,6 +215,7 @@
 	void DM_Detector::Use_Energy_Bins(double Emin, double Emax, int bins)
 	{
 		Use_Binned_Poisson(bins);
+		using_energy_bins = true;
 		energy_threshold = Emin;
 		energy_max = Emax;
 		bin_energies = Linear_Space(energy_threshold, energy_max, number_of_bins + 1);

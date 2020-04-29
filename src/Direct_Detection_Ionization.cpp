@@ -117,7 +117,59 @@
 	}
 
 //2. Electron recoil direct detection experiment with isolated target atoms
-	
+	DM_Detector_Ionization::DM_Detector_Ionization(std::string label, double expo, Atom& atom)
+	: DM_Detector(label, expo, "Electrons"), target_atom(atom), using_electron_threshold(false), ne_threshold(0), using_electron_bins(false),  using_S2_bins(false), S2_mu (0.0), S2_sigma (0.0), S2_bin_ranges({}), Trigger_Efficiency_PE({}), Acceptance_Efficiency_PE({})
+	{
+
+	}
+
+	//DM functions
+	std::vector<double> DM_Detector_Ionization::DM_Signals_Electron_Bins(const DM_Particle& DM, DM_Distribution& DM_distr)
+	{
+		if(!using_electron_bins)
+		{
+			std::cerr <<"Error in DM_Detector_Ionization::DM_Signals_Electron_Bins(const DM_Particle&,DM_Distribution&): Not using electron bins." <<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		else
+		{
+			std::vector<double> N_binned;
+			for(unsigned int bin = 0 ; bin < number_of_bins ; bin++)
+			{
+				unsigned int ne = ne_threshold + bin;
+				double R_bin = R_ne_Ionization(ne, DM, DM_distr,target_atom);
+				N_binned.push_back(flat_efficiency * bin_efficiencies[bin] * exposure * R_bin);
+			}
+			return N_binned;
+		}
+	}
+
+	std::vector<double> DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle& DM, DM_Distribution& DM_distr)
+	{
+		if(!using_S2_bins)
+		{
+			std::cerr <<"Error in DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle&,DM_Distribution&): Not using PE bins." <<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		else
+		{
+			std::vector<double> N_binned;
+			for(unsigned int bin = 0 ; bin < number_of_bins ; bin++)
+			{
+				double R_bin = 0.0;
+				for(unsigned int nPE = S2_bin_ranges[bin]; nPE < S2_bin_ranges[bin+1]; nPE++)
+				{
+					double R_new = R_PE_Ionization(nPE,S2_mu, S2_sigma, DM, DM_distr, target_atom);
+					if(Trigger_Efficiency_PE.empty() == false) R_new *= Trigger_Efficiency_PE[nPE - 1];
+					if(Acceptance_Efficiency_PE.empty() == false) R_new *= Acceptance_Efficiency_PE[nPE - 1];
+					R_bin += R_new;
+				}				
+				N_binned.push_back(flat_efficiency * bin_efficiencies[bin] * exposure * R_bin);
+			}
+			return N_binned;
+		}
+	}
+
 	double DM_Detector_Ionization::Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const
 	{
 		double vMax = DM_distr.Maximum_DM_Speed();
@@ -132,76 +184,122 @@
 		double mMin = 2.0 * E_min / vMax / vMax;
 		return mMin;
 	}
-
-	DM_Detector_Ionization::DM_Detector_Ionization(std::string label, double expo, Atom& atom)
-	: DM_Detector(label, expo, "Electrons"), target_atom(atom)
-	{
-
-	}
-
-	double DM_Detector_Ionization::dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr) 
-	{
-		return dRdEe_Ionization(E, DM, DM_distr, target_atom);
-	}
-
+	
 	double DM_Detector_Ionization::Minimum_DM_Speed(const DM_Particle& DM) const
 	{
 		return sqrt(2.0 * target_atom.Lowest_Binding_Energy() / DM.mass);
 	}
 
+	double DM_Detector_Ionization::dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr) 
+	{
+		return flat_efficiency * dRdEe_Ionization(E, DM, DM_distr, target_atom);
+	}
+
 	double DM_Detector_Ionization::DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr) 
 	{
 		double N=0;
-		if(using_electron_bins)
+		if(statistical_analysis == "Binned Poisson")
+		{
+			std::vector<double> binned_events = DM_Signals_Binned(DM, DM_distr);
+			N = std::accumulate(binned_events.begin(), binned_events.end(), 0.0);
+		}
+		else if(using_electron_threshold)
 		{
 			for(int ne = ne_threshold ; ne < 16 ; ne++)
 			{
-				N += exposure * R_ne_Ionization(ne,DM, DM_distr, target_atom);
+				N += exposure * R_ne_Ionization(ne, DM, DM_distr, target_atom);
 			}
-		}
-		else if(using_S2_bins)
-		{
-			for(int nPE = S2_bin_ranges.front(); nPE < S2_bin_ranges.back(); nPE++)
-			{
-				double N_PE = exposure * R_PE_Ionization(nPE,S2_mu, S2_sigma, DM, DM_distr, target_atom);
-				if(Trigger_Efficiency_PE.empty() == false) N_PE *= Trigger_Efficiency_PE[nPE - 1];
-				if(Acceptance_Efficiency_PE.empty() == false) N_PE *= Acceptance_Efficiency_PE[nPE - 1];
-				N += N_PE;
-			}
+			N *= flat_efficiency;
 		}
 		else
 		{
-			double R=0.0;
 			for(unsigned int i = 0; i < target_atom.electrons.size(); i++)
 			{
-				double k_min = sqrt(2.0 * mElectron * energy_threshold);
-				int ki_min = std::floor(log10(k_min / target_atom[i].k_min) / target_atom[i].dlogk);
-				for(unsigned int ki = ki_min; ki < target_atom[i].Nk; ki++)
+				double kMax = target_atom[i].k_max;
+				double Emax = kMax*kMax/2.0/mElectron;
+				if(Emax > energy_threshold)
 				{
-					double k = target_atom[i].k_Grid[ki];
-					double Ee = k*k / 2.0 / mElectron;
-					R += log(10.0) * target_atom[i].dlogk * k*k/mElectron * dRdEe_Ionization(Ee, DM, DM_distr, target_atom[i]);
+					std::function<double(double)> dNdE = [this, i, &DM, &DM_distr] (double E)
+					{
+						return exposure * dRdEe_Ionization(E, DM, DM_distr, target_atom[i]);
+					};
+					double eps =Find_Epsilon(dNdE,energy_threshold,Emax,1e-6);
+					N +=  Integrate(dNdE,energy_threshold,Emax,eps);
 				}
 			}
-			N = exposure * R;
+			N *= flat_efficiency;
 		}
-		return flat_efficiency * N;
+		return N;
 	}
 
-	void DM_Detector_Ionization::Use_Electron_Bins(unsigned int ne_thr, unsigned int N_bins)
+	std::vector<double> DM_Detector_Ionization::DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr) 
 	{
-		Use_Binned_Poisson(N_bins);
-		using_electron_bins = true;
+		if(statistical_analysis != "Binned Poisson")
+		{
+			std::cerr <<"Error in DM_Detector_Ionization::DM_Signals_Binned(): Statistical analysis is "<<statistical_analysis <<", not 'Binned Poisson'" <<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		else if(using_energy_bins)
+		{
+			return DM_Signals_Energy_Bins(DM, DM_distr);
+		}
+		else if(using_electron_bins)
+		{
+			return DM_Signals_Electron_Bins(DM, DM_distr);
+		}
+		else if(using_S2_bins)
+		{
+			return DM_Signals_PE_Bins(DM, DM_distr);
+		}
+		else
+		{
+			std::cerr <<"Error in DM_Detector_Ionization::DM_Signals_Binned(): Statistical analysis is 'Binned Poisson' but no bins have been defined. This should not happen ever." <<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+	}
+	
+	//Poisson with electron threshold
+	void DM_Detector_Ionization::Use_Poisson_Statistics()
+	{
+		statistical_analysis = "Poisson";
+		using_energy_bins = false;
+		using_electron_bins = false;
 		using_S2_bins = false;
+
+		observed_events = 0;
+		expected_background = 0;
+	}
+
+	void DM_Detector_Ionization::Set_Electron_Threshold(unsigned int ne_thr)
+	{
+		Use_Poisson_Statistics();
+		using_electron_threshold = true;
 
 		ne_threshold = ne_thr;
 	}
 
+	//Binned Poisson: Electron bins (n_e)
+	void DM_Detector_Ionization::Use_Electron_Bins(unsigned int ne_thr, unsigned int N_bins)
+	{
+		Use_Binned_Poisson(N_bins);
+		using_electron_bins = true;
+		
+		using_S2_bins = false;
+		using_electron_threshold = false;
+		using_energy_bins = false;
+
+		ne_threshold = ne_thr;
+	}
+
+	//Binned Poisson:  PE bins (S2)
 	void DM_Detector_Ionization::Use_PE_Bins(double S2mu, double S2sigma, const std::vector<int> &bin_ranges)
 	{
 		Use_Binned_Poisson(bin_ranges.size() - 1);
 		using_S2_bins = true;
+		
 		using_electron_bins = false;
+		using_electron_threshold = false;
+		using_energy_bins = false;
 
 		S2_mu = S2mu;
 		S2_sigma = S2sigma;
@@ -216,44 +314,6 @@
 	void DM_Detector_Ionization::Import_Acceptance_Efficiency_PE(std::string filename)
 	{
 		Acceptance_Efficiency_PE = Import_List(filename);
-	}
-
-	std::vector<double> DM_Detector_Ionization::DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr) 
-	{
-		std::vector<double> N_binned;
-		for(unsigned int bin = 0 ; bin < number_of_bins ; bin++)
-		{
-			double R_bin = 0.0;
-			if(using_electron_bins)
-			{
-				unsigned int ne = ne_threshold + bin;
-				R_bin = R_ne_Ionization(ne, DM, DM_distr,target_atom);
-			}
-			else if(using_S2_bins)
-			{
-				for(unsigned int nPE = S2_bin_ranges[bin]; nPE < S2_bin_ranges[bin+1]; nPE++)
-				{
-					double R_new = R_PE_Ionization(nPE,S2_mu, S2_sigma, DM, DM_distr, target_atom);
-					if(Trigger_Efficiency_PE.empty() == false) R_new *= Trigger_Efficiency_PE[nPE - 1];
-					if(Acceptance_Efficiency_PE.empty() == false) R_new *= Acceptance_Efficiency_PE[nPE - 1];
-					R_bin += R_new;
-				}
-			}
-			else
-			{
-				double E_min = bin_energies[bin];
-				double E_max = bin_energies[bin+1];
-				std::function<double(double)> spectrum = [this, &DM, &DM_distr] (double E)
-				{
-					return dRdEe_Ionization(E, DM, DM_distr,target_atom);
-				};
-				double epsilon = Find_Epsilon(spectrum, E_min, E_max, 1e-4);
-				R_bin =  Integrate(spectrum, E_min, E_max, epsilon);
-			}
-			if(bin_efficiencies.empty() == false) R_bin *= bin_efficiencies[bin];
-			N_binned.push_back(flat_efficiency * exposure * R_bin);
-		}
-		return N_binned;
 	}
 
 	void DM_Detector_Ionization::Print_Summary(int MPI_rank) const 
@@ -276,7 +336,7 @@
 				std::cout<<"\t"<<bin+1<<"\t["<<S2_bin_ranges[bin]<<","<<S2_bin_ranges[bin+1]<<")"<<std::endl;
 			}
 		}
-		else if(using_electron_bins)
+		else if(using_electron_bins || using_electron_threshold)
 		{
 			std::cout<<"\tNe threshold:\t"<<ne_threshold<<std::endl;
 		}
