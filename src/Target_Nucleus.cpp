@@ -148,7 +148,7 @@
 
 	Element Get_Element(std::string name)
 	{
-		for(int Z = 1; Z<=92 ; Z++)
+		for(int Z = 1; Z<=92; Z++)
 		{
 			if(Get_Element(Z).name == name) return Get_Element(Z);
 		}

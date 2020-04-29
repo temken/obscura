@@ -1,8 +1,8 @@
 #ifndef __Direct_Detection_Nucleus_hpp_
 #define __Direct_Detection_Nucleus_hpp_
 
-#include <vector>
-#include <string>
+// #include <vector>
+// #include <string>
 
 //Headers from libphys library
 #include "Natural_Units.hpp"

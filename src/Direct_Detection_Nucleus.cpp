@@ -32,27 +32,27 @@
 	DM_Detector_Nucleus::DM_Detector_Nucleus()
 	: DM_Detector("Nuclear recoil experiment", kg*day,"Nuclei"), target_elements({Get_Element(54)}), relative_mass_fractions({1.0}), energy_resolution(0.0), using_efficiency_tables(false)
 	{
-		energy_threshold = 1.0*keV;
-		energy_max = 100.0*keV;
+		Use_Energy_Threshold(1.0*keV, 100.0*keV);
 	}
 
 	DM_Detector_Nucleus::DM_Detector_Nucleus(std::string label, double expo,std::vector<Element> elements, double thr, double emax,std::vector<double> abund)
 	: DM_Detector(label, expo,"Nuclei"), target_elements(elements), energy_resolution(0.0), using_efficiency_tables(false)
 	{
-		energy_threshold = thr;
-		energy_max = emax;
+		Use_Energy_Threshold(thr, emax);
+
 		double tot = std::accumulate(abund.begin(),abund.end(),0.0);
 		if(abund.empty() || tot > 1.0)
 		{
 			//Compute relative abundance of the target elements by weight.		
-			for(unsigned int i = 0 ; i<target_elements.size() ; i++)
+			for(unsigned int i = 0; i<target_elements.size(); i++)
 			{
 				double proportion = (abund.empty()) ? 1.0 : abund[i];
 				double mi = proportion * target_elements[i].Average_Nuclear_Mass();
 				relative_mass_fractions.push_back(mi);
 			}
 			double Mtot = std::accumulate(relative_mass_fractions.begin(),relative_mass_fractions.end(),0.0);
-			for(unsigned int i = 0 ; i<relative_mass_fractions.size() ; i++) relative_mass_fractions[i] /= Mtot;
+			for(unsigned int i = 0; i < relative_mass_fractions.size(); i++)
+				relative_mass_fractions[i] /= Mtot;
 		}
 		else relative_mass_fractions = abund;
 	}
@@ -61,9 +61,9 @@
 	{
 		double vDM = DM_distr.Maximum_DM_Speed();
 		double Emax = 0.0;
-		for(unsigned int i = 0 ; i<target_elements.size() ; i++)
+		for(unsigned int i = 0; i<target_elements.size(); i++)
 		{
-			for(unsigned int j = 0 ; j<target_elements[i].Number_of_Isotopes(); j++)
+			for(unsigned int j = 0; j<target_elements[i].Number_of_Isotopes(); j++)
 			{
 				double ERmax = Maximum_Nuclear_Recoil_Energy(vDM, DM.mass, target_elements[i][j].mass);
 				if(ERmax>Emax && DM.Sigma_Nucleus(target_elements[i][j], vDM) > 0.0 ) Emax = ERmax;
@@ -76,9 +76,9 @@
 	{
 		std::vector<double> aux;
 		double vMax = DM_distr.Maximum_DM_Speed();
-		for(unsigned int i = 0 ; i<target_elements.size() ; i++)
+		for(unsigned int i = 0; i<target_elements.size(); i++)
 		{
-			for(unsigned int j = 0 ; j < target_elements[i].Number_of_Isotopes() ; j++)
+			for(unsigned int j = 0; j < target_elements[i].Number_of_Isotopes(); j++)
 			{
 				double mMin = target_elements[i][j].mass / (sqrt(2.0*target_elements[i][j].mass/(energy_threshold-2.0*energy_resolution))*vMax-1.0);
 				if(DM.Sigma_Nucleus(target_elements[i][j],vMax) > 0.0) aux.push_back(mMin);
@@ -102,7 +102,7 @@
 	void DM_Detector_Nucleus::Import_Efficiency(std::vector<std::string> filenames,double dim)
 	{
 		efficiencies.clear();
-		for(unsigned int i =0; i<filenames.size() ; i++) Import_Efficiency(filenames[i],dim);
+		for(unsigned int i =0; i<filenames.size(); i++) Import_Efficiency(filenames[i],dim);
 	}
 
 	double DM_Detector_Nucleus::dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr)
@@ -112,7 +112,7 @@
 		if(energy_resolution < 1e-6*eV)
 		{
 			double eff = 1.0;
-			for(unsigned int i = 0 ; i<target_elements.size() ; i++)
+			for(unsigned int i = 0; i<target_elements.size(); i++)
 			{
 				if(using_efficiency_tables)
 				{
@@ -133,7 +133,7 @@
 			std::function<double(double)> integrand = [this,E,&DM, &DM_distr] (double ER)
 			{
 				double dRtheory = 0.0;
-				for(unsigned int i = 0 ; i<target_elements.size() ; i++)
+				for(unsigned int i = 0; i<target_elements.size(); i++)
 				{
 					double eff = 1.0;
 					if(using_efficiency_tables)
@@ -145,7 +145,6 @@
 				}
 				return PDF_Gauss(E,ER,energy_resolution)*dRtheory;
 			};
-			// double epsilon = 1e-6*(eMax-eMin)*integrand(eMin);
 			double epsilon = Find_Epsilon(integrand,eMin,eMax,1e-4);
 			dR = Integrate(integrand, eMin,eMax,epsilon);
 		}
@@ -156,9 +155,9 @@
 	{
 		double Emin = energy_threshold - 2.0*energy_resolution;
 		double vcut = 1.0;
-		for(unsigned int i = 0 ; i < target_elements.size() ; i++)
+		for(unsigned int i = 0; i < target_elements.size(); i++)
 		{
-			for(unsigned int j = 0 ; j < target_elements[i].Number_of_Isotopes() ; j++)
+			for(unsigned int j = 0; j < target_elements[i].Number_of_Isotopes(); j++)
 			{
 				double vmin = vMinimal_Nucleus(Emin, DM.mass, target_elements[i][j].mass);
 				if(vmin < vcut && DM.Sigma_Nucleus(target_elements[i][j], 1.0e-3) > 0.0) vcut = vmin;
@@ -175,7 +174,7 @@
 			std::cout 	<<std::endl<<"Nuclear recoil experiment." <<std::endl
 						<<"Nuclear targets:"	<<std::endl
 						<<"\tNucl.\tabund."<<std::endl;
-			for(unsigned int i=0 ; i < target_elements.size() ; i++)
+			for(unsigned int i=0; i < target_elements.size(); i++)
 			{
 				std::cout <<"\t" <<target_elements[i].name<<"\t"<<Round(100.0*relative_mass_fractions[i])<<"%"<<std::endl;
 				// target_elements[i].Print_Summary();

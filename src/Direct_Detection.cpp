@@ -1,87 +1,17 @@
 #include "Direct_Detection.hpp"
 
-#include <cmath>
-#include <functional>
+#include <iostream>
 #include <numeric>
-#include <algorithm> //for std::min_element, std::max_element, std::sort
+#include <cmath>
 
 //Headers from libphys library
-#include "Natural_Units.hpp"
 #include "Numerics.hpp"
 #include "Statistics.hpp"
 #include "Utilities.hpp"
 
-// DM Detector base class, which includes the statistical methods.
-	void DM_Detector::Set_Flat_Efficiency(double eff)
-	{
-		flat_efficiency = eff;
-	}
-
-	// DM functions
-	std::vector<double> DM_Detector::DM_Signals_Energy_Bins(const DM_Particle& DM, DM_Distribution& DM_distr)
-	{
-		if(!using_energy_bins)
-		{
-			std::cerr <<"Error in DM_Detector::DM_Signals_Energy_Bins(const DM_Particle&,DM_Distribution&): Not using energy bins." <<std::endl;
-			std::exit(EXIT_FAILURE);
-		}
-		else
-		{
-			std::function<double(double)> spectrum = [this, &DM, &DM_distr] (double E)
-			{
-				return dRdE(E, DM, DM_distr);
-			};
-			std::vector<double> mu_i;
-			for(unsigned int i = 0; i < number_of_bins; i++)
-			{
-				
-				double epsilon = Find_Epsilon(spectrum, bin_energies[i], bin_energies[i+1], 1e-4);
-				double mu = exposure * Integrate(spectrum, bin_energies[i], bin_energies[i+1], epsilon);
-				mu_i.push_back(bin_efficiencies[i] * mu);
-			}
-			return mu_i;
-		}
-	}
-	
-	double DM_Detector::DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr)
-	{
-		double N=0;
-		if(statistical_analysis == "Binned Poisson")
-		{
-			std::vector<double> binned_events = DM_Signals_Binned(DM, DM_distr);
-			N = std::accumulate(binned_events.begin(), binned_events.end(), 0.0);
-		}
-		else
-		{
-			std::function<double(double)> spectrum = [this, &DM, &DM_distr] (double E)
-			{
-				return dRdE(E, DM, DM_distr);
-			};
-			double epsilon = Find_Epsilon(spectrum, energy_threshold, energy_max, 1e-6);
-			N = exposure * Integrate(spectrum, energy_threshold, energy_max, epsilon);
-		}
-		return N;
-	}
-
-	std::vector<double> DM_Detector::DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr)
-	{
-		if(statistical_analysis != "Binned Poisson")
-		{
-			std::cerr<<"Error in DM_Detector::DM_Signals_Binned(const DM_Particle&, DM_Distribution&): The statistical analysis is " <<statistical_analysis <<", not 'Binned Poisson'."<<std::endl;
-			std::exit(EXIT_FAILURE);
-		}
-		else if(using_energy_bins)
-		{
-			return DM_Detector::DM_Signals_Energy_Bins(DM, DM_distr);
-		}
-		else
-		{
-			std::cerr <<"Error in DM_Detector::DM_Signals_Binned(): Statistical analysis is 'Binned Poisson' but no bins have been defined. This should not happen ever." <<std::endl;
-			std::exit(EXIT_FAILURE);
-		}
-	}
-
+// DM Detector base class, which provides the statistical methods and energy bins.
 	//Statistics
+	//Likelihoods
 	double DM_Detector::Log_Likelihood(const DM_Particle& DM, DM_Distribution& DM_distr)
 	{
 		if(statistical_analysis == "Poisson")
@@ -103,7 +33,7 @@
 			// }
 			return Log_Likelihood_Poisson_Binned(s, n, b);
 		}
-		else if(statistical_analysis == "Maximum-Gap")
+		else if(statistical_analysis == "Maximum Gap")
 		{
 			return log(P_Value_Maximum_Gap(DM, DM_distr));
 		}
@@ -154,7 +84,7 @@
 			}
 			p_value =  *std::min_element(p_values.begin(),p_values.end());
 		}
-		else if(statistical_analysis == "Maximum-Gap")
+		else if(statistical_analysis == "Maximum Gap")
 		{
 			p_value = P_Value_Maximum_Gap(DM, DM_distr);
 		}
@@ -166,14 +96,12 @@
 		return p_value;
 	}
 
-	//a) Poisson statistics
-	void DM_Detector::Use_Poisson_Statistics()
+	// (a) Poisson statistics
+	void DM_Detector::Initialize_Poisson()
 	{
-		statistical_analysis = "Poisson";
-		using_energy_bins = false;
-		
-		observed_events = 0;
-		expected_background = 0;
+			statistical_analysis = "Poisson";
+			observed_events = 0;
+			expected_background = 0;
 	}
 
 	void DM_Detector::Set_Observed_Events(unsigned long int n)
@@ -202,8 +130,8 @@
 		}
 	}
 
-	//b) Binned Poisson statistics
-	void DM_Detector::Use_Binned_Poisson(unsigned bins)
+	// (b) Binned Poisson statistics
+	void DM_Detector::Initialize_Binned_Poisson(unsigned bins)
 	{
 		statistical_analysis = "Binned Poisson";
 		number_of_bins = bins;
@@ -212,15 +140,6 @@
 		bin_efficiencies = std::vector<double>(number_of_bins, 1.0);
 	}
 
-	void DM_Detector::Use_Energy_Bins(double Emin, double Emax, int bins)
-	{
-		Use_Binned_Poisson(bins);
-		using_energy_bins = true;
-		energy_threshold = Emin;
-		energy_max = Emax;
-		bin_energies = Linear_Space(energy_threshold, energy_max, number_of_bins + 1);
-	}
-	
 	void DM_Detector::Set_Observed_Events(std::vector<unsigned long int> Ni)
 	{
 		if (statistical_analysis != "Binned Poisson")
@@ -236,7 +155,7 @@
 		else
 		{
 			bin_observed_events = Ni;
-			observed_events = std::accumulate(bin_observed_events.begin(),bin_observed_events.end(),0);
+			observed_events = std::accumulate(bin_observed_events.begin(), bin_observed_events.end(), 0);
 		}		
 	}
 
@@ -273,36 +192,33 @@
 		else
 		{
 			bin_expected_background = Bi;
-			expected_background = std::accumulate(bin_expected_background.begin(),bin_expected_background.end(),0);
+			expected_background = std::accumulate(bin_expected_background.begin(), bin_expected_background.end(), 0.0);
 		}	
 	}
-
-	//c) Maximum gap
-	void DM_Detector::Use_Maximum_Gap(std::string filename_energy_data,double dim)
+	
+	// (c) Maximum gap a'la Yellin
+	void DM_Detector::Use_Maximum_Gap(std::vector<double> energies)
 	{
-		statistical_analysis = "Maximum-Gap";
+		statistical_analysis = "Maximum Gap";
 
-		maximum_gap_energy_data.clear();
-		maximum_gap_energy_data = Import_List(filename_energy_data, dim);
-		observed_events = maximum_gap_energy_data.size();
-		
-		maximum_gap_energy_data.push_back(energy_threshold);
-		maximum_gap_energy_data.push_back(energy_max);
+		maximum_gap_energy_data = energies;
 		std::sort(maximum_gap_energy_data.begin(),maximum_gap_energy_data.end());
+		energy_threshold = maximum_gap_energy_data.front();
+		energy_max = maximum_gap_energy_data.back();
 	}
 
 	double CDF_Maximum_Gap(double x,double mu)
 	{
-		if(x==mu) return 1.0-exp(-mu);
+		if(x == mu) return 1.0 - exp(-mu);
 		else
 		{
 			int m = mu/x;
 			double sum=0.0;
-			for(int k=0;k<=m;k++) 
+			for(int k=0; k <= m; k++) 
 			{
 				double term = pow(k*x-mu,k) / Factorial(k) * exp(-k*x) * (1.0 + k/(mu-k*x));
-				sum+= term ;
-				if (fabs(term)<1e-20) break;
+				sum += term;
+				if(fabs(term) < 1e-20) break;
 			}
 			return sum;
 		}
@@ -310,30 +226,72 @@
 
 	double DM_Detector::P_Value_Maximum_Gap(const DM_Particle& DM, DM_Distribution& DM_distr)
 	{
-		// Interpolation spectrum = Spectrum(DM);
 		std::function<double(double)> spectrum = [this, &DM, &DM_distr] (double E)
 		{
 			return exposure * dRdE(E, DM, DM_distr);
 		};
 
-		//Determine and save all gap sizes.
-		std::vector<double> x;
+		//Determine all gaps and find the maximum.
+		std::vector<double> gaps;
 		for(unsigned int i = 0; i < (maximum_gap_energy_data.size()-1); i++)
 		{
 			double E1 = maximum_gap_energy_data[i];
 			double E2 = maximum_gap_energy_data[i+1];
-			double epsilon = Find_Epsilon(spectrum,E1,E2,1e-3);
-			double xGap = Integrate(spectrum, E1,E2,epsilon);
-			x.push_back(xGap);
+			double eps = Find_Epsilon(spectrum,E1,E2,1e-3);
+			double gap = Integrate(spectrum, E1,E2,eps);
+			gaps.push_back(gap);
 		}
 		
-		//Maximum gap
-		double xMax = *std::max_element(x.begin(),x.end());
+		double max_gap = *std::max_element(gaps.begin(),gaps.end());
 		
-		//P_Value
-		double N = std::accumulate(x.begin(),x.end(),0.0);
-		double llh = 1.0 - CDF_Maximum_Gap(xMax,N);
-		return llh;
+		double N = std::accumulate(gaps.begin(),gaps.end(),0.0);
+		double p_value = 1.0 - CDF_Maximum_Gap(max_gap,N);
+		return p_value;
+	}
+
+
+	void DM_Detector::Set_Flat_Efficiency(double eff)
+	{
+		flat_efficiency = eff;
+	}
+
+	//DM functions
+	double DM_Detector::DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr)
+	{
+		double N=0;
+		if(statistical_analysis == "Binned Poisson")
+		{
+			std::vector<double> binned_events = DM_Signals_Binned(DM, DM_distr);
+			N = std::accumulate(binned_events.begin(), binned_events.end(), 0.0);
+		}
+		else
+		{
+			std::function<double(double)> spectrum = [this, &DM, &DM_distr] (double E)
+			{
+				return dRdE(E, DM, DM_distr);
+			};
+			double epsilon = Find_Epsilon(spectrum, energy_threshold, energy_max, 1e-6);
+			N = exposure * Integrate(spectrum, energy_threshold, energy_max, epsilon);
+		}
+		return N;
+	}
+
+	std::vector<double> DM_Detector::DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr)
+	{
+		if(statistical_analysis != "Binned Poisson")
+		{
+			std::cerr<<"Error in DM_Detector::DM_Signals_Binned(const DM_Particle&, DM_Distribution&): The statistical analysis is " <<statistical_analysis <<", not 'Binned Poisson'."<<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		else if(using_energy_bins)
+		{
+			return DM_Signals_Energy_Bins(DM, DM_distr);
+		}
+		else
+		{
+			std::cerr <<"Error in DM_Detector::DM_Signals_Binned(): Statistical analysis is 'Binned Poisson' but no bins have been defined. This should not happen ever." <<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
 	}
 
 	//Limits/Constraints
@@ -370,6 +328,58 @@
 		return limit;
 	}
 
+	//Energy spectrum
+	void DM_Detector::Use_Energy_Threshold(double Ethr, double Emax)
+	{
+		Initialize_Poisson();
+		using_energy_threshold = true;
+		energy_threshold = Ethr;
+		energy_max = Emax;
+	}
+
+	void DM_Detector::Use_Energy_Bins(double Emin, double Emax, int bins)
+	{
+		if(statistical_analysis == "Binned Poisson")
+		{
+			std::cerr <<"Error in DM_Detector::Use_Energy_Bins(): Bins have already been defined."<<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		else
+		{
+			Initialize_Binned_Poisson(bins);
+			using_energy_bins = true;
+			energy_threshold = Emin;
+			energy_max = Emax;
+			bin_energies = Linear_Space(energy_threshold, energy_max, number_of_bins + 1);
+		}
+	}
+
+	std::vector<double> DM_Detector::DM_Signals_Energy_Bins(const DM_Particle& DM, DM_Distribution& DM_distr)
+	{
+		if(!using_energy_bins)
+		{
+			std::cerr <<"Error in DM_Detector::DM_Signals_Energy_Bins(const DM_Particle&,DM_Distribution&): Not using energy bins." <<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		else
+		{
+			std::function<double(double)> spectrum = [this, &DM, &DM_distr] (double E)
+			{
+				return dRdE(E, DM, DM_distr);
+			};
+			std::vector<double> mu_i;
+			for(unsigned int i = 0; i < number_of_bins; i++)
+			{
+				
+				double epsilon = Find_Epsilon(spectrum, bin_energies[i], bin_energies[i+1], 1e-4);
+				double mu = exposure * Integrate(spectrum, bin_energies[i], bin_energies[i+1], epsilon);
+				mu_i.push_back(bin_efficiencies[i] * mu);
+			}
+			return mu_i;
+		}
+	}
+
+
 	void DM_Detector::Print_Summary_Base(int MPI_rank) const
 	{
 		if(MPI_rank == 0)
@@ -381,8 +391,10 @@
 						<<"Exposure [kg year]:\t" <<In_Units(exposure,kg*yr)<<std::endl
 						<<"Flat efficiency [%]:\t"<<Round(100.0*flat_efficiency)<<std::endl
 						<<"Observed events:\t"<<observed_events<<std::endl
-						<<"Expected backgroud:\t" <<expected_background <<std::endl
+						<<"Expected background:\t" <<expected_background <<std::endl
 						<<"Statistical analysis:\t" <<statistical_analysis <<std::endl;
+			if(using_energy_threshold || using_energy_bins || statistical_analysis == "Maximum Gap")
+				std::cout <<"Recoil energies [keV]:\t["<<Round(energy_threshold/keV)<<","<<Round(energy_max/keV) <<"]"<<std::endl;
 			if(statistical_analysis == "Binned Poisson")
 			{
 				std::cout <<"\tNumber of bins:\t" <<number_of_bins <<std::endl;
