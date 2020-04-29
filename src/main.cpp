@@ -22,7 +22,8 @@ int main(int argc, char *argv[])
 	Configuration cfg(argv[1]);
 	cfg.Print_Summary();
 
-	std::vector<std::vector<double>> exclusion_limits = cfg.DM_detector->Upper_Limit_Curve(*(cfg.DM), *(cfg.DM_distr), cfg.constraints_mass_min, cfg.constraints_mass_max, cfg.constraints_masses, cfg.constraints_certainty);
+	std::vector<double> DM_masses = Log_Space(cfg.constraints_mass_min, cfg.constraints_mass_max, cfg.constraints_masses);
+	std::vector<std::vector<double>> exclusion_limits = cfg.DM_detector->Upper_Limit_Curve(*(cfg.DM), *(cfg.DM_distr), DM_masses, cfg.constraints_certainty);
 	Export_Table("../results/"+cfg.ID+"/Direct_Detection_Limits.txt", exclusion_limits, {GeV,cm*cm});
 	
 	//Ending time and computing time

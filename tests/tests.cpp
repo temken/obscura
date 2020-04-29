@@ -6,6 +6,7 @@
 #include "Natural_Units.hpp"
 #include "Numerics.hpp"
 #include "Linear_Algebra.hpp"
+#include "Utilities.hpp"
 
 #include "DM_Distribution.hpp"
 #include "Astronomy.hpp"
@@ -15,6 +16,7 @@
 #include "DM_Particle.hpp"
 #include "DM_Particle_Standard.hpp"
 #include "Direct_Detection_Nucleus.hpp"
+#include "Direct_Detection_Ionization.hpp"
 #include "Direct_Detection_Semiconductor.hpp"
 
 int main(int argc, char *argv[])
@@ -32,7 +34,8 @@ int main(int argc, char *argv[])
 	Vector vEarth = Earth_Velocity(0.0);
 	std::cout<<"vEarth = "<<In_Units(vEarth,km/sec)<<std::endl<<std::endl;
 
-	std::vector<std::vector<double>> exclusion_limits = cfg.DM_detector->Upper_Limit_Curve(*(cfg.DM), *(cfg.DM_distr), cfg.constraints_mass_min, cfg.constraints_mass_max, cfg.constraints_masses, cfg.constraints_certainty);
+	std::vector<double> DM_masses = Log_Space(cfg.constraints_mass_min, cfg.constraints_mass_max, cfg.constraints_masses);
+	std::vector<std::vector<double>> exclusion_limits = cfg.DM_detector->Upper_Limit_Curve(*(cfg.DM), *(cfg.DM_distr), DM_masses, cfg.constraints_certainty);
 	for(int i = 0; i < exclusion_limits.size(); i++)
 	{
 		std::cout <<i+1 <<")\t" <<Round(exclusion_limits[i][0]) <<" GeV\t" <<Round(In_Units(exclusion_limits[i][1],cm*cm)) <<" cm^2" <<std::endl;
@@ -41,10 +44,21 @@ int main(int argc, char *argv[])
 		std::cout<<"N = "<<cfg.DM_detector->DM_Signals_Total(*(cfg.DM),*(cfg.DM_distr))<<std::endl;
 	}
 
- 	Atom a = Import_Ionization_Form_Factors("Xe");
- 	a.Print_Summary();
- 	double k =0.1*keV;
- 	std::cout<<a[0].Ionization_Form_Factor(400*keV, k*k/2/mElectron)<<std::endl;
+ 	// Atom Xe = Import_Ionization_Form_Factors("Xe");
+ 	// Atom Ar = Import_Ionization_Form_Factors("Ar");
+ 	// Xe.Print_Summary();
+ 	// Ar.Print_Summary();
+ 	// // double k =0.1*keV;
+ 	// // std::cout<<Xe[0].Ionization_Form_Factor(1*keV, k*k/2/mElectron)<<std::endl;
+
+ 	// cfg.DM->Set_Mass(500*MeV);
+ 	// cfg.DM->Set_Interaction_Parameter(5e-39*cm*cm,"Electrons");
+ 	// double mu = 27.0;
+ 	// double sigma = 6.7;
+ 	// for (int PE = 20; PE< 100; PE++)
+ 	// {
+ 	// 	std::cout <<"PE = "<<PE<<"\t"<<1000*kg*yr * R_PE_Ionization(PE,mu,sigma,*cfg.DM, *cfg.DM_distr, Xe)<<std::endl;
+ 	// }
 
 	//Ending time and computing time
 	auto time_end = std::chrono::system_clock::now();

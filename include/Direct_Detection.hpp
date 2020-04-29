@@ -10,7 +10,7 @@
 #include "DM_Particle.hpp"
 #include "DM_Distribution.hpp"
 
-//1. DM Detector base class
+// DM Detector base class, which includes the statistical methods.
 class DM_Detector
 {
 	protected:
@@ -29,13 +29,13 @@ class DM_Detector
 		double expected_background;
 
 		//b) Binned Poisson statistics
+		void Use_Binned_Poisson(unsigned bins);
 		unsigned int number_of_bins;
 		std::vector<double> bin_energies;
 		std::vector<double> bin_efficiencies;
 		std::vector<unsigned long int> bin_observed_events;
 		std::vector<double> bin_expected_background;
-		void Use_Binned_Poisson(unsigned bins)
-		;
+
 		//c) Maximum gap a'la Yellin
 		std::vector<double> maximum_gap_energy_data;
 		double P_Value_Maximum_Gap(const DM_Particle& DM, DM_Distribution& DM_distr);
@@ -49,35 +49,36 @@ class DM_Detector
 
 		void Set_Flat_Efficiency(double eff);
 
-		virtual double dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr) { return 0.0;};
+		//DM functions
 		virtual double Minimum_DM_Speed(const DM_Particle& DM) const {return 0.0;};
+		virtual double dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr) { return 0.0;};
+		virtual double DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr);
+		virtual std::vector<double> DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr);
 
 		//Statistics
-		virtual double Log_Likelihood(const DM_Particle& DM, DM_Distribution& DM_distr);
-		virtual double Likelihood(const DM_Particle& DM, DM_Distribution& DM_distr);
-		virtual double P_Value(const DM_Particle& DM, DM_Distribution& DM_distr);
-		virtual double Upper_Limit(DM_Particle& DM, DM_Distribution& DM_distr, double certainty = 0.95);
-		std::vector<std::vector<double>> Upper_Limit_Curve(DM_Particle& DM, DM_Distribution& DM_distr, double mMin,double mMax, int points = 50,double certainty = 0.95);
+		double Log_Likelihood(const DM_Particle& DM, DM_Distribution& DM_distr);
+		double Likelihood(const DM_Particle& DM, DM_Distribution& DM_distr);
+		double P_Value(const DM_Particle& DM, DM_Distribution& DM_distr);
 		
 		//a) Poisson
-		void Set_Observed_Events(unsigned long int N, double B = 0.0);
+		void Use_Poisson_Statistics();
+		void Set_Observed_Events(unsigned long int N);
 		void Set_Expected_Background(double B);
-		virtual double DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr);
 		
 		//b) Binned Poisson
 		void Use_Energy_Bins(double Emin, double Emax, int bins);
 		void Set_Observed_Events(std::vector<unsigned long int> Ni);
 		void Set_Bin_Efficiencies(const std::vector<double>& eff);
 		void Set_Expected_Background(const std::vector<double>& Bi);
-		virtual std::vector<double> DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr);
 		
 		//c) Maximum gap
 		void Use_Maximum_Gap(std::string filename_energy_data,double dim = keV);
 
+		//Limits/Constraints
+		double Upper_Limit(DM_Particle& DM, DM_Distribution& DM_distr, double certainty = 0.95);
+		std::vector<std::vector<double>> Upper_Limit_Curve(DM_Particle& DM, DM_Distribution& DM_distr, std::vector<double> masses, double certainty = 0.95);
+
 		virtual void Print_Summary(int MPI_rank = 0) const {Print_Summary_Base(MPI_rank);};
 };
-
-//2. Functions for statistical analysis
-	extern double CDF_Maximum_Gap(double x, double mu);
 
 #endif

@@ -11,16 +11,57 @@
 #include "Statistics.hpp"
 #include "Utilities.hpp"
 
-//1. DM_Detector base class
-
+// DM Detector base class, which includes the statistical methods.
 	void DM_Detector::Set_Flat_Efficiency(double eff)
 	{
 		flat_efficiency = eff;
 	}
 
+	// DM functions
+	double DM_Detector::DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr)
+	{
+		std::function<double(double)> spectrum = [this, &DM, &DM_distr] (double E)
+		{
+			return dRdE(E, DM, DM_distr);
+		};
+		double epsilon = Find_Epsilon(spectrum, energy_threshold, energy_max, 1e-6);
+		return exposure*Integrate(spectrum, energy_threshold, energy_max, epsilon);
+	}
+
+	std::vector<double> DM_Detector::DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr)
+	{
+		if(statistical_analysis != "Binned Poisson" || number_of_bins == 0)
+		{
+			std::cerr<<"Error in DM_Detector::DM_Signals_Binned(const DM_Particle&, DM_Distribution&): The analysis is not binned Poisson."<<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		else if(bin_energies.empty())
+		{
+			std::cerr<<"Error in DM_Detector::DM_Signals_Binned(const DM_Particle&, DM_Distribution&): No energy bins defined."<<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		else
+		{
+			std::function<double(double)> spectrum = [this, &DM, &DM_distr] (double E)
+			{
+				return dRdE(E, DM, DM_distr);
+			};
+			std::vector<double> mu_i;
+			for(unsigned int i = 0; i < number_of_bins; i++)
+			{
+				
+				double epsilon = Find_Epsilon(spectrum, bin_energies[i], bin_energies[i+1], 1e-4);
+				double mu = exposure * Integrate(spectrum, bin_energies[i], bin_energies[i+1], epsilon);
+				mu_i.push_back(bin_efficiencies[i] * mu);
+			}
+			return mu_i;
+		}
+	}
+
+	//Statistics
 	double DM_Detector::Log_Likelihood(const DM_Particle& DM, DM_Distribution& DM_distr)
 	{
-		if(statistical_analysis=="Poisson")
+		if(statistical_analysis == "Poisson")
 		{
 			double s = DM_Signals_Total(DM, DM_distr);
 			unsigned long int n = observed_events;
@@ -79,7 +120,7 @@
 			// double t = -2.0 * (log_likelihood - log_likelihood_0);
 			// //Integrate chi-square distribution with 1 degree of freedom (dof) over t' larger than t.
 			// double dof = 1.0;
-			// p_value = 0.5* (1.0 - CDF_Chi_Square(t, dof));
+			// p_value = 0.5 * (1.0 - CDF_Chi_Square(t, dof));
 
 			std::vector<double> expectation_values = DM_Signals_Binned(DM, DM_distr);
 			std::vector<double> p_values(number_of_bins, 0.0);
@@ -102,71 +143,45 @@
 		return p_value;
 	}
 
-	double DM_Detector::Upper_Limit(DM_Particle& DM, DM_Distribution& DM_distr, double certainty)
+	//a) Poisson statistics
+	void DM_Detector::Use_Poisson_Statistics()
 	{
-		double interaction_parameter_original = DM.Get_Interaction_Parameter(targets);
-		
-		std::function<double(double)> func = [this, &DM, &DM_distr, certainty] (double log10_parameter)
-		{
-			double parameter = pow(10.0, log10_parameter);
-			DM.Set_Interaction_Parameter(parameter, targets);
-			double p_value = P_Value(DM, DM_distr);
-			return p_value-(1.0-certainty);
-		};
-		double log10_upper_bound = Find_Root(func, -30.0, 10.0, 1.0e-4);
-
-		DM.Set_Interaction_Parameter(interaction_parameter_original, targets);
-		return pow(10.0, log10_upper_bound);
+		statistical_analysis = "Binned Poisson";
+		observed_events = 0;
+		expected_background = 0;
 	}
 
-	std::vector<std::vector<double>> DM_Detector::Upper_Limit_Curve(DM_Particle& DM, DM_Distribution& DM_distr, double mMin,double mMax, int points, double certainty)
+	void DM_Detector::Set_Observed_Events(unsigned long int n)
 	{
-		double mOriginal = DM.mass;
-		double lowest_mass = Minimum_DM_Mass(DM, DM_distr);
-		std::vector<std::vector<double>> limit;
-		std::vector<double> masses = Log_Space(mMin,mMax,points);
-
-		for(unsigned int i = 0; i < masses.size(); i++)
+		if(statistical_analysis != "Poisson")
 		{
-			if(masses[i] < lowest_mass) continue;
-			DM.Set_Mass(masses[i]);
-			limit.push_back(std::vector<double>{masses[i], Upper_Limit(DM, DM_distr, certainty)});
+			std::cerr <<"Error in DM_Detector::Set_Observed_Events(unsigned long int): Statistical analysis is " <<statistical_analysis <<" not 'Poisson'." <<std::endl;
+			std::exit(EXIT_FAILURE);
 		}
-
-		DM.Set_Mass(mOriginal);
-		return limit;
-	}
-
-	//a) Poisson
-	void DM_Detector::Set_Observed_Events(unsigned long int n, double B)
-	{
-		statistical_analysis = "Poisson";
-		observed_events = n;
-
-		expected_background = B;
+		else
+		{
+			observed_events = n;
+		}
 	}
 
 	void DM_Detector::Set_Expected_Background(double B)
 	{
-		expected_background = B;
-	}
-
-	double DM_Detector::DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr)
-	{
-		std::function<double(double)> spectrum = [this, &DM, &DM_distr] (double E)
+		if(statistical_analysis != "Poisson")
 		{
-			return dRdE(E, DM, DM_distr);
-		};
-		double epsilon = Find_Epsilon(spectrum, energy_threshold, energy_max, 1e-6);
-		return exposure*Integrate(spectrum, energy_threshold, energy_max, epsilon);
+			std::cerr <<"Error in DM_Detector::Set_Expected_Background(double): Statistical analysis is " <<statistical_analysis <<" not 'Poisson'." <<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		else
+		{
+			expected_background = B;
+		}
 	}
 
-	//b) Binned Poisson
+	//b) Binned Poisson statistics
 	void DM_Detector::Use_Binned_Poisson(unsigned bins)
 	{
-		number_of_bins = bins;
-
 		statistical_analysis = "Binned Poisson";
+		number_of_bins = bins;
 		bin_observed_events = std::vector<unsigned long int>(number_of_bins,0);
 		bin_expected_background = std::vector<double>(number_of_bins,0.0);
 		bin_efficiencies = std::vector<double>(number_of_bins, 1.0);
@@ -175,23 +190,21 @@
 	void DM_Detector::Use_Energy_Bins(double Emin, double Emax, int bins)
 	{
 		Use_Binned_Poisson(bins);
-
 		energy_threshold = Emin;
 		energy_max = Emax;
-
 		bin_energies = Linear_Space(energy_threshold, energy_max, number_of_bins + 1);
 	}
 	
 	void DM_Detector::Set_Observed_Events(std::vector<unsigned long int> Ni)
 	{
-		if(Ni.size() != number_of_bins)
+		if (statistical_analysis != "Binned Poisson")
 		{
-			std::cerr<<"Error in DM_Detector::Set_Observed_Events(std::vector<unsigned long int>): Length of the observed events ("<<Ni.size()<<") is not equal to the number of bins(" <<number_of_bins <<")."<<std::endl;
+			std::cerr<<"Error in DM_Detector::Set_Observed_Events(std::vector<unsigned long int>): Statistical analysis is " <<statistical_analysis <<" not 'Binned Poisson'." <<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
-		else if (statistical_analysis != "Binned Poisson")
+		else if(Ni.size() != number_of_bins)
 		{
-			std::cerr<<"Error in DM_Detector::Set_Observed_Events(std::vector<unsigned long int>): No bins have been defined."<<std::endl;
+			std::cerr<<"Error in DM_Detector::Set_Observed_Events(std::vector<unsigned long int>): Length of the input ("<<Ni.size()<<") is not equal to the number of bins(" <<number_of_bins <<")."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		else
@@ -203,59 +216,42 @@
 
 	void DM_Detector::Set_Bin_Efficiencies(const std::vector<double>& eff)
 	{
-		if(statistical_analysis != "Binned Poisson" || eff.size() != number_of_bins)
+		if (statistical_analysis != "Binned Poisson")
 		{
-			std::cerr<<"Error in DM_Detector::Set_Bin_Efficiencies(const std::vector<double>&): Length of the efficiency vector is not equal to the number of bins."<<std::endl;
+			std::cerr<<"Error in DM_Detector::Set_Bin_Efficiencies(const std::vector<double>&): Statistical analysis is " <<statistical_analysis <<" not 'Binned Poisson'." <<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
-		else bin_efficiencies = eff;
-	}
-
-	void DM_Detector::Set_Expected_Background(const std::vector<double>& Bi)
-	{
-		if(statistical_analysis != "Binned Poisson" || Bi.size() != number_of_bins)
+		else if(eff.size() != number_of_bins)
 		{
-			std::cerr<<"Error in DM_Detector::Set_Expected_Background(const std::vector<double>&): Length of the efficiency vector is not equal to the number of bins."<<std::endl;
-			std::exit(EXIT_FAILURE);
-		}
-		else 
-		{
-			bin_expected_background = Bi;
-			expected_background = std::accumulate(bin_expected_background.begin(),bin_expected_background.end(),0);
-		}
-	}
-	
-
-	std::vector<double> DM_Detector::DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr)
-	{
-		if(statistical_analysis != "Binned Poisson" || number_of_bins == 0)
-		{
-			std::cerr<<"Error in DM_Detector::DM_Signals_Binned(const DM_Particle&, DM_Distribution&): The analysis is not binned Poisson."<<std::endl;
-			std::exit(EXIT_FAILURE);
-		}
-		else if(bin_energies.empty())
-		{
-			std::cerr<<"Error in DM_Detector::DM_Signals_Binned(const DM_Particle&, DM_Distribution&): No energy bins defined."<<std::endl;
+			std::cerr<<"Error in DM_Detector::Set_Bin_Efficiencies(const std::vector<double>&): Length of the input ("<<eff.size()<<") is not equal to the number of bins(" <<number_of_bins <<")."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		else
 		{
-			std::function<double(double)> spectrum = [this, &DM, &DM_distr] (double E)
-			{
-				return dRdE(E, DM, DM_distr);
-			};
-			std::vector<double> mu_i;
-			for(unsigned int i = 0; i < number_of_bins; i++)
-			{
-				
-				double epsilon = Find_Epsilon(spectrum, bin_energies[i], bin_energies[i+1], 1e-4);
-				double mu = exposure * Integrate(spectrum, bin_energies[i], bin_energies[i+1], epsilon);
-				mu_i.push_back(bin_efficiencies[i] * mu);
-			}
-			return mu_i;
-		}
+			bin_efficiencies = eff;
+		}	
 	}
 
+	void DM_Detector::Set_Expected_Background(const std::vector<double>& Bi)
+	{
+		if (statistical_analysis != "Binned Poisson")
+		{
+			std::cerr<<"Error in DM_Detector::Set_Expected_Background(const std::vector<double>&): Statistical analysis is " <<statistical_analysis <<" not 'Binned Poisson'." <<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		else if(Bi.size() != number_of_bins)
+		{
+			std::cerr<<"Error in DM_Detector::Set_Expected_Background(const std::vector<double>&): Length of the input ("<<Bi.size()<<") is not equal to the number of bins(" <<number_of_bins <<")."<<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		else
+		{
+			bin_expected_background = Bi;
+			expected_background = std::accumulate(bin_expected_background.begin(),bin_expected_background.end(),0);
+		}	
+	}
+
+	//c) Maximum gap
 	void DM_Detector::Use_Maximum_Gap(std::string filename_energy_data,double dim)
 	{
 		statistical_analysis = "Maximum-Gap";
@@ -269,6 +265,23 @@
 		std::sort(maximum_gap_energy_data.begin(),maximum_gap_energy_data.end());
 	}
 
+	double CDF_Maximum_Gap(double x,double mu)
+	{
+		if(x==mu) return 1.0-exp(-mu);
+		else
+		{
+			int m = mu/x;
+			double sum=0.0;
+			for(int k=0;k<=m;k++) 
+			{
+				double term = pow(k*x-mu,k) / Factorial(k) * exp(-k*x) * (1.0 + k/(mu-k*x));
+				sum+= term ;
+				if (fabs(term)<1e-20) break;
+			}
+			return sum;
+		}
+	}
+
 	double DM_Detector::P_Value_Maximum_Gap(const DM_Particle& DM, DM_Distribution& DM_distr)
 	{
 		// Interpolation spectrum = Spectrum(DM);
@@ -279,7 +292,7 @@
 
 		//Determine and save all gap sizes.
 		std::vector<double> x;
-		for(unsigned int i = 0;i < (maximum_gap_energy_data.size()-1); i++)
+		for(unsigned int i = 0; i < (maximum_gap_energy_data.size()-1); i++)
 		{
 			double E1 = maximum_gap_energy_data[i];
 			double E2 = maximum_gap_energy_data[i+1];
@@ -295,6 +308,40 @@
 		double N = std::accumulate(x.begin(),x.end(),0.0);
 		double llh = 1.0 - CDF_Maximum_Gap(xMax,N);
 		return llh;
+	}
+
+	//Limits/Constraints
+	double DM_Detector::Upper_Limit(DM_Particle& DM, DM_Distribution& DM_distr, double certainty)
+	{
+		double interaction_parameter_original = DM.Get_Interaction_Parameter(targets);
+		// Find the interaction parameter such that p = 1-certainty
+		std::function<double(double)> func = [this, &DM, &DM_distr, certainty] (double log10_parameter)
+		{
+			double parameter = pow(10.0, log10_parameter);
+			DM.Set_Interaction_Parameter(parameter, targets);
+			double p_value = P_Value(DM, DM_distr);
+			return p_value - (1.0-certainty);
+		};
+		double log10_upper_bound = Find_Root(func, -30.0, 10.0, 1.0e-4);
+
+		DM.Set_Interaction_Parameter(interaction_parameter_original, targets);
+		return pow(10.0, log10_upper_bound);
+	}
+
+	std::vector<std::vector<double>> DM_Detector::Upper_Limit_Curve(DM_Particle& DM, DM_Distribution& DM_distr, std::vector<double> masses, double certainty)
+	{
+		double mOriginal = DM.mass;
+		double lowest_mass = Minimum_DM_Mass(DM, DM_distr);
+		std::vector<std::vector<double>> limit;
+
+		for(unsigned int i = 0; i < masses.size(); i++)
+		{
+			if(masses[i] < lowest_mass) continue;
+			DM.Set_Mass(masses[i]);
+			limit.push_back(std::vector<double>{masses[i], Upper_Limit(DM, DM_distr, certainty)});
+		}
+		DM.Set_Mass(mOriginal);
+		return limit;
 	}
 
 	void DM_Detector::Print_Summary_Base(int MPI_rank) const
@@ -320,25 +367,5 @@
 				}
 			}
 			std::cout <<std::endl;			
-		}
-	}
-
-
-
-//2. Functions for statistical analysis
-	double CDF_Maximum_Gap(double x,double mu)
-	{
-		if(x==mu) return 1.0-exp(-mu);
-		else
-		{
-			int m = mu/x;
-			double sum=0.0;
-			for(int k=0;k<=m;k++) 
-			{
-				double term = pow(k*x-mu,k) / Factorial(k) * exp(-k*x) * (1.0 + k/(mu-k*x));
-				sum+= term ;
-				if (fabs(term)<1e-20) break;
-			}
-			return sum;
 		}
 	}

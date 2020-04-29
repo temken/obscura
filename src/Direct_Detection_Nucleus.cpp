@@ -80,7 +80,6 @@
 		{
 			for(unsigned int j = 0 ; j < target_elements[i].Number_of_Isotopes() ; j++)
 			{
-
 				double mMin = target_elements[i][j].mass / (sqrt(2.0*target_elements[i][j].mass/(energy_threshold-2.0*energy_resolution))*vMax-1.0);
 				if(DM.Sigma_Nucleus(target_elements[i][j],vMax) > 0.0) aux.push_back(mMin);
 			}

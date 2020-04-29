@@ -255,7 +255,7 @@
  	double DM_Particle_SI::Sigma_Nucleus(const Isotope& isotope,double vDM) const
  	{
  		double sigmatot=0.0;
- 		if(FF_DM!="Contact" && FF_DM != "General")
+ 		if(FF_DM != "Contact" && FF_DM != "General")
 		{
 			std::cerr<<"Error in DM_Particle_SI::Sigma_Nucleus(): Divergence in the IR."<<std::endl;
 			std::exit(EXIT_FAILURE);		

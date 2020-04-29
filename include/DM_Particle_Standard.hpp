@@ -56,7 +56,7 @@ class DM_Particle_Standard : public DM_Particle
 		virtual double Sigma_Electron() const override;
 
 		//Total cross sections with nuclear isotopes, elements, and electrons
-		virtual double Sigma_Nucleus(const Isotope& target,double vDM=1e-3) const  override {return 0;};
+		virtual double Sigma_Nucleus(const Isotope& target,double vDM=1e-3) const override {return 0;};
 };
 
 //2. Spin-independent (SI) interactions
