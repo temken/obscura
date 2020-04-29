@@ -113,7 +113,7 @@
 			double p_value = P_Value(DM, DM_distr);
 			return p_value-(1.0-certainty);
 		};
-		double log10_upper_bound = Find_Root(func, -30.0, 10.0, 1.0e-6);
+		double log10_upper_bound = Find_Root(func, -30.0, 10.0, 1.0e-4);
 
 		DM.Set_Interaction_Parameter(interaction_parameter_original, targets);
 		return pow(10.0, log10_upper_bound);
@@ -162,25 +162,36 @@
 	}
 
 	//b) Binned Poisson
+	void DM_Detector::Use_Binned_Poisson(unsigned bins)
+	{
+		number_of_bins = bins;
+
+		statistical_analysis = "Binned Poisson";
+		bin_observed_events = std::vector<unsigned long int>(number_of_bins,0);
+		bin_expected_background = std::vector<double>(number_of_bins,0.0);
+		bin_efficiencies = std::vector<double>(number_of_bins, 1.0);
+	}
+
 	void DM_Detector::Use_Energy_Bins(double Emin, double Emax, int bins)
 	{
-		statistical_analysis = "Binned Poisson";
+		Use_Binned_Poisson(bins);
+
 		energy_threshold = Emin;
 		energy_max = Emax;
 
-		number_of_bins = bins;
-		bin_energies = Linear_Space(energy_threshold, energy_max, bins+1);
-		
-		if(bin_observed_events.size() != number_of_bins) bin_observed_events = std::vector<unsigned long int>(bins,0);
-		if(bin_expected_background.size() != number_of_bins) bin_expected_background = std::vector<double>(bins,0.0);
-		if(bin_efficiencies.size() != number_of_bins) bin_efficiencies = std::vector<double>(bins, 1.0);
+		bin_energies = Linear_Space(energy_threshold, energy_max, number_of_bins + 1);
 	}
 	
 	void DM_Detector::Set_Observed_Events(std::vector<unsigned long int> Ni)
 	{
-		if(statistical_analysis != "Binned Poisson" || Ni.size() != number_of_bins)
+		if(Ni.size() != number_of_bins)
 		{
-			std::cerr<<"Error in DM_Detector::Set_Observed_Events(std::vector<unsigned long int>): Length of the observed vector is not equal to the number of bins."<<std::endl;
+			std::cerr<<"Error in DM_Detector::Set_Observed_Events(std::vector<unsigned long int>): Length of the observed events ("<<Ni.size()<<") is not equal to the number of bins(" <<number_of_bins <<")."<<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		else if (statistical_analysis != "Binned Poisson")
+		{
+			std::cerr<<"Error in DM_Detector::Set_Observed_Events(std::vector<unsigned long int>): No bins have been defined."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		else

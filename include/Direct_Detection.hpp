@@ -34,7 +34,8 @@ class DM_Detector
 		std::vector<double> bin_efficiencies;
 		std::vector<unsigned long int> bin_observed_events;
 		std::vector<double> bin_expected_background;
-
+		void Use_Binned_Poisson(unsigned bins)
+		;
 		//c) Maximum gap a'la Yellin
 		std::vector<double> maximum_gap_energy_data;
 		double P_Value_Maximum_Gap(const DM_Particle& DM, DM_Distribution& DM_distr);

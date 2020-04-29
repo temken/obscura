@@ -105,17 +105,12 @@
 
 	void DM_Detector_Semiconductor::Use_Q_Bins(unsigned int Q_thr, unsigned int N_bins)
 	{
-		statistical_analysis = "Binned Poisson";
 		Q_threshold = Q_thr;
 		unsigned int Q_max = (N_bins == 0)? semiconductor_target.Q_max : N_bins - Q_threshold + 1;
-		number_of_bins = Q_max - Q_threshold + 1;
+		Use_Binned_Poisson(Q_max - Q_threshold + 1);
 		
 		energy_threshold = Minimum_Electron_Energy(Q_threshold, semiconductor_target);
 		energy_max = Minimum_Electron_Energy(Q_max, semiconductor_target);
-		
-		if(bin_observed_events.size() != number_of_bins)		bin_observed_events = std::vector<unsigned long int>(number_of_bins, 0);
-		if(bin_expected_background.size() != number_of_bins)	bin_expected_background = std::vector<double>(number_of_bins, 0.0);
-		if(bin_efficiencies.size() != number_of_bins) 			bin_efficiencies = std::vector<double>(number_of_bins,  1.0);
 	}
 
 	std::vector<double> DM_Detector_Semiconductor::DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr)

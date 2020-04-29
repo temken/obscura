@@ -190,23 +190,22 @@
 
 	void DM_Detector_Ionization::Use_Electron_Bins(unsigned int ne_thr, unsigned int N_bins)
 	{
+		Use_Binned_Poisson(N_bins);
 		using_electron_bins = true;
 		using_S2_bins = false;
 
 		ne_threshold = ne_thr;
-		number_of_bins = N_bins;
 	}
 
 	void DM_Detector_Ionization::Use_PE_Bins(double S2mu, double S2sigma, const std::vector<int> &bin_ranges)
 	{
+		Use_Binned_Poisson(bin_ranges.size() - 1);
 		using_S2_bins = true;
 		using_electron_bins = false;
 
 		S2_mu = S2mu;
 		S2_sigma = S2sigma;
 		S2_bin_ranges = bin_ranges;
-
-		number_of_bins = S2_bin_ranges.size() - 1;
 	}
 
 	void DM_Detector_Ionization::Import_Trigger_Efficiency_PE(std::string filename)
@@ -263,13 +262,13 @@
 		std::cout 	<<std::endl<<"Electron scattering experiment."<<std::endl
 					<<"Target:\t\t\t"	<<target_atom.name <<std::endl
 					<<"Electron bins:\t\t" <<(using_electron_bins? "[x]" : "[ ]") <<std::endl
-					<<"PE spectrum:\t\t" <<(using_S2_bins? "[x]" : "[ ]") <<std::endl;
+					<<"PE (S2) bins:\t\t" <<(using_S2_bins? "[x]" : "[ ]") <<std::endl;
 		if(using_S2_bins)
 		{
-			std::cout 	<<"\tmu_PE:\t" <<S2_mu<<std::endl
+			std::cout 	<<"\tmu_PE:\t\t" <<S2_mu<<std::endl
 			 			<<"\tsigma_PE:\t" <<S2_sigma<<std::endl
 			 			<<"\tImported trigger efficiencies:\t" <<(Trigger_Efficiency_PE.empty()? "[ ]" : "[x]") <<std::endl
-			 			<<"\tImported acceptance efficiencies:\t" <<(Acceptance_Efficiency_PE.empty()? "[ ]" : "[x]") <<std::endl;
+			 			<<"\tImported acc. efficiencies:\t" <<(Acceptance_Efficiency_PE.empty()? "[ ]" : "[x]") <<std::endl;
 
 			std::cout <<"\n\tBin\tBin range [S2]"<<std::endl;
 			for(unsigned int bin = 0; bin < number_of_bins; bin++)

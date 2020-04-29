@@ -651,8 +651,8 @@ using namespace libconfig;
 
 			DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target);
 			DM_detector->Set_Flat_Efficiency(flat_efficiency);
-			DM_detector->Set_Observed_Events(observed_event_bins);
 			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+			DM_detector->Set_Observed_Events(observed_event_bins);
 			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Trigger_Efficiency_PE(trigger_efficiency);
 		}
 		else if(DD_experiment == "XENON100e")
@@ -668,8 +668,8 @@ using namespace libconfig;
 			std::string acceptance_efficiency = "../data/XENON100e/PE_Acceptance_Efficiency.txt";
 
 			DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target);
-			DM_detector->Set_Observed_Events(observed_event_bins);
 			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+			DM_detector->Set_Observed_Events(observed_event_bins);
 			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Trigger_Efficiency_PE(trigger_efficiency);
 			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Acceptance_Efficiency_PE(acceptance_efficiency);
 		}
@@ -685,8 +685,8 @@ using namespace libconfig;
 			std::string trigger_efficiency = "../data/XENON1Te/XENON1T_TotalEfficiency.txt";
 
 			DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target);
-			DM_detector->Set_Observed_Events(observed_event_bins);
 			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+			DM_detector->Set_Observed_Events(observed_event_bins);
 			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Trigger_Efficiency_PE(trigger_efficiency);
 		}
 		else if(DD_experiment == "DarkSide-50")
@@ -698,8 +698,8 @@ using namespace libconfig;
 			std::vector<unsigned long int> observed_event_bins = {118643, 219893, 6131, 673, 252, 227, 198, 199, 189, 247, 230, 261,249, 329, 336, 349, 351, 352, 384, 411, 405, 461, 460, 436, 500, 546, 538, 536, 556, 583, 573, 630, 603, 635, 639, 682, 736, 755, 804, 811, 809, 882, 934, 935, 871, 965, 946, 1072, 997, 1060};
 
 			DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target);
-			DM_detector->Set_Observed_Events(observed_event_bins);
 			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_Electron_Bins(ne_threshold,15);
+			DM_detector->Set_Observed_Events(observed_event_bins);
 		}
 		else if(DD_experiment == "Semiconductor")
 		{
