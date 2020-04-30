@@ -159,6 +159,7 @@
 
 	void DM_Detector_Semiconductor::Use_Q_Bins(unsigned int Q_thr, unsigned int N_bins)
 	{
+		using_Q_bins = true;
 		Q_threshold = Q_thr;
 		unsigned int Q_max = (N_bins == 0)? semiconductor_target.Q_max : N_bins + Q_threshold - 1;
 		N_bins = Q_max - Q_threshold + 1;
