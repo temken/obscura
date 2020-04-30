@@ -5,17 +5,38 @@
 
 # DM_Detection
 
+## Dependencies
 
 ## Included experiments
 
+The following nuclear and electron recoil direct detection experiments are implemented.
+
 ### Nuclear recoil experiments
+
+#### DAMIC-N
+
+#### XENON1T-N
+
+#### CRESST-II
+
+#### CRESST-III
+
+#### CRESST-surface
 
 ### Electron recoil experiments
 
-## To-do
+#### XENON10-e
 
-- Nuclear form factor for SD interactions.
-- Add a list of included experiments with references and use defining experiment labels.
-- constraint plots for readme
-- Define vEarth by date in config file.
-- Binned events in cfg file for generic experiments
+#### XENON100-e
+
+#### XENON1T-e
+
+#### DarkSide50-e
+
+#### protoSENSEI@surface
+
+#### protoSENSEI@MINOS
+
+<!-- #### SENSEI@MINOS -->
+
+####CDMS-HVeV

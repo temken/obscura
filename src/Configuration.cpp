@@ -502,7 +502,7 @@ using namespace libconfig;
 			DM_detector->Set_Observed_Events(DD_observed_events_nuclear);
 			DM_detector->Set_Expected_Background(DD_expected_background_nuclear);
 		}
-		else if(DD_experiment == "DAMIC")
+		else if(DD_experiment == "DAMIC-N")
 		{
 			double DAMIC_exposure = 0.107*kg*day;
 			std::vector<Element> DAMIC_targets = {Get_Element(14)};
@@ -514,7 +514,7 @@ using namespace libconfig;
 			DM_detector->Use_Energy_Threshold(DAMIC_threshold, DAMIC_Emax);
 			DM_detector->Set_Observed_Events(DAMIC_observed_events);
 		}
-		else if(DD_experiment == "XENON1T")
+		else if(DD_experiment == "XENON1T-N")
 		{
 			double XENON1T_exposure = 34.2*day*1042*kg;
 			std::vector<Element> XENON1T_targets = {Get_Element(54)};
@@ -649,7 +649,7 @@ using namespace libconfig;
 			DM_detector->Set_Observed_Events(DD_observed_events_ionization);
 			DM_detector->Set_Expected_Background(DD_expected_background_ionization);
 		}
-		else if(DD_experiment == "XENON10e")
+		else if(DD_experiment == "XENON10-e")
 		{
 			std::string target_name = "Xenon";
 			double exposure = 15*kg*day;
@@ -666,7 +666,7 @@ using namespace libconfig;
 			DM_detector->Set_Observed_Events(observed_event_bins);
 			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Trigger_Efficiency_PE(trigger_efficiency);
 		}
-		else if(DD_experiment == "XENON100e")
+		else if(DD_experiment == "XENON100-e")
 		{
 			std::string target_name = "Xenon";
 			double exposure = 30*kg*yr;
@@ -683,7 +683,7 @@ using namespace libconfig;
 			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Trigger_Efficiency_PE(trigger_efficiency);
 			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Acceptance_Efficiency_PE(acceptance_efficiency);
 		}
-		else if(DD_experiment == "XENON1Te")
+		else if(DD_experiment == "XENON1T-e")
 		{
 			std::string target_name = "Xenon";
 			double exposure = 80755.2*kg*day;
@@ -698,7 +698,7 @@ using namespace libconfig;
 			DM_detector->Set_Observed_Events(observed_event_bins);
 			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Trigger_Efficiency_PE(trigger_efficiency);
 		}
-		else if(DD_experiment == "DarkSide-50")
+		else if(DD_experiment == "DarkSide-50-e")
 		{
 			std::string target_name = "Argon";
 			double exposure = 6786.0*kg*day;
@@ -776,7 +776,7 @@ using namespace libconfig;
 			DM_detector->Set_Observed_Events(DD_observed_events_semiconductor);
 			DM_detector->Set_Expected_Background(DD_expected_background_semiconductor);
 		}
-		else if(DD_experiment == "SENSEI-surface")
+		else if(DD_experiment == "protoSENSEI@surface")
 		{
 			double SENSEI_surface_exposure = 0.07*gram*456*minute;
 			unsigned int SENSEI_surface_Q_threshold = 1;
@@ -789,7 +789,7 @@ using namespace libconfig;
 			DM_detector->Set_Observed_Events(SENSEI_surface_observed_events);
 			DM_detector->Set_Bin_Efficiencies(SENSEI_surface_efficiencies);
 		}
-		else if(DD_experiment == "SENSEI")
+		else if(DD_experiment == "protoSENSEI@MINOS")
 		{
 				double SENSEI_exposure = 0.246*gram*day;
 				unsigned int SENSEI_Q_threshold = 1;
@@ -802,7 +802,7 @@ using namespace libconfig;
 				DM_detector->Set_Observed_Events(SENSEI_observed_events);
 				DM_detector->Set_Bin_Efficiencies(SENSEI_efficiencies);
 		}
-		else if(DD_experiment == "SuperCDMS")
+		else if(DD_experiment == "CDMS-HVeV")
 		{
 			double SuperCDMS_exposure = 0.487*gram*day;
 			double SuperCDMS_flat_efficiency = 0.9545;
