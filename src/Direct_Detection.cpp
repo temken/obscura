@@ -1,6 +1,7 @@
 #include "Direct_Detection.hpp"
 
 #include <iostream>
+#include <algorithm>
 #include <numeric>
 #include <cmath>
 
@@ -133,11 +134,19 @@
 	// (b) Binned Poisson statistics
 	void DM_Detector::Initialize_Binned_Poisson(unsigned bins)
 	{
-		statistical_analysis = "Binned Poisson";
-		number_of_bins = bins;
-		bin_observed_events = std::vector<unsigned long int>(number_of_bins,0);
-		bin_expected_background = std::vector<double>(number_of_bins,0.0);
-		bin_efficiencies = std::vector<double>(number_of_bins, 1.0);
+		if(statistical_analysis == "Binned Poisson")
+		{
+			std::cerr <<"Error in DM_Detector::Initialize_Binned_Poisson(): Bins have already been defined."<<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		else
+		{
+			statistical_analysis = "Binned Poisson";
+			number_of_bins = bins;
+			bin_observed_events = std::vector<unsigned long int>(number_of_bins,0);
+			bin_expected_background = std::vector<double>(number_of_bins,0.0);
+			bin_efficiencies = std::vector<double>(number_of_bins, 1.0);
+		}
 	}
 
 	void DM_Detector::Set_Observed_Events(std::vector<unsigned long int> Ni)
@@ -335,22 +344,24 @@
 		using_energy_threshold = true;
 		energy_threshold = Ethr;
 		energy_max = Emax;
+		if(energy_max < energy_threshold)
+		{
+			std::cerr <<"Error in DM_Detector::Use_Energy_Threshold(): Energy threshold (" <<energy_threshold/keV <<"keV) is higher than maximum energy (" <<energy_max/keV<<"keV)."<<std::endl;
+			std::exit(EXIT_FAILURE);
+		}
 	}
 
 	void DM_Detector::Use_Energy_Bins(double Emin, double Emax, int bins)
 	{
-		if(statistical_analysis == "Binned Poisson")
+		Initialize_Binned_Poisson(bins);
+		using_energy_bins = true;
+		energy_threshold = Emin;
+		energy_max = Emax;
+		bin_energies = Linear_Space(energy_threshold, energy_max, number_of_bins + 1);
+		if(energy_max < energy_threshold)
 		{
-			std::cerr <<"Error in DM_Detector::Use_Energy_Bins(): Bins have already been defined."<<std::endl;
+			std::cerr <<"Error in DM_Detector::Use_Energy_Bins(): Energy threshold (" <<energy_threshold/keV <<"keV) is higher than maximum energy (" <<energy_max/keV<<"keV)."<<std::endl;
 			std::exit(EXIT_FAILURE);
-		}
-		else
-		{
-			Initialize_Binned_Poisson(bins);
-			using_energy_bins = true;
-			energy_threshold = Emin;
-			energy_max = Emax;
-			bin_energies = Linear_Space(energy_threshold, energy_max, number_of_bins + 1);
 		}
 	}
 
@@ -387,21 +398,29 @@
 			std::cout 	<<std::endl
 						<<"----------------------------------------"<<std::endl
 						<<"Experiment summary:\t"<<name<<std::endl
-						<<"Target particles:\t" <<targets <<std::endl
-						<<"Exposure [kg year]:\t" <<In_Units(exposure,kg*yr)<<std::endl
-						<<"Flat efficiency [%]:\t"<<Round(100.0*flat_efficiency)<<std::endl
-						<<"Observed events:\t"<<observed_events<<std::endl
-						<<"Expected background:\t" <<expected_background <<std::endl
-						<<"Statistical analysis:\t" <<statistical_analysis <<std::endl;
-			if(using_energy_threshold || using_energy_bins || statistical_analysis == "Maximum Gap")
-				std::cout <<"Recoil energies [keV]:\t["<<Round(energy_threshold/keV)<<","<<Round(energy_max/keV) <<"]"<<std::endl;
+						<<"\tTarget particles:\t" <<targets <<std::endl
+						<<"\tExposure [kg year]:\t" <<In_Units(exposure,kg*yr)<<std::endl
+						<<"\tFlat efficiency [%]:\t"<<Round(100.0*flat_efficiency)<<std::endl
+						<<"\tObserved events:\t"<<observed_events<<std::endl
+						<<"\tExpected background:\t" <<expected_background <<std::endl
+						<<"\tStatistical analysis:\t" <<statistical_analysis <<std::endl;
 			if(statistical_analysis == "Binned Poisson")
 			{
-				std::cout <<"\tNumber of bins:\t" <<number_of_bins <<std::endl;
+				std::cout <<"\t\tNumber of bins:\t" <<number_of_bins <<std::endl;
 				if(!bin_observed_events.empty() && !bin_observed_events.empty())
 				{
-					std::cout <<"\tBin\tEfficiency[%]\tObserved events\tExpected background"<<std::endl;
-					for(unsigned int i = 0; i < bin_observed_events.size(); i++) std::cout <<"\t"<<i+1<<"\t" <<100.0 * bin_efficiencies[i]<<"\t\t"<<bin_observed_events[i] <<"\t\t"<<bin_expected_background[i] <<std::endl;
+					std::cout <<"\t\tBin\tEfficiency[%]\tObserved events\tExpected background"<<std::endl;
+					for(unsigned int i = 0; i < bin_observed_events.size(); i++) std::cout <<"\t\t"<<i+1<<"\t" <<100.0 * bin_efficiencies[i]<<"\t\t"<<bin_observed_events[i] <<"\t\t"<<bin_expected_background[i] <<std::endl;
+				}
+			}
+			if(using_energy_threshold || using_energy_bins || statistical_analysis == "Maximum Gap")
+				std::cout <<"\tRecoil energies [keV]:\t["<<Round(energy_threshold/keV)<<","<<Round(energy_max/keV) <<"]"<<std::endl;
+			if(using_energy_bins)
+			{
+				std::cout <<"\n\t\tBin\tBin range [keV]"<<std::endl;
+				for(unsigned int bin = 0; bin < number_of_bins; bin++)
+				{
+					std::cout<<"\t\t"<<bin+1<<"\t["<<Round(In_Units(bin_energies[bin],keV))<<","<<Round(In_Units(bin_energies[bin+1],keV))<<")"<<std::endl;
 				}
 			}
 			std::cout <<std::endl;			

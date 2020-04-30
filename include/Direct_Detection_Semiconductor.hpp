@@ -36,7 +36,7 @@
 			std::vector<double> DM_Signals_Q_Bins(const DM_Particle& DM, DM_Distribution& DM_distr);
 
 		public:
-			DM_Detector_Semiconductor(std::string label, double expo, std::string crys, unsigned int Q_thr);
+			DM_Detector_Semiconductor(std::string label, double expo, std::string crys);
 
 		//DM functions
 			virtual double Minimum_DM_Speed(const DM_Particle& DM) const override;
@@ -46,9 +46,9 @@
 
 		//Q spectrum
 			// (a) Poisson
-				void Use_Q_Threshold(unsigned int Q_thr);
+			void Use_Q_Threshold(unsigned int Q_thr);
 			// (b) Binned Poisson
-				void Use_Q_Bins(unsigned int Q_thr, unsigned int N_bins = 0);
+			void Use_Q_Bins(unsigned int Q_thr, unsigned int N_bins = 0);
 
 			virtual void Print_Summary(int MPI_rank = 0) const override;
 	};

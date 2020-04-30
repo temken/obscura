@@ -34,14 +34,14 @@
 		
 		public:
 			DM_Detector_Nucleus();
-			DM_Detector_Nucleus(std::string label, double expo,std::vector<Element> elements, double thr,double emax,std::vector<double> abund = {});
+			DM_Detector_Nucleus(std::string label, double expo,std::vector<Element> elements, std::vector<double> abund = {});
 
 			void Set_Resolution(double res);
 			void Import_Efficiency(std::string filename,double dim = keV);
 			void Import_Efficiency(std::vector<std::string> filenames,double dim = keV);
 			
-			virtual double dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr) override;
 			virtual double Minimum_DM_Speed(const DM_Particle& DM) const override;
+			virtual double dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr) override;
 			
 			virtual void Print_Summary(int MPI_rank = 0) const override;
 	};

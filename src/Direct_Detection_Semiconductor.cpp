@@ -75,10 +75,9 @@
 
 
 //2. Electron recoil direct detection experiment with semiconductor target
-	DM_Detector_Semiconductor::DM_Detector_Semiconductor(std::string label, double expo, std::string crys, unsigned int Q_thr)
+	DM_Detector_Semiconductor::DM_Detector_Semiconductor(std::string label, double expo, std::string crys)
 	: DM_Detector(label, expo, "Electrons"), semiconductor_target(Semiconductor(crys))
 	{
-		Use_Q_Threshold(Q_thr);
 	}
 
 	//DM functions

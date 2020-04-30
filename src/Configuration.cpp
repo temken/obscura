@@ -4,6 +4,9 @@
 // #include <sys/types.h> // required for stat.h
 #include <sys/stat.h>	//required to create a folder
 
+//Headers from libphys library
+#include "Utilities.hpp"
+
 #include "DM_Particle_Standard.hpp"
 #include "Direct_Detection_Nucleus.hpp"
 #include "Direct_Detection_Ionization.hpp"
@@ -38,7 +41,7 @@ using namespace libconfig;
 		Construct_DM_Distribution();
 
 		//5. DM-detection experiment
-		// Construct_DM_Detector();
+		Construct_DM_Detector();
 
 		// 6. Computation of exclusion limits
 		try
@@ -402,416 +405,422 @@ using namespace libconfig;
 		}
 	}
 
-	// void Configuration::Construct_DM_Detector()
-	// {
-	// 	std::string DD_experiment;
-	// 	try
-	// 	{
-	// 		DD_experiment = config.lookup("DD_experiment").c_str();
-	// 	}
-	// 	catch(const SettingNotFoundException &nfex)
-	// 	{
-	// 		std::cerr << "No 'DD_experiment' setting in configuration file." << std::endl;
-	// 		std::exit(EXIT_FAILURE);
-	// 	}
-	// 	if(DD_experiment == "Nuclear recoil")
-	// 	{
-	// 		std::vector<Element> DD_targets_nuclear;
-	// 		std::vector<double>  DD_targets_nuclear_abundances;
-	// 		try
-	// 		{
-	// 			int element_count=config.lookup("DD_targets_nuclear").getLength();
-	// 			for(int j=0;j<element_count;j++)
-	// 			{
-	// 				double abund = config.lookup("DD_targets_nuclear")[j][0];
-	// 				int Z = config.lookup("DD_targets_nuclear")[j][1];
-	// 				DD_targets_nuclear_abundances.push_back(abund);
-	// 				DD_targets_nuclear.push_back( Get_Element(Z) );
-	// 			}
-	// 		}
-	// 		catch(const SettingNotFoundException &nfex)
-	// 		{
-	// 			std::cerr << "No 'DD_targets_nuclear' setting in configuration file." << std::endl;
-	// 			std::exit(EXIT_FAILURE);
-	// 		}
+	void Configuration::Construct_DM_Detector()
+	{
+		std::string DD_experiment;
+		try
+		{
+			DD_experiment = config.lookup("DD_experiment").c_str();
+		}
+		catch(const SettingNotFoundException &nfex)
+		{
+			std::cerr << "No 'DD_experiment' setting in configuration file." << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		if(DD_experiment == "Nuclear recoil")
+		{
+			std::vector<Element> DD_targets_nuclear;
+			std::vector<double>  DD_targets_nuclear_abundances;
+			try
+			{
+				int element_count=config.lookup("DD_targets_nuclear").getLength();
+				for(int j=0;j<element_count;j++)
+				{
+					double abund = config.lookup("DD_targets_nuclear")[j][0];
+					int Z = config.lookup("DD_targets_nuclear")[j][1];
+					DD_targets_nuclear_abundances.push_back(abund);
+					DD_targets_nuclear.push_back( Get_Element(Z) );
+				}
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_targets_nuclear' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
 
-	// 		double DD_threshold_nuclear, DD_Emax_nuclear, DD_exposure_nuclear,  DD_efficiency_nuclear, DD_expected_background_nuclear;
-	// 		unsigned int DD_observed_events_nuclear;
-	// 		try
-	// 		{
-	// 			DD_threshold_nuclear = config.lookup("DD_threshold_nuclear");
-	// 			DD_threshold_nuclear *= keV;
-	// 		}
-	// 		catch(const SettingNotFoundException &nfex)
-	// 		{
-	// 			std::cerr << "No 'DD_threshold_nuclear' setting in configuration file." << std::endl;
-	// 			std::exit(EXIT_FAILURE);
-	// 		}
-	// 		try
-	// 		{
-	// 			DD_Emax_nuclear = config.lookup("DD_Emax_nuclear");
-	// 			DD_Emax_nuclear *= keV;
-	// 		}
-	// 		catch(const SettingNotFoundException &nfex)
-	// 		{
-	// 			std::cerr << "No 'DD_Emax_nuclear' setting in configuration file." << std::endl;
-	// 			std::exit(EXIT_FAILURE);
-	// 		}
-	// 		try
-	// 		{
-	// 			DD_exposure_nuclear = config.lookup("DD_exposure_nuclear");
-	// 			DD_exposure_nuclear *= kg*yr;
-	// 		}
-	// 		catch(const SettingNotFoundException &nfex)
-	// 		{
-	// 			std::cerr << "No 'DD_exposure_nuclear' setting in configuration file." << std::endl;
-	// 			std::exit(EXIT_FAILURE);
-	// 		}
-	// 		try
-	// 		{
-	// 			DD_efficiency_nuclear = config.lookup("DD_efficiency_nuclear");
-	// 		}
-	// 		catch(const SettingNotFoundException &nfex)
-	// 		{
-	// 			std::cerr << "No 'DD_efficiency_nuclear' setting in configuration file." << std::endl;
-	// 			std::exit(EXIT_FAILURE);
-	// 		}
-	// 		try
-	// 		{
-	// 			DD_observed_events_nuclear = config.lookup("DD_observed_events_nuclear");
-	// 		}
-	// 		catch(const SettingNotFoundException &nfex)
-	// 		{
-	// 			std::cerr << "No 'DD_observed_events_nuclear' setting in configuration file." << std::endl;
-	// 			std::exit(EXIT_FAILURE);
-	// 		}
-	// 		try
-	// 		{
-	// 			DD_expected_background_nuclear = config.lookup("DD_expected_background_nuclear");
-	// 		}
-	// 		catch(const SettingNotFoundException &nfex)
-	// 		{
-	// 			std::cerr << "No 'DD_expected_background_nuclear' setting in configuration file." << std::endl;
-	// 		}
-	// 		DM_detector = new DM_Detector_Nucleus(DD_experiment, DD_exposure_nuclear, DD_targets_nuclear, DD_threshold_nuclear, DD_Emax_nuclear,DD_targets_nuclear_abundances);
-	// 		DM_detector->Set_Flat_Efficiency(DD_efficiency_nuclear);
-	// 		DM_detector->Set_Observed_Events(DD_observed_events_nuclear);
-	// 		DM_detector->Set_Expected_Background(DD_expected_background_nuclear);
-	// 	}
-	// 	else if(DD_experiment == "DAMIC")
-	// 	{
-	// 		double DAMIC_exposure = 0.107*kg*day;
-	// 		std::vector<Element> DAMIC_targets = {Get_Element(14)};
-	// 		double DAMIC_threshold = 0.55*keV;
-	// 		double DAMIC_Emax = 7.0*keV;
-	// 		unsigned int DAMIC_observed_events = 106;
+			double DD_threshold_nuclear, DD_Emax_nuclear, DD_exposure_nuclear,  DD_efficiency_nuclear, DD_expected_background_nuclear;
+			unsigned int DD_observed_events_nuclear;
+			try
+			{
+				DD_threshold_nuclear = config.lookup("DD_threshold_nuclear");
+				DD_threshold_nuclear *= keV;
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_threshold_nuclear' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_Emax_nuclear = config.lookup("DD_Emax_nuclear");
+				DD_Emax_nuclear *= keV;
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_Emax_nuclear' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_exposure_nuclear = config.lookup("DD_exposure_nuclear");
+				DD_exposure_nuclear *= kg*yr;
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_exposure_nuclear' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_efficiency_nuclear = config.lookup("DD_efficiency_nuclear");
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_efficiency_nuclear' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_observed_events_nuclear = config.lookup("DD_observed_events_nuclear");
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_observed_events_nuclear' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_expected_background_nuclear = config.lookup("DD_expected_background_nuclear");
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_expected_background_nuclear' setting in configuration file." << std::endl;
+			}
+			DM_detector = new DM_Detector_Nucleus(DD_experiment, DD_exposure_nuclear, DD_targets_nuclear, DD_targets_nuclear_abundances);
+			DM_detector->Set_Flat_Efficiency(DD_efficiency_nuclear);
+			DM_detector->Use_Energy_Threshold(DD_threshold_nuclear, DD_Emax_nuclear);
+			DM_detector->Set_Observed_Events(DD_observed_events_nuclear);
+			DM_detector->Set_Expected_Background(DD_expected_background_nuclear);
+		}
+		else if(DD_experiment == "DAMIC")
+		{
+			double DAMIC_exposure = 0.107*kg*day;
+			std::vector<Element> DAMIC_targets = {Get_Element(14)};
+			double DAMIC_threshold = 0.55*keV;
+			double DAMIC_Emax = 7.0*keV;
+			unsigned int DAMIC_observed_events = 106;
 			
-	// 		DM_detector = new DM_Detector_Nucleus(DD_experiment, DAMIC_exposure, DAMIC_targets, DAMIC_threshold, DAMIC_Emax);
-	// 		DM_detector->Set_Observed_Events(DAMIC_observed_events);
-	// 	}
-	// 	else if(DD_experiment == "XENON1T")
-	// 	{
-	// 		double XENON1T_exposure = 34.2*day*1042*kg;
-	// 		std::vector<Element> XENON1T_targets = {Get_Element(54)};
-	// 		double XENON1T_threshold = 5.0*keV;
-	// 		double XENON1T_Emax = 40.0*keV;
-	// 		double XENON1T_efficiency = 0.82;
-	// 		unsigned int XENON1T_observed_events = 0;
+			DM_detector = new DM_Detector_Nucleus(DD_experiment, DAMIC_exposure, DAMIC_targets);
+			DM_detector->Use_Energy_Threshold(DAMIC_threshold, DAMIC_Emax);
+			DM_detector->Set_Observed_Events(DAMIC_observed_events);
+		}
+		else if(DD_experiment == "XENON1T")
+		{
+			double XENON1T_exposure = 34.2*day*1042*kg;
+			std::vector<Element> XENON1T_targets = {Get_Element(54)};
+			double XENON1T_threshold = 5.0*keV;
+			double XENON1T_Emax = 40.0*keV;
+			double XENON1T_efficiency = 0.82;
+			unsigned int XENON1T_observed_events = 0;
 			
-	// 		DM_detector = new DM_Detector_Nucleus(DD_experiment, XENON1T_exposure, XENON1T_targets, XENON1T_threshold, XENON1T_Emax);
-	// 		DM_detector->Set_Observed_Events(XENON1T_observed_events);
-	// 		DM_detector->Set_Flat_Efficiency(XENON1T_efficiency);
-	// 	}
-	// 	else if(DD_experiment == "CRESST-II")
-	// 	{
-	// 		double CRESST_II_exposure = 52.15*kg*day;
-	// 		std::vector<Element> CRESST_II_targets = {Get_Element(8),Get_Element(20),Get_Element(74)}; //CaOW
-	// 		std::vector<double> CRESST_II_target_ratios = {4,1,1};
-	// 		double CRESST_II_threshold = 307*eV;
-	// 		double CRESST_II_Emax = 40.0*keV;
-	// 		double CRESST_II_resolution = CRESST_II_threshold / 5.0;
-	// 		std::vector<std::string> efficiency_files = {"../data/CRESST-II/Lise_eff_AR_O.dat","../data/CRESST-II/Lise_eff_AR_Ca.dat","../data/CRESST-II/Lise_eff_AR_W.dat"};
-
-	// 		DM_detector = new DM_Detector_Nucleus(DD_experiment, CRESST_II_exposure, CRESST_II_targets, CRESST_II_threshold, CRESST_II_Emax, CRESST_II_target_ratios);
+			DM_detector = new DM_Detector_Nucleus(DD_experiment, XENON1T_exposure, XENON1T_targets);
+			DM_detector->Set_Flat_Efficiency(XENON1T_efficiency);
+			DM_detector->Use_Energy_Threshold(XENON1T_threshold, XENON1T_Emax);
+			DM_detector->Set_Observed_Events(XENON1T_observed_events);
+		}
+		else if(DD_experiment == "CRESST-II")
+		{
+			double CRESST_II_exposure = 52.15*kg*day;
+			std::vector<Element> CRESST_II_targets = {Get_Element(8),Get_Element(20),Get_Element(74)}; //CaOW
+			std::vector<double> CRESST_II_target_ratios = {4,1,1};
+			double CRESST_II_threshold = 307*eV;
+			double CRESST_II_Emax = 40.0*keV;
+			double CRESST_II_resolution = CRESST_II_threshold / 5.0;
+			std::vector<std::string> efficiency_files = {"../data/CRESST-II/Lise_eff_AR_O.dat","../data/CRESST-II/Lise_eff_AR_Ca.dat","../data/CRESST-II/Lise_eff_AR_W.dat"};
 			
-	// 		DM_detector->Use_Maximum_Gap("../data/CRESST-II/Lise_AR.dat");
-	// 		dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Set_Resolution(CRESST_II_resolution);
-	// 		dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Import_Efficiency(efficiency_files);
-	// 	}
-	// 	else if(DD_experiment == "CRESST-surface")
-	// 	{
-	// 		double CRESST_surface_exposure = 0.046*gram*day;
-	// 		std::vector<Element> CRESST_surface_targets = {Get_Element(8),Get_Element(13)};
-	// 		std::vector<double> CRESST_surface_target_ratios = {3,2};
-	// 		double CRESST_surface_threshold = 19.7*eV;
-	// 		double CRESST_surface_Emax = 600*eV;
-	// 		double CRESST_surface_resolution = 3.74*eV;
+			DM_detector = new DM_Detector_Nucleus(DD_experiment, CRESST_II_exposure, CRESST_II_targets, CRESST_II_target_ratios);
+			std::vector<double> energy_events = Import_List("../data/CRESST-II/Lise_AR.dat",keV);
+			energy_events.push_back(CRESST_II_threshold);
+			energy_events.push_back(CRESST_II_Emax);
+			DM_detector->Use_Maximum_Gap(energy_events);
+			dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Set_Resolution(CRESST_II_resolution);
+			dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Import_Efficiency(efficiency_files);
+		}
+		else if(DD_experiment == "CRESST-surface")
+		{
+			double CRESST_surface_exposure = 0.046*gram*day;
+			std::vector<Element> CRESST_surface_targets = {Get_Element(8),Get_Element(13)};
+			std::vector<double> CRESST_surface_target_ratios = {3,2};
+			double CRESST_surface_threshold = 19.7*eV;
+			double CRESST_surface_Emax = 600*eV;
+			double CRESST_surface_resolution = 3.74*eV;
 
-	// 		DM_detector = new DM_Detector_Nucleus(DD_experiment, CRESST_surface_exposure, CRESST_surface_targets, CRESST_surface_threshold, CRESST_surface_Emax, CRESST_surface_target_ratios);
+			DM_detector = new DM_Detector_Nucleus(DD_experiment, CRESST_surface_exposure, CRESST_surface_targets, CRESST_surface_target_ratios);
+			std::vector<double> energy_events = Import_List("../data/CRESST-surface/data.txt",keV);
+			energy_events.push_back(CRESST_surface_threshold);
+			energy_events.push_back(CRESST_surface_Emax);
+			DM_detector->Use_Maximum_Gap(energy_events);
+			dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Set_Resolution(CRESST_surface_resolution);
+		}
+		else if(DD_experiment == "CRESST-III")
+		{
+			double CRESST_III_exposure = 5.594*kg*day;
+			std::vector<Element> CRESST_III_targets = {Get_Element(8),Get_Element(20),Get_Element(74)}; //CaOW
+			std::vector<double> CRESST_III_target_ratios = {4,1,1};
+			double CRESST_III_threshold = 30.1*eV;
+			double CRESST_III_Emax = 16*keV;
+			double CRESST_III_resolution = 4.6*eV;
+			double CRESST_III_efficiency = 0.5;
+			std::vector<std::string> efficiency_files = {"../data/CRESST-III/C3P1_DetA_eff_AR_O.dat","../data/CRESST-III/C3P1_DetA_eff_AR_Ca.dat","../data/CRESST-III/C3P1_DetA_eff_AR_W.dat"};
+
+			DM_detector = new DM_Detector_Nucleus(DD_experiment, CRESST_III_exposure, CRESST_III_targets, CRESST_III_target_ratios);
+			DM_detector->Set_Flat_Efficiency(CRESST_III_efficiency);
+			std::vector<double> energy_events = Import_List("../data/CRESST-III/C3P1_DetA_AR.dat",keV);
+			energy_events.push_back(CRESST_III_threshold);
+			energy_events.push_back(CRESST_III_Emax);
+			DM_detector->Use_Maximum_Gap(energy_events);
+			dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Set_Resolution(CRESST_III_resolution);
+			dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Import_Efficiency(efficiency_files);
+		}
+		else if(DD_experiment == "Ionization")
+		{
+			std::string DD_target_ionization;
+			unsigned int DD_threshold_ionization, DD_observed_events_ionization;
+			double DD_exposure_ionization, DD_efficiency_ionization, DD_expected_background_ionization;
+			try
+			{
+				DD_target_ionization = config.lookup("DD_target_ionization").c_str();
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_target_ionization' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_threshold_ionization = config.lookup("DD_threshold_ionization");
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_threshold_ionization' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_exposure_ionization = config.lookup("DD_exposure_ionization");
+				DD_exposure_ionization *= kg*yr;
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_exposure_ionization' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_efficiency_ionization = config.lookup("DD_efficiency_ionization");
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_efficiency_ionization' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_observed_events_ionization = config.lookup("DD_observed_events_ionization");
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_observed_events_ionization' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_expected_background_ionization = config.lookup("DD_expected_background_ionization");
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_expected_background_ionization' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
 			
-	// 		DM_detector->Use_Maximum_Gap("../data/CRESST-surface/data.txt");
-	// 		dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Set_Resolution(CRESST_surface_resolution);
-	// 	}
-	// 	else if(DD_experiment == "CRESST-III")
-	// 	{
-	// 		double CRESST_III_exposure = 5.594*kg*day;
-	// 		std::vector<Element> CRESST_III_targets = {Get_Element(8),Get_Element(20),Get_Element(74)}; //CaOW
-	// 		std::vector<double> CRESST_III_target_ratios = {4,1,1};
-	// 		double CRESST_III_threshold = 30.1*eV;
-	// 		double CRESST_III_Emax = 16*keV;
-	// 		double CRESST_III_resolution = 4.6*eV;
-	// 		double CRESST_III_efficiency = 0.5;
-	// 		std::vector<std::string> efficiency_files = {"../data/CRESST-III/C3P1_DetA_eff_AR_O.dat","../data/CRESST-III/C3P1_DetA_eff_AR_Ca.dat","../data/CRESST-III/C3P1_DetA_eff_AR_W.dat"};
+			DM_detector = new DM_Detector_Ionization(DD_experiment, DD_exposure_ionization, DD_target_ionization);
+			DM_detector->Set_Flat_Efficiency(DD_efficiency_ionization);
+			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_Electron_Threshold(DD_threshold_ionization);
+			DM_detector->Set_Observed_Events(DD_observed_events_ionization);
+			DM_detector->Set_Expected_Background(DD_expected_background_ionization);
+		}
+		else if(DD_experiment == "XENON10e")
+		{
+			std::string target_name = "Xenon";
+			double exposure = 15*kg*day;
+			double flat_efficiency = 0.92;
+			std::vector<unsigned long int> observed_event_bins = {126, 60, 12, 3, 2, 0, 2};
+			double muPE = 27.0;
+			double sigPE = 6.7;
+			std::vector<int> S2_bin_ranges = {14,41,68,95,122,149,176,203};
+			std::string trigger_efficiency = "../data/XENON10e/PE_Trigger_Efficiency.txt";
 
-	// 		DM_detector = new DM_Detector_Nucleus(DD_experiment, CRESST_III_exposure, CRESST_III_targets, CRESST_III_threshold, CRESST_III_Emax, CRESST_III_target_ratios);
+			DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target_name);
+			DM_detector->Set_Flat_Efficiency(flat_efficiency);
+			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+			DM_detector->Set_Observed_Events(observed_event_bins);
+			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Trigger_Efficiency_PE(trigger_efficiency);
+		}
+		else if(DD_experiment == "XENON100e")
+		{
+			std::string target_name = "Xenon";
+			double exposure = 30*kg*yr;
+			std::vector<unsigned long int> observed_event_bins = {794, 1218, 924, 776, 669, 630, 528, 488, 433, 387};
+			double muPE = 19.7;
+			double sigPE = 6.2;
+			std::vector<int> S2_bin_ranges = {80, 90, 110,130,150,170,190,210,230,250,270};
+			std::string trigger_efficiency = "../data/XENON100e/PE_Trigger_Efficiency.txt";
+			std::string acceptance_efficiency = "../data/XENON100e/PE_Acceptance_Efficiency.txt";
+
+			DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target_name);
+			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+			DM_detector->Set_Observed_Events(observed_event_bins);
+			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Trigger_Efficiency_PE(trigger_efficiency);
+			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Acceptance_Efficiency_PE(acceptance_efficiency);
+		}
+		else if(DD_experiment == "XENON1Te")
+		{
+			std::string target_name = "Xenon";
+			double exposure = 80755.2*kg*day;
+			std::vector<unsigned long int> observed_event_bins = {8, 7, 2, 1};
+			double muPE = 33.0;
+			double sigPE = 7.0;
+			std::vector<int> S2_bin_ranges = {150,200,250,300,350};
+			std::string trigger_efficiency = "../data/XENON1Te/XENON1T_TotalEfficiency.txt";
+
+			DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target_name);
+			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+			DM_detector->Set_Observed_Events(observed_event_bins);
+			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Trigger_Efficiency_PE(trigger_efficiency);
+		}
+		else if(DD_experiment == "DarkSide-50")
+		{
+			std::string target_name = "Argon";
+			double exposure = 6786.0*kg*day;
+			unsigned int ne_threshold = 3;
+			std::vector<unsigned long int> observed_event_bins = {6131, 673, 252, 227, 198, 199, 189, 247, 230, 261, 249, 329, 336};
+
+			DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target_name);
+			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_Electron_Bins(ne_threshold,13);
+			DM_detector->Set_Observed_Events(observed_event_bins);
+		}
+		else if(DD_experiment == "Semiconductor")
+		{
+			std::string DD_target_semiconductor;
+			unsigned int DD_threshold_semiconductor, DD_observed_events_semiconductor;
+			double DD_exposure_semiconductor, DD_efficiency_semiconductor, DD_expected_background_semiconductor;
+			try
+			{
+				DD_target_semiconductor = config.lookup("DD_target_semiconductor").c_str();
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_target_semiconductor' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_threshold_semiconductor = config.lookup("DD_threshold_semiconductor");
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_threshold_semiconductor' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_exposure_semiconductor = config.lookup("DD_exposure_semiconductor");
+				DD_exposure_semiconductor *= gram*yr;
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_exposure_semiconductor' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_efficiency_semiconductor = config.lookup("DD_efficiency_semiconductor");
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_efficiency_semiconductor' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_observed_events_semiconductor = config.lookup("DD_observed_events_semiconductor");
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_observed_events_semiconductor' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
+			try
+			{
+				DD_expected_background_semiconductor = config.lookup("DD_expected_background_semiconductor");
+			}
+			catch(const SettingNotFoundException &nfex)
+			{
+				std::cerr << "No 'DD_expected_background_semiconductor' setting in configuration file." << std::endl;
+				std::exit(EXIT_FAILURE);
+			}
 			
-	// 		DM_detector->Use_Maximum_Gap("../data/CRESST-III/C3P1_DetA_AR.dat");
-	// 		DM_detector->Set_Flat_Efficiency(CRESST_III_efficiency);
-	// 		dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Set_Resolution(CRESST_III_resolution);
-	// 		dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Import_Efficiency(efficiency_files);
-	// 	}
-	// 	else if(DD_experiment == "Ionization")
-	// 	{
-	// 		// std::string DD_target_ionization;
-	// 		// unsigned int DD_threshold_ionization, DD_observed_events_ionization;
-	// 		// double DD_exposure_ionization, DD_efficiency_ionization, DD_expected_background_ionization;
-	// 		// try
-	// 		// {
-	// 		// 	DD_target_ionization = config.lookup("DD_target_ionization").c_str();
-	// 		// }
-	// 		// catch(const SettingNotFoundException &nfex)
-	// 		// {
-	// 		// 	std::cerr << "No 'DD_target_ionization' setting in configuration file." << std::endl;
-	// 		// 	std::exit(EXIT_FAILURE);
-	// 		// }
-	// 		// try
-	// 		// {
-	// 		// 	DD_threshold_ionization = config.lookup("DD_threshold_ionization");
-	// 		// }
-	// 		// catch(const SettingNotFoundException &nfex)
-	// 		// {
-	// 		// 	std::cerr << "No 'DD_threshold_ionization' setting in configuration file." << std::endl;
-	// 		// 	std::exit(EXIT_FAILURE);
-	// 		// }
-	// 		// try
-	// 		// {
-	// 		// 	DD_exposure_ionization = config.lookup("DD_exposure_ionization");
-	// 		// 	DD_exposure_ionization *= kg*yr;
-	// 		// }
-	// 		// catch(const SettingNotFoundException &nfex)
-	// 		// {
-	// 		// 	std::cerr << "No 'DD_exposure_ionization' setting in configuration file." << std::endl;
-	// 		// 	std::exit(EXIT_FAILURE);
-	// 		// }
-	// 		// try
-	// 		// {
-	// 		// 	DD_efficiency_ionization = config.lookup("DD_efficiency_ionization");
-	// 		// }
-	// 		// catch(const SettingNotFoundException &nfex)
-	// 		// {
-	// 		// 	std::cerr << "No 'DD_efficiency_ionization' setting in configuration file." << std::endl;
-	// 		// 	std::exit(EXIT_FAILURE);
-	// 		// }
-	// 		// try
-	// 		// {
-	// 		// 	DD_observed_events_ionization = config.lookup("DD_observed_events_ionization");
-	// 		// }
-	// 		// catch(const SettingNotFoundException &nfex)
-	// 		// {
-	// 		// 	std::cerr << "No 'DD_observed_events_ionization' setting in configuration file." << std::endl;
-	// 		// 	std::exit(EXIT_FAILURE);
-	// 		// }
-	// 		// try
-	// 		// {
-	// 		// 	DD_expected_background_ionization = config.lookup("DD_expected_background_ionization");
-	// 		// }
-	// 		// catch(const SettingNotFoundException &nfex)
-	// 		// {
-	// 		// 	std::cerr << "No 'DD_expected_background_ionization' setting in configuration file." << std::endl;
-	// 		// 	std::exit(EXIT_FAILURE);
-	// 		// }
-			
-	// 		// DM_detector = new DM_Detector_Ionization(DD_experiment, DD_exposure_ionization, DD_target_ionization);
-	// 		// DM_detector->Use_Electron_Bins(DD_threshold_ionization);
-	// 		// DM_detector->Set_Flat_Efficiency(DD_efficiency_ionization);
-	// 		// DM_detector->Set_Observed_Events(DD_observed_events_ionization);
-	// 		// DM_detector->Set_Expected_Background(DD_expected_background_ionization);
-	// 	}
-	// 	else if(DD_experiment == "XENON10e")
-	// 	{
-	// 		std::string target_name = "Xenon";
-	// 		Atom target = Import_Ionization_Form_Factors(target_name);
-	// 		double exposure = 15*kg*day;
-	// 		double flat_efficiency = 0.92;
-	// 		std::vector<unsigned long int> observed_event_bins = {126, 60, 12, 3, 2, 0, 2};
-	// 		double muPE = 27.0;
-	// 		double sigPE = 6.7;
-	// 		std::vector<int> S2_bin_ranges = {14,41,68,95,122,149,176,203};
-	// 		std::string trigger_efficiency = "../data/XENON10e/PE_Trigger_Efficiency.txt";
+			DM_detector = new DM_Detector_Semiconductor(DD_experiment, DD_exposure_semiconductor, DD_target_semiconductor);
+			DM_detector->Set_Flat_Efficiency(DD_efficiency_semiconductor);
+			dynamic_cast<DM_Detector_Semiconductor*>(DM_detector)->Use_Q_Threshold(DD_threshold_semiconductor);
+			DM_detector->Set_Observed_Events(DD_observed_events_semiconductor);
+			DM_detector->Set_Expected_Background(DD_expected_background_semiconductor);
+		}
+		else if(DD_experiment == "SENSEI-surface")
+		{
+			double SENSEI_surface_exposure = 0.07*gram*456*minute;
+			unsigned int SENSEI_surface_Q_threshold = 1;
+			unsigned int SENSEI_surface_N_bins = 5;
+			std::vector<double> SENSEI_surface_efficiencies = {0.668,0.41,0.32,0.27,0.24};
+			std::vector<unsigned long int> SENSEI_surface_observed_events = {140302,4676,131,1,0};
 
-	// 		DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target);
-	// 		DM_detector->Set_Flat_Efficiency(flat_efficiency);
-	// 		dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
-	// 		DM_detector->Set_Observed_Events(observed_event_bins);
-	// 		dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Trigger_Efficiency_PE(trigger_efficiency);
-	// 	}
-	// 	else if(DD_experiment == "XENON100e")
-	// 	{
-	// 		std::string target_name = "Xenon";
-	// 		Atom target = Import_Ionization_Form_Factors(target_name);
-	// 		double exposure = 30*kg*yr;
-	// 		std::vector<unsigned long int> observed_event_bins = {794, 1218, 924, 776, 669, 630, 528, 488, 433, 387};
-	// 		double muPE = 19.7;
-	// 		double sigPE = 6.2;
-	// 		std::vector<int> S2_bin_ranges = {80, 90, 110,130,150,170,190,210,230,250,270};
-	// 		std::string trigger_efficiency = "../data/XENON100e/PE_Trigger_Efficiency.txt";
-	// 		std::string acceptance_efficiency = "../data/XENON100e/PE_Acceptance_Efficiency.txt";
+			DM_detector = new DM_Detector_Semiconductor(DD_experiment,SENSEI_surface_exposure, "Si");
+			dynamic_cast<DM_Detector_Semiconductor*>(DM_detector)->Use_Q_Bins(SENSEI_surface_Q_threshold, SENSEI_surface_N_bins);
+			DM_detector->Set_Observed_Events(SENSEI_surface_observed_events);
+			DM_detector->Set_Bin_Efficiencies(SENSEI_surface_efficiencies);
+		}
+		else if(DD_experiment == "SENSEI")
+		{
+				double SENSEI_exposure = 0.246*gram*day;
+				unsigned int SENSEI_Q_threshold = 1;
+				unsigned int SENSEI_N_bins = 3;
+				std::vector<double> SENSEI_efficiencies = {1.0,0.62,0.48};
+				std::vector<unsigned long int> SENSEI_observed_events = {8516,87,0};
 
-	// 		DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target);
-	// 		dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
-	// 		DM_detector->Set_Observed_Events(observed_event_bins);
-	// 		dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Trigger_Efficiency_PE(trigger_efficiency);
-	// 		dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Acceptance_Efficiency_PE(acceptance_efficiency);
-	// 	}
-	// 	else if(DD_experiment == "XENON1Te")
-	// 	{
-	// 		std::string target_name = "Xenon";
-	// 		Atom target = Import_Ionization_Form_Factors(target_name);
-	// 		double exposure = 80755.2*kg*day;
-	// 		std::vector<unsigned long int> observed_event_bins = {8, 7, 2, 1};
-	// 		double muPE = 33.0;
-	// 		double sigPE = 7.0;
-	// 		std::vector<int> S2_bin_ranges = {150,200,250,300,350};
-	// 		std::string trigger_efficiency = "../data/XENON1Te/XENON1T_TotalEfficiency.txt";
+				DM_detector = new DM_Detector_Semiconductor(DD_experiment,SENSEI_exposure, "Si");
+				dynamic_cast<DM_Detector_Semiconductor*>(DM_detector)->Use_Q_Bins(SENSEI_Q_threshold, SENSEI_N_bins);
+				DM_detector->Set_Observed_Events(SENSEI_observed_events);
+				DM_detector->Set_Bin_Efficiencies(SENSEI_efficiencies);
+		}
+		else if(DD_experiment == "SuperCDMS")
+		{
+			double SuperCDMS_exposure = 0.487*gram*day;
+			double SuperCDMS_flat_efficiency = 0.9545;
+			unsigned int SuperCDMS_Q_threshold = 1;
+			unsigned int SuperCDMS_N_bins = 6;
+			std::vector<double> SuperCDMS_efficiencies = {0.88,0.91,0.91,0.91,0.91,0.91};
+			std::vector<unsigned long int> SuperCDMS_observed_events = {53000, 400, 74, 18, 7, 14};
 
-	// 		DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target);
-	// 		dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
-	// 		DM_detector->Set_Observed_Events(observed_event_bins);
-	// 		dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Import_Trigger_Efficiency_PE(trigger_efficiency);
-	// 	}
-	// 	else if(DD_experiment == "DarkSide-50")
-	// 	{
-	// 		std::string target_name = "Argon";
-	// 		Atom target = Import_Ionization_Form_Factors(target_name);
-	// 		double exposure = 6786.0*kg*day;
-	// 		unsigned int ne_threshold = 3;
-	// 		std::vector<unsigned long int> observed_event_bins = {118643, 219893, 6131, 673, 252, 227, 198, 199, 189, 247, 230, 261,249, 329, 336, 349, 351, 352, 384, 411, 405, 461, 460, 436, 500, 546, 538, 536, 556, 583, 573, 630, 603, 635, 639, 682, 736, 755, 804, 811, 809, 882, 934, 935, 871, 965, 946, 1072, 997, 1060};
-
-	// 		DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target);
-	// 		dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_Electron_Bins(ne_threshold,15);
-	// 		DM_detector->Set_Observed_Events(observed_event_bins);
-	// 	}
-	// 	else if(DD_experiment == "Semiconductor")
-	// 	{
-	// 		std::string DD_target_semiconductor;
-	// 		unsigned int DD_threshold_semiconductor, DD_observed_events_semiconductor;
-	// 		double DD_exposure_semiconductor, DD_efficiency_semiconductor, DD_expected_background_semiconductor;
-	// 		try
-	// 		{
-	// 			DD_target_semiconductor = config.lookup("DD_target_semiconductor").c_str();
-	// 		}
-	// 		catch(const SettingNotFoundException &nfex)
-	// 		{
-	// 			std::cerr << "No 'DD_target_semiconductor' setting in configuration file." << std::endl;
-	// 			std::exit(EXIT_FAILURE);
-	// 		}
-	// 		try
-	// 		{
-	// 			DD_threshold_semiconductor = config.lookup("DD_threshold_semiconductor");
-	// 		}
-	// 		catch(const SettingNotFoundException &nfex)
-	// 		{
-	// 			std::cerr << "No 'DD_threshold_semiconductor' setting in configuration file." << std::endl;
-	// 			std::exit(EXIT_FAILURE);
-	// 		}
-	// 		try
-	// 		{
-	// 			DD_exposure_semiconductor = config.lookup("DD_exposure_semiconductor");
-	// 			DD_exposure_semiconductor *= gram*yr;
-	// 		}
-	// 		catch(const SettingNotFoundException &nfex)
-	// 		{
-	// 			std::cerr << "No 'DD_exposure_semiconductor' setting in configuration file." << std::endl;
-	// 			std::exit(EXIT_FAILURE);
-	// 		}
-	// 		try
-	// 		{
-	// 			DD_efficiency_semiconductor = config.lookup("DD_efficiency_semiconductor");
-	// 		}
-	// 		catch(const SettingNotFoundException &nfex)
-	// 		{
-	// 			std::cerr << "No 'DD_efficiency_semiconductor' setting in configuration file." << std::endl;
-	// 			std::exit(EXIT_FAILURE);
-	// 		}
-	// 		try
-	// 		{
-	// 			DD_observed_events_semiconductor = config.lookup("DD_observed_events_semiconductor");
-	// 		}
-	// 		catch(const SettingNotFoundException &nfex)
-	// 		{
-	// 			std::cerr << "No 'DD_observed_events_semiconductor' setting in configuration file." << std::endl;
-	// 			std::exit(EXIT_FAILURE);
-	// 		}
-	// 		try
-	// 		{
-	// 			DD_expected_background_semiconductor = config.lookup("DD_expected_background_semiconductor");
-	// 		}
-	// 		catch(const SettingNotFoundException &nfex)
-	// 		{
-	// 			std::cerr << "No 'DD_expected_background_semiconductor' setting in configuration file." << std::endl;
-	// 			std::exit(EXIT_FAILURE);
-	// 		}
-			
-	// 		DM_detector = new DM_Detector_Semiconductor(DD_experiment, DD_exposure_semiconductor, DD_target_semiconductor, DD_threshold_semiconductor);
-	// 		DM_detector->Set_Flat_Efficiency(DD_efficiency_semiconductor);
-	// 		DM_detector->Set_Observed_Events(DD_observed_events_semiconductor);
-	// 		DM_detector->Set_Expected_Background(DD_expected_background_semiconductor);
-	// 	}
-	// 	else if(DD_experiment == "SENSEI-surface")
-	// 	{
-	// 			double SENSEI_surface_exposure = 0.07*gram*456*minute;
-	// 			unsigned int SENSEI_surface_Q_threshold = 1;
-	// 			unsigned int SENSEI_surface_N_bins = 5;
-	// 			std::vector<double> SENSEI_surface_efficiencies = {0.668,0.41,0.32,0.27,0.24};
-	// 			std::vector<unsigned long int> SENSEI_surface_observed_events = {140302,4676,131,1,0};
-
-	// 			DM_detector = new DM_Detector_Semiconductor(DD_experiment,SENSEI_surface_exposure, "Si" ,SENSEI_surface_Q_threshold);
-	// 			dynamic_cast<DM_Detector_Semiconductor*>(DM_detector)->Use_Q_Bins(SENSEI_surface_Q_threshold, SENSEI_surface_N_bins);
-	// 			DM_detector->Set_Observed_Events(SENSEI_surface_observed_events);
-	// 			DM_detector->Set_Bin_Efficiencies(SENSEI_surface_efficiencies);
-	// 	}
-	// 	else if(DD_experiment == "SENSEI")
-	// 	{
-	// 			double SENSEI_exposure = 0.246*gram*day;
-	// 			unsigned int SENSEI_Q_threshold = 1;
-	// 			unsigned int SENSEI_N_bins = 3;
-	// 			std::vector<double> SENSEI_efficiencies = {1.0,0.62,0.48};
-	// 			std::vector<unsigned long int> SENSEI_observed_events = {8516,87,0};
-
-	// 			DM_detector = new DM_Detector_Semiconductor(DD_experiment,SENSEI_exposure, "Si" ,SENSEI_Q_threshold);
-	// 			dynamic_cast<DM_Detector_Semiconductor*>(DM_detector)->Use_Q_Bins(SENSEI_Q_threshold, SENSEI_N_bins);
-	// 			DM_detector->Set_Observed_Events(SENSEI_observed_events);
-	// 			DM_detector->Set_Bin_Efficiencies(SENSEI_efficiencies);
-	// 	}
-	// 	else if(DD_experiment == "SuperCDMS")
-	// 	{
-	// 		double SuperCDMS_exposure = 0.487*gram*day;
-	// 		double SuperCDMS_flat_efficiency = 0.9545;
-	// 		unsigned int SuperCDMS_Q_threshold = 1;
-	// 		unsigned int SuperCDMS_N_bins = 6;
-	// 		std::vector<double> SuperCDMS_efficiencies = {0.88,0.91,0.91,0.91,0.91,0.91};
-	// 		std::vector<unsigned long int> SuperCDMS_observed_events = {53000, 400, 74, 18, 7, 14};
-
-	// 		DM_detector = new DM_Detector_Semiconductor(DD_experiment,SuperCDMS_exposure, "Si" ,SuperCDMS_Q_threshold);
-	// 		DM_detector->Set_Flat_Efficiency(SuperCDMS_flat_efficiency);
-	// 		dynamic_cast<DM_Detector_Semiconductor*>(DM_detector)->Use_Q_Bins(SuperCDMS_Q_threshold, SuperCDMS_N_bins);
-	// 		DM_detector->Set_Observed_Events(SuperCDMS_observed_events);
-	// 		DM_detector->Set_Bin_Efficiencies(SuperCDMS_efficiencies);
-	// 	}
-	// 	else
-	// 	{
-	// 		std::cerr << "Error in Configuration::Construct_DM_Detector(): Experiment " <<DD_experiment<<" not recognized." << std::endl;
-	// 		std::exit(EXIT_FAILURE);
-	// 	}
-	// }
+			DM_detector = new DM_Detector_Semiconductor(DD_experiment,SuperCDMS_exposure, "Si");
+			DM_detector->Set_Flat_Efficiency(SuperCDMS_flat_efficiency);
+			dynamic_cast<DM_Detector_Semiconductor*>(DM_detector)->Use_Q_Bins(SuperCDMS_Q_threshold, SuperCDMS_N_bins);
+			DM_detector->Set_Observed_Events(SuperCDMS_observed_events);
+			DM_detector->Set_Bin_Efficiencies(SuperCDMS_efficiencies);
+		}
+		else
+		{
+			std::cerr << "Error in Configuration::Construct_DM_Detector(): Experiment " <<DD_experiment<<" not recognized." << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+	}
 

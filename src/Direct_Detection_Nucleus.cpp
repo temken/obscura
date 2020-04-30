@@ -32,14 +32,11 @@
 	DM_Detector_Nucleus::DM_Detector_Nucleus()
 	: DM_Detector("Nuclear recoil experiment", kg*day,"Nuclei"), target_elements({Get_Element(54)}), relative_mass_fractions({1.0}), energy_resolution(0.0), using_efficiency_tables(false)
 	{
-		Use_Energy_Threshold(1.0*keV, 100.0*keV);
 	}
 
-	DM_Detector_Nucleus::DM_Detector_Nucleus(std::string label, double expo,std::vector<Element> elements, double thr, double emax,std::vector<double> abund)
+	DM_Detector_Nucleus::DM_Detector_Nucleus(std::string label, double expo, std::vector<Element> elements, std::vector<double> abund)
 	: DM_Detector(label, expo,"Nuclei"), target_elements(elements), energy_resolution(0.0), using_efficiency_tables(false)
 	{
-		Use_Energy_Threshold(thr, emax);
-
 		double tot = std::accumulate(abund.begin(),abund.end(),0.0);
 		if(abund.empty() || tot > 1.0)
 		{
@@ -171,17 +168,17 @@
 		if(MPI_rank == 0)
 		{
 			Print_Summary_Base(MPI_rank);
-			std::cout 	<<std::endl<<"Nuclear recoil experiment." <<std::endl
-						<<"Nuclear targets:"	<<std::endl
-						<<"\tNucl.\tabund."<<std::endl;
+			std::cout 	<<std::endl<<"\tNuclear recoil experiment." <<std::endl
+						<<"\tNuclear targets:"	<<std::endl
+						<<"\t\tNucl.\tabund."<<std::endl;
 			for(unsigned int i=0; i < target_elements.size(); i++)
 			{
-				std::cout <<"\t" <<target_elements[i].name<<"\t"<<Round(100.0*relative_mass_fractions[i])<<"%"<<std::endl;
+				std::cout <<"\t\t" <<target_elements[i].name<<"\t"<<Round(100.0*relative_mass_fractions[i])<<"%"<<std::endl;
 				// target_elements[i].Print_Summary();
 			}
-			std::cout 	<<"Threshold [keV]:\t"<<In_Units(energy_threshold,keV)<<std::endl
-						<<"ER_max [keV]:\t\t"<<In_Units(energy_max,keV)<<std::endl
-						<<"Energy resolution [eV]:\t"<<In_Units(energy_resolution,eV)<<std::endl
+			std::cout 	<<"\tThreshold [keV]:\t"<<In_Units(energy_threshold,keV)<<std::endl
+						<<"\tER_max [keV]:\t\t"<<In_Units(energy_max,keV)<<std::endl
+						<<"\tEnergy resolution [eV]:\t"<<In_Units(energy_resolution,eV)<<std::endl
 			 			<<"----------------------------------------"<<std::endl<<std::endl;		
 		}
 	
