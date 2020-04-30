@@ -21,6 +21,7 @@ using namespace libconfig;
 	Configuration::Configuration(std::string cfg_filename, int MPI_rank)
 	: cfg_file(cfg_filename), results_path("./")
 	{
+		//1. Read the cfg file.
 		Read_Config_File();
 
 		//2. Identifier for the program's run.
@@ -462,39 +463,39 @@ using namespace libconfig;
 			}
 			try
 			{
-				DD_exposure_nuclear = config.lookup("DD_exposure_nuclear");
+				DD_exposure_nuclear = config.lookup("DD_exposure");
 				DD_exposure_nuclear *= kg*yr;
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
-				std::cerr << "No 'DD_exposure_nuclear' setting in configuration file." << std::endl;
+				std::cerr << "No 'DD_exposure' setting in configuration file." << std::endl;
 				std::exit(EXIT_FAILURE);
 			}
 			try
 			{
-				DD_efficiency_nuclear = config.lookup("DD_efficiency_nuclear");
+				DD_efficiency_nuclear = config.lookup("DD_efficiency");
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
-				std::cerr << "No 'DD_efficiency_nuclear' setting in configuration file." << std::endl;
+				std::cerr << "No 'DD_efficiency' setting in configuration file." << std::endl;
 				std::exit(EXIT_FAILURE);
 			}
 			try
 			{
-				DD_observed_events_nuclear = config.lookup("DD_observed_events_nuclear");
+				DD_observed_events_nuclear = config.lookup("DD_observed_events");
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
-				std::cerr << "No 'DD_observed_events_nuclear' setting in configuration file." << std::endl;
+				std::cerr << "No 'DD_observed_events' setting in configuration file." << std::endl;
 				std::exit(EXIT_FAILURE);
 			}
 			try
 			{
-				DD_expected_background_nuclear = config.lookup("DD_expected_background_nuclear");
+				DD_expected_background_nuclear = config.lookup("DD_expected_background");
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
-				std::cerr << "No 'DD_expected_background_nuclear' setting in configuration file." << std::endl;
+				std::cerr << "No 'DD_expected_background' setting in configuration file." << std::endl;
 			}
 			DM_detector = new DM_Detector_Nucleus(DD_experiment, DD_exposure_nuclear, DD_targets_nuclear, DD_targets_nuclear_abundances);
 			DM_detector->Set_Flat_Efficiency(DD_efficiency_nuclear);
@@ -589,57 +590,57 @@ using namespace libconfig;
 			double DD_exposure_ionization, DD_efficiency_ionization, DD_expected_background_ionization;
 			try
 			{
-				DD_target_ionization = config.lookup("DD_target_ionization").c_str();
+				DD_target_ionization = config.lookup("DD_target_electron").c_str();
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
-				std::cerr << "No 'DD_target_ionization' setting in configuration file." << std::endl;
+				std::cerr << "No 'DD_target_electron' setting in configuration file." << std::endl;
 				std::exit(EXIT_FAILURE);
 			}
 			try
 			{
-				DD_threshold_ionization = config.lookup("DD_threshold_ionization");
+				DD_threshold_ionization = config.lookup("DD_threshold_electron");
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
-				std::cerr << "No 'DD_threshold_ionization' setting in configuration file." << std::endl;
+				std::cerr << "No 'DD_threshold_electron' setting in configuration file." << std::endl;
 				std::exit(EXIT_FAILURE);
 			}
 			try
 			{
-				DD_exposure_ionization = config.lookup("DD_exposure_ionization");
+				DD_exposure_ionization = config.lookup("DD_exposure");
 				DD_exposure_ionization *= kg*yr;
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
-				std::cerr << "No 'DD_exposure_ionization' setting in configuration file." << std::endl;
+				std::cerr << "No 'DD_exposure' setting in configuration file." << std::endl;
 				std::exit(EXIT_FAILURE);
 			}
 			try
 			{
-				DD_efficiency_ionization = config.lookup("DD_efficiency_ionization");
+				DD_efficiency_ionization = config.lookup("DD_efficiency");
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
-				std::cerr << "No 'DD_efficiency_ionization' setting in configuration file." << std::endl;
+				std::cerr << "No 'DD_efficiency' setting in configuration file." << std::endl;
 				std::exit(EXIT_FAILURE);
 			}
 			try
 			{
-				DD_observed_events_ionization = config.lookup("DD_observed_events_ionization");
+				DD_observed_events_ionization = config.lookup("DD_observed_events");
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
-				std::cerr << "No 'DD_observed_events_ionization' setting in configuration file." << std::endl;
+				std::cerr << "No 'DD_observed_events' setting in configuration file." << std::endl;
 				std::exit(EXIT_FAILURE);
 			}
 			try
 			{
-				DD_expected_background_ionization = config.lookup("DD_expected_background_ionization");
+				DD_expected_background_ionization = config.lookup("DD_expected_background");
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
-				std::cerr << "No 'DD_expected_background_ionization' setting in configuration file." << std::endl;
+				std::cerr << "No 'DD_expected_background' setting in configuration file." << std::endl;
 				std::exit(EXIT_FAILURE);
 			}
 			
@@ -716,57 +717,57 @@ using namespace libconfig;
 			double DD_exposure_semiconductor, DD_efficiency_semiconductor, DD_expected_background_semiconductor;
 			try
 			{
-				DD_target_semiconductor = config.lookup("DD_target_semiconductor").c_str();
+				DD_target_semiconductor = config.lookup("DD_target_electron").c_str();
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
-				std::cerr << "No 'DD_target_semiconductor' setting in configuration file." << std::endl;
+				std::cerr << "No 'DD_target_electron' setting in configuration file." << std::endl;
 				std::exit(EXIT_FAILURE);
 			}
 			try
 			{
-				DD_threshold_semiconductor = config.lookup("DD_threshold_semiconductor");
+				DD_threshold_semiconductor = config.lookup("DD_threshold_electron");
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
-				std::cerr << "No 'DD_threshold_semiconductor' setting in configuration file." << std::endl;
+				std::cerr << "No 'DD_threshold_electron' setting in configuration file." << std::endl;
 				std::exit(EXIT_FAILURE);
 			}
 			try
 			{
-				DD_exposure_semiconductor = config.lookup("DD_exposure_semiconductor");
-				DD_exposure_semiconductor *= gram*yr;
+				DD_exposure_semiconductor = config.lookup("DD_exposure");
+				DD_exposure_semiconductor *= kg*yr;
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
-				std::cerr << "No 'DD_exposure_semiconductor' setting in configuration file." << std::endl;
+				std::cerr << "No 'DD_exposure' setting in configuration file." << std::endl;
 				std::exit(EXIT_FAILURE);
 			}
 			try
 			{
-				DD_efficiency_semiconductor = config.lookup("DD_efficiency_semiconductor");
+				DD_efficiency_semiconductor = config.lookup("DD_efficiency");
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
-				std::cerr << "No 'DD_efficiency_semiconductor' setting in configuration file." << std::endl;
+				std::cerr << "No 'DD_efficiency' setting in configuration file." << std::endl;
 				std::exit(EXIT_FAILURE);
 			}
 			try
 			{
-				DD_observed_events_semiconductor = config.lookup("DD_observed_events_semiconductor");
+				DD_observed_events_semiconductor = config.lookup("DD_observed_events");
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
-				std::cerr << "No 'DD_observed_events_semiconductor' setting in configuration file." << std::endl;
+				std::cerr << "No 'DD_observed_events' setting in configuration file." << std::endl;
 				std::exit(EXIT_FAILURE);
 			}
 			try
 			{
-				DD_expected_background_semiconductor = config.lookup("DD_expected_background_semiconductor");
+				DD_expected_background_semiconductor = config.lookup("DD_expected_background");
 			}
 			catch(const SettingNotFoundException &nfex)
 			{
-				std::cerr << "No 'DD_expected_background_semiconductor' setting in configuration file." << std::endl;
+				std::cerr << "No 'DD_expected_background' setting in configuration file." << std::endl;
 				std::exit(EXIT_FAILURE);
 			}
 			

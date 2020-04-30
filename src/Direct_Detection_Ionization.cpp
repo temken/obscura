@@ -358,10 +358,10 @@
 	void DM_Detector_Ionization::Print_Summary(int MPI_rank) const 
 	{
 		Print_Summary_Base();
-		std::cout 	<<std::endl<<"Electron scattering experiment."<<std::endl
-					<<"Target:\t\t\t"	<<target_atom.name <<std::endl
-					<<"Electron bins:\t\t" <<(using_electron_bins? "[x]" : "[ ]") <<std::endl
-					<<"PE (S2) bins:\t\t" <<(using_S2_bins? "[x]" : "[ ]") <<std::endl;
+		std::cout 	<<std::endl<<"\tElectron recoil experiment (ionization)."<<std::endl
+					<<"\tTarget:\t\t\t"	<<target_atom.name <<std::endl
+					<<"\tElectron bins:\t\t" <<(using_electron_bins? "[x]" : "[ ]") <<std::endl
+					<<"\tPE (S2) bins:\t\t" <<(using_S2_bins? "[x]" : "[ ]") <<std::endl;
 		if(using_S2_bins || using_S2_threshold)
 		{
 			std::cout 	<<"\tmu_PE:\t\t" <<S2_mu<<std::endl
@@ -370,18 +370,18 @@
 			 			<<"\tImported acc. efficiencies:\t" <<(Acceptance_Efficiency_PE.empty()? "[ ]" : "[x]") <<std::endl;
 			if(using_S2_bins)
 			{
-				std::cout <<"\n\tBin\tBin range [S2]"<<std::endl;
+				std::cout <<"\n\t\tBin\tBin range [S2]"<<std::endl;
 				for(unsigned int bin = 0; bin < number_of_bins; bin++)
 				{
-					std::cout<<"\t"<<bin+1<<"\t["<<S2_bin_ranges[bin]<<","<<S2_bin_ranges[bin+1]<<")"<<std::endl;
+					std::cout<<"\t\t"<<bin+1<<"\t["<<S2_bin_ranges[bin]<<","<<S2_bin_ranges[bin+1]<<")"<<std::endl;
 				}
 			}
 			
 		}
 		else if(using_electron_bins || using_electron_threshold)
 		{
-			std::cout<<"\tNe threshold:\t"<<ne_threshold<<std::endl;
-			std::cout<<"\tNe max:\t\t"<<ne_max<<std::endl;
+			std::cout<<"\t\tNe threshold:\t"<<ne_threshold<<std::endl;
+			std::cout<<"\t\tNe max:\t\t"<<ne_max<<std::endl;
 		}
 	 	std::cout<<"----------------------------------------"<<std::endl<<std::endl;
 	}

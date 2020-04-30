@@ -189,10 +189,10 @@
 	void DM_Detector_Semiconductor::Print_Summary(int MPI_rank) const
 	{
 			Print_Summary_Base();
-			std::cout 	<<std::endl <<"Electron scattering experiment."<<std::endl
-						<<"Target:\t\t\t"	<<semiconductor_target.name <<" semiconductor"<<std::endl;
+			std::cout 	<<std::endl <<"\tElectron recoil experiment (semiconductor)."<<std::endl
+						<<"\tTarget:\t\t\t"	<<semiconductor_target.name <<" semiconductor"<<std::endl;
 			if(using_Q_threshold || using_Q_bins)
-				std::cout 	<<"eh pair threshold:\t"<<Q_threshold<<std::endl
+				std::cout 	<<"\teh pair threshold:\t"<<Q_threshold<<std::endl
 							<<"----------------------------------------"<<std::endl<<std::endl;
 	}
 

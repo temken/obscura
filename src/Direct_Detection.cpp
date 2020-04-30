@@ -399,7 +399,7 @@
 						<<"----------------------------------------"<<std::endl
 						<<"Experiment summary:\t"<<name<<std::endl
 						<<"\tTarget particles:\t" <<targets <<std::endl
-						<<"\tExposure [kg year]:\t" <<In_Units(exposure,kg*yr)<<std::endl
+						<<"\tExposure [kg year]:\t" <<Round(In_Units(exposure,kg*yr))<<std::endl
 						<<"\tFlat efficiency [%]:\t"<<Round(100.0*flat_efficiency)<<std::endl
 						<<"\tObserved events:\t"<<observed_events<<std::endl
 						<<"\tExpected background:\t" <<expected_background <<std::endl
