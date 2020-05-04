@@ -63,7 +63,7 @@
 
 		double Lowest_Binding_Energy() const;
 
-		Atomic_Electron Electron(int n, int l);
+		Atomic_Electron Electron(unsigned int n, unsigned int l);
 
 		// Overloading brackets
 		Atomic_Electron& operator[](int i) 

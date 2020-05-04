@@ -179,7 +179,7 @@
 		else
 		{
 			std::vector<double> signals;
-			for(int Q = Q_threshold; Q < Q_threshold + number_of_bins; Q++)
+			for(unsigned int Q = Q_threshold; Q < Q_threshold + number_of_bins; Q++)
 			{
 				signals.push_back(exposure * flat_efficiency * bin_efficiencies[Q-1] * R_Q_Semiconductor(Q, DM, DM_distr, semiconductor_target));
 			}

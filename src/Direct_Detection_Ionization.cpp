@@ -34,16 +34,16 @@
 		// (b) Simply summing up the table entries
 		double integral = 0.0;
 		double k = sqrt(2.0 * mElectron * Ee);
-		int ki = std::round(log10(k / shell.k_min) / shell.dlogk);
+		unsigned int ki = std::round(log10(k / shell.k_min) / shell.dlogk);
 		if(ki >= shell.Nk || ki < 0) 
 		{
  			std::cerr <<"Warning in dRdEe_Ionization(double,const DM_Particle&,DM_Distribution&,const Atomic_Electron&): Index ki = "<<ki<<" out of bounds. Function returns 0.0."<<std::endl;
  			return 0.0;
 		}
-		int qi_min = std::floor(log10(qMin / shell.q_min) / shell.dlogq); // = 0;
-		int qi_max = std::floor(log10(qMax / shell.q_min) / shell.dlogq); // = shell.Nq;
+		unsigned int qi_min = std::floor(log10(qMin / shell.q_min) / shell.dlogq); // = 0;
+		unsigned int qi_max = std::floor(log10(qMax / shell.q_min) / shell.dlogq); // = shell.Nq;
 		if(qi_max > shell.Nq) qi_max = shell.Nq;
-		for(int qi = qi_min; qi < qi_max; qi++)
+		for(unsigned int qi = qi_min; qi < qi_max; qi++)
 		{
 			double q = shell.q_Grid[qi];
 			double vMin = vMinimal_Electrons(q, shell.binding_energy + Ee, DM.mass);
@@ -158,7 +158,7 @@
 		}
 		else if(using_electron_threshold)
 		{
-			for(int ne = ne_threshold; ne <= ne_max; ne++)
+			for(unsigned int ne = ne_threshold; ne <= ne_max; ne++)
 			{
 				N += flat_efficiency * exposure * R_ne_Ionization(ne, DM, DM_distr, target_atom);
 			}
@@ -184,7 +184,7 @@
 		}
 		else if(using_S2_threshold)
 		{
-			for(int PE = PE_threshold; PE <= PE_max; PE++)
+			for(unsigned int PE = PE_threshold; PE <= PE_max; PE++)
 			{
 				double PE_eff = 1.0;
 				if(Trigger_Efficiency_PE.empty() == false) PE_eff *= Trigger_Efficiency_PE[PE - 1];
@@ -346,7 +346,7 @@
 	}
 
 	//Binned Poisson:  PE bins (S2)
-	void DM_Detector_Ionization::Use_PE_Bins(double S2mu, double S2sigma, const std::vector<int> &bin_ranges)
+	void DM_Detector_Ionization::Use_PE_Bins(double S2mu, double S2sigma, const std::vector<unsigned int> &bin_ranges)
 	{
 		Initialize_Binned_Poisson(bin_ranges.size() - 1);
 		using_S2_bins = true;

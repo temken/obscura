@@ -56,7 +56,7 @@ DAMIC Collaboration (J. Barreto et al.)
 
 - *First Dark Matter Search Results from the XENON1T Experiment*  
 XENON Collaboration (E. Aprile et al.)  
-[![Phys.Rev.Lett. 119 (2017) no.18, 181301](https://img.shields.io/badge/Phys.Rev.L-119(2017)no.18,181301-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.119.181301)
+[![Phys.Rev.Lett. 119 (2017) no.18, 181301](https://img.shields.io/badge/Phys.Rev.Lett.-119(2017)no.18,181301-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.119.181301)
 [![[arXiv:1705.06655]](https://img.shields.io/badge/arXiv-1705.06655-B31B1B.svg)](https://arxiv.org/abs/1705.06655)
 
 
@@ -66,7 +66,7 @@ XENON Collaboration (E. Aprile et al.)
 
 - *First Dark Matter Constraints from a SuperCDMS Single-Charge Sensitive Detector*  
 SuperCDMS Collaboration (R. Agnese et al.)  
-[![Phys.Rev.Lett. 121 (2018) no.5, 051301](https://img.shields.io/badge/Phys.Rev.L-121(2018)no.5,051301-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.121.051301)
+[![Phys.Rev.Lett. 121 (2018) no.5, 051301](https://img.shields.io/badge/Phys.Rev.Lett.-121(2018)no.5,051301-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.121.051301)
 [![[arXiv:1804.10697]](https://img.shields.io/badge/arXiv-1804.10697-B31B1B.svg)](https://arxiv.org/abs/1804.10697)
 
 
@@ -77,21 +77,21 @@ SuperCDMS Collaboration (R. Agnese et al.)
 
 - *Constraints on Sub-GeV Dark-Matter–Electron Scattering from the DarkSide-50 Experiment*  
 DarkSide Collaboration (P. Agnes et al.)  
-[![Phys.Rev.Lett. 121 (2018) no.11, 111303](https://img.shields.io/badge/Phys.Rev.L-121(2018)no.11,111303-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.121.111303)
+[![Phys.Rev.Lett. 121 (2018) no.11, 111303](https://img.shields.io/badge/Phys.Rev.Lett.-121(2018)no.11,111303-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.121.111303)
 [![[arXiv:1802.06998]](https://img.shields.io/badge/arXiv-1802.06998-B31B1B.svg)](https://arxiv.org/abs/1802.06998)
 
 #### protoSENSEI@surface
 
 - *SENSEI: First Direct-Detection Constraints on sub-GeV Dark Matter from a Surface Run*  
 SENSEI Collaboration (Michael Crisler et al.)   
-[![Phys.Rev.Lett. 121 (2018) no.6, 061803](https://img.shields.io/badge/Phys.Rev.L-121(2018)no.6-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.121.061803)
+[![Phys.Rev.Lett. 121 (2018) no.6, 061803](https://img.shields.io/badge/Phys.Rev.Lett.-121(2018)no.6-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.121.061803)
 [![[arXiv:1804.00088]](https://img.shields.io/badge/arXiv-1804.00088-B31B1B.svg)](https://arxiv.org/abs/1804.00088)
 
 #### protoSENSEI@MINOS
 
 - *SENSEI: Direct-Detection Constraints on Sub-GeV Dark Matter from a Shallow Underground Run Using a Prototype Skipper-CCD*  
 SENSEI Collaboration (Orr Abramoff et al.)   
-[![Phys.Rev.Lett. 122 (2019) no.16, 161801](https://img.shields.io/badge/Phys.Rev.L-122(2019)no.16,161801-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.122.161801)
+[![Phys.Rev.Lett. 122 (2019) no.16, 161801](https://img.shields.io/badge/Phys.Rev.Lett.-122(2019)no.16,161801-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.122.161801)
 [![[arXiv:1901.10478]](https://img.shields.io/badge/arXiv-1901.10478-B31B1B.svg)](https://arxiv.org/abs/1901.10478)
 
 <!-- #### SENSEI@MINOS -->
@@ -101,12 +101,12 @@ SENSEI Collaboration (Orr Abramoff et al.)
 
 - *A search for light dark matter in XENON10 data*  
 XENON10 Collaboration (J. Angle et al.)  
-[![Phys.Rev.Lett. 107 (2011) 051301](https://img.shields.io/badge/Phys.Rev.L-107(2011)051301-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.107.051301)
+[![Phys.Rev.Lett. 107 (2011) 051301](https://img.shields.io/badge/Phys.Rev.Lett.-107(2011)051301-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.107.051301)
 [![[arXiv:1104.3088]](https://img.shields.io/badge/arXiv-1104.3088-B31B1B.svg)](https://arxiv.org/abs/1104.3088)
 
 - *First Direct Detection Limits on sub-GeV Dark Matter from XENON10*  
 Rouven Essig, Aaron Manalaysay, Jeremy Mardon, Peter Sorensen, Tomer Volansky.  
-[![Phys.Rev.Lett. 109 (2012) 021301](https://img.shields.io/badge/Phys.Rev.L-109(2012)021301-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.109.021301)
+[![Phys.Rev.Lett. 109 (2012) 021301](https://img.shields.io/badge/Phys.Rev.Lett.-109(2012)021301-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.109.021301)
 [![[arXiv:1206.2644]](https://img.shields.io/badge/arXiv-1206.2644-B31B1B.svg)](https://arxiv.org/abs/1206.2644)
 
 - *New Constraints and Prospects for sub-GeV Dark Matter Scattering off Electrons in Xenon*  
@@ -131,7 +131,7 @@ Rouven Essig, Tomer Volansky, Tien-Tien Yu
 
 - *Light Dark Matter Search with Ionization Signals in XENON1T*  
 XENON Collaboration (E. Aprile et al.)  
-[![Phys.Rev.Lett. 123 (2019) no.25, 251801](https://img.shields.io/badge/Phys.Rev.L-123(2019)no.25,251801-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.123.251801)
+[![Phys.Rev.Lett. 123 (2019) no.25, 251801](https://img.shields.io/badge/Phys.Rev.Lett.-123(2019)no.25,251801-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.123.251801)
 [![[arXiv:1907.11485]](https://img.shields.io/badge/arXiv-1907.11485-B31B1B.svg)](https://arxiv.org/abs/1907.11485)
 
 ## AUTHORS & CONTACT

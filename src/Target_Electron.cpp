@@ -78,7 +78,7 @@
 		double k = sqrt(2.0*mElectron*E);
 		int ki = std::floor(log10(k/k_min) / dlogk);
 		int qi = std::floor(log10(q/q_min) / dlogq);
-		if(ki == Nk-1)		ki--;
+		if(ki == (int) Nk-1)		ki--;
 		else if(ki == -1)	ki++;
 		
 		//Bilinear interpolation between four points: (Source: https://en.wikipedia.org/wiki/Bilinear_interpolation)
@@ -121,7 +121,7 @@
 		return binding_energy_min;
 	}
 
-	Atomic_Electron Atom::Electron(int n, int l)
+	Atomic_Electron Atom::Electron(unsigned int n, unsigned int l)
 	{
 		for(unsigned int i = 0; i<electrons.size(); i++)
 		{

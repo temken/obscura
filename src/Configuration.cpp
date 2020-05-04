@@ -658,7 +658,7 @@ using namespace libconfig;
 			std::vector<unsigned long int> observed_event_bins = {126, 60, 12, 3, 2, 0, 2};
 			double muPE = 27.0;
 			double sigPE = 6.7;
-			std::vector<int> S2_bin_ranges = {14,41,68,95,122,149,176,203};
+			std::vector<unsigned int> S2_bin_ranges = {14,41,68,95,122,149,176,203};
 			std::string trigger_efficiency = "../data/XENON10e/PE_Trigger_Efficiency.txt";
 
 			DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target_name);
@@ -674,7 +674,7 @@ using namespace libconfig;
 			std::vector<unsigned long int> observed_event_bins = {794, 1218, 924, 776, 669, 630, 528, 488, 433, 387};
 			double muPE = 19.7;
 			double sigPE = 6.2;
-			std::vector<int> S2_bin_ranges = {80, 90, 110,130,150,170,190,210,230,250,270};
+			std::vector<unsigned int> S2_bin_ranges = {80, 90, 110,130,150,170,190,210,230,250,270};
 			std::string trigger_efficiency = "../data/XENON100e/PE_Trigger_Efficiency.txt";
 			std::string acceptance_efficiency = "../data/XENON100e/PE_Acceptance_Efficiency.txt";
 
@@ -691,7 +691,7 @@ using namespace libconfig;
 			std::vector<unsigned long int> observed_event_bins = {8, 7, 2, 1};
 			double muPE = 33.0;
 			double sigPE = 7.0;
-			std::vector<int> S2_bin_ranges = {150,200,250,300,350};
+			std::vector<unsigned int> S2_bin_ranges = {150,200,250,300,350};
 			std::string trigger_efficiency = "../data/XENON1Te/XENON1T_TotalEfficiency.txt";
 
 			DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target_name);

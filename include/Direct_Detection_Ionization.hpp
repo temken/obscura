@@ -44,7 +44,7 @@
 			bool using_S2_threshold;
 			// (b) Binned Poisson: PE bins (S2)
 			bool using_S2_bins;
-			std::vector<int> S2_bin_ranges;
+			std::vector<unsigned int> S2_bin_ranges;
 			std::vector<double> DM_Signals_PE_Bins(const DM_Particle& DM, DM_Distribution& DM_distr);
 
 		public:
@@ -68,7 +68,7 @@
 			void Import_Trigger_Efficiency_PE(std::string filename);
 			void Import_Acceptance_Efficiency_PE(std::string filename);
 			// (b) Binned Poisson: PE bins (S2)
-			void Use_PE_Bins(double S2mu, double S2sigma, const std::vector<int> &bin_ranges);
+			void Use_PE_Bins(double S2mu, double S2sigma, const std::vector<unsigned int> &bin_ranges);
 
 			virtual void Print_Summary(int MPI_rank = 0) const override;
 	};
