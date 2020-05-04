@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.2)
 
-project(DM_Detection)
+project(obscura)
 
 # Compiler settings
 set(CMAKE_CXX_STANDARD 11)

@@ -1,4 +1,4 @@
-add_library(darkmatter STATIC
+add_library(obscura STATIC
     Astronomy.cpp
     Configuration.cpp
     Direct_Detection.cpp
@@ -12,7 +12,7 @@ add_library(darkmatter STATIC
     Target_Nucleus.cpp
 )
 
-target_compile_options(darkmatter PUBLIC -Wall -pedantic)
+target_compile_options(obscura PUBLIC -Wall -pedantic)
 
 # Find and include libconfig
 find_path(LIBCONFIG_INCLUDE_DIRs libconfig.h++
@@ -27,26 +27,28 @@ find_library(LIBCONFIGPP_LIBRARY config++
 ~/libs/lib
 )
 
-target_include_directories(darkmatter 
+target_include_directories(obscura 
                         PUBLIC
                             ${LIBCONFIG_INCLUDE_DIRs})
 
 # Link libraries:
-target_link_libraries(darkmatter 
+target_link_libraries(obscura 
                         PUBLIC
                             coverage_config 
                             ${LIBCONFIGPP_LIBRARY})
 
-install(TARGETS darkmatter DESTINATION ${LIB_DIR})
+install(TARGETS obscura DESTINATION ${LIB_DIR})
 
 
-add_executable(DM_Detection main.cpp)
+add_executable(obscura-bin main.cpp)
+SET_TARGET_PROPERTIES(obscura-bin
+  PROPERTIES OUTPUT_NAME obscura)
 
-target_link_libraries(DM_Detection
-	PUBLIC darkmatter
+target_link_libraries(obscura-bin
+	PUBLIC obscura
 	PUBLIC coverage_config 
 	PUBLIC libphys)
 
-install(TARGETS DM_Detection DESTINATION ${BIN_DIR})
+install(TARGETS obscura-bin DESTINATION ${BIN_DIR})
 
 
