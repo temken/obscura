@@ -40,22 +40,6 @@ int main(int argc, char *argv[])
 	}
 	Export_Table("../results/"+cfg.ID+"/constraints.txt", exclusion_limits,{GeV,cm*cm});
 
- 	// Atom Xe = Import_Ionization_Form_Factors("Xe");
- 	// Atom Ar = Import_Ionization_Form_Factors("Ar");
- 	// Xe.Print_Summary();
- 	// Ar.Print_Summary();
- 	// // double k =0.1*keV;
- 	// // std::cout<<Xe[0].Ionization_Form_Factor(1*keV, k*k/2/mElectron)<<std::endl;
-
- 	// cfg.DM->Set_Mass(500*MeV);
- 	// cfg.DM->Set_Interaction_Parameter(5e-39*cm*cm,"Electrons");
- 	// double mu = 27.0;
- 	// double sigma = 6.7;
- 	// for (int PE = 20; PE< 100; PE++)
- 	// {
- 	// 	std::cout <<"PE = "<<PE<<"\t"<<1000*kg*yr * R_PE_Ionization(PE,mu,sigma,*cfg.DM, *cfg.DM_distr, Xe)<<std::endl;
- 	// }
-
 	//Ending time and computing time
 	auto time_end = std::chrono::system_clock::now();
 	double durationTotal =1e-6*std::chrono::duration_cast<std::chrono::microseconds>( time_end - time_start ).count();

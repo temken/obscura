@@ -9,17 +9,20 @@
 //1. Event spectra and rates
 	double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, const Atomic_Electron& shell)
 	{
+		double vMax = DM_distr.Maximum_DM_Speed();
+		double E_DM_max = DM.mass / 2.0 * vMax * vMax;
+		if(E_DM_max < shell.binding_energy)
+			return 0.0; 
+		
 		double prefactor = 1.0/shell.nucleus_mass * DM_distr.DM_density / DM.mass / Ee / 2.0;
 		double vDM = 1.0e-3; 	//cancels in the product with dSigma_dq^2 
 								//-> THIS NEEDS TO BE UPDATED WHEN IMPLEMENTING VELOCITY DEPENDING CROSS SECTIONS
+		double qMin = DM.mass * vMax - sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
+		double qMax = DM.mass * vMax + sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
 		
 		// // Integration over q
 		// // (a) Using numerical integration function.
-		// double vMax = DM_distr.Maximum_DM_Speed();
-		// double qMin = DM.mass * vMax - sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
-		// double qMax = DM.mass * vMax + sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
 		// if(qMax > shell.q_max) qMax = shell.q_max; 
-
 		// std::function<double(double)> integrand = [Ee,&DM, vDM, &DM_distr, &shell] (double q)
 		// {
 		// 	double vMin = vMinimal_Electrons(q, shell.binding_energy + Ee, DM.mass);
@@ -37,19 +40,14 @@
  			std::cerr <<"Warning in dRdEe_Ionization(double,const DM_Particle&,DM_Distribution&,const Atomic_Electron&): Index ki = "<<ki<<" out of bounds. Function returns 0.0."<<std::endl;
  			return 0.0;
 		}
-		double vMax = DM_distr.Maximum_DM_Speed();
-		double qMin = DM.mass * vMax - sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
-		double qMax = DM.mass * vMax + sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
-		int qi_min = std::floor(log10(qMin / shell.q_min) / shell.dlogq);
-		int qi_max = std::floor(log10(qMax / shell.q_min) / shell.dlogq);
+		int qi_min = std::floor(log10(qMin / shell.q_min) / shell.dlogq); // = 0;
+		int qi_max = std::floor(log10(qMax / shell.q_min) / shell.dlogq); // = shell.Nq;
 		if(qi_max > shell.Nq) qi_max = shell.Nq;
-		// int qi_min = 0;
-		// int qi_max = shell.Nq;
 		for(int qi = qi_min; qi < qi_max; qi++)
 		{
 			double q = shell.q_Grid[qi];
 			double vMin = vMinimal_Electrons(q, shell.binding_energy + Ee, DM.mass);
-			integral += log(10.0) * shell.dlogq * q * q * DM.dSigma_dq2_Electron(q,vDM) * vDM * vDM * DM_distr.Eta_Function(vMin) *shell.Ionization_Form_Factor(q,Ee);//* shell.Ionization_Form_Factor[ki][qi];//
+			integral += log(10.0) * shell.dlogq * q * q * DM.dSigma_dq2_Electron(q,vDM) * vDM * vDM * DM_distr.Eta_Function(vMin) * shell.Ionization_Form_Factor(q,Ee);//* shell.Ionization_Form_Factor[ki][qi];//
 		}
 
 		return prefactor * integral;
@@ -152,6 +150,7 @@
 	double DM_Detector_Ionization::DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr) 
 	{
 		double N = 0;
+
 		if(statistical_analysis == "Binned Poisson")
 		{
 			std::vector<double> binned_events = DM_Signals_Binned(DM, DM_distr);
@@ -166,6 +165,7 @@
 		}
 		else if(using_energy_threshold)
 		{
+
 			for(unsigned int i = 0; i < target_atom.electrons.size(); i++)
 			{
 				double kMax = target_atom[i].k_max;
@@ -180,6 +180,7 @@
 					N +=  Integrate(dNdE,energy_threshold,Emax,eps);
 				}
 			}
+
 		}
 		else if(using_S2_threshold)
 		{
@@ -191,6 +192,7 @@
 				N += flat_efficiency * PE_eff * exposure * R_PE_Ionization(PE, S2_mu, S2_sigma, DM, DM_distr, target_atom);
 			}
 		}
+
 		return N;
 	}
 

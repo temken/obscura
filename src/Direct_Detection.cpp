@@ -75,7 +75,6 @@
 			// //Integrate chi-square distribution with 1 degree of freedom (dof) over t' larger than t.
 			// double dof = 1.0;
 			// p_value = 0.5 * (1.0 - CDF_Chi_Square(t, dof));
-
 			std::vector<double> expectation_values = DM_Signals_Binned(DM, DM_distr);
 			std::vector<double> p_values(number_of_bins, 0.0);
 			for(unsigned int i = 0; i < number_of_bins; i++)
@@ -94,6 +93,7 @@
 			std::cerr<<"Error in DM_Detector_Nucleus::P_Value(): Analysis "<<statistical_analysis <<" not recognized."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
+
 		return p_value;
 	}
 
