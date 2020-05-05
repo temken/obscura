@@ -4,7 +4,9 @@
 
 # obscura
 
-A C++ tool and library for dark matter direct detection computations.
+A C++ tool and library for dark matter direct detection computations for both nuclear and electron recoil experiments.
+
+<img src="results/obscura_DD_Constraints.png" width="650">
 
 ## Dependencies
 
