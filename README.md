@@ -2,7 +2,7 @@
 [![codecov](https://codecov.io/gh/temken/obscura/branch/master/graph/badge.svg)](https://codecov.io/gh/temken/obscura)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-# obscura
+# obscura - Direct detection of dark matter with nucleus and electron recoil experiments
 
 A C++ tool and library for dark matter direct detection computations for both nuclear and electron recoil experiments.
 
