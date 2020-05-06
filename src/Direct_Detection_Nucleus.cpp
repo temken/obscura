@@ -1,10 +1,10 @@
 #include "Direct_Detection_Nucleus.hpp"
 
 #include <cmath>
-#include <numeric> //for std::accumulate
-#include <algorithm> //for std::min_element, std::max_element, std::sort
+#include <numeric> 		//for std::accumulate
+#include <algorithm> 	//for std::min_element, std::max_element, std::sort
 
-//Headers from libphys library
+//Headers from libphysica library
 #include "Statistics.hpp"
 #include "Utilities.hpp"
 

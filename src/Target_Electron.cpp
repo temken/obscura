@@ -3,7 +3,7 @@
 #include <cmath>
 #include <fstream>
 
-//Headers from libphys library
+//Headers from libphysica library
 #include "Natural_Units.hpp"
 #include "Utilities.hpp"
 

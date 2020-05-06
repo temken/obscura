@@ -1,7 +1,7 @@
 #ifndef __Astronomy_hpp_
 #define __Astronomy_hpp_
 
-//Headers from libphys library
+//Headers from libphysica library
 #include "Linear_Algebra.hpp"
 
 //1. Transform between astronomical coordinate systems.

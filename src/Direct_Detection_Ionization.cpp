@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-//Headers from libphys library
+//Headers from libphysica library
 #include "Statistics.hpp"
 #include "Utilities.hpp"
 

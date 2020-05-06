@@ -1,10 +1,10 @@
 #include "Configuration.hpp"
 
 #include <fstream>
-// #include <sys/types.h> // required for stat.h
+#include <sys/types.h> // required for stat.h
 #include <sys/stat.h>	//required to create a folder
 
-//Headers from libphys library
+//Headers from libphysica library
 #include "Utilities.hpp"
 
 #include "DM_Particle_Standard.hpp"

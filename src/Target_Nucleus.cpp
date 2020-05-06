@@ -4,7 +4,7 @@
 #include <fstream>
 #include <cmath>
 
-//Headers from libphys library
+//Headers from libphysica library
 #include "Numerics.hpp"
 #include "Natural_Units.hpp"
 

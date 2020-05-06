@@ -4,7 +4,7 @@
 #include <cmath>
 #include <functional>
 
-//Headers from libphys library
+//Headers from libphysica library
 #include "Numerics.hpp"
 #include "Natural_Units.hpp"
 

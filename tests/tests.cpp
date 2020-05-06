@@ -2,7 +2,7 @@
 #include <chrono>
 #include <cmath>
 
-//Headers from libphys library
+//Headers from libphysica library
 #include "Natural_Units.hpp"
 #include "Numerics.hpp"
 #include "Linear_Algebra.hpp"

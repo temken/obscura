@@ -2,8 +2,9 @@
 #define __DM_Distribution_hpp_
 
 #include <vector>
+#include <string>
 
-//Headers from libphys library
+//Headers from libphysica library
 #include "Linear_Algebra.hpp"
 
 //1. Abstract base class for DM distributions that can be used to compute direct detection recoil spectra.

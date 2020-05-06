@@ -5,7 +5,7 @@
 #include <numeric>
 #include <cmath>
 
-//Headers from libphys library
+//Headers from libphysica library
 #include "Numerics.hpp"
 #include "Statistics.hpp"
 #include "Utilities.hpp"

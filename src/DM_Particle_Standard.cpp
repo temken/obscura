@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-//Headers from libphys library
+//Headers from libphysica library
 #include "Numerics.hpp"
 
 //1. Abstract parent class for SI and SD interactions

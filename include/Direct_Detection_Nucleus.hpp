@@ -1,10 +1,10 @@
 #ifndef __Direct_Detection_Nucleus_hpp_
 #define __Direct_Detection_Nucleus_hpp_
 
-// #include <vector>
-// #include <string>
+#include <vector>
+#include <string>
 
-//Headers from libphys library
+//Headers from libphysica library
 #include "Natural_Units.hpp"
 #include "Numerics.hpp"
 
