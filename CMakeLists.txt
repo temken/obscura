@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.2)
 
-project(DM_Detection)
+project(obscura)
 
 # Compiler settings
 set(CMAKE_CXX_STANDARD 11)
@@ -12,6 +12,8 @@ set(INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set(BIN_DIR ${PROJECT_SOURCE_DIR}/bin)
 set(SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 set(EXPROJ_DIR    "${CMAKE_HOME_DIRECTORY}/external")
+set(TESTS_DIR ${PROJECT_SOURCE_DIR}/tests)
+set(LIB_DIR ${PROJECT_SOURCE_DIR}/lib)
 
 #Include my libphys library
 include(ExternalProject)
@@ -46,7 +48,6 @@ set_target_properties(libphys PROPERTIES
 
 include_directories( ${INCLUDE_DIR} ${LIBPHYS_INCLUDE_DIR})
 
-enable_testing()
 add_subdirectory(${SRC_DIR})
 
 # Code Coverage Configuration
@@ -66,3 +67,11 @@ if(CODE_COVERAGE)
   endif()
 endif(CODE_COVERAGE)
 
+
+option (BUILD_TESTING "Build the testing tree." ON)
+# Only build tests if we are the top-level project
+# Allows this to be used by super projects with `add_subdirectory`
+if (BUILD_TESTING AND (PROJECT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR))
+  enable_testing()
+  add_subdirectory(${TESTS_DIR})
+endif()
