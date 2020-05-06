@@ -34,10 +34,6 @@ int main(int argc, char *argv[])
 
 	std::vector<double> DM_masses = Log_Space(cfg.constraints_mass_min, cfg.constraints_mass_max, cfg.constraints_masses);
 	std::vector<std::vector<double>> exclusion_limits = cfg.DM_detector->Upper_Limit_Curve(*(cfg.DM), *(cfg.DM_distr), DM_masses, cfg.constraints_certainty);
-	for(unsigned int i = 0; i < exclusion_limits.size(); i++)
-	{
-		std::cout <<i+1 <<")\t" <<Round(exclusion_limits[i][0]) <<" GeV\t" <<Round(In_Units(exclusion_limits[i][1],cm*cm)) <<" cm^2" <<std::endl;
-	}
 	Export_Table("../results/"+cfg.ID+"/constraints.txt", exclusion_limits,{GeV,cm*cm});
 
 	//Ending time and computing time

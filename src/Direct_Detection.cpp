@@ -332,6 +332,9 @@
 			if(masses[i] < lowest_mass) continue;
 			DM.Set_Mass(masses[i]);
 			limit.push_back(std::vector<double>{masses[i], Upper_Limit(DM, DM_distr, certainty)});
+			std::cout 	<<i+1 <<"/"<<masses.size()
+						<<"\tmDM = "<<Round(In_Units(DM.mass, (DM.mass<GeV)? MeV : GeV)) <<((DM.mass<GeV)? " MeV" : " GeV")
+						<<"\tUpper Bound:\t" <<Round(In_Units(limit.back()[1],cm*cm)) <<std::endl;
 		}
 		DM.Set_Mass(mOriginal);
 		return limit;
