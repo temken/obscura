@@ -6,7 +6,7 @@
 
 A C++ tool and library for dark matter direct detection computations for both nuclear and electron recoil experiments.
 
-<img src="results/obscura_DD_Constraints.png" width="650">
+<img src="results/obscura_DD_Constraints.png" width="500">
 
 ## Dependencies
 
@@ -96,8 +96,11 @@ SENSEI Collaboration (Orr Abramoff et al.)
 [![Phys.Rev.Lett. 122 (2019) no.16, 161801](https://img.shields.io/badge/Phys.Rev.Lett.-122(2019)no.16,161801-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.122.161801)
 [![[arXiv:1901.10478]](https://img.shields.io/badge/arXiv-1901.10478-B31B1B.svg)](https://arxiv.org/abs/1901.10478)
 
-<!-- #### SENSEI@MINOS -->
-<!-- 2004.11378 -->
+#### SENSEI@MINOS
+
+- *SENSEI: Direct-Detection Results on sub-GeV Dark Matter from a New Skipper-CCD*  
+SENSEI Collaboration (Liron Barak et al.) 
+[![[arXiv:2004.11378]](https://img.shields.io/badge/arXiv-2004.11378-B31B1B.svg)](https://arxiv.org/abs/2004.11378)
 
 #### XENON10-e
 
