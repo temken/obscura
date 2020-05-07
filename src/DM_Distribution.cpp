@@ -95,7 +95,7 @@
 				<<"\tLocal DM density[GeV/cm^3]:\t" <<In_Units(DM_density,GeV/cm/cm/cm)<<std::endl
 				<<"\tSpeed domain [km/sec]:\t\t[" <<In_Units(v_domain[0],km/sec)<<","<<In_Units(v_domain[1],km/sec)<<"]"<<std::endl
 				<<"\tAverage DM velocity [km/sec]:\t" <<In_Units(Average_Velocity(),km/sec)<<std::endl
-				<<"\tAverage DM speed [km/sec]:\t" <<In_Units(Average_Speed(),km/sec)<<std::endl<<std::endl;
+				<<"\tAverage DM speed [km/sec]:\t" <<Round(In_Units(Average_Speed(),km/sec))<<std::endl<<std::endl;
 		}
 	}
 
