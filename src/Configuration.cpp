@@ -808,7 +808,7 @@ using namespace libconfig;
 				double SENSEI_exposure = 9.1*gram*day;
 				unsigned int SENSEI_Q_threshold = 1;
 				unsigned int SENSEI_N_bins = 4;
-				std::vector<double> SENSEI_efficiencies = {1.0 * 1.38/9.1, 0.228 * 2.09/9.1, 0.761 * 9.03/9.1, 0.788};
+				std::vector<double> SENSEI_efficiencies = {1.38/9.1,2.09/9.1,9.03/9.1, 1.0};
 				std::vector<unsigned long int> SENSEI_observed_events = {1312, 5, 0, 0};
 
 				DM_detector = new DM_Detector_Semiconductor(DD_experiment,SENSEI_exposure, "Si");
