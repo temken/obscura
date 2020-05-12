@@ -5,6 +5,7 @@ coverage.info
 build/
 external/
 lib/
+results/
 *tests
 
 #Ignore executables

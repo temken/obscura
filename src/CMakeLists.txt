@@ -1,4 +1,7 @@
-add_library(obscura STATIC
+
+
+# Static library
+add_library(libobscura STATIC
     Astronomy.cpp
     Configuration.cpp
     Direct_Detection.cpp
@@ -12,43 +15,50 @@ add_library(obscura STATIC
     Target_Nucleus.cpp
 )
 
-target_compile_options(obscura PUBLIC -Wall -pedantic)
+set_target_properties(libobscura PROPERTIES PREFIX "")
+
+target_compile_options(libobscura PUBLIC -Wall -pedantic)
 
 # Find and include libconfig
 find_path(LIBCONFIG_INCLUDE_DIRs libconfig.h++
-/usr/local/include
-/usr/include
-~/libs/include
-~/include
-)
+    /usr/local/include
+    /usr/include
+    ~/libs/include
+    ~/include )
 find_library(LIBCONFIGPP_LIBRARY config++
-/usr/local/lib
-/usr/lib
-~/libs/lib
-)
+    /usr/local/lib
+    /usr/lib
+    ~/libs/lib )
 
-target_include_directories(obscura 
-                        PUBLIC
-                            ${LIBCONFIG_INCLUDE_DIRs})
+target_include_directories(libobscura 
+     PUBLIC
+        ${LIBCONFIG_INCLUDE_DIRs})
 
-# Link libraries:
-target_link_libraries(obscura 
-                        PUBLIC
-                            coverage_config 
-                            ${LIBCONFIGPP_LIBRARY})
+target_link_libraries(libobscura
+    PUBLIC
+        coverage_config 
+        libphysica
+        ${LIBCONFIGPP_LIBRARY}
+    )
 
-install(TARGETS obscura DESTINATION ${LIB_DIR})
+target_include_directories(libobscura
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${INCLUDE_DIR})
 
+install(TARGETS libobscura DESTINATION ${LIB_DIR})
 
-add_executable(obscura-bin main.cpp)
-SET_TARGET_PROPERTIES(obscura-bin
-  PROPERTIES OUTPUT_NAME obscura)
+# Executable
+add_executable(obscura
+    main.cpp )
 
-target_link_libraries(obscura-bin
-	PUBLIC obscura
-	PUBLIC coverage_config 
-	PUBLIC libphys)
+target_compile_options(obscura PUBLIC -Wall -pedantic)
 
-install(TARGETS obscura-bin DESTINATION ${BIN_DIR})
+target_link_libraries(obscura
+    PUBLIC 
+        coverage_config
+        libobscura )
+
+install(TARGETS obscura DESTINATION ${BIN_DIR})
 
 
