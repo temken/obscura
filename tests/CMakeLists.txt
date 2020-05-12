@@ -1,11 +1,12 @@
 add_executable(tests
-	tests.cpp)
+	test_Astronomy.cpp)
 
 # Linking up all libraries (includes the coverage settings set by 'example' library)
 target_link_libraries(tests 
 	PRIVATE
 		libobscura
-		libphysica )
+		gtest_main	#contains the main function
+)
 
 target_compile_options(tests PUBLIC -Wall -pedantic)
 
