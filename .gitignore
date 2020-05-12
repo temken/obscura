@@ -5,10 +5,7 @@ coverage.info
 build/
 external/
 lib/
-*tests
-
-#Ignore executables
-bin/executable
+results/
 
 # Ignore build files
 *.o
