@@ -6,10 +6,6 @@ build/
 external/
 lib/
 results/
-*tests
-
-#Ignore executables
-bin/executable
 
 # Ignore build files
 *.o
