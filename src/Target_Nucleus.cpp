@@ -11,11 +11,11 @@
 //1. Kinematic functions
 	double vMinimal_Nucleus(double ER, double mDM, double mNucleus)
 	{
-		return sqrt(mNucleus*ER/2.0/pow(Reduced_Mass(mDM,mNucleus),2.0));
+		return sqrt(mNucleus * ER/2.0/pow(Reduced_Mass(mDM,mNucleus),2.0));
 	}
 	double Maximum_Nuclear_Recoil_Energy(double vDM, double mDM, double mNucleus)
 	{
-		return 2.0*vDM*vDM*pow(Reduced_Mass(mDM,mNucleus),2.0)/mNucleus;
+		return 2.0 * vDM * vDM * pow(Reduced_Mass(mDM,mNucleus),2.0) / mNucleus;
 	}
 
 //2. Class for nuclear isotopes.
@@ -25,15 +25,15 @@
 	Isotope::Isotope()
 	: Z(1), A(1), abundance(1.0), spin(0.5), sp(0.5), sn(0)
 	{
-		name="H-1";
+		name = "H-1";
 		mass = mProton;
 	}
 
 	Isotope::Isotope(unsigned int z, unsigned int a,double abund,double Spin,double Sp,double Sn)
 	: Z(z), A(a), abundance(abund), spin(Spin), sp(Sp), sn(Sn)
 	{
-		name=ElementNames[Z-1]+"-"+std::to_string(A);
-		mass= (A==1)? mProton : A*mNucleon;
+		name = ElementNames[Z-1] + "-" + std::to_string(A);
+		mass = (A == 1)? mProton : A*mNucleon;
 	}
 
 	double Isotope::Thomas_Fermi_Radius() const
@@ -85,7 +85,8 @@
 	double Element::Average_Nuclear_Mass() const
 	{
 		double average_mass=0.0;
-		for(unsigned int i=0;i<Number_of_Isotopes();i++) average_mass += isotopes[i].mass*isotopes[i].abundance;
+		for(unsigned int i = 0; i < Number_of_Isotopes(); i++)
+			average_mass += isotopes[i].mass*isotopes[i].abundance;
 		return average_mass;
 	}
 
@@ -110,20 +111,25 @@
 	{
 		Elements.clear();
 		std::vector<Isotope> isotopes;
+		std::string path = "../data/Nuclear_Data.txt";
 		std::ifstream f;
-		f.open("../data/Nuclear_Data.txt");
-
+		f.open(path);
+		if(!f)
+		{
+			std::cerr <<"Error in Import_Nuclear_Data(): Data file " <<path <<" not found."<<std::endl;
+			std::exit(EXIT_FAILURE);			
+		}
 		std::string name;
 		int Z,A;
-		double abund,spin,sp,sn;
-		int Zold=1;
+		double abund, spin, sp, sn;
+		int Zold = 1;
 		while(f >>name >>Z >>A >>abund >>spin >>sp >>sn)
 		{
-			if(Z>Zold)
+			if(Z > Zold)
 			{
 				Elements.push_back(Element(isotopes));
 				isotopes.clear();
-				Zold=Z;
+				Zold = Z;
 			}
 			isotopes.push_back( Isotope(Z, A,abund,spin,sp, sn) );
 		}
@@ -133,7 +139,7 @@
 
 	Element Get_Element(int Z)
 	{
-		if(Z<1||Z>92)
+		if(Z < 1 || Z > 92)
 		{
 			std::cerr <<"Error in Get_Element(): Input Z="<<Z <<" is not a value between 1 and 92."<<std::endl;
 			std::exit(EXIT_FAILURE);
@@ -148,9 +154,10 @@
 
 	Element Get_Element(std::string name)
 	{
-		for(int Z = 1; Z<=92; Z++)
+		for(int Z = 1; Z <= 92; Z++)
 		{
-			if(Get_Element(Z).name == name) return Get_Element(Z);
+			if(Get_Element(Z).name == name)
+				return Get_Element(Z);
 		}
 		std::cerr<<"Error in Get_Element(): Element " <<name <<" not recognized."<<std::endl;
 		std::exit(EXIT_FAILURE);
