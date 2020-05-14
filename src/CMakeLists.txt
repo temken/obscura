@@ -19,6 +19,11 @@ set_target_properties(libobscura PROPERTIES PREFIX "")
 
 target_compile_options(libobscura PUBLIC -Wall -pedantic)
 
+target_compile_definitions(libobscura
+    PRIVATE 
+        OBSCURA_DIR="${PROJECT_SOURCE_DIR}/"
+        TOP_LEVEL_DIR="${CMAKE_SOURCE_DIR}/")
+
 # Find and include libconfig
 find_path(LIBCONFIG_INCLUDE_DIRs libconfig.h++
     /usr/local/include
@@ -53,6 +58,11 @@ add_executable(obscura
     main.cpp )
 
 target_compile_options(obscura PUBLIC -Wall -pedantic)
+
+target_compile_definitions(obscura
+    PRIVATE 
+        OBSCURA_DIR="${PROJECT_SOURCE_DIR}/"
+        TOP_LEVEL_DIR="${CMAKE_SOURCE_DIR}/")
 
 target_link_libraries(obscura
     PUBLIC 

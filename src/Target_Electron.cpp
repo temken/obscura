@@ -42,7 +42,13 @@
 		}
 		//Import the form factor
 			std::ifstream f;
-			f.open("../data/Semiconductors/C."+target+"137.dat");
+			std::string path = OBSCURA_DIR "data/Semiconductors/C."+target+"137.dat";
+			f.open(path);
+			if(!f)
+			{
+				std::cerr <<"Error in Semiconductor::Semiconductor(): Data file " <<path <<" not found."<<std::endl;
+				std::exit(EXIT_FAILURE);			
+			}
 			//Prefactors:
 			double wk = 2.0/137.0;
 			for(int Ei = 1; Ei <= 500; Ei++)
@@ -64,7 +70,8 @@
 	{
 		name = element + "_" + std::to_string(n) + s_names[l];
 		//Import the table.
-		Form_Factor_Tables = Import_Table("../data/Form_Factors_Ionization/"+name+".txt");
+		std::string path = OBSCURA_DIR "data/Form_Factors_Ionization/"+name+".txt";
+		Form_Factor_Tables = Import_Table(path);
 		Nk = Form_Factor_Tables.size();
 		Nq = Form_Factor_Tables[0].size();
 		k_Grid = Log_Space(k_min, k_max, Nk);

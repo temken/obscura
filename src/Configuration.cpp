@@ -94,7 +94,7 @@ using namespace libconfig;
 		if(MPI_rank == 0) 
 		{
 			//1. Create the /results/ folder if necessary
-			std::string results_folder = "../results";
+			std::string results_folder = TOP_LEVEL_DIR "results";
 			mode_t nMode = 0733; // UNIX style permissions
 			int nError_1 = 0;
 			#if defined(_WIN32)
@@ -124,7 +124,7 @@ using namespace libconfig;
 			std::ifstream inFile;
 			std::ofstream outFile;
 			inFile.open(cfg_file);
-	    	outFile.open("../results/"+ID+"/"+ID+".cfg");
+	    	outFile.open(TOP_LEVEL_DIR "results/"+ID+"/"+ID+".cfg");
 			outFile << inFile.rdbuf();
 			inFile.close();
 			outFile.close();
@@ -537,10 +537,10 @@ using namespace libconfig;
 			double CRESST_II_threshold = 307*eV;
 			double CRESST_II_Emax = 40.0*keV;
 			double CRESST_II_resolution = CRESST_II_threshold / 5.0;
-			std::vector<std::string> efficiency_files = {"../data/CRESST-II/Lise_eff_AR_O.dat","../data/CRESST-II/Lise_eff_AR_Ca.dat","../data/CRESST-II/Lise_eff_AR_W.dat"};
+			std::vector<std::string> efficiency_files = {OBSCURA_DIR "data/CRESST-II/Lise_eff_AR_O.dat",OBSCURA_DIR "data/CRESST-II/Lise_eff_AR_Ca.dat",OBSCURA_DIR "data/CRESST-II/Lise_eff_AR_W.dat"};
 			
 			DM_detector = new DM_Detector_Nucleus(DD_experiment, CRESST_II_exposure, CRESST_II_targets, CRESST_II_target_ratios);
-			std::vector<double> energy_events = Import_List("../data/CRESST-II/Lise_AR.dat",keV);
+			std::vector<double> energy_events = Import_List(OBSCURA_DIR "data/CRESST-II/Lise_AR.dat",keV);
 			energy_events.push_back(CRESST_II_threshold);
 			energy_events.push_back(CRESST_II_Emax);
 			DM_detector->Use_Maximum_Gap(energy_events);
@@ -557,7 +557,7 @@ using namespace libconfig;
 			double CRESST_surface_resolution = 3.74*eV;
 
 			DM_detector = new DM_Detector_Nucleus(DD_experiment, CRESST_surface_exposure, CRESST_surface_targets, CRESST_surface_target_ratios);
-			std::vector<double> energy_events = Import_List("../data/CRESST-surface/data.txt",keV);
+			std::vector<double> energy_events = Import_List(OBSCURA_DIR "data/CRESST-surface/data.txt",keV);
 			energy_events.push_back(CRESST_surface_threshold);
 			energy_events.push_back(CRESST_surface_Emax);
 			DM_detector->Use_Maximum_Gap(energy_events);
@@ -572,11 +572,11 @@ using namespace libconfig;
 			double CRESST_III_Emax = 16*keV;
 			double CRESST_III_resolution = 4.6*eV;
 			double CRESST_III_efficiency = 0.5;
-			std::vector<std::string> efficiency_files = {"../data/CRESST-III/C3P1_DetA_eff_AR_O.dat","../data/CRESST-III/C3P1_DetA_eff_AR_Ca.dat","../data/CRESST-III/C3P1_DetA_eff_AR_W.dat"};
+			std::vector<std::string> efficiency_files = {OBSCURA_DIR "data/CRESST-III/C3P1_DetA_eff_AR_O.dat",OBSCURA_DIR "data/CRESST-III/C3P1_DetA_eff_AR_Ca.dat",OBSCURA_DIR "data/CRESST-III/C3P1_DetA_eff_AR_W.dat"};
 
 			DM_detector = new DM_Detector_Nucleus(DD_experiment, CRESST_III_exposure, CRESST_III_targets, CRESST_III_target_ratios);
 			DM_detector->Set_Flat_Efficiency(CRESST_III_efficiency);
-			std::vector<double> energy_events = Import_List("../data/CRESST-III/C3P1_DetA_AR.dat",keV);
+			std::vector<double> energy_events = Import_List(OBSCURA_DIR "data/CRESST-III/C3P1_DetA_AR.dat",keV);
 			energy_events.push_back(CRESST_III_threshold);
 			energy_events.push_back(CRESST_III_Emax);
 			DM_detector->Use_Maximum_Gap(energy_events);
@@ -659,7 +659,7 @@ using namespace libconfig;
 			double muPE = 27.0;
 			double sigPE = 6.7;
 			std::vector<unsigned int> S2_bin_ranges = {14,41,68,95,122,149,176,203};
-			std::string trigger_efficiency = "../data/XENON10e/PE_Trigger_Efficiency.txt";
+			std::string trigger_efficiency = OBSCURA_DIR "data/XENON10e/PE_Trigger_Efficiency.txt";
 
 			DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target_name);
 			DM_detector->Set_Flat_Efficiency(flat_efficiency);
@@ -675,8 +675,8 @@ using namespace libconfig;
 			double muPE = 19.7;
 			double sigPE = 6.2;
 			std::vector<unsigned int> S2_bin_ranges = {80, 90, 110,130,150,170,190,210,230,250,270};
-			std::string trigger_efficiency = "../data/XENON100e/PE_Trigger_Efficiency.txt";
-			std::string acceptance_efficiency = "../data/XENON100e/PE_Acceptance_Efficiency.txt";
+			std::string trigger_efficiency = OBSCURA_DIR "data/XENON100e/PE_Trigger_Efficiency.txt";
+			std::string acceptance_efficiency = OBSCURA_DIR "data/XENON100e/PE_Acceptance_Efficiency.txt";
 
 			DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target_name);
 			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
@@ -692,7 +692,7 @@ using namespace libconfig;
 			double muPE = 33.0;
 			double sigPE = 7.0;
 			std::vector<unsigned int> S2_bin_ranges = {150,200,250,300,350};
-			std::string trigger_efficiency = "../data/XENON1Te/XENON1T_TotalEfficiency.txt";
+			std::string trigger_efficiency = OBSCURA_DIR "data/XENON1Te/XENON1T_TotalEfficiency.txt";
 
 			DM_detector = new DM_Detector_Ionization(DD_experiment, exposure, target_name);
 			dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
