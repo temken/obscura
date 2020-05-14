@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 
 	std::vector<double> DM_masses = Log_Space(cfg.constraints_mass_min, cfg.constraints_mass_max, cfg.constraints_masses);
 	std::vector<std::vector<double>> exclusion_limits = cfg.DM_detector->Upper_Limit_Curve(*(cfg.DM), *(cfg.DM_distr), DM_masses, cfg.constraints_certainty);
-	Export_Table("../results/"+cfg.ID+"/constraints.txt", exclusion_limits,{GeV,cm*cm});
+	Export_Table(TOP_LEVEL_DIR "results/" + cfg.ID + "/constraints.txt", exclusion_limits,{GeV,cm*cm});
 	
 	//Ending time and computing time
 	auto time_end = std::chrono::system_clock::now();
