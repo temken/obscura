@@ -111,7 +111,9 @@
 	{
 		Elements.clear();
 		std::vector<Isotope> isotopes;
-		std::string path = "../data/Nuclear_Data.txt";
+    	std::string base_directory = ((std::string)__FILE__).substr(0, ((std::string)__FILE__).find("/src/")+1 );
+		std::string path = base_directory + "data/Nuclear_Data.txt";
+		// std::string path = "../data/Nuclear_Data.txt";
 		std::ifstream f;
 		f.open(path);
 		if(!f)
