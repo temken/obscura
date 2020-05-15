@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "version.hpp"
+
 //1. Kinematic functions
 	extern double vMinimal_Electrons(double q,double Delta_E, double mDM);
 	
