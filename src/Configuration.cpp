@@ -126,6 +126,7 @@ using namespace libconfig;
 			std::ofstream outFile;
 			inFile.open(cfg_file);
 	    	outFile.open(TOP_LEVEL_DIR "results/"+ID+"/"+ID+".cfg");
+	    	outFile <<"//\t"<<PROJECT_NAME <<"-"<<PROJECT_VERSION <<"\tgit:" <<GIT_BRANCH <<"/" <<GIT_COMMIT_HASH <<std::endl;
 			outFile << inFile.rdbuf();
 			inFile.close();
 			outFile.close();

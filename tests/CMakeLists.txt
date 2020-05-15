@@ -19,11 +19,11 @@ target_link_libraries(tests
 		gtest_main	#contains the main function
 )
 
+target_compile_options(tests PUBLIC -Wall -pedantic)
+
 target_include_directories(tests
     PRIVATE
         ${GENERATED_DIR} )
-
-target_compile_options(tests PUBLIC -Wall -pedantic)
 
 install(TARGETS tests DESTINATION ${TESTS_DIR})
 
