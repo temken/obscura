@@ -42,7 +42,7 @@
 		}
 		//Import the form factor
 			std::ifstream f;
-			std::string path = OBSCURA_DIR "data/Semiconductors/C."+target+"137.dat";
+			std::string path = PROJECT_DIR "data/Semiconductors/C."+target+"137.dat";
 			f.open(path);
 			if(!f)
 			{
@@ -70,7 +70,7 @@
 	{
 		name = element + "_" + std::to_string(n) + s_names[l];
 		//Import the table.
-		std::string path = OBSCURA_DIR "data/Form_Factors_Ionization/"+name+".txt";
+		std::string path = PROJECT_DIR "data/Form_Factors_Ionization/"+name+".txt";
 		Form_Factor_Tables = Import_Table(path);
 		Nk = Form_Factor_Tables.size();
 		Nq = Form_Factor_Tables[0].size();

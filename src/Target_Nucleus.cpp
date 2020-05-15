@@ -111,7 +111,7 @@
 	{
 		Elements.clear();
 		std::vector<Isotope> isotopes;
-		std::string path = OBSCURA_DIR "data/Nuclear_Data.txt";
+		std::string path = PROJECT_DIR "data/Nuclear_Data.txt";
 		std::ifstream f;
 		f.open(path);
 		if(!f)
