@@ -63,7 +63,7 @@ class DM_Particle_Standard : public DM_Particle
 class DM_Particle_SI : public DM_Particle_Standard
 {
 	private:
-		double qRef = aEM * mElectron;
+		double qRef;
 		//Dark matter form factor
 		std::string FF_DM;
 		double mMediator;
@@ -71,7 +71,8 @@ class DM_Particle_SI : public DM_Particle_Standard
 
 	public:
 		DM_Particle_SI();
-		DM_Particle_SI(double mDM, double sigmaP=1e-40*cm*cm);
+		DM_Particle_SI(double mDM);
+		DM_Particle_SI(double mDM, double sigmaP);
 
 		void Set_FormFactor_DM(std::string ff,double mMed=-1.0);
 		void Set_Mediator_Mass(double m);
@@ -94,7 +95,8 @@ class DM_Particle_SD : public DM_Particle_Standard
 
 	public:
 		DM_Particle_SD();
-		DM_Particle_SD(double mDM, double sigmaP=1e-40*cm*cm);
+		DM_Particle_SD(double mDM);
+		DM_Particle_SD(double mDM, double sigmaP);
 		
 		//Differential cross sections with nuclear isotopes, elements, and electrons
 		virtual double dSigma_dq2_Nucleus(double q,const Isotope& target,double vDM) const override;

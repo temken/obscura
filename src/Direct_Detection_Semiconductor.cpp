@@ -7,6 +7,7 @@
 #include "Natural_Units.hpp"
 #include "Numerics.hpp"
 
+using namespace libphysica::natural_units;
 //1. Event spectra and rates
 
 	double Minimum_Electron_Energy(int Q, const Semiconductor& target)
@@ -115,8 +116,8 @@
 			{
 				return dRdE(E, DM, DM_distr);
 			};
-			double epsilon = Find_Epsilon(spectrum, energy_threshold, energy_max, 1e-6);
-			N = exposure * Integrate(spectrum, energy_threshold, energy_max, epsilon);
+			double epsilon = libphysica::Find_Epsilon(spectrum, energy_threshold, energy_max, 1e-6);
+			N = exposure * libphysica::Integrate(spectrum, energy_threshold, energy_max, epsilon);
 		}
 		else if(using_Q_threshold)
 		{

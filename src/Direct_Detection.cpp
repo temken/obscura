@@ -10,6 +10,8 @@
 #include "Statistics.hpp"
 #include "Utilities.hpp"
 
+using namespace libphysica::natural_units;
+
 // DM Detector base class, which provides the statistical methods and energy bins.
 	//Statistics
 	//Likelihoods
@@ -21,7 +23,7 @@
 			unsigned long int n = observed_events;
 			double b = expected_background;
 			// if(b < 1.0e-4 && (n > s)) b = n-s;	// see eq.(29) of [arXiv:1705.07920]
-			return Log_Likelihood_Poisson(s, n, b);
+			return libphysica::Log_Likelihood_Poisson(s, n, b);
 		}
 		else if(statistical_analysis == "Binned Poisson")
 		{
@@ -32,7 +34,7 @@
 			// {
 			// 	if(b[i] < 1.0e-4 && (n[i] > s[i])) b[i] = n[i]-s[i]; // see eq.(29) of [arXiv:1705.07920]
 			// }
-			return Log_Likelihood_Poisson_Binned(s, n, b);
+			return libphysica::Log_Likelihood_Poisson_Binned(s, n, b);
 		}
 		else if(statistical_analysis == "Maximum Gap")
 		{
@@ -64,7 +66,7 @@
 			// p_value = 0.5* (1.0 - CDF_Chi_Square(t, dof));
 
 			double expectation_value = DM_Signals_Total(DM, DM_distr) + expected_background;
-			p_value = CDF_Poisson(expectation_value, observed_events);
+			p_value = libphysica::CDF_Poisson(expectation_value, observed_events);
 		}
 		else if(statistical_analysis == "Binned Poisson")
 		{
@@ -80,7 +82,7 @@
 			for(unsigned int i = 0; i < number_of_bins; i++)
 			{
 				double expectation_value = expectation_values[i] + bin_expected_background[i];
-				p_values[i] = CDF_Poisson(expectation_value, bin_observed_events[i]); 
+				p_values[i] = libphysica::CDF_Poisson(expectation_value, bin_observed_events[i]); 
 			}
 			p_value =  *std::min_element(p_values.begin(),p_values.end());
 		}
@@ -225,7 +227,7 @@
 			double sum=0.0;
 			for(int k=0; k <= m; k++) 
 			{
-				double term = pow(k*x-mu,k) / Factorial(k) * exp(-k*x) * (1.0 + k/(mu-k*x));
+				double term = pow(k*x-mu,k) / libphysica::Factorial(k) * exp(-k*x) * (1.0 + k/(mu-k*x));
 				sum += term;
 				if(fabs(term) < 1e-20) break;
 			}
@@ -246,8 +248,8 @@
 		{
 			double E1 = maximum_gap_energy_data[i];
 			double E2 = maximum_gap_energy_data[i+1];
-			double eps = Find_Epsilon(spectrum,E1,E2,1e-3);
-			double gap = Integrate(spectrum, E1,E2,eps);
+			double eps = libphysica::Find_Epsilon(spectrum,E1,E2,1e-3);
+			double gap = libphysica::Integrate(spectrum, E1,E2,eps);
 			gaps.push_back(gap);
 		}
 		
@@ -279,8 +281,8 @@
 			{
 				return dRdE(E, DM, DM_distr);
 			};
-			double epsilon = Find_Epsilon(spectrum, energy_threshold, energy_max, 1e-6);
-			N = exposure * Integrate(spectrum, energy_threshold, energy_max, epsilon);
+			double epsilon = libphysica::Find_Epsilon(spectrum, energy_threshold, energy_max, 1e-6);
+			N = exposure * libphysica::Integrate(spectrum, energy_threshold, energy_max, epsilon);
 		}
 		return N;
 	}
@@ -315,7 +317,7 @@
 			double p_value = P_Value(DM, DM_distr);
 			return p_value - (1.0-certainty);
 		};
-		double log10_upper_bound = Find_Root(func, -30.0, 10.0, 1.0e-4);
+		double log10_upper_bound = libphysica::Find_Root(func, -30.0, 10.0, 1.0e-4);
 
 		DM.Set_Interaction_Parameter(interaction_parameter_original, targets);
 		return pow(10.0, log10_upper_bound);
@@ -333,8 +335,8 @@
 			DM.Set_Mass(masses[i]);
 			limit.push_back(std::vector<double>{masses[i], Upper_Limit(DM, DM_distr, certainty)});
 			std::cout 	<<i+1 <<"/"<<masses.size()
-						<<"\tmDM = "<<Round(In_Units(DM.mass, (DM.mass<GeV)? MeV : GeV)) <<((DM.mass<GeV)? " MeV" : " GeV")
-						<<"\tUpper Bound:\t" <<Round(In_Units(limit.back()[1],cm*cm)) <<std::endl;
+						<<"\tmDM = "<<libphysica::Round(In_Units(DM.mass, (DM.mass<GeV)? MeV : GeV)) <<((DM.mass<GeV)? " MeV" : " GeV")
+						<<"\tUpper Bound:\t" <<libphysica::Round(In_Units(limit.back()[1],cm*cm)) <<std::endl;
 		}
 		DM.Set_Mass(mOriginal);
 		return limit;
@@ -360,7 +362,7 @@
 		using_energy_bins = true;
 		energy_threshold = Emin;
 		energy_max = Emax;
-		bin_energies = Linear_Space(energy_threshold, energy_max, number_of_bins + 1);
+		bin_energies = libphysica::Linear_Space(energy_threshold, energy_max, number_of_bins + 1);
 		if(energy_max < energy_threshold)
 		{
 			std::cerr <<"Error in DM_Detector::Use_Energy_Bins(): Energy threshold (" <<energy_threshold/keV <<"keV) is higher than maximum energy (" <<energy_max/keV<<"keV)."<<std::endl;
@@ -385,8 +387,8 @@
 			for(unsigned int i = 0; i < number_of_bins; i++)
 			{
 				
-				double epsilon = Find_Epsilon(spectrum, bin_energies[i], bin_energies[i+1], 1e-4);
-				double mu = exposure * Integrate(spectrum, bin_energies[i], bin_energies[i+1], epsilon);
+				double epsilon = libphysica::Find_Epsilon(spectrum, bin_energies[i], bin_energies[i+1], 1e-4);
+				double mu = exposure * libphysica::Integrate(spectrum, bin_energies[i], bin_energies[i+1], epsilon);
 				mu_i.push_back(bin_efficiencies[i] * mu);
 			}
 			return mu_i;
@@ -402,8 +404,8 @@
 						<<"----------------------------------------"<<std::endl
 						<<"Experiment summary:\t"<<name<<std::endl
 						<<"\tTarget particles:\t" <<targets <<std::endl
-						<<"\tExposure [kg year]:\t" <<Round(In_Units(exposure,kg*yr))<<std::endl
-						<<"\tFlat efficiency [%]:\t"<<Round(100.0*flat_efficiency)<<std::endl
+						<<"\tExposure [kg year]:\t" <<libphysica::Round(In_Units(exposure,kg*yr))<<std::endl
+						<<"\tFlat efficiency [%]:\t"<<libphysica::Round(100.0*flat_efficiency)<<std::endl
 						<<"\tObserved events:\t"<<observed_events<<std::endl
 						<<"\tExpected background:\t" <<expected_background <<std::endl
 						<<"\tStatistical analysis:\t" <<statistical_analysis <<std::endl;
@@ -417,13 +419,13 @@
 				}
 			}
 			if(using_energy_threshold || using_energy_bins || statistical_analysis == "Maximum Gap")
-				std::cout <<"\tRecoil energies [keV]:\t["<<Round(energy_threshold/keV)<<","<<Round(energy_max/keV) <<"]"<<std::endl;
+				std::cout <<"\tRecoil energies [keV]:\t["<<libphysica::Round(energy_threshold/keV)<<","<<libphysica::Round(energy_max/keV) <<"]"<<std::endl;
 			if(using_energy_bins)
 			{
 				std::cout <<"\n\t\tBin\tBin range [keV]"<<std::endl;
 				for(unsigned int bin = 0; bin < number_of_bins; bin++)
 				{
-					std::cout<<"\t\t"<<bin+1<<"\t["<<Round(In_Units(bin_energies[bin],keV))<<","<<Round(In_Units(bin_energies[bin+1],keV))<<")"<<std::endl;
+					std::cout<<"\t\t"<<bin+1<<"\t["<<libphysica::Round(In_Units(bin_energies[bin],keV))<<","<<libphysica::Round(In_Units(bin_energies[bin+1],keV))<<")"<<std::endl;
 				}
 			}
 			std::cout <<std::endl;			

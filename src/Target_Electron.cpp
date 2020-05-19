@@ -7,6 +7,7 @@
 #include "Natural_Units.hpp"
 #include "Utilities.hpp"
 
+using namespace libphysica::natural_units;
 
 //1. Kinematic functions
 	double vMinimal_Electrons(double q,double Delta_E, double mDM)
@@ -71,11 +72,11 @@
 		name = element + "_" + std::to_string(n) + s_names[l];
 		//Import the table.
 		std::string path = PROJECT_DIR "data/Form_Factors_Ionization/"+name+".txt";
-		Form_Factor_Tables = Import_Table(path);
+		Form_Factor_Tables = libphysica::Import_Table(path);
 		Nk = Form_Factor_Tables.size();
 		Nq = Form_Factor_Tables[0].size();
-		k_Grid = Log_Space(k_min, k_max, Nk);
-		q_Grid = Log_Space(q_min, q_max, Nq);
+		k_Grid = libphysica::Log_Space(k_min, k_max, Nk);
+		q_Grid = libphysica::Log_Space(q_min, q_max, Nq);
 		dlogk = log10(k_max/k_min) / (Nk-1.0);
 		dlogq = log10(q_max/q_min) / (Nq-1.0);
 	}

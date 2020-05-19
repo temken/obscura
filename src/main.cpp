@@ -11,6 +11,8 @@
 #include "version.hpp"
 #include "Configuration.hpp"
 
+using namespace libphysica::natural_units;
+
 int main(int argc, char *argv[])
 {
 	//Initial terminal output
@@ -29,9 +31,9 @@ int main(int argc, char *argv[])
 	Configuration cfg(argv[1]);
 	cfg.Print_Summary();
 
-	std::vector<double> DM_masses = Log_Space(cfg.constraints_mass_min, cfg.constraints_mass_max, cfg.constraints_masses);
+	std::vector<double> DM_masses = libphysica::Log_Space(cfg.constraints_mass_min, cfg.constraints_mass_max, cfg.constraints_masses);
 	std::vector<std::vector<double>> exclusion_limits = cfg.DM_detector->Upper_Limit_Curve(*(cfg.DM), *(cfg.DM_distr), DM_masses, cfg.constraints_certainty);
-	Export_Table(TOP_LEVEL_DIR "results/" + cfg.ID + "/constraints.txt", exclusion_limits,{GeV,cm*cm});
+	libphysica::Export_Table(TOP_LEVEL_DIR "results/" + cfg.ID + "/constraints.txt", exclusion_limits,{GeV,cm*cm});
 	
 	////////////////////////////////////////////////////////////////////////
 	//Final terminal output

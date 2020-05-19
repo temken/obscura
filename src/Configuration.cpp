@@ -14,6 +14,8 @@
 #include "version.hpp"
 
 using namespace libconfig;
+using namespace libphysica::natural_units;
+
 // Read in the configuration file
 	Configuration::Configuration()
 	{
@@ -542,12 +544,12 @@ using namespace libconfig;
 			std::vector<std::string> efficiency_files = {PROJECT_DIR "data/CRESST-II/Lise_eff_AR_O.dat",PROJECT_DIR "data/CRESST-II/Lise_eff_AR_Ca.dat",PROJECT_DIR "data/CRESST-II/Lise_eff_AR_W.dat"};
 			
 			DM_detector = new DM_Detector_Nucleus(DD_experiment, CRESST_II_exposure, CRESST_II_targets, CRESST_II_target_ratios);
-			std::vector<double> energy_events = Import_List(PROJECT_DIR "data/CRESST-II/Lise_AR.dat",keV);
+			std::vector<double> energy_events = libphysica::Import_List(PROJECT_DIR "data/CRESST-II/Lise_AR.dat",keV);
 			energy_events.push_back(CRESST_II_threshold);
 			energy_events.push_back(CRESST_II_Emax);
 			DM_detector->Use_Maximum_Gap(energy_events);
 			dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Set_Resolution(CRESST_II_resolution);
-			dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Import_Efficiency(efficiency_files);
+			dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Import_Efficiency(efficiency_files, keV);
 		}
 		else if(DD_experiment == "CRESST-surface")
 		{
@@ -559,7 +561,7 @@ using namespace libconfig;
 			double CRESST_surface_resolution = 3.74*eV;
 
 			DM_detector = new DM_Detector_Nucleus(DD_experiment, CRESST_surface_exposure, CRESST_surface_targets, CRESST_surface_target_ratios);
-			std::vector<double> energy_events = Import_List(PROJECT_DIR "data/CRESST-surface/data.txt",keV);
+			std::vector<double> energy_events = libphysica::Import_List(PROJECT_DIR "data/CRESST-surface/data.txt",keV);
 			energy_events.push_back(CRESST_surface_threshold);
 			energy_events.push_back(CRESST_surface_Emax);
 			DM_detector->Use_Maximum_Gap(energy_events);
@@ -578,12 +580,12 @@ using namespace libconfig;
 
 			DM_detector = new DM_Detector_Nucleus(DD_experiment, CRESST_III_exposure, CRESST_III_targets, CRESST_III_target_ratios);
 			DM_detector->Set_Flat_Efficiency(CRESST_III_efficiency);
-			std::vector<double> energy_events = Import_List(PROJECT_DIR "data/CRESST-III/C3P1_DetA_AR.dat",keV);
+			std::vector<double> energy_events = libphysica::Import_List(PROJECT_DIR "data/CRESST-III/C3P1_DetA_AR.dat",keV);
 			energy_events.push_back(CRESST_III_threshold);
 			energy_events.push_back(CRESST_III_Emax);
 			DM_detector->Use_Maximum_Gap(energy_events);
 			dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Set_Resolution(CRESST_III_resolution);
-			dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Import_Efficiency(efficiency_files);
+			dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Import_Efficiency(efficiency_files, keV);
 		}
 		else if(DD_experiment == "Ionization")
 		{
