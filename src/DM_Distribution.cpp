@@ -10,6 +10,10 @@
 
 #include "Astronomy.hpp"
 
+namespace obscura
+{
+	using namespace libphysica::natural_units;
+
 //1. Abstract base class for DM distributions that can be used to compute direct detection recoil spectra.
 	//Constructors:
 	DM_Distribution::DM_Distribution()
@@ -40,14 +44,14 @@
 			{
 				return PDF_Speed(v);
 			};
-			double cdf = Integrate(integrand, v_domain[0], v, 1.0e-6);
+			double cdf = libphysica::Integrate(integrand, v_domain[0], v, 1.0e-6);
 			return cdf;
 		}
 	}
 
-	Vector DM_Distribution::Average_Velocity() const
+	libphysica::Vector DM_Distribution::Average_Velocity() const
 	{
-		Vector v_average(3);
+		libphysica::Vector v_average(3);
 		// Todo
 		return v_average;
 	}
@@ -58,7 +62,7 @@
 		{
 			return v * PDF_Speed(v);
 		};
-		double v_average = Integrate(integrand, v_domain[0], v_domain[1], 1.0e-3*km/sec);
+		double v_average = libphysica::Integrate(integrand, v_domain[0], v_domain[1], 1.0e-3*km/sec);
 		return v_average;
 	}
 
@@ -79,8 +83,8 @@
 			{
 				return 1.0 / v * PDF_Speed(v);
 			};
-			double eps = Integrate(integrand, vMin, v_domain[1], 1.0e-5);
-			double eta = Integrate(integrand, vMin, v_domain[1], eps);
+			double eps = libphysica::Integrate(integrand, vMin, v_domain[1], 1.0e-5);
+			double eta = libphysica::Integrate(integrand, vMin, v_domain[1], eps);
 			return eta;
 		}
 		
@@ -95,7 +99,7 @@
 				<<"\tLocal DM density[GeV/cm^3]:\t" <<In_Units(DM_density,GeV/cm/cm/cm)<<std::endl
 				<<"\tSpeed domain [km/sec]:\t\t[" <<In_Units(v_domain[0],km/sec)<<","<<In_Units(v_domain[1],km/sec)<<"]"<<std::endl
 				<<"\tAverage DM velocity [km/sec]:\t" <<In_Units(Average_Velocity(),km/sec)<<std::endl
-				<<"\tAverage DM speed [km/sec]:\t" <<Round(In_Units(Average_Speed(),km/sec))<<std::endl<<std::endl;
+				<<"\tAverage DM speed [km/sec]:\t" <<libphysica::Round(In_Units(Average_Speed(),km/sec))<<std::endl<<std::endl;
 		}
 	}
 
@@ -104,7 +108,7 @@
 	Standard_Halo_Model::Standard_Halo_Model()
 	: DM_Distribution("Standard halo model (SHM)", 0.4*GeV/cm/cm/cm, 0.0, (544.0+232.58)*km/sec), v_0(220.0*km/sec), v_esc(544.0*km/sec) 
 	{
-		vel_observer = Vector({0, 220.0*km/sec, 0}) + Vector({11.1*km/sec, 12.2*km/sec, 7.3*km/sec});
+		vel_observer = libphysica::Vector({0, 220.0*km/sec, 0}) + libphysica::Vector({11.1*km/sec, 12.2*km/sec, 7.3*km/sec});
 		v_observer = vel_observer.Norm();
 		Normalize_PDF();
 	}
@@ -112,11 +116,11 @@
 	Standard_Halo_Model::Standard_Halo_Model(double rho, double v0, double vobs, double vesc)
 	: DM_Distribution("Standard halo model (SHM)", rho, 0.0, vesc+vobs), v_0(v0), v_esc(vesc), v_observer(vobs)
 	{
-		vel_observer = Vector({0, vobs, 0});
+		vel_observer = libphysica::Vector({0, vobs, 0});
 		Normalize_PDF();
 	}
 
-	Standard_Halo_Model::Standard_Halo_Model(double rho, double v0, Vector& vel_obs, double vesc)
+	Standard_Halo_Model::Standard_Halo_Model(double rho, double v0, libphysica::Vector& vel_obs, double vesc)
 	: DM_Distribution("Standard halo model", rho, 0.0, vesc+vel_obs.Norm()), v_0(v0), v_esc(vesc), vel_observer(vel_obs)
 	{
 		v_observer = vel_observer.Norm();
@@ -136,7 +140,7 @@
 		v_domain[1] = vesc + v_observer;
 		Normalize_PDF();
 	}
-	void Standard_Halo_Model::Set_Observer_Velocity(Vector& vel_obs)
+	void Standard_Halo_Model::Set_Observer_Velocity(libphysica::Vector& vel_obs)
 	{
 		vel_observer = vel_obs;
 		v_observer = vel_observer.Norm();
@@ -159,7 +163,7 @@
 	}
 
 	//Distribution functions
-	double Standard_Halo_Model::PDF_Velocity(Vector vel) const
+	double Standard_Halo_Model::PDF_Velocity(libphysica::Vector vel) const
 	{
 		double v = vel.Norm();
 		if(v > v_domain[1] || v < v_domain[0]) return 0.0;
@@ -170,7 +174,7 @@
 	}
 	double Standard_Halo_Model::PDF_Speed(double v) const
 	{
-		return  v / N_esc / v_0 / sqrt(M_PI) / v_observer * (2 * exp(-(v*v+v_observer*v_observer)/v_0/v_0) * sinh(2*v*v_observer/v_0/v_0) + (exp(-pow(v+v_observer,2.0)/v_0/v_0) - exp(-v_esc*v_esc/v_0/v_0)) * StepFunction(abs(v+v_observer)-v_esc) - (exp(-pow(v-v_observer,2.0)/v_0/v_0)-exp(-v_esc*v_esc/v_0/v_0)) * StepFunction(abs(v-v_observer)-v_esc) );
+		return  v / N_esc / v_0 / sqrt(M_PI) / v_observer * (2 * exp(-(v*v+v_observer*v_observer)/v_0/v_0) * sinh(2*v*v_observer/v_0/v_0) + (exp(-pow(v+v_observer,2.0)/v_0/v_0) - exp(-v_esc*v_esc/v_0/v_0)) * libphysica::StepFunction(abs(v+v_observer)-v_esc) - (exp(-pow(v-v_observer,2.0)/v_0/v_0)-exp(-v_esc*v_esc/v_0/v_0)) * libphysica::StepFunction(abs(v-v_observer)-v_esc) );
 	}
 
 	//Eta-function for direct detection
@@ -197,3 +201,5 @@
 						<<"\tObserver's speed [km/sec]:\t"<<In_Units(v_observer,km/sec) <<std::endl<<std::endl;
 		}
 	}
+
+}	// namespace obscura

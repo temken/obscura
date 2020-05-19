@@ -2,6 +2,8 @@
 
 #include "Direct_Detection_Ionization.hpp"
 
+using namespace obscura;
+
 // TEST(TestDirectDetectionIonization, Test)
 // {
 // 	//ARRANGE

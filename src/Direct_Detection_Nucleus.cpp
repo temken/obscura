@@ -8,6 +8,10 @@
 #include "Statistics.hpp"
 #include "Utilities.hpp"
 
+namespace obscura
+{
+	using namespace libphysica::natural_units;
+
 //1. Theoretical nuclear recoil spectrum
 	double dRdER_Nucleus(double ER, const DM_Particle& DM, DM_Distribution& DM_distr, const Isotope& target_isotope)
 	{
@@ -92,7 +96,7 @@
 	void DM_Detector_Nucleus::Import_Efficiency(std::string filename,double dim)
 	{
 		using_efficiency_tables = true;
-		Interpolation eff(filename,dim);
+		libphysica::Interpolation eff(filename,dim);
 		efficiencies.push_back(eff);
 	}
 
@@ -140,10 +144,10 @@
 					}
 					dRtheory+= eff * flat_efficiency * relative_mass_fractions[i] * dRdER_Nucleus(ER, DM, DM_distr, target_elements[i]);
 				}
-				return PDF_Gauss(E,ER,energy_resolution)*dRtheory;
+				return libphysica::PDF_Gauss(E,ER,energy_resolution)*dRtheory;
 			};
-			double epsilon = Find_Epsilon(integrand,eMin,eMax,1e-4);
-			dR = Integrate(integrand, eMin,eMax,epsilon);
+			double epsilon = libphysica::Find_Epsilon(integrand,eMin,eMax,1e-4);
+			dR = libphysica::Integrate(integrand, eMin,eMax,epsilon);
 		}
 		return dR;
 	}
@@ -173,7 +177,7 @@
 						<<"\t\tNucl.\tabund."<<std::endl;
 			for(unsigned int i=0; i < target_elements.size(); i++)
 			{
-				std::cout <<"\t\t" <<target_elements[i].name<<"\t"<<Round(100.0*relative_mass_fractions[i])<<"%"<<std::endl;
+				std::cout <<"\t\t" <<target_elements[i].name<<"\t"<<libphysica::Round(100.0*relative_mass_fractions[i])<<"%"<<std::endl;
 				// target_elements[i].Print_Summary();
 			}
 			std::cout 	<<"\tThreshold [keV]:\t"<<In_Units(energy_threshold,keV)<<std::endl
@@ -183,3 +187,5 @@
 		}
 	
 	}
+
+}	// namespace obscura

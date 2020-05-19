@@ -2,6 +2,8 @@
 
 #include "Target_Nucleus.hpp"
 
+using namespace obscura;
+
 // TEST(TestTargetNucleus, Test)
 // {
 // 	//ARRANGE

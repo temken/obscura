@@ -7,6 +7,9 @@
 //Headers from libphysica library
 #include "Linear_Algebra.hpp"
 
+namespace obscura
+{
+
 //1. Abstract base class for DM distributions that can be used to compute direct detection recoil spectra.
 	class DM_Distribution
 	{
@@ -26,11 +29,11 @@
 			double Minimum_DM_Speed() const;
 			double Maximum_DM_Speed() const;
 			//Distribution functions
-			virtual double PDF_Velocity(Vector vel) const {return 0.0;};
+			virtual double PDF_Velocity(libphysica::Vector vel) const {return 0.0;};
 			virtual double PDF_Speed(double v) const {return 0.0;};
 			virtual double CDF_Speed(double v) const;
 
-			virtual Vector Average_Velocity() const;
+			virtual libphysica::Vector Average_Velocity() const;
 			virtual double Average_Speed() const;
 
 			//Eta-function for direct detection
@@ -44,25 +47,25 @@
 	{
 		protected:
 			double v_0, v_esc, v_observer;
-			Vector vel_observer;
+			libphysica::Vector vel_observer;
 			double N_esc;
 		public:
 			//Constructors:
 			Standard_Halo_Model();
 			Standard_Halo_Model(double rho, double v0, double vobs, double vesc = 1.0);
-			Standard_Halo_Model(double rho, double v0, Vector& vel_obs, double vesc = 1.0);
+			Standard_Halo_Model(double rho, double v0, libphysica::Vector& vel_obs, double vesc = 1.0);
 
 			//Set SHM parameters
 			void Set_Speed_Dispersion(double v0);
 			void Set_Escape_Velocity(double vesc);
-			void Set_Observer_Velocity(Vector& vObserver);
+			void Set_Observer_Velocity(libphysica::Vector& vObserver);
 			void Set_Observer_Velocity(int day, int month, int year, int hour = 0, int minute = 0);
 
 			//Compute N_esc
 			void Normalize_PDF();
 
 			//Distribution functions
-			virtual double PDF_Velocity(Vector vel) const override;
+			virtual double PDF_Velocity(libphysica::Vector vel) const override;
 			virtual double PDF_Speed(double v) const override;
 
 			//Eta-function for direct detection
@@ -71,5 +74,6 @@
 			virtual void Print_Summary(int MPI_rank = 0) const override;
 	};
 
+}	// namespace obscura
 
 #endif

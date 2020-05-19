@@ -8,14 +8,18 @@
 #include "Numerics.hpp"
 #include "Natural_Units.hpp"
 
+namespace obscura
+{
+	using namespace libphysica::natural_units;
+	
 //1. Kinematic functions
 	double vMinimal_Nucleus(double ER, double mDM, double mNucleus)
 	{
-		return sqrt(mNucleus * ER/2.0/pow(Reduced_Mass(mDM,mNucleus),2.0));
+		return sqrt(mNucleus * ER/2.0/pow(libphysica::Reduced_Mass(mDM,mNucleus),2.0));
 	}
 	double Maximum_Nuclear_Recoil_Energy(double vDM, double mDM, double mNucleus)
 	{
-		return 2.0 * vDM * vDM * pow(Reduced_Mass(mDM,mNucleus),2.0) / mNucleus;
+		return 2.0 * vDM * vDM * pow(libphysica::Reduced_Mass(mDM,mNucleus),2.0) / mNucleus;
 	}
 
 //2. Class for nuclear isotopes.
@@ -162,3 +166,5 @@
 		std::cerr<<"Error in Get_Element(): Element " <<name <<" not recognized."<<std::endl;
 		std::exit(EXIT_FAILURE);
 	}
+
+}	// namespace obscura

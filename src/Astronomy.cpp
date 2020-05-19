@@ -4,14 +4,19 @@
 
 #include "Natural_Units.hpp"
 
+using namespace libphysica::natural_units;
+
+namespace obscura
+{
+
 //1. Transform between astronomical coordinate systems.
 	//Transformation matrices
-	Matrix Transformation_Matrix_P(double T)
+	libphysica::Matrix Transformation_Matrix_P(double T)
 	{
 		double zeta_A = 2306.083227 * arcsec * T + 0.298850 * arcsec * T*T;
 		double z_A = 2306.077181 * arcsec * T + 1.092735 * arcsec * T*T;
 		double theta_A = 2004.191903 * arcsec * T - 0.429493 * arcsec * T*T;
-		Matrix P(
+		libphysica::Matrix P(
 		{
 			{cos(zeta_A)*cos(theta_A)*cos(z_A)-sin(zeta_A)*sin(z_A),	-sin(zeta_A)*cos(theta_A)*cos(z_A)-cos(zeta_A)*sin(z_A),	-sin(theta_A)*cos(z_A)},
 			{cos(zeta_A)*cos(theta_A)*sin(z_A) + sin(zeta_A)*cos(z_A),	-sin(zeta_A)*cos(theta_A)*sin(z_A) + cos(zeta_A)*cos(z_A),	-sin(theta_A)*sin(z_A)},
@@ -20,12 +25,12 @@
 		return P;
 	}
 
-	Matrix Transformation_Matrix_M()
+	libphysica::Matrix Transformation_Matrix_M()
 	{
 		double l_CP = 122.932*deg;
 		double alpha_GP = 192.85948*deg;
 		double delta_GP = 27.12825*deg;
-		Matrix M(
+		libphysica::Matrix M(
 		{
 				{-sin(l_CP)*sin(alpha_GP)-cos(l_CP)*cos(alpha_GP)*sin(delta_GP),	sin(l_CP)*cos(alpha_GP)-cos(l_CP)*sin(alpha_GP)*sin(delta_GP),	cos(l_CP)*cos(delta_GP)},
 				{cos(l_CP)*sin(alpha_GP)-sin(l_CP)*cos(alpha_GP)*sin(delta_GP),		-cos(l_CP)*cos(alpha_GP)-sin(l_CP)*sin(alpha_GP)*sin(delta_GP),	sin(l_CP)*cos(delta_GP)},
@@ -34,30 +39,30 @@
 		return M;
 	}
 
-	Matrix Transformation_Matrix_R(double T)
+	libphysica::Matrix Transformation_Matrix_R(double T)
 	{
 		double eps = 23.4393*deg-0.0130*deg * T;
-		Matrix R = Rotation_Matrix(eps,3,Vector({1,0,0}));
+		libphysica::Matrix R = Rotation_Matrix(eps,3,libphysica::Vector({1,0,0}));
 		return R;
 	}
 
 	//Coordinate transformations
-	Vector Transform_Equat_to_Gal(const Vector &v_Equat, double T)
+	libphysica::Vector Transform_Equat_to_Gal(const libphysica::Vector &v_Equat, double T)
 	{
 		return Transformation_Matrix_M() * Transformation_Matrix_P(T).Inverse() * v_Equat;
 	}
 
-	Vector Transform_GeoEcl_to_Gal(const Vector &v_GeoEcl, double T)
+	libphysica::Vector Transform_GeoEcl_to_Gal(const libphysica::Vector &v_GeoEcl, double T)
 	{
 		return Transformation_Matrix_M() * Transformation_Matrix_P(T).Inverse() * Transformation_Matrix_R(T) * v_GeoEcl;
 	}
 
-	Vector Transform_HelEcl_to_Gal(const Vector &v_HelEcl, double T)
+	libphysica::Vector Transform_HelEcl_to_Gal(const libphysica::Vector &v_HelEcl, double T)
 	{
 		return (-1.0) * Transformation_Matrix_M() * Transformation_Matrix_P(T).Inverse() * Transformation_Matrix_R(T) * v_HelEcl;
 	}
 
-	Vector Transform_Gal_to_Equat(const Vector &v_Gal, double T)
+	libphysica::Vector Transform_Gal_to_Equat(const libphysica::Vector &v_Gal, double T)
 	{
 		return Transformation_Matrix_P(T) * Transformation_Matrix_M().Inverse() * v_Gal;
 	}
@@ -94,26 +99,28 @@
 	 }
 
 //3. Earth's velocity in the galactic frame
-	 Vector Earth_Velocity(double nJ2000)
+	 libphysica::Vector Earth_Velocity(double nJ2000)
 	 {
 		//1. Sun's rotation around galactic center:
-		Vector vGal({0,220*km/sec,0});
+		libphysica::Vector vGal({0,220*km/sec,0});
 		//2. Sun's peculiar motion:
-		Vector vPec({11.1*km/sec,12.2*km/sec,7.3*km/sec});
+		libphysica::Vector vPec({11.1*km/sec,12.2*km/sec,7.3*km/sec});
 		//3. Earth's rotation around galactic center:
 		double e = 0.01671; //Ellipticity of earth's orbit
 		double L = fmod(280.46*deg + nJ2000 * 0.9856474*deg,2*M_PI);
 		double omega = fmod(282.932*deg + nJ2000 * 0.0000471*deg,2*M_PI);
 		double T  =  nJ2000 / 36525.0;
-		Vector ex({1,0,0});
-		Vector ey({0,1,0});
+		libphysica::Vector ex({1,0,0});
+		libphysica::Vector ey({0,1,0});
 		//Basis vectors in heliocentric ecliptic coordinate system
-		Vector exEcl  =  Transform_HelEcl_to_Gal(ex,T);	//(0.054876-0.024232 * T,-0.494109-0.002689 * T,0.867666 + 1.546e-6 * T);
-		Vector eyEcl  =  Transform_HelEcl_to_Gal(ey,T);	//(0.993824 + 0.001316 * T,0.110992-0.011851 * T,0.000352 + 0.021267 * T);
+		libphysica::Vector exEcl  =  Transform_HelEcl_to_Gal(ex,T);	//(0.054876-0.024232 * T,-0.494109-0.002689 * T,0.867666 + 1.546e-6 * T);
+		libphysica::Vector eyEcl  =  Transform_HelEcl_to_Gal(ey,T);	//(0.993824 + 0.001316 * T,0.110992-0.011851 * T,0.000352 + 0.021267 * T);
 		std::cout <<"exEcl = " <<exEcl <<std::endl;
 		std::cout <<"eyEcl = " <<eyEcl <<std::endl;
 		double ve = 29.79*km/sec;
-		Vector uE = -ve * (sin(L) + e * sin(2*L - omega)) * exEcl + ve * (cos(L) + e * cos(2*L - omega))*eyEcl;
+		libphysica::Vector uE = -ve * (sin(L) + e * sin(2*L - omega)) * exEcl + ve * (cos(L) + e * cos(2*L - omega))*eyEcl;
 		//Return the sum of all components
 		return vGal + vPec + uE;
 	}
+
+}	// namespace obscura

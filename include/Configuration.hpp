@@ -8,6 +8,9 @@
 #include "DM_Distribution.hpp"
 #include "DM_Particle.hpp"
 
+namespace obscura
+{
+
 class Configuration
 {
 	private:
@@ -40,5 +43,7 @@ class Configuration
 
 		void Print_Summary(int MPI_rank = 0);
 };
+
+}	// namespace obscura
 
 #endif

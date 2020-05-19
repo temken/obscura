@@ -6,6 +6,9 @@
 
 #include "version.hpp"
 
+namespace obscura
+{
+
 //1. Kinematic functions
 	extern double vMinimal_Electrons(double q,double Delta_E, double mDM);
 	
@@ -83,5 +86,6 @@
 
 	extern Atom Import_Ionization_Form_Factors(std::string element);
 
+}	// namespace obscura
 
 #endif

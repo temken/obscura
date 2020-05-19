@@ -3,8 +3,13 @@
 #include <cmath>
 
 //Headers from libphysica library
+#include "Natural_Units.hpp"
 #include "Statistics.hpp"
 #include "Utilities.hpp"
+
+namespace obscura
+{
+	using namespace libphysica::natural_units;
 
 //1. Event spectra and rates
 	double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, const Atomic_Electron& shell)
@@ -69,7 +74,7 @@
 		double NxNi = 0.2;
 		double fe = (1.0-fR)/(1.0+NxNi);
 		double neMax = shell.number_of_secondary_electrons + std::floor( Ee / shell.W);
-		return PMF_Binomial(neMax,fe,ne-1);
+		return libphysica::PMF_Binomial(neMax,fe,ne-1);
 	}
 
 	double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, const Atomic_Electron& shell)
@@ -99,7 +104,7 @@
 		double sum=0.0;
 		for(int ne = 1; ne < 16; ne++)
 		{
-				sum += PDF_Gauss(nPE,mu_PE*ne,sqrt(ne)*sigma_PE) * R_ne_Ionization(ne, DM, DM_distr, shell);
+				sum += libphysica::PDF_Gauss(nPE,mu_PE*ne,sqrt(ne)*sigma_PE) * R_ne_Ionization(ne, DM, DM_distr, shell);
 		}
 		return sum;
 	}
@@ -176,8 +181,8 @@
 					{
 						return flat_efficiency * exposure * dRdEe_Ionization(E, DM, DM_distr, target_atom[i]);
 					};
-					double eps =Find_Epsilon(dNdE,energy_threshold,Emax,1e-6);
-					N +=  Integrate(dNdE,energy_threshold,Emax,eps);
+					double eps = libphysica::Find_Epsilon(dNdE,energy_threshold,Emax,1e-6);
+					N +=  libphysica::Integrate(dNdE,energy_threshold,Emax,eps);
 				}
 			}
 
@@ -328,7 +333,7 @@
 		}
 		else
 		{
-			Trigger_Efficiency_PE = Import_List(filename);
+			Trigger_Efficiency_PE = libphysica::Import_List(filename);
 		}
 	}
 
@@ -341,7 +346,7 @@
 		}
 		else
 		{
-			Acceptance_Efficiency_PE = Import_List(filename);
+			Acceptance_Efficiency_PE = libphysica::Import_List(filename);
 		}
 	}
 
@@ -387,3 +392,5 @@
 		}
 	 	std::cout<<"----------------------------------------"<<std::endl<<std::endl;
 	}
+
+}	// namespace obscura

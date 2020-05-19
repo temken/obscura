@@ -5,6 +5,10 @@
 //Headers from libphysica library
 #include "Numerics.hpp"
 
+namespace obscura
+{
+	using namespace libphysica::natural_units;
+
 //1. Abstract parent class for SI and SD interactions
 	DM_Particle_Standard::DM_Particle_Standard()
 	: DM_Particle(), prefactor(1.0), fixed_coupling_relation(true), fp_relative(0.5), fn_relative(0.5), sigma_electron(0.0)
@@ -18,7 +22,7 @@
 
 	void DM_Particle_Standard::Set_Sigma_Proton(double sigma) 
 	{
-		fp = sqrt(M_PI*sigma/prefactor)/Reduced_Mass(mass,mProton);
+		fp = sqrt(M_PI*sigma/prefactor) / libphysica::Reduced_Mass(mass,mProton);
 		if(fixed_coupling_relation)
 		{
 			if(sigma == 0.0 && fp_relative != 0.0)
@@ -81,7 +85,7 @@
 
 	void DM_Particle_Standard::Set_Sigma_Neutron(double sigma) 
 	{
-		fn= sqrt(M_PI*sigma/prefactor)/Reduced_Mass(mass,mProton);
+		fn= sqrt(M_PI*sigma/prefactor) / libphysica::Reduced_Mass(mass,mProton);
 		if(fixed_coupling_relation)
 		{
 			if(sigma == 0.0 && fn_relative != 0.0)
@@ -163,12 +167,12 @@
 
 	double DM_Particle_Standard::Sigma_Proton() const
 	{
-		return prefactor * fp * fp * Reduced_Mass(mass,mProton) * Reduced_Mass(mass,mProton)/M_PI;
+		return prefactor * fp * fp * libphysica::Reduced_Mass(mass,mProton) * libphysica::Reduced_Mass(mass,mProton)/M_PI;
 	}
 
 	double DM_Particle_Standard::Sigma_Neutron() const
 	{
-		return prefactor * fn * fn * Reduced_Mass(mass,mProton) * Reduced_Mass(mass,mProton)/M_PI;
+		return prefactor * fn * fn * libphysica::Reduced_Mass(mass,mProton) * libphysica::Reduced_Mass(mass,mProton)/M_PI;
 	}
 
 	double DM_Particle_Standard::Sigma_Electron() const
@@ -184,7 +188,7 @@
 					 	<<"\tIsospin conservation:\t"	<<((fn==fp)? "[x]" : "[ ]")	<<std::endl;
 			if(fixed_coupling_relation)
 			{
-				std::cout <<"\tCoupling ratio:\t\t" <<((fp!=0.0)? "fn/fp = " : "fp/fn = ") <<((fp!=0.0)? Round(fn/fp) : Round(fp/fn))<<std::endl<<std::endl;
+				std::cout <<"\tCoupling ratio:\t\t" <<((fp!=0.0)? "fn/fp = " : "fp/fn = ") <<((fp!=0.0)? libphysica::Round(fn/fp) : libphysica::Round(fp/fn))<<std::endl<<std::endl;
 			}
 			std::cout  	<<"\tSigma_P[cm^2]:\t\t" <<In_Units(Sigma_Proton(),cm*cm)	<<std::endl
 						<<"\tSigma_N[cm^2]:\t\t" <<In_Units(Sigma_Neutron(),cm*cm)	<<std::endl
@@ -197,12 +201,21 @@
 	DM_Particle_SI::DM_Particle_SI()
 	: DM_Particle_Standard(), FF_DM("Contact"), mMediator(0.0)
 	{
+		qRef = aEM * mElectron;
+		Set_Sigma_Proton(1e-40*cm*cm);
+	}
+
+	DM_Particle_SI::DM_Particle_SI(double mDM)
+	: DM_Particle_Standard(mDM, 1.0), FF_DM("Contact"), mMediator(0.0)
+	{
+		qRef = aEM * mElectron;
 		Set_Sigma_Proton(1e-40*cm*cm);
 	}
 
 	DM_Particle_SI::DM_Particle_SI(double mDM, double sigmaP)
 	: DM_Particle_Standard(mDM,1.0), FF_DM("Contact"), mMediator(0.0)
 	{
+		qRef = aEM * mElectron;
 		Set_Sigma_Proton(sigmaP);
 	}
 
@@ -247,7 +260,7 @@
 
 	double DM_Particle_SI::dSigma_dq2_Electron(double q,double vDM) const
 	{
-		return sigma_electron/pow(2.0*Reduced_Mass(mass,mElectron)*vDM,2.0) * FormFactor2_DM(q);
+		return sigma_electron/pow(2.0*libphysica::Reduced_Mass(mass,mElectron)*vDM,2.0) * FormFactor2_DM(q);
 	}
 
 	
@@ -263,10 +276,10 @@
 		else if(!low_mass) sigmatot=Sigma_Nucleus_Base(isotope,vDM);
 		else
 		{
-			sigmatot = pow(Reduced_Mass(mass,isotope.mass),2.0)/M_PI * pow(fp*isotope.Z+fn*(isotope.A-isotope.Z),2.0);
+			sigmatot = pow(libphysica::Reduced_Mass(mass,isotope.mass),2.0)/M_PI * pow(fp*isotope.Z+fn*(isotope.A-isotope.Z),2.0);
 			if(FF_DM == "General")
 			{
-				double q2max = 4.0*pow(Reduced_Mass(mass,isotope.mass)*vDM,2.0);
+				double q2max = 4.0*pow(libphysica::Reduced_Mass(mass,isotope.mass)*vDM,2.0);
 				sigmatot *= pow(qRef*qRef+mMediator*mMediator,2.0)/mMediator/mMediator/(mMediator*mMediator+q2max);
 			} 
 		}
@@ -301,6 +314,13 @@
 	{
 		Set_Sigma_Proton(1e-40*cm*cm);
 	}
+	
+	DM_Particle_SD::DM_Particle_SD(double mDM)
+	: DM_Particle_Standard(mDM,3.0)
+	{
+		Set_Sigma_Proton(1e-40*cm*cm);
+	}
+
 	DM_Particle_SD::DM_Particle_SD(double mDM, double sigmaP)
 	: DM_Particle_Standard(mDM,3.0)
 	{
@@ -315,13 +335,13 @@
 
 	double DM_Particle_SD::dSigma_dq2_Electron(double q,double vDM) const
 	{
-		return sigma_electron/pow(2.0*Reduced_Mass(mass,mElectron)*vDM,2.0);
+		return sigma_electron/pow(2.0*libphysica::Reduced_Mass(mass,mElectron)*vDM,2.0);
 	}
 
 	//Total cross sections with nuclear isotopes, elements, and electrons
 	double DM_Particle_SD::Sigma_Nucleus(const Isotope& isotope,double vDM) const
 	{
-		return (isotope.spin!=0)? 4.0*pow(Reduced_Mass(mass,isotope.mass),2.0)/M_PI*(isotope.spin+1.0)/isotope.spin*pow(fp*isotope.sp+fn*isotope.sn,2.0) : 0.0;
+		return (isotope.spin!=0)? 4.0*pow(libphysica::Reduced_Mass(mass,isotope.mass),2.0)/M_PI*(isotope.spin+1.0)/isotope.spin*pow(fp*isotope.sp+fn*isotope.sn,2.0) : 0.0;
 	}
 
 	void DM_Particle_SD::Print_Summary(int MPI_rank) const
@@ -335,4 +355,4 @@
 		}
 	}
 
-
+}	// namespace obscura

@@ -8,6 +8,10 @@
 #include "Natural_Units.hpp"
 #include "Numerics.hpp"
 
+namespace obscura
+{
+	using namespace libphysica::natural_units;
+
 //1. Base class for a DM particle with virtual functions for the cross sections
 	DM_Particle::DM_Particle()
 	: low_mass(false), mass(10.0*GeV), spin(1.0/2.0), fractional_density(1.0)
@@ -44,13 +48,13 @@
 	{
 		//Numerically integrate the differential cross section
 		double q2min = 0;
-		double q2max = 4.0 * pow(Reduced_Mass(mass,target.mass)*vDM,2.0);
+		double q2max = 4.0 * pow(libphysica::Reduced_Mass(mass,target.mass)*vDM,2.0);
 		std::function<double(double)> dodq2 = [this,&target,vDM] (double q2)
 		{
 			return dSigma_dq2_Nucleus(sqrt(q2),target,vDM);
 		};
-	  	double eps = Find_Epsilon(dodq2,q2min,q2max,1.0e-6);
-	  	double sigmatot = Integrate(dodq2,q2min,q2max,eps);
+	  	double eps = libphysica::Find_Epsilon(dodq2,q2min,q2max,1.0e-6);
+	  	double sigmatot = libphysica::Integrate(dodq2,q2min,q2max,eps);
 		return sigmatot;
 	}
 
@@ -76,3 +80,4 @@
 		return 2.0 * target.mass * dSigma_dq2_Nucleus(q,target,vDM);
 	}
 
+}	// namespace obscura

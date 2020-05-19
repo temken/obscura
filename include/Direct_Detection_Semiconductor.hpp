@@ -9,6 +9,8 @@
 #include "DM_Particle.hpp"
 #include "Target_Electron.hpp"
 
+namespace obscura
+{
 
 //1. Event spectra and rates
 	extern double dRdEe_Semiconductor(double Ee, const DM_Particle& DM,DM_Distribution& DM_distr, const Semiconductor& target_crystal);
@@ -52,5 +54,7 @@
 
 			virtual void Print_Summary(int MPI_rank = 0) const override;
 	};
+
+}	// namespace obscura
 
 #endif
