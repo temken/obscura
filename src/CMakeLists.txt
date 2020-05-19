@@ -9,6 +9,7 @@ add_library(libobscura STATIC
     DM_Distribution.cpp
     DM_Particle.cpp
     DM_Particle_Standard.cpp
+    Experiments.cpp
     Target_Electron.cpp
     Target_Nucleus.cpp
 )
