@@ -70,7 +70,7 @@ namespace obscura
 	{
 		if(vMin < v_domain[0])
 		{
-			std::cerr<<"Error in DM_Distribution::Eta_Function(double): vMin = "<<In_Units(vMin,km/sec)<<"km/sec lies below the domain ["<<In_Units(v_domain[0],km/sec)<<"km/sec,"<<In_Units(v_domain[1],km/sec)<<"km/sec]."<<std::endl;
+			std::cerr<<"Error in obscura::DM_Distribution::Eta_Function(double): vMin = "<<In_Units(vMin,km/sec)<<"km/sec lies below the domain ["<<In_Units(v_domain[0],km/sec)<<"km/sec,"<<In_Units(v_domain[1],km/sec)<<"km/sec]."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		else if (vMin > v_domain[1])

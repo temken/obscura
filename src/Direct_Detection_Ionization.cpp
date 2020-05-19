@@ -42,7 +42,7 @@ namespace obscura
 		unsigned int ki = std::round(log10(k / shell.k_min) / shell.dlogk);
 		if(ki >= shell.Nk || ki < 0) 
 		{
- 			std::cerr <<"Warning in dRdEe_Ionization(double,const DM_Particle&,DM_Distribution&,const Atomic_Electron&): Index ki = "<<ki<<" out of bounds. Function returns 0.0."<<std::endl;
+ 			std::cerr <<"Warning in obscura::dRdEe_Ionization(double,const DM_Particle&,DM_Distribution&,const Atomic_Electron&): Index ki = "<<ki<<" out of bounds. Function returns 0.0."<<std::endl;
  			return 0.0;
 		}
 		unsigned int qi_min = std::floor(log10(qMin / shell.q_min) / shell.dlogq); // = 0;
@@ -205,7 +205,7 @@ namespace obscura
 	{
 		if(statistical_analysis != "Binned Poisson")
 		{
-			std::cerr <<"Error in DM_Detector_Ionization::DM_Signals_Binned(): Statistical analysis is "<<statistical_analysis <<", not 'Binned Poisson'" <<std::endl;
+			std::cerr <<"Error in obscura::DM_Detector_Ionization::DM_Signals_Binned(): Statistical analysis is "<<statistical_analysis <<", not 'Binned Poisson'" <<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		else if(using_energy_bins)
@@ -222,7 +222,7 @@ namespace obscura
 		}
 		else
 		{
-			std::cerr <<"Error in DM_Detector_Ionization::DM_Signals_Binned(): Statistical analysis is 'Binned Poisson' but no bins have been defined. This should not happen ever." <<std::endl;
+			std::cerr <<"Error in obscura::DM_Detector_Ionization::DM_Signals_Binned(): Statistical analysis is 'Binned Poisson' but no bins have been defined. This should not happen ever." <<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 	}
@@ -232,7 +232,7 @@ namespace obscura
 	{
 		if(!using_electron_bins)
 		{
-			std::cerr <<"Error in DM_Detector_Ionization::DM_Signals_Electron_Bins(const DM_Particle&,DM_Distribution&): Not using electron bins." <<std::endl;
+			std::cerr <<"Error in obscura::DM_Detector_Ionization::DM_Signals_Electron_Bins(const DM_Particle&,DM_Distribution&): Not using electron bins." <<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		else
@@ -259,7 +259,7 @@ namespace obscura
 		ne_max = (nemax > 0 && nemax > ne_thr)? nemax : 15;
 		if(ne_max < ne_threshold)
 		{
-			std::cerr <<"Error in DM_Detector::Use_Electron_Threshold(): ne threshold (" <<ne_threshold <<") is higher than maximum (" <<ne_max<<")."<<std::endl;
+			std::cerr <<"Error in obscura::DM_Detector::Use_Electron_Threshold(): ne threshold (" <<ne_threshold <<") is higher than maximum (" <<ne_max<<")."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 	}
@@ -273,7 +273,7 @@ namespace obscura
 		ne_max = ne_threshold + N_bins - 1;
 		if(ne_max < ne_threshold)
 		{
-			std::cerr <<"Error in DM_Detector::Use_Electron_Bins(): ne threshold (" <<ne_threshold <<") is higher than maximum (" <<ne_max<<")."<<std::endl;
+			std::cerr <<"Error in obscura::DM_Detector::Use_Electron_Bins(): ne threshold (" <<ne_threshold <<") is higher than maximum (" <<ne_max<<")."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 	}
@@ -283,7 +283,7 @@ namespace obscura
 	{
 		if(!using_S2_bins)
 		{
-			std::cerr <<"Error in DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle&,DM_Distribution&): Not using PE bins." <<std::endl;
+			std::cerr <<"Error in obscura::DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle&,DM_Distribution&): Not using PE bins." <<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		else
@@ -319,7 +319,7 @@ namespace obscura
 		PE_max = nPE_max;
 		if(PE_max < PE_threshold)
 		{
-			std::cerr <<"Error in DM_Detector::Use_PE_Threshold(): PE threshold (" <<PE_threshold <<") is higher than maximum (" <<PE_max<<")."<<std::endl;
+			std::cerr <<"Error in obscura::DM_Detector::Use_PE_Threshold(): PE threshold (" <<PE_threshold <<") is higher than maximum (" <<PE_max<<")."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 	}
@@ -328,7 +328,7 @@ namespace obscura
 	{	
 		if(!using_S2_bins && !using_S2_threshold)
 		{
-			std::cerr <<"Error in DM_Detector_Ionization::Import_Trigger_Efficiency_PE(): No PE spectrum has been initialized." <<std::endl;
+			std::cerr <<"Error in obscura::DM_Detector_Ionization::Import_Trigger_Efficiency_PE(): No PE spectrum has been initialized." <<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		else
@@ -341,7 +341,7 @@ namespace obscura
 	{
 		if(!using_S2_bins && !using_S2_threshold)
 		{
-			std::cerr <<"Error in DM_Detector_Ionization::Import_Acceptance_Efficiency_PE(): No PE spectrum has been initialized." <<std::endl;
+			std::cerr <<"Error in obscura::DM_Detector_Ionization::Import_Acceptance_Efficiency_PE(): No PE spectrum has been initialized." <<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		else

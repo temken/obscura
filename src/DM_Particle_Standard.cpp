@@ -27,13 +27,13 @@ namespace obscura
 		{
 			if(sigma == 0.0 && fp_relative != 0.0)
 			{
-				std::cerr <<"Error in DM_Particle_Standard::Set_Sigma_Proton(): fp is set to zero while fixed fn/fp."<<std::endl;
+				std::cerr <<"Error in obscura::DM_Particle_Standard::Set_Sigma_Proton(): fp is set to zero while fixed fn/fp."<<std::endl;
 				std::exit(EXIT_FAILURE);
 
 			}
 			else if(sigma != 0.0 && fp_relative == 0.0)
 			{
-				std::cerr <<"Error in DM_Particle_Standard::Set_Sigma_Proton(): fp is set while fp/fn is fixed to zero."<<std::endl;
+				std::cerr <<"Error in obscura::DM_Particle_Standard::Set_Sigma_Proton(): fp is set while fp/fn is fixed to zero."<<std::endl;
 				std::exit(EXIT_FAILURE);
 			}
 			else
@@ -57,7 +57,7 @@ namespace obscura
 		}
 		else
 		{
-			std::cerr <<"Error in DM_Particle_Standard::Get_Interaction_Parameter(std::string): Target "<<target <<" not recognized."<<std::endl;
+			std::cerr <<"Error in obscura::DM_Particle_Standard::Get_Interaction_Parameter(std::string): Target "<<target <<" not recognized."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		
@@ -76,7 +76,7 @@ namespace obscura
 		}
 		else
 		{
-			std::cerr <<"Error in DM_Particle_Standard::Get_Interaction_Parameter(std::string): Target "<<target <<" not recognized."<<std::endl;
+			std::cerr <<"Error in obscura::DM_Particle_Standard::Get_Interaction_Parameter(std::string): Target "<<target <<" not recognized."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 
@@ -90,13 +90,13 @@ namespace obscura
 		{
 			if(sigma == 0.0 && fn_relative != 0.0)
 			{
-				std::cerr <<"Error in DM_Particle_Standard::Set_Sigma_Neutron(): fn is set to zero while fixed fn/fp."<<std::endl;
+				std::cerr <<"Error in obscura::DM_Particle_Standard::Set_Sigma_Neutron(): fn is set to zero while fixed fn/fp."<<std::endl;
 				std::exit(EXIT_FAILURE);
 
 			}
 			else if(sigma != 0.0 && fn_relative == 0.0)
 			{
-				std::cerr <<"Error in DM_Particle_Standard::Set_Sigma_Neutron(): fn is set while fn/fp is fixed to zero."<<std::endl;
+				std::cerr <<"Error in obscura::DM_Particle_Standard::Set_Sigma_Neutron(): fn is set while fn/fp is fixed to zero."<<std::endl;
 				std::exit(EXIT_FAILURE);
 			}
 			else
@@ -122,7 +122,7 @@ namespace obscura
 		else if(fn != 0.0) fp = fp_relative / fn_relative * fp;
 		else
 		{
-			std::cerr <<"Error in DM_Particle_Standard::Fix_Coupling_Ratio(double, double): Both couplings zero."<<std::endl;
+			std::cerr <<"Error in obscura::DM_Particle_Standard::Fix_Coupling_Ratio(double, double): Both couplings zero."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 
@@ -138,7 +138,7 @@ namespace obscura
 		else if(fn != 0.0) fp = fp_relative / fn_relative * fp;
 		else
 		{
-			std::cerr <<"Error in DM_Particle_Standard::Fix_fn_over_fp(double): Both couplings zero."<<std::endl;
+			std::cerr <<"Error in obscura::DM_Particle_Standard::Fix_fn_over_fp(double): Both couplings zero."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 	}
@@ -153,7 +153,7 @@ namespace obscura
 		else if(fn != 0.0) fp = fp_relative / fn_relative * fp;
 		else
 		{
-			std::cerr <<"Error in DM_Particle_Standard::Fix_fp_over_fn(double): Both couplings zero."<<std::endl;
+			std::cerr <<"Error in obscura::DM_Particle_Standard::Fix_fp_over_fn(double): Both couplings zero."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 	}
@@ -224,7 +224,7 @@ namespace obscura
 		if(ff=="Contact" || ff=="Electric-Dipole" || ff=="Long-Range" || ff=="General") FF_DM=ff;
 		else
 		{
-			std::cerr<<"Error in DM_Particle_SI::Set_FormFactor_DM(): Form factor "<<ff<<" not recognized." <<std::endl;
+			std::cerr<<"Error in obscura::DM_Particle_SI::Set_FormFactor_DM(): Form factor "<<ff<<" not recognized." <<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		if(FF_DM=="General" && mMed > 0.0) mMediator=mMed;
@@ -245,7 +245,7 @@ namespace obscura
 		else if (FF_DM=="Electric-Dipole")		FF = qRef/q;
 		else
 		{
-			std::cerr <<"Error in DM_Particle_SI::FormFactor2_DM(): Form factor "<<FF_DM <<"not recognized."<<std::endl;
+			std::cerr <<"Error in obscura::DM_Particle_SI::FormFactor2_DM(): Form factor "<<FF_DM <<"not recognized."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		return FF*FF;
@@ -270,7 +270,7 @@ namespace obscura
  		double sigmatot=0.0;
  		if(FF_DM != "Contact" && FF_DM != "General")
 		{
-			std::cerr<<"Error in DM_Particle_SI::Sigma_Nucleus(): Divergence in the IR."<<std::endl;
+			std::cerr<<"Error in obscura::DM_Particle_SI::Sigma_Nucleus(): Divergence in the IR."<<std::endl;
 			std::exit(EXIT_FAILURE);		
 		}
 		else if(!low_mass) sigmatot=Sigma_Nucleus_Base(isotope,vDM);
