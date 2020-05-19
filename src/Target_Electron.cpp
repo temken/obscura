@@ -40,7 +40,7 @@ namespace obscura
 		}
 		else
 		{
-			std::cerr <<"Error in Semiconductor::Semiconductor(): target " <<target <<" not recognized."<<std::endl;
+			std::cerr <<"Error in obscura::Semiconductor::Semiconductor(): target " <<target <<" not recognized."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		//Import the form factor
@@ -49,7 +49,7 @@ namespace obscura
 			f.open(path);
 			if(!f)
 			{
-				std::cerr <<"Error in Semiconductor::Semiconductor(): Data file " <<path <<" not found."<<std::endl;
+				std::cerr <<"Error in obscura::Semiconductor::Semiconductor(): Data file " <<path <<" not found."<<std::endl;
 				std::exit(EXIT_FAILURE);			
 			}
 			//Prefactors:
@@ -137,7 +137,7 @@ namespace obscura
 		{
 			if(electrons[i].n == n && electrons[i].l == l) return electrons[i];
 		}
-		std::cerr <<"Error in Atom::Electron(): (n,l) = ("<<n<<","<<l<<") of " <<name<<" does not exist."<<std::endl;
+		std::cerr <<"Error in obscura::Atom::Electron(): (n,l) = ("<<n<<","<<l<<") of " <<name<<" does not exist."<<std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -203,7 +203,7 @@ namespace obscura
 		}
 		else
 		{
-			std::cerr <<"Error in Import_Ionization_Form_Factors(std::string): Element " <<element <<" not recognized."<<std::endl;
+			std::cerr <<"Error in obscura::Import_Ionization_Form_Factors(std::string): Element " <<element <<" not recognized."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 	}

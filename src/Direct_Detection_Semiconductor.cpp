@@ -29,7 +29,7 @@ namespace obscura
 		int Ei = std::round( Ee/target_crystal.dE -1 );
 		if(Ei < 0 || Ei > 499)
 		{
-			std::cerr <<"Error in dRdEe_Semiconductor(): Ee lies beyond the tabulated cyrstal form factor."<<std::endl;
+			std::cerr <<"Error in obscura::dRdEe_Semiconductor(): Ee lies beyond the tabulated cyrstal form factor."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		else
@@ -133,7 +133,7 @@ namespace obscura
 	{
 		if(statistical_analysis != "Binned Poisson")
 		{
-			std::cerr<<"Error in DM_Detector_Semiconductor::DM_Signals_Binned(const DM_Particle&, DM_Distribution&): The statistical analysis is " <<statistical_analysis <<", not 'Binned Poisson'."<<std::endl;
+			std::cerr<<"Error in obscura::DM_Detector_Semiconductor::DM_Signals_Binned(const DM_Particle&, DM_Distribution&): The statistical analysis is " <<statistical_analysis <<", not 'Binned Poisson'."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		else if(using_energy_bins)
@@ -146,7 +146,7 @@ namespace obscura
 		}
 		else
 		{
-			std::cerr <<"Error in DM_Detector_Semiconductor::DM_Signals_Binned(): Statistical analysis is 'Binned Poisson' but no bins have been defined. This should not happen ever." <<std::endl;
+			std::cerr <<"Error in obscura::DM_Detector_Semiconductor::DM_Signals_Binned(): Statistical analysis is 'Binned Poisson' but no bins have been defined. This should not happen ever." <<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 	}
@@ -177,7 +177,7 @@ namespace obscura
 	{
 		if(!using_Q_bins)
 		{
-			std::cerr <<"Error in DM_Detector_Semiconductor::DM_Signals_Q_Bins(const DM_Particle&,DM_Distribution&): Not using Q bins." <<std::endl;
+			std::cerr <<"Error in obscura::DM_Detector_Semiconductor::DM_Signals_Q_Bins(const DM_Particle&,DM_Distribution&): Not using Q bins." <<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		else

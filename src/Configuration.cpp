@@ -36,7 +36,7 @@ namespace obscura
 		}
 		catch(const SettingNotFoundException &nfex)
 		{
-			std::cerr << "Error in Configuration::Configuration(std::string): No 'ID' setting in configuration file." << std::endl;
+			std::cerr << "Error in obscura::Configuration::Configuration(std::string): No 'ID' setting in configuration file." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 
@@ -163,12 +163,12 @@ namespace obscura
 		}
 		catch(const FileIOException &fioex)
 		{
-			std::cerr << "Error in Configuration::Read_Config_File(): I/O error while reading configuration file." << std::endl;
+			std::cerr << "Error in obscura::Configuration::Read_Config_File(): I/O error while reading configuration file." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		catch(const ParseException &pex)
 		{
-			std::cerr << "Error in Configuration::Read_Config_File(): Configurate file parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << std::endl;
+			std::cerr << "Error in obscura::Configuration::Read_Config_File(): Configurate file parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 	}
@@ -334,7 +334,7 @@ namespace obscura
 		}
 		else
 		{
-			std::cerr << "Error in Configuration::Construct_DM_Particle(): 'DM_interaction' setting "<<DM_interaction <<" in configuration file not recognized." << std::endl;
+			std::cerr << "Error in obscura::Configuration::Construct_DM_Particle(): 'DM_interaction' setting "<<DM_interaction <<" in configuration file not recognized." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 
@@ -407,7 +407,7 @@ namespace obscura
 		}
 		else
 		{
-			std::cerr << "Error in Configuration::Construct_DM_Distribution(): 'DM_distribution' setting "<<DM_distribution <<" in configuration file not recognized." << std::endl;
+			std::cerr << "Error in obscura::Configuration::Construct_DM_Distribution(): 'DM_distribution' setting "<<DM_distribution <<" in configuration file not recognized." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 	}
@@ -839,7 +839,7 @@ namespace obscura
 		}
 		else
 		{
-			std::cerr << "Error in Configuration::Construct_DM_Detector(): Experiment " <<DD_experiment<<" not recognized." << std::endl;
+			std::cerr << "Error in obscura::Configuration::Construct_DM_Detector(): Experiment " <<DD_experiment<<" not recognized." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 	}

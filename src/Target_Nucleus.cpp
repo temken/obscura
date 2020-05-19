@@ -120,7 +120,7 @@ namespace obscura
 		f.open(path);
 		if(!f)
 		{
-			std::cerr <<"Error in Import_Nuclear_Data(): Data file " <<path <<" not found."<<std::endl;
+			std::cerr <<"Error in obscura::Import_Nuclear_Data(): Data file " <<path <<" not found."<<std::endl;
 			std::exit(EXIT_FAILURE);			
 		}
 		std::string name;
@@ -145,12 +145,12 @@ namespace obscura
 	{
 		if(Z < 1 || Z > 92)
 		{
-			std::cerr <<"Error in Get_Element(): Input Z="<<Z <<" is not a value between 1 and 92."<<std::endl;
+			std::cerr <<"Error in obscura::Get_Element(): Input Z="<<Z <<" is not a value between 1 and 92."<<std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		else if(Elements.size() == 0)
 		{
-			std::cerr <<"Warning in Get_Element(): Nuclear data not imported yet. Import_Nuclear_Data() is performed now."<<std::endl;
+			std::cerr <<"Warning in obscura::Get_Element(): Nuclear data not imported yet. Import_Nuclear_Data() is performed now."<<std::endl;
 			Import_Nuclear_Data();
 		}
 		return Elements[Z-1];
@@ -163,7 +163,7 @@ namespace obscura
 			if(Get_Element(Z).name == name)
 				return Get_Element(Z);
 		}
-		std::cerr<<"Error in Get_Element(): Element " <<name <<" not recognized."<<std::endl;
+		std::cerr<<"Error in obscura::Get_Element(): Element " <<name <<" not recognized."<<std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 
