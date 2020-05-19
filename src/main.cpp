@@ -27,8 +27,8 @@ int main(int argc, char *argv[])
 	////////////////////////////////////////////////////////////////////////
 
 	//Import nuclear data and configuration file
-	Import_Nuclear_Data();
-	Configuration cfg(argv[1]);
+	obscura::Import_Nuclear_Data();
+	obscura::Configuration cfg(argv[1]);
 	cfg.Print_Summary();
 
 	std::vector<double> DM_masses = libphysica::Log_Space(cfg.constraints_mass_min, cfg.constraints_mass_max, cfg.constraints_masses);

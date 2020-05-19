@@ -2,6 +2,8 @@
 
 #include "Astronomy.hpp"
 
+using namespace obscura;
+
 TEST(TestAstronomy, TestFractionalDayssinceJ2000)
 {
 	//ARRANGE

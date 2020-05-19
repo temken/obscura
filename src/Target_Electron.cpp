@@ -7,7 +7,9 @@
 #include "Natural_Units.hpp"
 #include "Utilities.hpp"
 
-using namespace libphysica::natural_units;
+namespace obscura
+{
+	using namespace libphysica::natural_units;
 
 //1. Kinematic functions
 	double vMinimal_Electrons(double q,double Delta_E, double mDM)
@@ -205,3 +207,5 @@ using namespace libphysica::natural_units;
 			std::exit(EXIT_FAILURE);
 		}
 	}
+
+}	// namespace obscura

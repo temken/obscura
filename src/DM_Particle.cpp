@@ -8,7 +8,9 @@
 #include "Natural_Units.hpp"
 #include "Numerics.hpp"
 
-using namespace libphysica::natural_units;
+namespace obscura
+{
+	using namespace libphysica::natural_units;
 
 //1. Base class for a DM particle with virtual functions for the cross sections
 	DM_Particle::DM_Particle()
@@ -78,3 +80,4 @@ using namespace libphysica::natural_units;
 		return 2.0 * target.mass * dSigma_dq2_Nucleus(q,target,vDM);
 	}
 
+}	// namespace obscura

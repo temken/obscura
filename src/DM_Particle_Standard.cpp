@@ -5,7 +5,9 @@
 //Headers from libphysica library
 #include "Numerics.hpp"
 
-using namespace libphysica::natural_units;
+namespace obscura
+{
+	using namespace libphysica::natural_units;
 
 //1. Abstract parent class for SI and SD interactions
 	DM_Particle_Standard::DM_Particle_Standard()
@@ -353,4 +355,4 @@ using namespace libphysica::natural_units;
 		}
 	}
 
-
+}	// namespace obscura

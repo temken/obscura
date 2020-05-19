@@ -3,10 +3,13 @@
 #include <cmath>
 
 //Headers from libphysica library
+#include "Natural_Units.hpp"
 #include "Statistics.hpp"
 #include "Utilities.hpp"
 
-using namespace libphysica::natural_units;
+namespace obscura
+{
+	using namespace libphysica::natural_units;
 
 //1. Event spectra and rates
 	double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, const Atomic_Electron& shell)
@@ -389,3 +392,5 @@ using namespace libphysica::natural_units;
 		}
 	 	std::cout<<"----------------------------------------"<<std::endl<<std::endl;
 	}
+
+}	// namespace obscura

@@ -4,6 +4,9 @@
 //Headers from libphysica library
 #include "Linear_Algebra.hpp"
 
+namespace obscura
+{
+
 //1. Transform between astronomical coordinate systems.
 	extern libphysica::Vector Transform_Equat_to_Gal(const libphysica::Vector &v_Equat, double T = 0.0);
 	extern libphysica::Vector Transform_GeoEcl_to_Gal(const libphysica::Vector &v_GeoEcl, double T = 0.0);
@@ -17,5 +20,7 @@
 
 //3. Earth's velocity in the galactic frame
 	extern libphysica::Vector Earth_Velocity(double nJ2000);
+
+}	// namespace obscura
 
 #endif

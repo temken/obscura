@@ -8,8 +8,10 @@
 #include "Numerics.hpp"
 #include "Natural_Units.hpp"
 
-using namespace libphysica::natural_units;
-
+namespace obscura
+{
+	using namespace libphysica::natural_units;
+	
 //1. Kinematic functions
 	double vMinimal_Nucleus(double ER, double mDM, double mNucleus)
 	{
@@ -164,3 +166,5 @@ using namespace libphysica::natural_units;
 		std::cerr<<"Error in Get_Element(): Element " <<name <<" not recognized."<<std::endl;
 		std::exit(EXIT_FAILURE);
 	}
+
+}	// namespace obscura

@@ -4,11 +4,11 @@
 #include <vector>
 #include <string>
 
-//Headers from libphysica library
-#include "Natural_Units.hpp"
-
 #include "DM_Particle.hpp"
 #include "DM_Distribution.hpp"
+
+namespace obscura
+{
 
 // DM Detector base class, which provides the statistical methods and energy bins.
 class DM_Detector
@@ -95,5 +95,7 @@ class DM_Detector
 
 		virtual void Print_Summary(int MPI_rank = 0) const {Print_Summary_Base(MPI_rank);};
 };
+
+}	// namespace obscura
 
 #endif

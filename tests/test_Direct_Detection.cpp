@@ -2,6 +2,8 @@
 
 #include "Direct_Detection.hpp"
 
+using namespace obscura;
+
 // TEST(TestDirectDetection, Test)
 // {
 // 	//ARRANGE

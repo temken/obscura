@@ -6,6 +6,9 @@
 
 #include "version.hpp"
 
+namespace obscura
+{
+
 //1. Kinematic functions
 	extern double vMinimal_Nucleus(double ER, double mDM, double mNucleus);
 	extern double Maximum_Nuclear_Recoil_Energy(double vDM, double mDM, double mNucleus);
@@ -69,5 +72,7 @@
 	extern std::vector<Element> Elements;
 	extern Element Get_Element(int Z);
 	extern Element Get_Element(std::string name);
+
+}	// namespace obscura
 
 #endif

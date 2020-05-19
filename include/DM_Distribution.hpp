@@ -7,6 +7,9 @@
 //Headers from libphysica library
 #include "Linear_Algebra.hpp"
 
+namespace obscura
+{
+
 //1. Abstract base class for DM distributions that can be used to compute direct detection recoil spectra.
 	class DM_Distribution
 	{
@@ -71,5 +74,6 @@
 			virtual void Print_Summary(int MPI_rank = 0) const override;
 	};
 
+}	// namespace obscura
 
 #endif

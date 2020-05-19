@@ -5,6 +5,9 @@
 
 #include "Target_Nucleus.hpp"
 
+namespace obscura
+{
+
 //1. Base class for a DM particle with virtual functions for the cross sections
 class DM_Particle
 {
@@ -48,5 +51,7 @@ class DM_Particle
 
 		virtual void Print_Summary(int MPI_rank = 0) const {Print_Summary_Base(MPI_rank);};
 };
+
+}	// namespace obscura
 
 #endif

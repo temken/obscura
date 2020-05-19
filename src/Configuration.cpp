@@ -13,8 +13,10 @@
 #include "Direct_Detection_Semiconductor.hpp"
 #include "version.hpp"
 
-using namespace libconfig;
-using namespace libphysica::natural_units;
+namespace obscura
+{
+	using namespace libconfig;
+	using namespace libphysica::natural_units;
 
 // Read in the configuration file
 	Configuration::Configuration()
@@ -842,3 +844,4 @@ using namespace libphysica::natural_units;
 		}
 	}
 
+}	// namespace obscura

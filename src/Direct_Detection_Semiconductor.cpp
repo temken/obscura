@@ -7,7 +7,10 @@
 #include "Natural_Units.hpp"
 #include "Numerics.hpp"
 
-using namespace libphysica::natural_units;
+namespace obscura
+{
+	using namespace libphysica::natural_units;
+
 //1. Event spectra and rates
 
 	double Minimum_Electron_Energy(int Q, const Semiconductor& target)
@@ -198,3 +201,4 @@ using namespace libphysica::natural_units;
 							<<"----------------------------------------"<<std::endl<<std::endl;
 	}
 
+}	// namespace obscura

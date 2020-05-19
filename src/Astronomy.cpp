@@ -5,6 +5,10 @@
 #include "Natural_Units.hpp"
 
 using namespace libphysica::natural_units;
+
+namespace obscura
+{
+
 //1. Transform between astronomical coordinate systems.
 	//Transformation matrices
 	libphysica::Matrix Transformation_Matrix_P(double T)
@@ -118,3 +122,5 @@ using namespace libphysica::natural_units;
 		//Return the sum of all components
 		return vGal + vPec + uE;
 	}
+
+}	// namespace obscura

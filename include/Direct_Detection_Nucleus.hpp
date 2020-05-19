@@ -12,6 +12,9 @@
 #include "DM_Particle.hpp"
 #include "DM_Distribution.hpp"
 
+namespace obscura
+{
+
 //1. Theoretical nuclear recoil spectrum [events per time, energy, and target mass]
 	extern double dRdER_Nucleus(double ER, const DM_Particle& DM, DM_Distribution& DM_distr, const Isotope& target_isotope);
 	extern double dRdER_Nucleus(double ER, const DM_Particle& DM, DM_Distribution& DM_distr, const Element& target_element);
@@ -45,4 +48,7 @@
 			
 			virtual void Print_Summary(int MPI_rank = 0) const override;
 	};
+
+}	// namespace obscura
+
 #endif

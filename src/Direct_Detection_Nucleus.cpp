@@ -8,7 +8,9 @@
 #include "Statistics.hpp"
 #include "Utilities.hpp"
 
-using namespace libphysica::natural_units;
+namespace obscura
+{
+	using namespace libphysica::natural_units;
 
 //1. Theoretical nuclear recoil spectrum
 	double dRdER_Nucleus(double ER, const DM_Particle& DM, DM_Distribution& DM_distr, const Isotope& target_isotope)
@@ -185,3 +187,5 @@ using namespace libphysica::natural_units;
 		}
 	
 	}
+
+}	// namespace obscura

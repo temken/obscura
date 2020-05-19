@@ -10,7 +10,9 @@
 
 #include "Astronomy.hpp"
 
-using namespace libphysica::natural_units;
+namespace obscura
+{
+	using namespace libphysica::natural_units;
 
 //1. Abstract base class for DM distributions that can be used to compute direct detection recoil spectra.
 	//Constructors:
@@ -199,3 +201,5 @@ using namespace libphysica::natural_units;
 						<<"\tObserver's speed [km/sec]:\t"<<In_Units(v_observer,km/sec) <<std::endl<<std::endl;
 		}
 	}
+
+}	// namespace obscura

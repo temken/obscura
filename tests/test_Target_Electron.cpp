@@ -2,6 +2,8 @@
 
 #include "Target_Electron.hpp"
 
+using namespace obscura;
+
 // TEST(TestTargetElectron, Test)
 // {
 // 	//ARRANGE

@@ -6,11 +6,15 @@
 #include <cmath>
 
 //Headers from libphysica library
+#include "Natural_Units.hpp"
 #include "Numerics.hpp"
 #include "Statistics.hpp"
 #include "Utilities.hpp"
 
-using namespace libphysica::natural_units;
+
+namespace obscura
+{
+	using namespace libphysica::natural_units;
 
 // DM Detector base class, which provides the statistical methods and energy bins.
 	//Statistics
@@ -431,3 +435,5 @@ using namespace libphysica::natural_units;
 			std::cout <<std::endl;			
 		}
 	}
+
+}	// namespace obscura

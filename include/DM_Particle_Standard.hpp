@@ -8,6 +8,8 @@
 
 #include "DM_Particle.hpp"
 
+namespace obscura
+{
 
 //1. Abstract parent class to encompass SI and SD interactions
 class DM_Particle_Standard : public DM_Particle
@@ -107,5 +109,7 @@ class DM_Particle_SD : public DM_Particle_Standard
 
 		virtual void Print_Summary(int MPI_rank = 0) const override;
 };
+
+}	// namespace obscura
 
 #endif
