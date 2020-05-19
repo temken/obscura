@@ -38,6 +38,7 @@ namespace obscura
 			std::vector<double> DM_Signals_Q_Bins(const DM_Particle& DM, DM_Distribution& DM_distr);
 
 		public:
+			DM_Detector_Semiconductor();
 			DM_Detector_Semiconductor(std::string label, double expo, std::string crys);
 
 		//DM functions

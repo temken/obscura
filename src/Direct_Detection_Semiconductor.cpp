@@ -79,6 +79,11 @@ namespace obscura
 
 
 //2. Electron recoil direct detection experiment with semiconductor target
+	DM_Detector_Semiconductor::DM_Detector_Semiconductor()
+	: DM_Detector("Semiconductor experiment", gram*yr, "Electrons"), semiconductor_target(Semiconductor("Si"))
+	{
+	}
+
 	DM_Detector_Semiconductor::DM_Detector_Semiconductor(std::string label, double expo, std::string crys)
 	: DM_Detector(label, expo, "Electrons"), semiconductor_target(Semiconductor(crys))
 	{
