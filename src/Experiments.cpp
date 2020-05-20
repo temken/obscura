@@ -44,8 +44,8 @@ namespace obscura
 	DM_Detector_Nucleus CRESST_II()
 	{
 		double CRESST_II_exposure = 52.15*kg*day;
-		std::vector<Element> CRESST_II_targets = {Get_Element(8),Get_Element(20),Get_Element(74)}; //CaOW
-		std::vector<double> CRESST_II_target_ratios = {4,1,1};
+		std::vector<Element> CRESST_II_targets = {Get_Element(8), Get_Element(20), Get_Element(74)}; //CaOW
+		std::vector<double> CRESST_II_target_ratios = {4, 1, 1};
 		double CRESST_II_threshold = 307*eV;
 		double CRESST_II_Emax = 40.0*keV;
 		double CRESST_II_resolution = CRESST_II_threshold / 5.0;
@@ -65,8 +65,8 @@ namespace obscura
 	DM_Detector_Nucleus CRESST_III()
 	{
 		double CRESST_III_exposure = 5.594*kg*day;
-		std::vector<Element> CRESST_III_targets = {Get_Element(8),Get_Element(20),Get_Element(74)}; //CaOW
-		std::vector<double> CRESST_III_target_ratios = {4,1,1};
+		std::vector<Element> CRESST_III_targets = {Get_Element(8), Get_Element(20), Get_Element(74)}; //CaOW
+		std::vector<double> CRESST_III_target_ratios = {4, 1, 1};
 		double CRESST_III_threshold = 30.1*eV;
 		double CRESST_III_Emax = 16*keV;
 		double CRESST_III_resolution = 4.6*eV;
@@ -88,8 +88,8 @@ namespace obscura
 	DM_Detector_Nucleus CRESST_surface()
 	{
 		double CRESST_surface_exposure = 0.046*gram*day;
-		std::vector<Element> CRESST_surface_targets = {Get_Element(8),Get_Element(13)};
-		std::vector<double> CRESST_surface_target_ratios = {3,2};
+		std::vector<Element> CRESST_surface_targets = {Get_Element(8), Get_Element(13)};
+		std::vector<double> CRESST_surface_target_ratios = {3, 2};
 		double CRESST_surface_threshold = 19.7*eV;
 		double CRESST_surface_Emax = 600*eV;
 		double CRESST_surface_resolution = 3.74*eV;
@@ -152,7 +152,7 @@ namespace obscura
 		std::vector<unsigned long int> observed_event_bins = {8, 7, 2, 1};
 		double muPE = 33.0;
 		double sigPE = 7.0;
-		std::vector<unsigned int> S2_bin_ranges = {150,200,250,300,350};
+		std::vector<unsigned int> S2_bin_ranges = {150, 200, 250, 300, 350};
 		std::string trigger_efficiency = PROJECT_DIR "data/XENON1Te/XENON1T_TotalEfficiency.txt";
 
 		DM_Detector_Ionization detector("XENON1T-e", exposure, target_name);
@@ -183,8 +183,8 @@ namespace obscura
 		double SENSEI_surface_exposure = 0.07*gram*456*minute;
 		unsigned int SENSEI_surface_Q_threshold = 1;
 		unsigned int SENSEI_surface_N_bins = 5;
-		std::vector<double> SENSEI_surface_efficiencies = {0.668,0.41,0.32,0.27,0.24};
-		std::vector<unsigned long int> SENSEI_surface_observed_events = {140302,4676,131,1,0};
+		std::vector<double> SENSEI_surface_efficiencies = {0.668, 0.41, 0.32, 0.27, 0.24};
+		std::vector<unsigned long int> SENSEI_surface_observed_events = {140302, 4676, 131, 1, 0};
 
 		DM_Detector_Semiconductor detector("protoSENSEI@surface",SENSEI_surface_exposure, "Si");
 		detector.Use_Q_Bins(SENSEI_surface_Q_threshold, SENSEI_surface_N_bins);
@@ -199,8 +199,8 @@ namespace obscura
 		double SENSEI_exposure = 0.246*gram*day;
 		unsigned int SENSEI_Q_threshold = 1;
 		unsigned int SENSEI_N_bins = 3;
-		std::vector<double> SENSEI_efficiencies = {1.0,0.62,0.48};
-		std::vector<unsigned long int> SENSEI_observed_events = {8516,87,0};
+		std::vector<double> SENSEI_efficiencies = {1.0, 0.62, 0.48};
+		std::vector<unsigned long int> SENSEI_observed_events = {8516, 87, 0};
 
 		DM_Detector_Semiconductor detector("protoSENSEI@MINOS",SENSEI_exposure, "Si");
 		detector.Use_Q_Bins(SENSEI_Q_threshold, SENSEI_N_bins);
@@ -215,7 +215,7 @@ namespace obscura
 		double SENSEI_exposure = 9.1*gram*day;
 		unsigned int SENSEI_Q_threshold = 1;
 		unsigned int SENSEI_N_bins = 4;
-		std::vector<double> SENSEI_efficiencies = {1.38/9.1,2.09/9.1,9.03/9.1, 1.0};
+		std::vector<double> SENSEI_efficiencies = {1.38/9.1, 2.09/9.1, 9.03/9.1, 1.0};
 		std::vector<unsigned long int> SENSEI_observed_events = {1312, 5, 0, 0};
 
 		DM_Detector_Semiconductor detector("SENSEI@MINOS",SENSEI_exposure, "Si");
@@ -232,7 +232,7 @@ namespace obscura
 		double SuperCDMS_flat_efficiency = 0.9545;
 		unsigned int SuperCDMS_Q_threshold = 1;
 		unsigned int SuperCDMS_N_bins = 6;
-		std::vector<double> SuperCDMS_efficiencies = {0.88,0.91,0.91,0.91,0.91,0.91};
+		std::vector<double> SuperCDMS_efficiencies = {0.88, 0.91, 0.91, 0.91, 0.91, 0.91};
 		std::vector<unsigned long int> SuperCDMS_observed_events = {53000, 400, 74, 18, 7, 14};
 
 		DM_Detector_Semiconductor detector("CMDS-HVeV",SuperCDMS_exposure, "Si");
