@@ -8,8 +8,8 @@
 #include "Numerics.hpp"
 #include "Utilities.hpp"
 
-#include "version.hpp"
 #include "Configuration.hpp"
+#include "version.hpp"
 
 using namespace libphysica::natural_units;
 
