@@ -98,14 +98,22 @@ namespace obscura
 		return fmod(t,86400) * sec;
 	 }
 
-//3. Earth's velocity in the galactic frame
-	 libphysica::Vector Earth_Velocity(double nJ2000)
+//3. Sun's and earth's velocity in the galactic frame
+	 libphysica::Vector Sun_Velocity()
 	 {
-		//1. Sun's rotation around galactic center:
+	 	//1. Sun's rotation around galactic center:
 		libphysica::Vector vGal({0,220*km/sec,0});
 		//2. Sun's peculiar motion:
 		libphysica::Vector vPec({11.1*km/sec,12.2*km/sec,7.3*km/sec});
-		//3. Earth's rotation around galactic center:
+
+		return vGal+vPec;
+	 }
+
+	 libphysica::Vector Earth_Velocity(double nJ2000)
+	 {
+		//1. Sun's velocity
+		libphysica::Vector vSun = Sun_Velocity();
+		//2. Earth's rotation around galactic center:
 		double e = 0.01671; //Ellipticity of earth's orbit
 		double L = fmod(280.46*deg + nJ2000 * 0.9856474*deg,2*M_PI);
 		double omega = fmod(282.932*deg + nJ2000 * 0.0000471*deg,2*M_PI);
@@ -115,12 +123,10 @@ namespace obscura
 		//Basis vectors in heliocentric ecliptic coordinate system
 		libphysica::Vector exEcl  =  Transform_HelEcl_to_Gal(ex,T);	//(0.054876-0.024232 * T,-0.494109-0.002689 * T,0.867666 + 1.546e-6 * T);
 		libphysica::Vector eyEcl  =  Transform_HelEcl_to_Gal(ey,T);	//(0.993824 + 0.001316 * T,0.110992-0.011851 * T,0.000352 + 0.021267 * T);
-		std::cout <<"exEcl = " <<exEcl <<std::endl;
-		std::cout <<"eyEcl = " <<eyEcl <<std::endl;
 		double ve = 29.79*km/sec;
 		libphysica::Vector uE = -ve * (sin(L) + e * sin(2*L - omega)) * exEcl + ve * (cos(L) + e * cos(2*L - omega))*eyEcl;
-		//Return the sum of all components
-		return vGal + vPec + uE;
+
+		return vSun + uE;
 	}
 
 }	// namespace obscura

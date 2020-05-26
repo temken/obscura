@@ -18,7 +18,8 @@ namespace obscura
 	extern double Fractional_Days_since_J2000(int day, int month, int year, double hour = 0.0, double minute = 0.0, double second = 0.0);
 	extern double Local_Apparent_Sidereal_Time(double nJ2000, double longitude);
 
-//3. Earth's velocity in the galactic frame
+//3. Sun's and earth's velocity in the galactic frame
+	extern libphysica::Vector Sun_Velocity();
 	extern libphysica::Vector Earth_Velocity(double nJ2000);
 
 }	// namespace obscura
