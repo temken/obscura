@@ -4,8 +4,10 @@
 
 using namespace obscura;
 
-// TEST(TestDirectDetection, Test)
-// {
-// 	//ARRANGE
-// 	// ACT & ASSERT
-// }
+TEST(TestExperiments, TestDamicN)
+{
+	//ARRANGE
+	DM_Detector_Nucleus experiment = DAMIC_N();
+	// ACT & ASSERT
+	ASSERT_EQ(experiment.name, "DAMIC-N");
+}

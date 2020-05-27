@@ -4,8 +4,11 @@
 
 using namespace obscura;
 
-// TEST(TestDirectDetection, Test)
-// {
-// 	//ARRANGE
-// 	// ACT & ASSERT
-// }
+TEST(TestDirectDetection, TestDefaultConstructor)
+{
+	// ARRANGE
+	DM_Detector detector;
+	// ACT & ASSERT
+	ASSERT_EQ( detector.name, "base name");
+}
+
