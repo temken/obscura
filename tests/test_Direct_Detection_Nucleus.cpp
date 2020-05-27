@@ -4,8 +4,10 @@
 
 using namespace obscura;
 
-// TEST(TestDirectDetectionNucleus, Test)
-// {
-// 	//ARRANGE
-// 	// ACT & ASSERT
-// }
+TEST(TestDirectDetectionNucleus, TestDefaultConstructor)
+{
+	// ARRANGE
+	DM_Detector_Nucleus detector;
+	// ACT & ASSERT
+	ASSERT_EQ( detector.name, "Nuclear recoil experiment");
+}

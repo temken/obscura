@@ -4,9 +4,10 @@
 
 using namespace obscura;
 
-TEST(TestConfiguration, Test)
+TEST(TestConfiguration, TestDefaultConstructor)
 {
 	//ARRANGE
 	obscura::Configuration cfg;
 	// ACT & ASSERT
+	ASSERT_EQ( cfg.ID, "default" );
 }
