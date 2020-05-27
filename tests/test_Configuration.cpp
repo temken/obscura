@@ -4,8 +4,9 @@
 
 using namespace obscura;
 
-// TEST(TestConfiguration, Test)
-// {
-// 	//ARRANGE
-// 	// ACT & ASSERT
-// }
+TEST(TestConfiguration, Test)
+{
+	//ARRANGE
+	obscura::Configuration cfg;
+	// ACT & ASSERT
+}
