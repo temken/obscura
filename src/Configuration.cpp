@@ -21,9 +21,10 @@ namespace obscura
 
 // Read in the configuration file
 	Configuration::Configuration()
+	: ID("default")
 	{
-		Configuration("config.cfg");
 	}
+
 	Configuration::Configuration(std::string cfg_filename, int MPI_rank)
 	: cfg_file(cfg_filename), results_path("./")
 	{
