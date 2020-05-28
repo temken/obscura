@@ -9,6 +9,5 @@ TEST(TestDirectDetection, TestDefaultConstructor)
 	// ARRANGE
 	DM_Detector detector;
 	// ACT & ASSERT
-	ASSERT_EQ( detector.name, "base name");
+	ASSERT_EQ(detector.name, "base name");
 }
-

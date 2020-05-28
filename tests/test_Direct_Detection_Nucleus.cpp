@@ -9,5 +9,5 @@ TEST(TestDirectDetectionNucleus, TestDefaultConstructor)
 	// ARRANGE
 	DM_Detector_Nucleus detector;
 	// ACT & ASSERT
-	ASSERT_EQ( detector.name, "Nuclear recoil experiment");
+	ASSERT_EQ(detector.name, "Nuclear recoil experiment");
 }

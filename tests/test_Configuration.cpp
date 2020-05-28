@@ -9,5 +9,5 @@ TEST(TestConfiguration, TestDefaultConstructor)
 	//ARRANGE
 	obscura::Configuration cfg;
 	// ACT & ASSERT
-	ASSERT_EQ( cfg.ID, "default" );
+	ASSERT_EQ(cfg.ID, "default");
 }

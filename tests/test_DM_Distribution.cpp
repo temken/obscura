@@ -13,5 +13,5 @@ TEST(TestDMDistribution, TestSHMDefaultConstructor)
 	// ARRANGE
 	Standard_Halo_Model shm;
 	// ACT & ASSERT
-	ASSERT_DOUBLE_EQ( In_Units(shm.DM_density, GeV/cm/cm/cm), 0.4);
+	ASSERT_DOUBLE_EQ(In_Units(shm.DM_density, GeV / cm / cm / cm), 0.4);
 }

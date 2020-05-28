@@ -9,5 +9,5 @@ TEST(TestDirectDetectionIonization, TestDefaultConstructor)
 	// ARRANGE
 	DM_Detector_Ionization detector;
 	// ACT & ASSERT
-	ASSERT_EQ( detector.name, "Ionization experiment");
+	ASSERT_EQ(detector.name, "Ionization experiment");
 }
