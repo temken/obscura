@@ -182,6 +182,7 @@ void Configuration::Read_Config_File()
 
 void Configuration::Construct_DM_Particle()
 {
+
 	double DM_mass, DM_spin, DM_fraction;
 	bool DM_light;
 	//3.1 General properties
@@ -352,6 +353,7 @@ void Configuration::Construct_DM_Particle()
 
 void Configuration::Construct_DM_Distribution()
 {
+
 	std::string DM_distribution;
 	double DM_local_density;
 	try
@@ -508,6 +510,7 @@ void Configuration::Construct_DM_Detector()
 		catch(const SettingNotFoundException& nfex)
 		{
 			std::cerr << "No 'DD_expected_background' setting in configuration file." << std::endl;
+			std::exit(EXIT_FAILURE);
 		}
 		DM_detector = new DM_Detector_Nucleus(DD_experiment, DD_exposure_nuclear, DD_targets_nuclear, DD_targets_nuclear_abundances);
 		DM_detector->Set_Flat_Efficiency(DD_efficiency_nuclear);
