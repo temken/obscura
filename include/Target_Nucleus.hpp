@@ -37,21 +37,20 @@ namespace obscura
 	};
 
 //3. Class for elements containing all isotopes occuring in nature
-	class Element
+	struct Element
 	{
-		private:
 			std::vector<Isotope> isotopes;
-
-		public:
 			std::string name;
 
 			Element();
-			Element(std::vector<Isotope>& iso);
+			Element(const std::vector<Isotope>& iso);
 			Element(const Isotope& iso);
 
 			unsigned int Number_of_Isotopes() const;
 
 			void Add_Isotope(Isotope& isotope);
+
+			Isotope Get_Isotope(unsigned int A) const;
 
 			Isotope& operator[](int i) 
 			{	
@@ -70,7 +69,8 @@ namespace obscura
 //4. Nuclear data
 	extern void Import_Nuclear_Data();
 	extern std::vector<Element> Elements;
-	extern Element Get_Element(int Z);
+	extern Isotope Get_Isotope(unsigned int Z, unsigned int A);
+	extern Element Get_Element(unsigned int Z);
 	extern Element Get_Element(std::string name);
 
 }	// namespace obscura

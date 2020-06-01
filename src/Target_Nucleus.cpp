@@ -64,7 +64,7 @@ namespace obscura
 		isotopes = {};
 	}
 
-	Element::Element(std::vector<Isotope>& iso)
+	Element::Element(const std::vector<Isotope>& iso)
 	: isotopes(iso)
 	{
 		name=ElementNames[iso[0].Z-1];
@@ -84,6 +84,15 @@ namespace obscura
 	void Element::Add_Isotope(Isotope& isotope)
 	{
 		isotopes.push_back(isotope);
+	}
+
+	Isotope Element::Get_Isotope(unsigned int A) const 
+	{
+		for(unsigned int i = 0; i < Number_of_Isotopes(); i++)
+			if(isotopes[i].A == A)
+				return isotopes[i];
+		std::cout << "Error in obscura::Element::Get_Isotope(): Isotope A=" << A << " not existent for " << name << "." << std::endl;
+		std::exit(EXIT_FAILURE);
 	}
 
 	double Element::Average_Nuclear_Mass() const
@@ -141,7 +150,12 @@ namespace obscura
 		f.close();
 	}
 
-	Element Get_Element(int Z)
+	Isotope Get_Isotope(unsigned int Z, unsigned int A)
+	{
+		return Get_Element(Z).Get_Isotope(A);
+	}
+
+	Element Get_Element(unsigned int Z)
 	{
 		if(Z < 1 || Z > 92)
 		{
@@ -159,10 +173,8 @@ namespace obscura
 	Element Get_Element(std::string name)
 	{
 		for(int Z = 1; Z <= 92; Z++)
-		{
 			if(Get_Element(Z).name == name)
 				return Get_Element(Z);
-		}
 		std::cerr<<"Error in Get_Element(): Element " <<name <<" not recognized."<<std::endl;
 		std::exit(EXIT_FAILURE);
 	}
