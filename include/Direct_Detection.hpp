@@ -18,14 +18,8 @@ class DM_Detector
 	double exposure, flat_efficiency;
 
 	//DM functions
-	virtual double Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const
-	{
-		return 0.0;
-	};
-	virtual double Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const
-	{
-		return 0.0;
-	};
+	virtual double Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const { return 0.0; };
+	virtual double Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const { return 0.0; };
 
 	//Statistics
 	std::string statistical_analysis;
@@ -69,14 +63,8 @@ class DM_Detector
 	void Set_Flat_Efficiency(double eff);
 
 	//DM functions
-	virtual double Minimum_DM_Speed(const DM_Particle& DM) const
-	{
-		return 0.0;
-	};
-	virtual double dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr)
-	{
-		return 0.0;
-	};
+	virtual double Minimum_DM_Speed(const DM_Particle& DM) const { return 0.0; };
+	virtual double dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr) { return 0.0; };
 	virtual double DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr);
 	virtual std::vector<double> DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr);
 
@@ -107,10 +95,7 @@ class DM_Detector
 	double Upper_Limit(DM_Particle& DM, DM_Distribution& DM_distr, double certainty = 0.95);
 	std::vector<std::vector<double>> Upper_Limit_Curve(DM_Particle& DM, DM_Distribution& DM_distr, std::vector<double> masses, double certainty = 0.95);
 
-	virtual void Print_Summary(int MPI_rank = 0) const
-	{
-		Print_Summary_Base(MPI_rank);
-	};
+	virtual void Print_Summary(int MPI_rank = 0) const { Print_Summary_Base(MPI_rank); };
 };
 
 }	// namespace obscura
