@@ -154,7 +154,7 @@ namespace obscura
 			for(unsigned int i = 0; i < electrons.size(); i++)
 			{
 				std::cout<<"\t";
-				electrons[i].Print_Summary();
+				electrons[i].Print_Summary(MPI_rank);
 			}
 		}
 	}

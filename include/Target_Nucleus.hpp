@@ -63,7 +63,7 @@ namespace obscura
 
 			double Average_Nuclear_Mass() const;
 
-			void Print_Summary() const;
+			void Print_Summary(int MPI_rank = 0) const;
 	};
 
 //4. Nuclear data

@@ -104,17 +104,21 @@ namespace obscura
 	}
 
 
-	void Element::Print_Summary() const
+	void Element::Print_Summary(int MPI_rank) const
 	{
-		double total=0.0;
-		std::cout <<std::endl<<name<<std::endl<<"Isotope\tZ\tA\tAbund.[%]\tSpin\t<sp>\t<sn>"<<std::endl;
-		std::cout <<"------------------------------------------------------------"<<std::endl;
-		for(unsigned int i=0;i<Number_of_Isotopes();i++)
+		if(MPI_rank == 0)
 		{
-			total+=100.0*isotopes[i].abundance;
-			std::cout <<isotopes[i].name <<"\t"<<isotopes[i].Z<<"\t"<<isotopes[i].A<<"\t"<<100.0*isotopes[i].abundance<<"\t\t"<<isotopes[i].spin<<"\t"<<isotopes[i].sp<<"\t"<<isotopes[i].sn<<std::endl;
+			double total=0.0;
+			std::cout <<std::endl<<name<<std::endl<<"Isotope\tZ\tA\tAbund.[%]\tSpin\t<sp>\t<sn>"<<std::endl;
+			std::cout <<"------------------------------------------------------------"<<std::endl;
+			for(unsigned int i=0;i<Number_of_Isotopes();i++)
+			{
+				total+=100.0*isotopes[i].abundance;
+				std::cout <<isotopes[i].name <<"\t"<<isotopes[i].Z<<"\t"<<isotopes[i].A<<"\t"<<100.0*isotopes[i].abundance<<"\t\t"<<isotopes[i].spin<<"\t"<<isotopes[i].sp<<"\t"<<isotopes[i].sn<<std::endl;
+			}
+			std::cout <<"Total:\t\t"<<Average_Nuclear_Mass()/mNucleon<<"\t"<<total<<std::endl<<std::endl;
 		}
-		std::cout <<"Total:\t\t"<<Average_Nuclear_Mass()/mNucleon<<"\t"<<total<<std::endl<<std::endl;
+		
 	}
 
 //4. Nuclear data
