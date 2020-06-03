@@ -28,11 +28,13 @@ class DM_Distribution
 
 	double Minimum_DM_Speed() const;
 	double Maximum_DM_Speed() const;
+
 	//Distribution functions
 	virtual double PDF_Velocity(libphysica::Vector vel) const { return 0.0; };
 	virtual double PDF_Speed(double v) const { return 0.0; };
 	virtual double CDF_Speed(double v) const;
 
+	//Averages
 	virtual libphysica::Vector Average_Velocity() const;
 	virtual double Average_Speed(double vMin = -1.0) const;
 
@@ -48,7 +50,10 @@ class Standard_Halo_Model : public DM_Distribution
   protected:
 	double v_0, v_esc, v_observer;
 	libphysica::Vector vel_observer;
+
+	//Normalization
 	double N_esc;
+	void Normalize_PDF();
 
   public:
 	//Constructors:
@@ -59,11 +64,8 @@ class Standard_Halo_Model : public DM_Distribution
 	//Set SHM parameters
 	void Set_Speed_Dispersion(double v0);
 	void Set_Escape_Velocity(double vesc);
-	void Set_Observer_Velocity(libphysica::Vector& vObserver);
+	void Set_Observer_Velocity(const libphysica::Vector& vObserver);
 	void Set_Observer_Velocity(int day, int month, int year, int hour = 0, int minute = 0);
-
-	//Compute N_esc
-	void Normalize_PDF();
 
 	//Distribution functions
 	virtual double PDF_Velocity(libphysica::Vector vel) const override;
