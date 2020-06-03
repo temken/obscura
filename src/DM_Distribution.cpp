@@ -77,11 +77,11 @@ double DM_Distribution::Average_Speed(double vMin) const
 		return v * PDF_Speed(v);
 	};
 	double v_average = libphysica::Integrate(integrand, vMin, v_domain[1], 1.0e-3 * km / sec);
-	
+
 	// 3. Re-normalize in case of a sub-domain
 	if(agerage_over_subdomain)
 		v_average /= (1.0 - CDF_Speed(vMin));
-	
+
 	return v_average;
 }
 
@@ -159,7 +159,7 @@ void Standard_Halo_Model::Set_Escape_Velocity(double vesc)
 	v_domain[1] = vesc + v_observer;
 	Normalize_PDF();
 }
-void Standard_Halo_Model::Set_Observer_Velocity(libphysica::Vector& vel_obs)
+void Standard_Halo_Model::Set_Observer_Velocity(const libphysica::Vector& vel_obs)
 {
 	vel_observer = vel_obs;
 	v_observer	 = vel_observer.Norm();
@@ -194,7 +194,10 @@ double Standard_Halo_Model::PDF_Velocity(libphysica::Vector vel) const
 }
 double Standard_Halo_Model::PDF_Speed(double v) const
 {
-	return v / N_esc / v_0 / sqrt(M_PI) / v_observer * (2 * exp(-(v * v + v_observer * v_observer) / v_0 / v_0) * sinh(2 * v * v_observer / v_0 / v_0) + (exp(-pow(v + v_observer, 2.0) / v_0 / v_0) - exp(-v_esc * v_esc / v_0 / v_0)) * libphysica::StepFunction(abs(v + v_observer) - v_esc) - (exp(-pow(v - v_observer, 2.0) / v_0 / v_0) - exp(-v_esc * v_esc / v_0 / v_0)) * libphysica::StepFunction(abs(v - v_observer) - v_esc));
+	if(v < v_domain[0] || v > v_domain[1])
+		return 0.0;
+	else
+		return v / N_esc / v_0 / sqrt(M_PI) / v_observer * (2 * exp(-(v * v + v_observer * v_observer) / v_0 / v_0) * sinh(2 * v * v_observer / v_0 / v_0) + (exp(-pow(v + v_observer, 2.0) / v_0 / v_0) - exp(-v_esc * v_esc / v_0 / v_0)) * libphysica::StepFunction(abs(v + v_observer) - v_esc) - (exp(-pow(v - v_observer, 2.0) / v_0 / v_0) - exp(-v_esc * v_esc / v_0 / v_0)) * libphysica::StepFunction(abs(v - v_observer) - v_esc));
 }
 
 //Eta-function for direct detection
