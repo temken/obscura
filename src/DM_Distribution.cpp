@@ -57,12 +57,31 @@ libphysica::Vector DM_Distribution::Average_Velocity() const
 	return v_average;
 }
 
-double DM_Distribution::Average_Speed() const
+double DM_Distribution::Average_Speed(double vMin) const
 {
+	// 1. Check the domain.
+	bool agerage_over_subdomain = true;
+	if(vMin < 0)
+	{
+		vMin				   = v_domain[0];
+		agerage_over_subdomain = false;
+	}
+	else if(vMin < v_domain[0] || vMin > v_domain[1])
+	{
+		std::cerr << "Error in DM_Distribution::Average_Speed(): vMin = " << In_Units(vMin, km / sec) << "lies outside the domain [" << In_Units(v_domain[0], km / sec) << "," << In_Units(v_domain[1], km / sec) << "]" << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+
+	// 2. Integrate v*f(v)
 	std::function<double(double)> integrand = [this](double v) {
 		return v * PDF_Speed(v);
 	};
-	double v_average = libphysica::Integrate(integrand, v_domain[0], v_domain[1], 1.0e-3 * km / sec);
+	double v_average = libphysica::Integrate(integrand, vMin, v_domain[1], 1.0e-3 * km / sec);
+	
+	// 3. Re-normalize in case of a sub-domain
+	if(agerage_over_subdomain)
+		v_average /= (1.0 - CDF_Speed(vMin));
+	
 	return v_average;
 }
 

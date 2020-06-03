@@ -34,15 +34,12 @@ class DM_Distribution
 	virtual double CDF_Speed(double v) const;
 
 	virtual libphysica::Vector Average_Velocity() const;
-	virtual double Average_Speed() const;
+	virtual double Average_Speed(double vMin = -1.0) const;
 
 	//Eta-function for direct detection
 	virtual double Eta_Function(double vMin) const;
 
-	virtual void Print_Summary(int MPI_rank = 0) const
-	{
-		Print_Summary_Base(MPI_rank);
-	};
+	virtual void Print_Summary(int MPI_rank = 0) const { Print_Summary_Base(MPI_rank); };
 };
 
 //2. Standard halo model (SHM)
