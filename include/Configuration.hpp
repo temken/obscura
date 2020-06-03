@@ -15,10 +15,10 @@ class Configuration
 {
 	private:
 		libconfig::Config config;
-		void Read_Config_File();
-		void Construct_DM_Particle();
-		void Construct_DM_Distribution();
-		void Construct_DM_Detector();
+		virtual void Read_Config_File();
+		virtual void Construct_DM_Particle();
+		virtual void Construct_DM_Distribution();
+		virtual void Construct_DM_Detector();
 
 		void Create_Result_Folder(int MPI_rank = 0);
 		void Copy_Config_File(int MPI_rank = 0);
@@ -40,8 +40,8 @@ class Configuration
 		//Constructors
 		Configuration();
 		Configuration(std::string cfg_filename, int MPI_rank = 0);
-
-		void Print_Summary(int MPI_rank = 0);
+ 
+		virtual void Print_Summary(int MPI_rank = 0);
 };
 
 }	// namespace obscura
