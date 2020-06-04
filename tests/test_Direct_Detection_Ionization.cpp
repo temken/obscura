@@ -4,8 +4,10 @@
 
 using namespace obscura;
 
-// TEST(TestDirectDetectionIonization, Test)
-// {
-// 	//ARRANGE
-// 	// ACT & ASSERT
-// }
+TEST(TestDirectDetectionIonization, TestDefaultConstructor)
+{
+	// ARRANGE
+	DM_Detector_Ionization detector;
+	// ACT & ASSERT
+	ASSERT_EQ(detector.name, "Ionization experiment");
+}

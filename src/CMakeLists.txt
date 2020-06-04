@@ -1,3 +1,20 @@
+# Executable
+add_executable(obscura
+    main.cpp )
+
+target_compile_options(obscura PUBLIC -Wall -pedantic)
+
+target_link_libraries(obscura
+    PUBLIC 
+        coverage_config
+        libobscura )
+
+target_include_directories(obscura
+    PRIVATE
+        ${GENERATED_DIR} )
+
+install(TARGETS obscura DESTINATION ${BIN_DIR})
+
 # Static library
 add_library(libobscura STATIC
     Astronomy.cpp
@@ -9,6 +26,7 @@ add_library(libobscura STATIC
     DM_Distribution.cpp
     DM_Particle.cpp
     DM_Particle_Standard.cpp
+    Experiments.cpp
     Target_Electron.cpp
     Target_Nucleus.cpp
 )
@@ -44,19 +62,3 @@ target_link_libraries(libobscura
 
 install(TARGETS libobscura DESTINATION ${LIB_DIR})
 
-# Executable
-add_executable(obscura
-    main.cpp )
-
-target_compile_options(obscura PUBLIC -Wall -pedantic)
-
-target_include_directories(obscura
-    PRIVATE
-        ${GENERATED_DIR} )
-
-target_link_libraries(obscura
-    PUBLIC 
-        coverage_config
-        libobscura )
-
-install(TARGETS obscura DESTINATION ${BIN_DIR})

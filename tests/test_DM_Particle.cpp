@@ -4,8 +4,10 @@
 
 using namespace obscura;
 
-// TEST(TestDMParticle, Test)
-// {
-// 	//ARRANGE
-// 	// ACT & ASSERT
-// }
+TEST(TestDMParticle, TestDefaultConstructor)
+{
+	// ARRANGE
+	DM_Particle dm;
+	// ACT & ASSERT
+	ASSERT_DOUBLE_EQ(dm.mass, 10.0);
+}

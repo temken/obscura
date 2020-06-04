@@ -8,6 +8,7 @@ add_executable(tests
     test_DM_Distribution.cpp
     test_DM_Particle.cpp
     test_DM_Particle_Standard.cpp
+    test_Experiments.cpp
     test_Target_Electron.cpp
     test_Target_Nucleus.cpp
     )

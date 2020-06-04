@@ -58,7 +58,7 @@ FetchContent_Declare(googletest
   TEST_COMMAND      "")
 
 # Version header
-execute_process( # Git commit hash
+execute_process( # Git branch
   COMMAND git rev-parse --abbrev-ref HEAD
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   OUTPUT_VARIABLE GIT_BRANCH
