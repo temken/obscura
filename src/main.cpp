@@ -22,9 +22,8 @@ int main(int argc, char* argv[])
 	if(ctime_start[std::strlen(ctime_start) - 1] == '\n')
 		ctime_start[std::strlen(ctime_start) - 1] = '\0';
 	std::cout << "[Started on " << ctime_start << "]" << std::endl;
-	std::cout << PROJECT_NAME << "-" << PROJECT_VERSION << "\tgit:" << GIT_BRANCH << "/" << GIT_COMMIT_HASH << std::endl
+	std::cout << PROJECT_NAME << "-v" << PROJECT_VERSION << "\tgit:" << GIT_BRANCH << "/" << GIT_COMMIT_HASH << std::endl
 			  << OBSCURA_LOGO
-			  << "\tdeveloped by " << AUTHOR << " (" << YEAR << ")" << std::endl
 			  << std::endl;
 	////////////////////////////////////////////////////////////////////////
 
