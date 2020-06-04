@@ -80,6 +80,15 @@ unsigned int Element::Number_of_Isotopes() const
 	return isotopes.size();
 }
 
+Isotope Element::Get_Isotope(unsigned int A) const 
+{
+  for(unsigned int i = 0; i < Number_of_Isotopes(); i++)
+  if(isotopes[i].A == A)
+    return isotopes[i];
+  std::cout << "Error in obscura::Element::Get_Isotope(): Isotope A=" << A << " not existent for " << name << "." << std::endl;
+  std::exit(EXIT_FAILURE);
+}
+
 void Element::Add_Isotope(Isotope& isotope)
 {
 	isotopes.push_back(isotope);
@@ -93,20 +102,22 @@ double Element::Average_Nuclear_Mass() const
 	return average_mass;
 }
 
-void Element::Print_Summary() const
+void Element::Print_Summary(int MPI_rank) const
 {
-	double total = 0.0;
-	std::cout << std::endl
-			  << name << std::endl
-			  << "Isotope\tZ\tA\tAbund.[%]\tSpin\t<sp>\t<sn>" << std::endl;
-	std::cout << "------------------------------------------------------------" << std::endl;
-	for(unsigned int i = 0; i < Number_of_Isotopes(); i++)
-	{
-		total += 100.0 * isotopes[i].abundance;
-		std::cout << isotopes[i].name << "\t" << isotopes[i].Z << "\t" << isotopes[i].A << "\t" << 100.0 * isotopes[i].abundance << "\t\t" << isotopes[i].spin << "\t" << isotopes[i].sp << "\t" << isotopes[i].sn << std::endl;
-	}
-	std::cout << "Total:\t\t" << Average_Nuclear_Mass() / mNucleon << "\t" << total << std::endl
-			  << std::endl;
+  if(MPI_rank == 0)
+  {
+    double total = 0.0;
+    std::cout << std::endl
+        << name << std::endl
+        << "Isotope\tZ\tA\tAbund.[%]\tSpin\t<sp>\t<sn>" << std::endl;
+    std::cout << "------------------------------------------------------------" << std::endl;
+    for(unsigned int i = 0; i < Number_of_Isotopes(); i++)
+    {
+      total += 100.0 * isotopes[i].abundance;
+      std::cout << isotopes[i].name << "\t" << isotopes[i].Z << "\t" << isotopes[i].A << "\t" << 100.0 * isotopes[i].abundance << "\t\t" << isotopes[i].spin << "\t" << isotopes[i].sp << "\t" << isotopes[i].sn << std::endl;
+    }
+    std::cout << "Total:\t\t" << Average_Nuclear_Mass() / mNucleon << "\t" << total << std::endl << std::endl;
+  }
 }
 
 //4. Nuclear data
@@ -142,6 +153,12 @@ void Import_Nuclear_Data()
 	f.close();
 }
 
+
+Isotope Get_Isotope(unsigned int Z, unsigned int A)
+{
+  return Get_Element(Z).Get_Isotope(A);
+}
+
 Element Get_Element(int Z)
 {
 	if(Z < 1 || Z > 92)
@@ -159,13 +176,11 @@ Element Get_Element(int Z)
 
 Element Get_Element(std::string name)
 {
-	for(int Z = 1; Z <= 92; Z++)
-	{
-		if(Get_Element(Z).name == name)
-			return Get_Element(Z);
-	}
-	std::cerr << "Error in obscura::Get_Element(): Element " << name << " not recognized." << std::endl;
-	std::exit(EXIT_FAILURE);
+  for(int Z = 1; Z <= 92; Z++)
+    if(Get_Element(Z).name == name)
+      return Get_Element(Z);
+  std::cerr<<"Error in obscura::Get_Element(): Element " <<name <<" not recognized."<<std::endl;
+  std::exit(EXIT_FAILURE);
 }
 
 }	// namespace obscura

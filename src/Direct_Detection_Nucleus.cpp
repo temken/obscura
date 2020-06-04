@@ -186,7 +186,7 @@ void DM_Detector_Nucleus::Print_Summary(int MPI_rank) const
 				  << "\t\tNucl.\tabund." << std::endl;
 		for(unsigned int i = 0; i < target_elements.size(); i++)
 		{
-			std::cout << "\t\t" << target_elements[i].name << "\t" << libphysica::Round(100.0 * relative_mass_fractions[i]) << "%" << std::endl;
+		  std::cout << "\t\t" << target_elements[i].name << "\t" << libphysica::Round(100.0 * relative_mass_fractions[i]) << "%" << std::endl;
 			// target_elements[i].Print_Summary();
 		}
 		std::cout << "\tThreshold [keV]:\t" << In_Units(energy_threshold, keV) << std::endl

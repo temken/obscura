@@ -17,24 +17,24 @@ class Configuration
 	libconfig::Config config;
 	std::string cfg_file;
 
-	void Read_Config_File();
+	virtual void Read_Config_File();
 
 	void Initialize_Result_Folder(int MPI_rank = 0);
 	void Create_Result_Folder(int MPI_rank = 0);
 	void Copy_Config_File(int MPI_rank = 0);
 
-	void Construct_DM_Particle();
-	void Construct_DM_Particle_Standard(std::string DM_interaction);
+	virtual void Construct_DM_Particle();
+	virtual void Construct_DM_Particle_Standard(std::string DM_interaction);
 
-	void Construct_DM_Distribution();
-	void Construct_DM_Distribution_SHM();
+	virtual void Construct_DM_Distribution();
+	virtual void Construct_DM_Distribution_SHM();
 
-	void Construct_DM_Detector();
-	void Construct_DM_Detector_Nuclear();
-	void Construct_DM_Detector_Ionization();
-	void Construct_DM_Detector_Semiconductor();
+	virtual void Construct_DM_Detector();
+	virtual void Construct_DM_Detector_Nuclear();
+	virtual void Construct_DM_Detector_Ionization();
+	virtual void Construct_DM_Detector_Semiconductor();
 
-	void Initialize_Parameters();
+	virtual void Initialize_Parameters();
 
   public:
 	std::string ID;
@@ -54,7 +54,7 @@ class Configuration
 	Configuration();
 	explicit Configuration(std::string cfg_filename, int MPI_rank = 0);
 
-	void Print_Summary(int MPI_rank = 0);
+	virtual void Print_Summary(int MPI_rank = 0);
 };
 
 }	// namespace obscura
