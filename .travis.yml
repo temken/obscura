@@ -1,13 +1,13 @@
 language: c++
 
-sudo: required
-
 compiler:
   - gcc
   - clang
 
 os:
   - linux
+
+dist: bionic
 
 addons:
   apt:
