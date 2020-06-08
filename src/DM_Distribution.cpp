@@ -17,11 +17,11 @@ using namespace libphysica::natural_units;
 //1. Abstract base class for DM distributions that can be used to compute direct detection recoil spectra.
 //Constructors:
 DM_Distribution::DM_Distribution()
-: name("DM base distribution"), v_domain(std::vector<double>{0.0, 1.0}), DM_density(0.0)
+: name("DM base distribution"), v_domain(std::vector<double> {0.0, 1.0}), DM_density(0.0)
 {
 }
 DM_Distribution::DM_Distribution(std::string label, double rhoDM, double vMin, double vMax)
-: name(label), v_domain(std::vector<double>{vMin, vMax}), DM_density(rhoDM)
+: name(label), v_domain(std::vector<double> {vMin, vMax}), DM_density(rhoDM)
 {
 }
 
@@ -196,8 +196,10 @@ double Standard_Halo_Model::PDF_Speed(double v) const
 {
 	if(v < v_domain[0] || v > v_domain[1])
 		return 0.0;
-	else
+	else if(v_observer > 0)
 		return v / N_esc / v_0 / sqrt(M_PI) / v_observer * (2 * exp(-(v * v + v_observer * v_observer) / v_0 / v_0) * sinh(2 * v * v_observer / v_0 / v_0) + (exp(-pow(v + v_observer, 2.0) / v_0 / v_0) - exp(-v_esc * v_esc / v_0 / v_0)) * libphysica::StepFunction(fabs(v + v_observer) - v_esc) - (exp(-pow(v - v_observer, 2.0) / v_0 / v_0) - exp(-v_esc * v_esc / v_0 / v_0)) * libphysica::StepFunction(fabs(v - v_observer) - v_esc));
+	else
+		return 4.0 * v * v / N_esc / sqrt(M_PI) / v_0 / v_0 / v_0 * exp(-v * v / v_0 / v_0) * libphysica::StepFunction(Maximum_DM_Speed() - v);
 }
 
 //Eta-function for direct detection
@@ -210,6 +212,8 @@ double Standard_Halo_Model::Eta_Function(double vMin) const
 		return 0.0;
 	else if(fabs(xMin - xE - xEsc) < 1e-8)
 		return 0.0;
+	else if(xE < 1e-8)
+		return 2.0 / N_esc / sqrt(M_PI) / v_0 * (exp(-xMin * xMin) - exp(-xEsc * xEsc));
 	else if(xMin > fabs(xE - xEsc))
 		return 1.0 / v_0 / 2.0 / N_esc / xE * (erf(xEsc) - erf(xMin - xE) - 2.0 / sqrt(M_PI) * (xE + xEsc - xMin) * exp(-xEsc * xEsc));
 	else if(xEsc > xE)

@@ -115,6 +115,24 @@ TEST(TestDMDistribution, TestAverageSpeed)
 	EXPECT_NEAR(shm.Average_Speed(vMin), 0.00141172, 1.0e-8);
 }
 
+TEST(TestDMDistribution, TestGalacticRestFrame)
+{
+	// ARRANGE
+	double rhoDM = 0.3 * GeV / cm / cm / cm;
+	double v0	 = 220 * km / sec;
+	double vobs	 = 0 * km / sec;
+	double vesc	 = 544 * km / sec;
+	Standard_Halo_Model shm(rhoDM, v0, vobs, vesc);
+	double tol	= 1.0e-3 * km / sec;
+	double vMin = 300 * km / sec;
+	// ACT & ASSERT
+	EXPECT_DOUBLE_EQ(shm.Minimum_DM_Speed(), 0);
+	EXPECT_DOUBLE_EQ(shm.Maximum_DM_Speed(), 544 * km / sec);
+	EXPECT_NEAR(shm.CDF_Speed(vMin), 0.71127388958876704, 1.0e-6);
+	EXPECT_NEAR(shm.Average_Speed(), 245.97191 * km / sec, tol);
+	EXPECT_DOUBLE_EQ(shm.Eta_Function(vMin), 0.00079276427680802335156063599536891092516647194737494989322329020 * sec / km);
+}
+
 TEST(TestDMDistribution, TestEtaFunction)
 {
 	// ARRANGE
