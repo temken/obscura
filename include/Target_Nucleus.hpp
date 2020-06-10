@@ -34,6 +34,8 @@ struct Isotope
 
 	//Nuclear form factor for SD interactions
 	// to do
+
+	void Print_Summary(unsigned int MPI_rank) const;
 };
 
 //3. Class for elements containing all isotopes occuring in nature
@@ -63,7 +65,7 @@ struct Element
 
 	double Average_Nuclear_Mass() const;
 
-	void Print_Summary(int MPI_rank = 0) const;
+	void Print_Summary(unsigned int MPI_rank = 0) const;
 };
 
 //4. Nuclear data
