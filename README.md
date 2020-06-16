@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/temken/obscura.svg?branch=master)](https://travis-ci.com/temken/obscura)
+[![Build Status](https://github.com/temken/obscura/workflows/Build%20Status/badge.svg)](https://github.com/temken/obscura/actions)
 [![codecov](https://codecov.io/gh/temken/obscura/branch/master/graph/badge.svg)](https://codecov.io/gh/temken/obscura)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
