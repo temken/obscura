@@ -50,7 +50,7 @@ struct Element
 
 	unsigned int Number_of_Isotopes() const;
 
-	void Add_Isotope(Isotope& isotope);
+	// void Add_Isotope(Isotope& isotope);
 
 	Isotope Get_Isotope(unsigned int A) const;
 

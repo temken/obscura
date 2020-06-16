@@ -86,10 +86,10 @@ unsigned int Element::Number_of_Isotopes() const
 	return isotopes.size();
 }
 
-void Element::Add_Isotope(Isotope& isotope)
-{
-	isotopes.push_back(isotope);
-}
+// void Element::Add_Isotope(Isotope& isotope)
+// {
+// 	isotopes.push_back(isotope);
+// }
 
 double Element::Average_Nuclear_Mass() const
 {
@@ -158,6 +158,11 @@ void Import_Nuclear_Data()
 	}
 	Elements.push_back(Element(isotopes));
 	f.close();
+}
+
+Isotope Get_Isotope(unsigned int Z, unsigned int A)
+{
+	return Get_Element(Z).Get_Isotope(A);
 }
 
 Element Get_Element(unsigned int Z)
