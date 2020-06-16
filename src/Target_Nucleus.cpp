@@ -57,6 +57,12 @@ double Isotope::Helm_Form_Factor(double q) const
 	return 3.0 * (sin(qr) / pow(qr, 3.0) - cos(qr) / pow(qr, 2.0)) * exp(-q * q * s * s / 2.0);
 }
 
+void Isotope::Print_Summary(unsigned int MPI_rank) const
+{
+	if(MPI_rank == 0)
+		std::cout << name << "\t" << Z << "\t" << A << "\t" << libphysica::Round(100.0 * abundance) << "\t\t" << spin << "\t" << sp << "\t" << sn << std::endl;
+}
+
 //3. Class for elements containing all isotopes occuring in nature
 Element::Element()
 {
@@ -80,10 +86,10 @@ unsigned int Element::Number_of_Isotopes() const
 	return isotopes.size();
 }
 
-void Element::Add_Isotope(Isotope& isotope)
-{
-	isotopes.push_back(isotope);
-}
+// void Element::Add_Isotope(Isotope& isotope)
+// {
+// 	isotopes.push_back(isotope);
+// }
 
 double Element::Average_Nuclear_Mass() const
 {
@@ -93,7 +99,7 @@ double Element::Average_Nuclear_Mass() const
 	return average_mass;
 }
 
-void Element::Print_Summary(int MPI_rank) const
+void Element::Print_Summary(unsigned int MPI_rank) const
 {
 	if(MPI_rank == 0)
 	{
@@ -102,12 +108,12 @@ void Element::Print_Summary(int MPI_rank) const
 				  << name << std::endl
 				  << "Isotope\tZ\tA\tAbund.[%]\tSpin\t<sp>\t<sn>" << std::endl;
 		std::cout << "------------------------------------------------------------" << std::endl;
-		for(unsigned int i = 0; i < Number_of_Isotopes(); i++)
+		for(const auto& isotope : isotopes)
 		{
-			total += 100.0 * isotopes[i].abundance;
-			std::cout << isotopes[i].name << "\t" << isotopes[i].Z << "\t" << isotopes[i].A << "\t" << 100.0 * isotopes[i].abundance << "\t\t" << isotopes[i].spin << "\t" << isotopes[i].sp << "\t" << isotopes[i].sn << std::endl;
+			total += 100.0 * isotope.abundance;
+			isotope.Print_Summary(MPI_rank);
 		}
-		std::cout << "Total:\t\t" << Average_Nuclear_Mass() / mNucleon << "\t" << total << std::endl
+		std::cout << "Total:\t\t" << libphysica::Round(Average_Nuclear_Mass() / mNucleon) << "\t" << total << std::endl
 				  << std::endl;
 	}
 }
