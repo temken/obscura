@@ -487,7 +487,7 @@ void Configuration::Construct_DM_Detector_Nuclear()
 	try
 	{
 		DD_exposure_nuclear = config.lookup("DD_exposure");
-		DD_exposure_nuclear *= kg * yr;
+		DD_exposure_nuclear *= kg * year;
 	}
 	catch(const SettingNotFoundException& nfex)
 	{
@@ -554,7 +554,7 @@ void Configuration::Construct_DM_Detector_Ionization()
 	try
 	{
 		DD_exposure_ionization = config.lookup("DD_exposure");
-		DD_exposure_ionization *= kg * yr;
+		DD_exposure_ionization *= kg * year;
 	}
 	catch(const SettingNotFoundException& nfex)
 	{
@@ -622,7 +622,7 @@ void Configuration::Construct_DM_Detector_Semiconductor()
 	try
 	{
 		DD_exposure_semiconductor = config.lookup("DD_exposure");
-		DD_exposure_semiconductor *= kg * yr;
+		DD_exposure_semiconductor *= kg * year;
 	}
 	catch(const SettingNotFoundException& nfex)
 	{

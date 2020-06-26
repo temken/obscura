@@ -122,7 +122,7 @@ double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM
 
 //2. Electron recoil direct detection experiment with isolated target atoms
 DM_Detector_Ionization::DM_Detector_Ionization()
-: DM_Detector("Ionization experiment", kg * yr, "Electrons"), target_atom(Import_Ionization_Form_Factors("Xenon")), ne_threshold(0), ne_max(0), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
+: DM_Detector("Ionization experiment", kg * year, "Electrons"), target_atom(Import_Ionization_Form_Factors("Xenon")), ne_threshold(0), ne_max(0), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
 {
 }
 

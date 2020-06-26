@@ -17,7 +17,7 @@ class DM_Distribution
 	std::string name;
 	std::vector<double> v_domain;
 
-	void Print_Summary_Base(int MPI_rank = 0) const;
+	void Print_Summary_Base(int MPI_rank = 0);
 
   public:
 	double DM_density;	 //Local DM density
@@ -30,18 +30,18 @@ class DM_Distribution
 	double Maximum_DM_Speed() const;
 
 	//Distribution functions
-	virtual double PDF_Velocity(libphysica::Vector vel) const { return 0.0; };
-	virtual double PDF_Speed(double v) const { return 0.0; };
-	virtual double CDF_Speed(double v) const;
+	virtual double PDF_Velocity(libphysica::Vector vel) { return 0.0; };
+	virtual double PDF_Speed(double v) { return 0.0; };
+	virtual double CDF_Speed(double v);
 
 	//Averages
-	virtual libphysica::Vector Average_Velocity() const;
-	virtual double Average_Speed(double vMin = -1.0) const;
+	virtual libphysica::Vector Average_Velocity();
+	virtual double Average_Speed(double vMin = -1.0);
 
 	//Eta-function for direct detection
-	virtual double Eta_Function(double vMin) const;
+	virtual double Eta_Function(double vMin);
 
-	virtual void Print_Summary(int MPI_rank = 0) const { Print_Summary_Base(MPI_rank); };
+	virtual void Print_Summary(int MPI_rank = 0) { Print_Summary_Base(MPI_rank); };
 };
 
 //2. Standard halo model (SHM)
@@ -68,13 +68,13 @@ class Standard_Halo_Model : public DM_Distribution
 	void Set_Observer_Velocity(int day, int month, int year, int hour = 0, int minute = 0);
 
 	//Distribution functions
-	virtual double PDF_Velocity(libphysica::Vector vel) const override;
-	virtual double PDF_Speed(double v) const override;
+	virtual double PDF_Velocity(libphysica::Vector vel) override;
+	virtual double PDF_Speed(double v) override;
 
 	//Eta-function for direct detection
-	virtual double Eta_Function(double vMin) const override;
+	virtual double Eta_Function(double vMin) override;
 
-	virtual void Print_Summary(int MPI_rank = 0) const override;
+	virtual void Print_Summary(int MPI_rank = 0) override;
 };
 
 }	// namespace obscura

@@ -333,7 +333,7 @@ std::vector<std::vector<double>> DM_Detector::Upper_Limit_Curve(DM_Particle& DM,
 		if(masses[i] < lowest_mass)
 			continue;
 		DM.Set_Mass(masses[i]);
-		limit.push_back(std::vector<double>{masses[i], Upper_Limit(DM, DM_distr, certainty)});
+		limit.push_back(std::vector<double> {masses[i], Upper_Limit(DM, DM_distr, certainty)});
 		std::cout << i + 1 << "/" << masses.size()
 				  << "\tmDM = " << libphysica::Round(In_Units(DM.mass, (DM.mass < GeV) ? MeV : GeV)) << ((DM.mass < GeV) ? " MeV" : " GeV")
 				  << "\tUpper Bound:\t" << libphysica::Round(In_Units(limit.back()[1], cm * cm)) << std::endl;
@@ -402,7 +402,7 @@ void DM_Detector::Print_Summary_Base(int MPI_rank) const
 				  << "----------------------------------------" << std::endl
 				  << "Experiment summary:\t" << name << std::endl
 				  << "\tTarget particles:\t" << targets << std::endl
-				  << "\tExposure [kg year]:\t" << libphysica::Round(In_Units(exposure, kg * yr)) << std::endl
+				  << "\tExposure [kg year]:\t" << libphysica::Round(In_Units(exposure, kg * year)) << std::endl
 				  << "\tFlat efficiency [%]:\t" << libphysica::Round(100.0 * flat_efficiency) << std::endl
 				  << "\tObserved events:\t" << observed_events << std::endl
 				  << "\tExpected background:\t" << expected_background << std::endl
