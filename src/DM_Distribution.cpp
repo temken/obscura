@@ -34,7 +34,7 @@ double DM_Distribution::Maximum_DM_Speed() const
 	return v_domain[1];
 }
 
-double DM_Distribution::CDF_Speed(double v) const
+double DM_Distribution::CDF_Speed(double v)
 {
 	if(v < v_domain[0])
 		return 0.0;
@@ -50,14 +50,14 @@ double DM_Distribution::CDF_Speed(double v) const
 	}
 }
 
-libphysica::Vector DM_Distribution::Average_Velocity() const
+libphysica::Vector DM_Distribution::Average_Velocity()
 {
 	libphysica::Vector v_average(3);
 	// Todo
 	return v_average;
 }
 
-double DM_Distribution::Average_Speed(double vMin) const
+double DM_Distribution::Average_Speed(double vMin)
 {
 	// 1. Check the domain.
 	bool agerage_over_subdomain = true;
@@ -85,7 +85,7 @@ double DM_Distribution::Average_Speed(double vMin) const
 	return v_average;
 }
 
-double DM_Distribution::Eta_Function(double vMin) const
+double DM_Distribution::Eta_Function(double vMin)
 {
 	if(vMin < v_domain[0])
 	{
@@ -107,7 +107,7 @@ double DM_Distribution::Eta_Function(double vMin) const
 	}
 }
 
-void DM_Distribution::Print_Summary_Base(int MPI_rank) const
+void DM_Distribution::Print_Summary_Base(int MPI_rank)
 {
 	if(MPI_rank == 0)
 	{
@@ -182,7 +182,7 @@ void Standard_Halo_Model::Normalize_PDF()
 }
 
 //Distribution functions
-double Standard_Halo_Model::PDF_Velocity(libphysica::Vector vel) const
+double Standard_Halo_Model::PDF_Velocity(libphysica::Vector vel)
 {
 	double v = vel.Norm();
 	if(v > v_domain[1] || v < v_domain[0])
@@ -192,7 +192,7 @@ double Standard_Halo_Model::PDF_Velocity(libphysica::Vector vel) const
 		return 1.0 / N_esc * pow(v_0 * sqrt(M_PI), -3.0) * exp(-1.0 * (vel + vel_observer) * (vel + vel_observer) / v_0 / v_0);
 	}
 }
-double Standard_Halo_Model::PDF_Speed(double v) const
+double Standard_Halo_Model::PDF_Speed(double v)
 {
 	if(v < v_domain[0] || v > v_domain[1])
 		return 0.0;
@@ -203,7 +203,7 @@ double Standard_Halo_Model::PDF_Speed(double v) const
 }
 
 //Eta-function for direct detection
-double Standard_Halo_Model::Eta_Function(double vMin) const
+double Standard_Halo_Model::Eta_Function(double vMin)
 {
 	double xMin = vMin / v_0;
 	double xEsc = v_esc / v_0;
@@ -222,7 +222,7 @@ double Standard_Halo_Model::Eta_Function(double vMin) const
 		return 1.0 / v_0 / xE;
 }
 
-void Standard_Halo_Model::Print_Summary(int MPI_rank) const
+void Standard_Halo_Model::Print_Summary(int MPI_rank)
 {
 	if(MPI_rank == 0)
 	{
