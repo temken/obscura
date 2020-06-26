@@ -79,7 +79,7 @@ double R_total_Semiconductor(int Qthreshold, const DM_Particle& DM, DM_Distribut
 
 //2. Electron recoil direct detection experiment with semiconductor target
 DM_Detector_Semiconductor::DM_Detector_Semiconductor()
-: DM_Detector("Semiconductor experiment", gram * yr, "Electrons"), semiconductor_target(Semiconductor("Si"))
+: DM_Detector("Semiconductor experiment", gram * year, "Electrons"), semiconductor_target(Semiconductor("Si"))
 {
 }
 

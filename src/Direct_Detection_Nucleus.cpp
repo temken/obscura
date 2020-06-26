@@ -98,8 +98,9 @@ void DM_Detector_Nucleus::Set_Resolution(double res)
 
 void DM_Detector_Nucleus::Import_Efficiency(std::string filename, double dim)
 {
-	using_efficiency_tables = true;
-	libphysica::Interpolation eff(filename, dim);
+	using_efficiency_tables							  = true;
+	std::vector<std::vector<double>> efficiency_table = libphysica::Import_Table(filename);
+	libphysica::Interpolation eff(efficiency_table, dim);
 	efficiencies.push_back(eff);
 }
 

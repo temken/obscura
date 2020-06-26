@@ -128,7 +128,7 @@ DM_Detector_Ionization XENON10_e()
 DM_Detector_Ionization XENON100_e()
 {
 	std::string target_name							   = "Xenon";
-	double exposure									   = 30 * kg * yr;
+	double exposure									   = 30 * kg * year;
 	std::vector<unsigned long int> observed_event_bins = {794, 1218, 924, 776, 669, 630, 528, 488, 433, 387};
 	double muPE										   = 19.7;
 	double sigPE									   = 6.2;
