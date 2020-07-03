@@ -25,13 +25,28 @@ unsigned int Electron_Hole_Pairs(double Ee, const Semiconductor& target)
 
 double dRdEe_Semiconductor(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Semiconductor& target_crystal)
 {
-	double prefactor = DM_distr.DM_density / DM.mass / target_crystal.M_cell * aEM * mElectron * mElectron;
-	double vDM		 = 1e-3;   //cancels in v^2 * dSigma/dq^2
+	double prefactor = 4.0 / target_crystal.M_cell * aEM * mElectron * mElectron;
 	double sum		 = 0.0;
 	for(int qi = 0; qi < 900; qi++)
 	{
-		double q = (qi + 1) * target_crystal.dq;
-		sum += target_crystal.dq / q / q * DM_distr.Eta_Function(vMinimal_Electrons(q, Ee, DM.mass)) * target_crystal.Crystal_Form_Factor(q, Ee) * 4.0 * vDM * vDM * DM.dSigma_dq2_Electron(q, vDM);
+		double q	= (qi + 1) * target_crystal.dq;
+		double vMin = vMinimal_Electrons(q, Ee, DM.mass);
+		double vMax = DM_distr.Maximum_DM_Speed();
+		if(vMin > vMax)
+			continue;
+		else if(DM.DD_use_eta_function && DM_distr.DD_use_eta_function)
+		{
+			double vDM = 1e-3;	 //cancels in v^2 * dSigma/dq^2
+			sum += target_crystal.dq / q / q * DM_distr.DM_density / DM.mass * DM_distr.Eta_Function(vMin) * target_crystal.Crystal_Form_Factor(q, Ee) * vDM * vDM * DM.dSigma_dq2_Electron(q, vDM);
+		}
+		else
+		{
+			auto integrand = [&DM_distr, &DM, q](double v) {
+				return DM_distr.Differential_DM_Flux(v, DM.mass) * DM.dSigma_dq2_Electron(q, v);
+			};
+			double eps = libphysica::Find_Epsilon(integrand, vMin, vMax, 1.0e-4);
+			sum += target_crystal.dq / q / q * target_crystal.Crystal_Form_Factor(q, Ee) * libphysica::Integrate(integrand, vMin, vMax, eps);
+		}
 	}
 	return prefactor * sum;
 }

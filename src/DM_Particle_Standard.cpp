@@ -13,11 +13,13 @@ using namespace libphysica::natural_units;
 DM_Particle_Standard::DM_Particle_Standard()
 : DM_Particle(), prefactor(1.0), fixed_coupling_relation(true), fp_relative(0.5), fn_relative(0.5), sigma_electron(0.0)
 {
+	DD_use_eta_function = true;
 }
 
 DM_Particle_Standard::DM_Particle_Standard(double mDM, double pre)
 : DM_Particle(mDM), prefactor(pre), fixed_coupling_relation(true), fp_relative(0.5), fn_relative(0.5), sigma_electron(0.0)
 {
+	DD_use_eta_function = true;
 }
 
 void DM_Particle_Standard::Set_Sigma_Proton(double sigma)

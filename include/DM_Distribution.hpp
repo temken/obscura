@@ -21,6 +21,7 @@ class DM_Distribution
 
   public:
 	double DM_density;	 //Local DM density
+	bool DD_use_eta_function;
 
 	//Constructors:
 	DM_Distribution();
@@ -33,6 +34,8 @@ class DM_Distribution
 	virtual double PDF_Velocity(libphysica::Vector vel) { return 0.0; };
 	virtual double PDF_Speed(double v) { return 0.0; };
 	virtual double CDF_Speed(double v);
+
+	virtual double Differential_DM_Flux(double v, double mDM);
 
 	//Averages
 	virtual libphysica::Vector Average_Velocity();

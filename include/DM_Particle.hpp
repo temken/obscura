@@ -19,6 +19,7 @@ class DM_Particle
 
   public:
 	double mass, spin, fractional_density;
+	bool DD_use_eta_function;
 
 	//Constructors:
 	DM_Particle();
@@ -34,11 +35,11 @@ class DM_Particle
 	{
 		return 0.0;
 	};
-	virtual void Set_Interaction_Parameter(double par, std::string target){};
+	virtual void Set_Interaction_Parameter(double par, std::string target) {};
 
-	virtual void Set_Sigma_Proton(double sigma){};
-	virtual void Set_Sigma_Neutron(double sigma){};
-	virtual void Set_Sigma_Electron(double sigma){};
+	virtual void Set_Sigma_Proton(double sigma) {};
+	virtual void Set_Sigma_Neutron(double sigma) {};
+	virtual void Set_Sigma_Electron(double sigma) {};
 
 	//Differential cross sections
 	virtual double dSigma_dq2_Nucleus(double q, const Isotope& target, double vDM) const

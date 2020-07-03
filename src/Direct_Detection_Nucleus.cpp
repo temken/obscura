@@ -15,10 +15,25 @@ using namespace libphysica::natural_units;
 //1. Theoretical nuclear recoil spectrum
 double dRdER_Nucleus(double ER, const DM_Particle& DM, DM_Distribution& DM_distr, const Isotope& target_isotope)
 {
-	double vMin	 = vMinimal_Nucleus(ER, DM.mass, target_isotope.mass);
-	double rhoDM = DM_distr.DM_density * DM.fractional_density;
-	double vDM	 = 1.0e-3;	 //cancels
-	return 1.0 / target_isotope.mass * rhoDM / DM.mass * (vDM * vDM * DM.dSigma_dER_Nucleus(ER, target_isotope, vDM)) * DM_distr.Eta_Function(vMin);
+	double vMin = vMinimal_Nucleus(ER, DM.mass, target_isotope.mass);
+	double vMax = DM_distr.Maximum_DM_Speed();
+	if(vMin > vMax)
+		return 0.0;
+	else if(DM.DD_use_eta_function && DM_distr.DD_use_eta_function)
+	{
+		double rhoDM = DM_distr.DM_density * DM.fractional_density;
+		double vDM	 = 1.0e-3;	 //cancels when eta function can be used
+		return 1.0 / target_isotope.mass * rhoDM / DM.mass * (vDM * vDM * DM.dSigma_dER_Nucleus(ER, target_isotope, vDM)) * DM_distr.Eta_Function(vMin);
+	}
+	else
+	{
+		auto integrand = [ER, &DM, &DM_distr, &target_isotope](double v) {
+			return DM_distr.Differential_DM_Flux(v, DM.mass) * DM.dSigma_dER_Nucleus(ER, target_isotope, v);
+		};
+		double eps		= libphysica::Find_Epsilon(integrand, vMin, vMax, 1.0e-4);
+		double integral = libphysica::Integrate(integrand, vMin, vMax, eps);
+		return DM.fractional_density / target_isotope.mass * integral;
+	}
 }
 
 double dRdER_Nucleus(double ER, const DM_Particle& DM, DM_Distribution& DM_distr, const Element& target_element)

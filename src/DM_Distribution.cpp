@@ -17,11 +17,11 @@ using namespace libphysica::natural_units;
 //1. Abstract base class for DM distributions that can be used to compute direct detection recoil spectra.
 //Constructors:
 DM_Distribution::DM_Distribution()
-: name("DM base distribution"), v_domain(std::vector<double> {0.0, 1.0}), DM_density(0.0)
+: name("DM base distribution"), v_domain(std::vector<double> {0.0, 1.0}), DM_density(0.0), DD_use_eta_function(false)
 {
 }
 DM_Distribution::DM_Distribution(std::string label, double rhoDM, double vMin, double vMax)
-: name(label), v_domain(std::vector<double> {vMin, vMax}), DM_density(rhoDM)
+: name(label), v_domain(std::vector<double> {vMin, vMax}), DM_density(rhoDM), DD_use_eta_function(false)
 {
 }
 
@@ -48,6 +48,11 @@ double DM_Distribution::CDF_Speed(double v)
 		double cdf = libphysica::Integrate(integrand, v_domain[0], v, 1.0e-6);
 		return cdf;
 	}
+}
+
+double DM_Distribution::Differential_DM_Flux(double v, double mDM)
+{
+	return DM_density / mDM * v * PDF_Speed(v);
 }
 
 libphysica::Vector DM_Distribution::Average_Velocity()
@@ -115,7 +120,7 @@ void DM_Distribution::Print_Summary_Base(int MPI_rank)
 				  << "\t" << name << std::endl
 				  << std::endl
 				  << "\tLocal DM density[GeV/cm^3]:\t" << In_Units(DM_density, GeV / cm / cm / cm) << std::endl
-				  << "\tSpeed domain [km/sec]:\t\t[" << In_Units(v_domain[0], km / sec) << "," << In_Units(v_domain[1], km / sec) << "]" << std::endl
+				  << "\tSpeed domain [km/sec]:\t\t[" << libphysica::Round(In_Units(v_domain[0], km / sec)) << "," << libphysica::Round(In_Units(v_domain[1], km / sec)) << "]" << std::endl
 				  << "\tAverage DM velocity [km/sec]:\t" << In_Units(Average_Velocity(), km / sec) << std::endl
 				  << "\tAverage DM speed [km/sec]:\t" << libphysica::Round(In_Units(Average_Speed(), km / sec)) << std::endl
 				  << std::endl;
@@ -130,6 +135,7 @@ Standard_Halo_Model::Standard_Halo_Model()
 	vel_observer = libphysica::Vector({0, 220.0 * km / sec, 0}) + libphysica::Vector({11.1 * km / sec, 12.2 * km / sec, 7.3 * km / sec});
 	v_observer	 = vel_observer.Norm();
 	Normalize_PDF();
+	DD_use_eta_function = true;
 }
 
 Standard_Halo_Model::Standard_Halo_Model(double rho, double v0, double vobs, double vesc)
@@ -137,6 +143,7 @@ Standard_Halo_Model::Standard_Halo_Model(double rho, double v0, double vobs, dou
 {
 	vel_observer = libphysica::Vector({0, vobs, 0});
 	Normalize_PDF();
+	DD_use_eta_function = true;
 }
 
 Standard_Halo_Model::Standard_Halo_Model(double rho, double v0, libphysica::Vector& vel_obs, double vesc)
@@ -144,6 +151,7 @@ Standard_Halo_Model::Standard_Halo_Model(double rho, double v0, libphysica::Vect
 {
 	v_observer = vel_observer.Norm();
 	Normalize_PDF();
+	DD_use_eta_function = true;
 }
 
 //Set SHM parameters
