@@ -12,7 +12,7 @@ namespace obscura
 using namespace libphysica::natural_units;
 
 //1. Event spectra and rates
-double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, const Atomic_Electron& shell)
+double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell)
 {
 	double vMax		= DM_distr.Maximum_DM_Speed();
 	double E_DM_max = DM.mass / 2.0 * vMax * vMax;
@@ -59,7 +59,7 @@ double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_di
 	return prefactor * integral;
 }
 
-double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, const Atom& atom)
+double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom)
 {
 	double result = 0.0;
 	for(unsigned int i = 0; i < atom.electrons.size(); i++)
@@ -78,7 +78,7 @@ double PDF_ne(unsigned int ne, double Ee, const Atomic_Electron& shell)
 	return libphysica::PMF_Binomial(neMax, fe, ne - 1);
 }
 
-double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, const Atomic_Electron& shell)
+double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell)
 {
 	double sum = 0.0;
 	for(unsigned int ki = 0; ki < shell.Nk; ki++)
@@ -90,7 +90,7 @@ double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& 
 	return sum;
 }
 
-double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, const Atom& atom)
+double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom)
 {
 	double result = 0.0;
 	for(unsigned int i = 0; i < atom.electrons.size(); i++)
@@ -100,7 +100,7 @@ double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& 
 	return result;
 }
 
-double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, const Atomic_Electron& shell)
+double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell)
 {
 	double sum = 0.0;
 	for(int ne = 1; ne < 16; ne++)
@@ -110,7 +110,7 @@ double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM
 	return sum;
 }
 
-double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, const Atom& atom)
+double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom)
 {
 	double result = 0.0;
 	for(unsigned int i = 0; i < atom.electrons.size(); i++)

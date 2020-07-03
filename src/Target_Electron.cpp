@@ -73,40 +73,22 @@ Atomic_Electron::Atomic_Electron(std::string element, double A, int N, int L, do
 {
 	name = element + "_" + std::to_string(n) + s_names[l];
 	//Import the table.
-	std::string path   = PROJECT_DIR "data/Form_Factors_Ionization/" + name + ".txt";
-	Form_Factor_Tables = libphysica::Import_Table(path);
-	Nk				   = Form_Factor_Tables.size();
-	Nq				   = Form_Factor_Tables[0].size();
-	k_Grid			   = libphysica::Log_Space(k_min, k_max, Nk);
-	q_Grid			   = libphysica::Log_Space(q_min, q_max, Nq);
-	dlogk			   = log10(k_max / k_min) / (Nk - 1.0);
-	dlogq			   = log10(q_max / q_min) / (Nq - 1.0);
+	std::string path									= PROJECT_DIR "data/Form_Factors_Ionization/" + name + ".txt";
+	std::vector<std::vector<double>> form_factor_tables = libphysica::Import_Table(path);
+
+	Nk						  = form_factor_tables.size();
+	Nq						  = form_factor_tables[0].size();
+	k_Grid					  = libphysica::Log_Space(k_min, k_max, Nk);
+	q_Grid					  = libphysica::Log_Space(q_min, q_max, Nq);
+	form_factor_interpolation = libphysica::Interpolation_2D(k_Grid, q_Grid, form_factor_tables);
+	dlogk					  = log10(k_max / k_min) / (Nk - 1.0);
+	dlogq					  = log10(q_max / q_min) / (Nq - 1.0);
 }
 
-double Atomic_Electron::Ionization_Form_Factor(double q, double E) const
+double Atomic_Electron::Ionization_Form_Factor(double q, double E)
 {
 	double k = sqrt(2.0 * mElectron * E);
-	int ki	 = std::floor(log10(k / k_min) / dlogk);
-	int qi	 = std::floor(log10(q / q_min) / dlogq);
-	if(ki == (int) Nk - 1)
-		ki--;
-	else if(ki == -1)
-		ki++;
-
-	//Bilinear interpolation between four points: (Source: https://en.wikipedia.org/wiki/Bilinear_interpolation)
-	double x   = k;
-	double y   = q;
-	double x1  = k_Grid[ki];
-	double x2  = k_Grid[ki + 1];
-	double y1  = q_Grid[qi];
-	double y2  = q_Grid[qi + 1];
-	double f11 = Form_Factor_Tables[ki][qi];
-	double f12 = Form_Factor_Tables[ki][qi + 1];
-	double f21 = Form_Factor_Tables[ki + 1][qi];
-	double f22 = Form_Factor_Tables[ki + 1][qi + 1];
-
-	double f = 1.0 / (x2 - x1) / (y2 - y1) * (f11 * (x2 - x) * (y2 - y) + f21 * (x - x1) * (y2 - y) + f12 * (x2 - x) * (y - y1) + f22 * (x - x1) * (y - y1));
-	return f;
+	return form_factor_interpolation(k, q);
 }
 
 void Atomic_Electron::Print_Summary(unsigned int MPI_rank) const

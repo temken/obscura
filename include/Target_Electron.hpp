@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 
+// Headers from libphysica
+#include "Numerics.hpp"
+
 #include "version.hpp"
 
 namespace obscura
@@ -33,7 +36,7 @@ struct Atomic_Electron
 	unsigned int Nk, Nq;
 	std::vector<double> k_Grid = {};
 	std::vector<double> q_Grid = {};
-	std::vector<std::vector<double>> Form_Factor_Tables;
+	libphysica::Interpolation_2D form_factor_interpolation;
 
 	unsigned int n, l;
 	std::string name;
@@ -45,7 +48,7 @@ struct Atomic_Electron
 	Atomic_Electron(std::string element, double A, int N, int L, double Ebinding, double kMin, double kMax, double qMin, double qMax, double w, unsigned int neSecondary = 0);
 
 	//Squared ionization form factor.
-	double Ionization_Form_Factor(double q, double E) const;
+	double Ionization_Form_Factor(double q, double E);
 
 	void Print_Summary(unsigned int MPI_rank = 0) const;
 };
