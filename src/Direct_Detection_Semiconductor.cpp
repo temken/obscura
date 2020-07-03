@@ -23,30 +23,20 @@ unsigned int Electron_Hole_Pairs(double Ee, const Semiconductor& target)
 	return std::floor((Ee - target.energy_gap) / target.epsilon + 1);
 }
 
-double dRdEe_Semiconductor(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, const Semiconductor& target_crystal)
+double dRdEe_Semiconductor(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Semiconductor& target_crystal)
 {
-	//Integrate by summing over the tabulated form factors
-	int Ei = std::round(Ee / target_crystal.dE - 1);
-	if(Ei < 0 || Ei > 499)
+	double prefactor = DM_distr.DM_density / DM.mass / target_crystal.M_cell * aEM * mElectron * mElectron;
+	double vDM		 = 1e-3;   //cancels in v^2 * dSigma/dq^2
+	double sum		 = 0.0;
+	for(int qi = 0; qi < 900; qi++)
 	{
-		std::cerr << "Error in obscura::dRdEe_Semiconductor(): Ee lies beyond the tabulated cyrstal form factor." << std::endl;
-		std::exit(EXIT_FAILURE);
+		double q = (qi + 1) * target_crystal.dq;
+		sum += target_crystal.dq / q / q * DM_distr.Eta_Function(vMinimal_Electrons(q, Ee, DM.mass)) * target_crystal.Crystal_Form_Factor(q, Ee) * 4.0 * vDM * vDM * DM.dSigma_dq2_Electron(q, vDM);
 	}
-	else
-	{
-		double prefactor = DM_distr.DM_density / DM.mass / target_crystal.M_cell * aEM * mElectron * mElectron;
-		double vDM		 = 1e-3;   //cancels in v^2 * dSigma/dq^2
-		double sum		 = 0.0;
-		for(int qi = 0; qi < 900; qi++)
-		{
-			double q = (qi + 1) * target_crystal.dq;
-			sum += target_crystal.dq / q / q * DM_distr.Eta_Function(vMinimal_Electrons(q, Ee, DM.mass)) * target_crystal.Crystal_Form_Factor[qi][Ei] * 4.0 * vDM * vDM * DM.dSigma_dq2_Electron(q, vDM);
-		}
-		return prefactor * sum;
-	}
+	return prefactor * sum;
 }
 
-double R_Q_Semiconductor(int Q, const DM_Particle& DM, DM_Distribution& DM_distr, const Semiconductor& target_crystal)
+double R_Q_Semiconductor(int Q, const DM_Particle& DM, DM_Distribution& DM_distr, Semiconductor& target_crystal)
 {
 	//Energy threshold
 	double Emin = Minimum_Electron_Energy(Q, target_crystal);
@@ -63,7 +53,7 @@ double R_Q_Semiconductor(int Q, const DM_Particle& DM, DM_Distribution& DM_distr
 	return sum;
 }
 
-double R_total_Semiconductor(int Qthreshold, const DM_Particle& DM, DM_Distribution& DM_distr, const Semiconductor& target_crystal)
+double R_total_Semiconductor(int Qthreshold, const DM_Particle& DM, DM_Distribution& DM_distr, Semiconductor& target_crystal)
 {
 	//Energy threshold
 	double E_min = Minimum_Electron_Energy(Qthreshold, target_crystal);

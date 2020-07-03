@@ -16,15 +16,21 @@ namespace obscura
 extern double vMinimal_Electrons(double q, double Delta_E, double mDM);
 
 //2. Semiconductor crystal target
-struct Semiconductor
+class Semiconductor
 {
+  private:
+	libphysica::Interpolation_2D form_factor_interpolation;
+
+  public:
 	std::string name;
 	double dE, dq;
 	double M_cell;
 	double energy_gap, epsilon;
 	unsigned int Q_max;
-	double Crystal_Form_Factor[900][500];
+
 	explicit Semiconductor(std::string target);
+
+	double Crystal_Form_Factor(double q, double E);
 };
 
 //3. Bound electrons in isolated atoms

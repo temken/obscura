@@ -44,25 +44,22 @@ Semiconductor::Semiconductor(std::string target)
 		std::exit(EXIT_FAILURE);
 	}
 	//Import the form factor
-	std::ifstream f;
-	std::string path = PROJECT_DIR "data/Semiconductors/C." + target + "137.dat";
-	f.open(path);
-	if(!f)
-	{
-		std::cerr << "Error in obscura::Semiconductor::Semiconductor(): Data file " << path << " not found." << std::endl;
-		std::exit(EXIT_FAILURE);
-	}
-	//Prefactors:
-	double wk = 2.0 / 137.0;
-	for(int Ei = 1; Ei <= 500; Ei++)
-	{
-		for(int qi = 1; qi <= 900; qi++)
-		{
-			f >> Crystal_Form_Factor[qi - 1][Ei - 1];
-			Crystal_Form_Factor[qi - 1][Ei - 1] *= prefactor * qi / dE * wk / 4.0;
-		}
-	}
-	f.close();
+	std::string path			 = PROJECT_DIR "data/Semiconductors/C." + target + "137.dat";
+	std::vector<double> aux_list = libphysica::Import_List(path);
+	std::vector<std::vector<double>> form_factor_table(900, std::vector<double>(500, 0.0));
+	double wk	   = 2.0 / 137.0;
+	unsigned int i = 0;
+	for(int Ei = 0; Ei < 500; Ei++)
+		for(int qi = 0; qi < 900; qi++)
+			form_factor_table[qi][Ei] = prefactor * (qi + 1) / dE * wk / 4.0 * aux_list[i++];
+	std::vector<double> q_grid = libphysica::Linear_Space(dq, 900 * dq, 900);
+	std::vector<double> E_grid = libphysica::Linear_Space(dE, 500 * dE, 500);
+	form_factor_interpolation  = libphysica::Interpolation_2D(q_grid, E_grid, form_factor_table);
+}
+
+double Semiconductor::Crystal_Form_Factor(double q, double E)
+{
+	return form_factor_interpolation(q, E);
 }
 
 //3. Bound electrons in isolated atoms
