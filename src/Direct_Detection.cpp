@@ -242,9 +242,21 @@ double CDF_Maximum_Gap(double x, double mu)
 
 double DM_Detector::P_Value_Maximum_Gap(const DM_Particle& DM, DM_Distribution& DM_distr)
 {
-	std::function<double(double)> spectrum = [this, &DM, &DM_distr](double E) {
-		return exposure * dRdE(E, DM, DM_distr);
-	};
+	// Interpolate the spectrum
+	unsigned int interpolation_points = 400;
+	std::vector<double> energies;
+	double maximum_energy_deposit = Maximum_Energy_Deposit(DM, DM_distr);
+	if(maximum_energy_deposit < energy_max)
+	{
+		energies = libphysica::Linear_Space(energy_threshold, maximum_energy_deposit, interpolation_points);
+		energies.push_back(energy_max);
+	}
+	else
+		energies = libphysica::Linear_Space(energy_threshold, energy_max, interpolation_points);
+	std::vector<double> spectrum_values;
+	for(auto& energy : energies)
+		spectrum_values.push_back(exposure * dRdE(energy, DM, DM_distr));
+	libphysica::Interpolation spectrum(energies, spectrum_values);
 
 	//Determine all gaps and find the maximum.
 	std::vector<double> gaps;
@@ -252,8 +264,7 @@ double DM_Detector::P_Value_Maximum_Gap(const DM_Particle& DM, DM_Distribution& 
 	{
 		double E1  = maximum_gap_energy_data[i];
 		double E2  = maximum_gap_energy_data[i + 1];
-		double eps = libphysica::Find_Epsilon(spectrum, E1, E2, 1e-3);
-		double gap = libphysica::Integrate(spectrum, E1, E2, eps);
+		double gap = spectrum.Integrate(E1, E2);
 		gaps.push_back(gap);
 	}
 

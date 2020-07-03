@@ -12,54 +12,46 @@ namespace obscura
 using namespace libphysica::natural_units;
 
 //1. Event spectra and rates
-double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, const Atomic_Electron& shell)
+double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell)
 {
 	double vMax		= DM_distr.Maximum_DM_Speed();
 	double E_DM_max = DM.mass / 2.0 * vMax * vMax;
 	if(E_DM_max < shell.binding_energy)
 		return 0.0;
 
-	double prefactor = 1.0 / shell.nucleus_mass * DM_distr.DM_density / DM.mass / Ee / 2.0;
-	double vDM		 = 1.0e-3;	 //cancels in the product with dSigma_dq^2
-								 //-> THIS NEEDS TO BE UPDATED WHEN IMPLEMENTING VELOCITY DEPENDING CROSS SECTIONS
-	double qMin = DM.mass * vMax - sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
-	double qMax = DM.mass * vMax + sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
-
-	// // Integration over q
-	// // (a) Using numerical integration function.
-	// if(qMax > shell.q_max) qMax = shell.q_max;
-	// std::function<double(double)> integrand = [Ee,&DM, vDM, &DM_distr, &shell] (double q)
-	// {
-	// 	double vMin = vMinimal_Electrons(q, shell.binding_energy + Ee, DM.mass);
-	// 	return q * DM.dSigma_dq2_Electron(q,vDM) * vDM * vDM * DM_distr.Eta_Function(vMin) * shell.Ionization_Form_Factor(q,Ee);
-	// };
-	// double eps = Find_Epsilon(integrand, qMin, qMax, 1.0e-4);
-	// double integral = Integrate(integrand, qMin, qMax, eps);
-
-	// (b) Simply summing up the table entries
-	double integral = 0.0;
-	double k		= sqrt(2.0 * mElectron * Ee);
-	unsigned int ki = std::round(log10(k / shell.k_min) / shell.dlogk);
-	if(ki >= shell.Nk || ki < 0)
-	{
-		std::cerr << "Warning in obscura::dRdEe_Ionization(double,const DM_Particle&,DM_Distribution&,const Atomic_Electron&): Index ki = " << ki << " out of bounds. Function returns 0.0." << std::endl;
-		return 0.0;
-	}
+	double qMin			= DM.mass * vMax - sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
+	double qMax			= DM.mass * vMax + sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
 	unsigned int qi_min = std::floor(log10(qMin / shell.q_min) / shell.dlogq);	 // = 0;
 	unsigned int qi_max = std::floor(log10(qMax / shell.q_min) / shell.dlogq);	 // = shell.Nq;
 	if(qi_max > shell.Nq)
 		qi_max = shell.Nq;
+
+	double integral = 0.0;
 	for(unsigned int qi = qi_min; qi < qi_max; qi++)
 	{
 		double q	= shell.q_Grid[qi];
 		double vMin = vMinimal_Electrons(q, shell.binding_energy + Ee, DM.mass);
-		integral += log(10.0) * shell.dlogq * q * q * DM.dSigma_dq2_Electron(q, vDM) * vDM * vDM * DM_distr.Eta_Function(vMin) * shell.Ionization_Form_Factor(q, Ee);	//* shell.Ionization_Form_Factor[ki][qi];//
+		if(vMin < vMax)
+		{
+			if(DM.DD_use_eta_function && DM_distr.DD_use_eta_function)
+			{
+				double vDM = 1e-3;	 // cancels
+				integral += log(10.0) * shell.dlogq * q * q * DM.dSigma_dq2_Electron(q, vDM) * vDM * vDM * DM_distr.DM_density / DM.mass * DM_distr.Eta_Function(vMin) * shell.Ionization_Form_Factor(q, Ee);
+			}
+			else
+			{
+				auto integrand = [&DM_distr, &DM, q](double v) {
+					return DM_distr.Differential_DM_Flux(v, DM.mass) * DM.dSigma_dq2_Electron(q, v);
+				};
+				double eps = libphysica::Find_Epsilon(integrand, vMin, vMax, 1.0e-4);
+				integral += log(10.0) * shell.dlogq * q * q * shell.Ionization_Form_Factor(q, Ee) * libphysica::Integrate(integrand, vMin, vMax, eps);
+			}
+		}
 	}
-
-	return prefactor * integral;
+	return 1.0 / shell.nucleus_mass / Ee / 2.0 * integral;
 }
 
-double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, const Atom& atom)
+double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom)
 {
 	double result = 0.0;
 	for(unsigned int i = 0; i < atom.electrons.size(); i++)
@@ -78,7 +70,7 @@ double PDF_ne(unsigned int ne, double Ee, const Atomic_Electron& shell)
 	return libphysica::PMF_Binomial(neMax, fe, ne - 1);
 }
 
-double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, const Atomic_Electron& shell)
+double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell)
 {
 	double sum = 0.0;
 	for(unsigned int ki = 0; ki < shell.Nk; ki++)
@@ -90,7 +82,7 @@ double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& 
 	return sum;
 }
 
-double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, const Atom& atom)
+double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom)
 {
 	double result = 0.0;
 	for(unsigned int i = 0; i < atom.electrons.size(); i++)
@@ -100,7 +92,7 @@ double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& 
 	return result;
 }
 
-double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, const Atomic_Electron& shell)
+double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell)
 {
 	double sum = 0.0;
 	for(int ne = 1; ne < 16; ne++)
@@ -110,7 +102,7 @@ double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM
 	return sum;
 }
 
-double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, const Atom& atom)
+double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom)
 {
 	double result = 0.0;
 	for(unsigned int i = 0; i < atom.electrons.size(); i++)

@@ -13,9 +13,9 @@ namespace obscura
 {
 
 //1. Event spectra and rates
-extern double dRdEe_Semiconductor(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, const Semiconductor& target_crystal);
-extern double R_Q_Semiconductor(int Q, const DM_Particle& DM, DM_Distribution& DM_distr, const Semiconductor& target_crystal);
-extern double R_total_Semiconductor(int Qthreshold, const DM_Particle& DM, DM_Distribution& DM_distr, const Semiconductor& target_crystal);
+extern double dRdEe_Semiconductor(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Semiconductor& target_crystal);
+extern double R_Q_Semiconductor(int Q, const DM_Particle& DM, DM_Distribution& DM_distr, Semiconductor& target_crystal);
+extern double R_total_Semiconductor(int Qthreshold, const DM_Particle& DM, DM_Distribution& DM_distr, Semiconductor& target_crystal);
 
 //2. Electron recoil direct detection experiment with semiconductor target
 class DM_Detector_Semiconductor : public DM_Detector
