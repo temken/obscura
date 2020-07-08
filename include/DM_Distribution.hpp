@@ -36,6 +36,7 @@ class DM_Distribution
 	virtual double CDF_Speed(double v);
 
 	virtual double Differential_DM_Flux(double v, double mDM);
+	virtual double Total_DM_Flux(double mDM);
 
 	//Averages
 	virtual libphysica::Vector Average_Velocity();
