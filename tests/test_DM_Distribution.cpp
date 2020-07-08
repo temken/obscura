@@ -96,6 +96,21 @@ TEST(TestDMDistribution, TestSHMCDFSpeed)
 	EXPECT_DOUBLE_EQ(shm.CDF_Speed(1.0), 1.0);
 }
 
+TEST(TestDMDistribution, TestTotalFlux)
+{
+	// ARRANGE
+	double rhoDM = 0.3 * GeV / cm / cm / cm;
+	double v0	 = 220 * km / sec;
+	double vobs	 = 232 * km / sec;
+	double vesc	 = 544 * km / sec;
+	Standard_Halo_Model shm(rhoDM, v0, vobs, vesc);
+	double mDM		  = 1.0 * GeV;
+	double Flux_total = 1.0 / mDM * 9.8855e6 / cm / cm / sec;
+	double tol		  = 1e-5 * Flux_total;
+	// ACT & ASSERT
+	ASSERT_NEAR(shm.Total_DM_Flux(mDM), Flux_total, tol);
+}
+
 // TEST(TestDMDistribution, TestAverageVelocity)
 // {
 

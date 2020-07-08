@@ -55,6 +55,16 @@ double DM_Distribution::Differential_DM_Flux(double v, double mDM)
 	return DM_density / mDM * v * PDF_Speed(v);
 }
 
+double DM_Distribution::Total_DM_Flux(double mDM)
+{
+	auto dFdv = [this, mDM](double v) {
+		return Differential_DM_Flux(v, mDM);
+	};
+	double eps	   = libphysica::Find_Epsilon(dFdv, v_domain[0], v_domain[1], 1.0e-5);
+	double F_total = libphysica::Integrate(dFdv, v_domain[0], v_domain[1], eps);
+	return F_total;
+}
+
 libphysica::Vector DM_Distribution::Average_Velocity()
 {
 	libphysica::Vector v_average(3);
