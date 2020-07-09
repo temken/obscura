@@ -56,9 +56,11 @@ class DM_Detector
   public:
 	std::string name;
 	DM_Detector()
-	: targets("base targets"), exposure(0.0), flat_efficiency(1.0), statistical_analysis("default"), observed_events(0), expected_background(0.0), number_of_bins(0), energy_threshold(0), energy_max(0), using_energy_threshold(false), using_energy_bins(false), name("base name"){};
+	: targets("base targets"), exposure(0.0), flat_efficiency(1.0), statistical_analysis("default"), observed_events(0), expected_background(0.0), number_of_bins(0), energy_threshold(0), energy_max(0), using_energy_threshold(false), using_energy_bins(false), name("base name") {};
 	DM_Detector(std::string label, double expo, std::string target_type)
-	: targets(target_type), exposure(expo), flat_efficiency(1.0), statistical_analysis("default"), observed_events(0), expected_background(0.0), number_of_bins(0), energy_threshold(0), energy_max(0), using_energy_threshold(false), using_energy_bins(false), name(label){};
+	: targets(target_type), exposure(expo), flat_efficiency(1.0), statistical_analysis("default"), observed_events(0), expected_background(0.0), number_of_bins(0), energy_threshold(0), energy_max(0), using_energy_threshold(false), using_energy_bins(false), name(label) {};
+
+	std::string Target_Particles();
 
 	void Set_Flat_Efficiency(double eff);
 

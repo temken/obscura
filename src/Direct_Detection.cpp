@@ -280,6 +280,11 @@ void DM_Detector::Set_Flat_Efficiency(double eff)
 	flat_efficiency = eff;
 }
 
+std::string DM_Detector::Target_Particles()
+{
+	return targets;
+}
+
 //DM functions
 double DM_Detector::DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr)
 {
