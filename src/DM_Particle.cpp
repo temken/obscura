@@ -25,7 +25,16 @@ DM_Particle::DM_Particle(double m, double s)
 
 void DM_Particle::Set_Mass(double mDM)
 {
+	// The cross sections might depend on the DM mass, and need to be re-computed to yield the same cross sections.
+	double sigma_p = Sigma_Proton();
+	double sigma_n = Sigma_Neutron();
+	double sigma_e = Sigma_Electron();
+
 	mass = mDM;
+
+	Set_Sigma_Proton(sigma_p);
+	Set_Sigma_Neutron(sigma_n);
+	Set_Sigma_Electron(sigma_e);
 }
 
 void DM_Particle::Set_Spin(double s)

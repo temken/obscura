@@ -25,7 +25,7 @@ class DM_Particle
 	DM_Particle();
 	explicit DM_Particle(double m, double s = 1.0 / 2.0);
 
-	void Set_Mass(double mDM);
+	virtual void Set_Mass(double mDM);
 	void Set_Spin(double s);
 	void Set_Low_Mass_Mode(bool ldm);
 	void Set_Fractional_Density(double f);

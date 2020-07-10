@@ -25,6 +25,7 @@ class Configuration
 
 	void Construct_DM_Particle();
 	void Construct_DM_Particle_Standard(std::string DM_interaction);
+	void Construct_DM_Particle_DP();
 
 	void Construct_DM_Distribution();
 	void Construct_DM_Distribution_SHM();
