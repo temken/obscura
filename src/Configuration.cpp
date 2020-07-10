@@ -204,6 +204,8 @@ void Configuration::Construct_DM_Particle()
 	//3.2.1 SI and SD
 	if(DM_interaction == "SI" || DM_interaction == "SD")
 		Configuration::Construct_DM_Particle_Standard(DM_interaction);
+	else if(DM_interaction == "DP")
+		Configuration::Construct_DM_Particle_DP();
 	else
 	{
 		std::cerr << "Error in obscura::Configuration::Construct_DM_Particle(): 'DM_interaction' setting " << DM_interaction << " in configuration file not recognized." << std::endl;
@@ -314,6 +316,50 @@ void Configuration::Construct_DM_Particle_Standard(std::string DM_interaction)
 		std::exit(EXIT_FAILURE);
 	}
 	DM->Set_Sigma_Electron(DM_cross_section_electron);
+}
+
+void Configuration::Construct_DM_Particle_DP()
+{
+	DM = new DM_Particle_DP();
+
+	//DM form factor
+	std::string DM_form_factor;
+	double DM_mediator_mass = -1.0;
+	try
+	{
+		DM_form_factor = config.lookup("DM_form_factor").c_str();
+	}
+	catch(const SettingNotFoundException& nfex)
+	{
+		std::cerr << "Error in Configuration::Construct_DM_Particle_DP(): No 'DM_form_factor' setting in configuration file." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+	if(DM_form_factor == "General")
+	{
+		try
+		{
+			DM_mediator_mass = config.lookup("DM_mediator_mass");
+			DM_mediator_mass *= MeV;
+		}
+		catch(const SettingNotFoundException& nfex)
+		{
+			std::cerr << "Error in Configuration::Construct_DM_Particle_DP(): No 'DM_mediator_mass' setting in configuration file." << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+	}
+	dynamic_cast<DM_Particle_DP*>(DM)->Set_FormFactor_DM(DM_form_factor, DM_mediator_mass);
+	double DM_cross_section_proton;
+	try
+	{
+		DM_cross_section_proton = config.lookup("DM_cross_section_nucleon");
+		DM_cross_section_proton *= cm * cm;
+	}
+	catch(const SettingNotFoundException& nfex)
+	{
+		std::cerr << "Error in Configuration::Construct_DM_Particle_DP(): No 'DM_cross_section_proton' setting in configuration file." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+	DM->Set_Interaction_Parameter(DM_cross_section_proton, "Nuclei");
 }
 
 void Configuration::Construct_DM_Distribution()
