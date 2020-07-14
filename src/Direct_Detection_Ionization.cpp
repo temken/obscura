@@ -19,24 +19,25 @@ double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_di
 	if(E_DM_max < shell.binding_energy)
 		return 0.0;
 
-	double qMin			= DM.mass * vMax - sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
-	double qMax			= DM.mass * vMax + sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
-	unsigned int qi_min = std::floor(log10(qMin / shell.q_min) / shell.dlogq);	 // = 0;
-	unsigned int qi_max = std::floor(log10(qMax / shell.q_min) / shell.dlogq);	 // = shell.Nq;
-	if(qi_max > shell.Nq)
-		qi_max = shell.Nq;
+	double qMin = DM.mass * vMax - sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
+	double qMax = DM.mass * vMax + sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
+	if(qMin > shell.q_max)
+		return 0.0;
+	else if(qMax > shell.q_max)
+		qMax = shell.q_max;
 
-	double integral = 0.0;
-	for(unsigned int qi = qi_min; qi < qi_max; qi++)
+	std::vector<double> q_grid = libphysica::Log_Space(qMin, qMax, 50);
+	double d_lnq			   = log(q_grid[1] / q_grid[0]);
+	double integral			   = 0.0;
+	for(auto& q : q_grid)
 	{
-		double q	= shell.q_Grid[qi];
 		double vMin = vMinimal_Electrons(q, shell.binding_energy + Ee, DM.mass);
 		if(vMin < vMax)
 		{
 			if(DM.DD_use_eta_function && DM_distr.DD_use_eta_function)
 			{
-				double vDM = 1e-3;	 // cancels
-				integral += log(10.0) * shell.dlogq * q * q * DM.dSigma_dq2_Electron(q, vDM) * vDM * vDM * DM_distr.DM_density / DM.mass * DM_distr.Eta_Function(vMin) * shell.Ionization_Form_Factor(q, Ee);
+				double vDM = 1.0e-3;   // cancels
+				integral += d_lnq * q * q * DM.dSigma_dq2_Electron(q, vDM) * vDM * vDM * DM_distr.DM_density / DM.mass * DM_distr.Eta_Function(vMin) * shell.Ionization_Form_Factor(q, Ee);
 			}
 			else
 			{
@@ -44,7 +45,7 @@ double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_di
 					return DM_distr.Differential_DM_Flux(v, DM.mass) * DM.dSigma_dq2_Electron(q, v);
 				};
 				double eps = libphysica::Find_Epsilon(integrand, vMin, vMax, 1.0e-4);
-				integral += log(10.0) * shell.dlogq * q * q * shell.Ionization_Form_Factor(q, Ee) * libphysica::Integrate(integrand, vMin, vMax, eps);
+				integral += d_lnq * q * q * shell.Ionization_Form_Factor(q, Ee) * libphysica::Integrate(integrand, vMin, vMax, eps);
 			}
 		}
 	}
