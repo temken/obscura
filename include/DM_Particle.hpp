@@ -12,7 +12,7 @@ namespace obscura
 class DM_Particle
 {
   protected:
-	bool low_mass;
+	bool low_mass, using_cross_section;
 
 	void Print_Summary_Base(int MPI_rank = 0) const;
 	double Sigma_Nucleus_Base(const Isotope& target, double vDM) const;
@@ -36,6 +36,7 @@ class DM_Particle
 		return 0.0;
 	};
 	virtual void Set_Interaction_Parameter(double par, std::string target) {};
+	bool Interaction_Parameter_Is_Cross_Section() const;
 
 	virtual void Set_Sigma_Proton(double sigma) {};
 	virtual void Set_Sigma_Neutron(double sigma) {};
