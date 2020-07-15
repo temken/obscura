@@ -14,12 +14,12 @@ using namespace libphysica::natural_units;
 
 //1. Base class for a DM particle with virtual functions for the cross sections
 DM_Particle::DM_Particle()
-: low_mass(false), mass(10.0 * GeV), spin(1.0 / 2.0), fractional_density(1.0), DD_use_eta_function(false)
+: low_mass(false), using_cross_section(false), mass(10.0 * GeV), spin(1.0 / 2.0), fractional_density(1.0), DD_use_eta_function(false)
 {
 }
 
 DM_Particle::DM_Particle(double m, double s)
-: low_mass(false), mass(m), spin(s), fractional_density(1.0), DD_use_eta_function(false)
+: low_mass(false), using_cross_section(false), mass(m), spin(s), fractional_density(1.0), DD_use_eta_function(false)
 {
 }
 
@@ -50,6 +50,11 @@ void DM_Particle::Set_Low_Mass_Mode(bool ldm)
 void DM_Particle::Set_Fractional_Density(double f)
 {
 	fractional_density = f;
+}
+
+bool DM_Particle::Interaction_Parameter_Is_Cross_Section() const
+{
+	return using_cross_section;
 }
 
 double DM_Particle::Sigma_Nucleus_Base(const Isotope& target, double vDM) const

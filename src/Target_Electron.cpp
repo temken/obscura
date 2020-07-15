@@ -85,7 +85,16 @@ Atomic_Electron::Atomic_Electron(std::string element, double A, int N, int L, do
 double Atomic_Electron::Ionization_Form_Factor(double q, double E)
 {
 	double k = sqrt(2.0 * mElectron * E);
-	return form_factor_interpolation(k, q);
+	if(q > q_min)
+		return form_factor_interpolation(k, q);
+	else
+	{
+		// Dipole approximation for low q
+		// See eq. 6 of arXiv:1908.10881
+		double q_0	= q_min;
+		double FF_0 = form_factor_interpolation(k, q_0);
+		return q * q / q_0 / q_0 * FF_0;
+	}
 }
 
 void Atomic_Electron::Print_Summary(unsigned int MPI_rank) const

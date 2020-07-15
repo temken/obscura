@@ -13,12 +13,14 @@ using namespace libphysica::natural_units;
 DM_Particle_Standard::DM_Particle_Standard()
 : DM_Particle(), prefactor(1.0), fixed_coupling_relation(true), fp_relative(0.5), fn_relative(0.5), sigma_electron(0.0)
 {
+	using_cross_section = true;
 	DD_use_eta_function = true;
 }
 
 DM_Particle_Standard::DM_Particle_Standard(double mDM, double pre)
 : DM_Particle(mDM), prefactor(pre), fixed_coupling_relation(true), fp_relative(0.5), fn_relative(0.5), sigma_electron(0.0)
 {
+	using_cross_section = true;
 	DD_use_eta_function = true;
 }
 
@@ -366,6 +368,7 @@ void DM_Particle_SD::Print_Summary(int MPI_rank) const
 DM_Particle_DP::DM_Particle_DP()
 : DM_Particle(), alpha_dark(aEM), q_reference(aEM * mElectron), FF_DM("Contact"), m_dark_photon(GeV)
 {
+	using_cross_section = true;
 	DD_use_eta_function = true;
 	Set_Sigma_Proton(1.0e-40 * cm * cm);
 }
@@ -373,6 +376,7 @@ DM_Particle_DP::DM_Particle_DP()
 DM_Particle_DP::DM_Particle_DP(double mDM)
 : DM_Particle(mDM), alpha_dark(aEM), q_reference(aEM * mElectron), FF_DM("Contact"), m_dark_photon(GeV)
 {
+	using_cross_section = true;
 	DD_use_eta_function = true;
 	Set_Sigma_Proton(1.0e-40 * cm * cm);
 }
@@ -380,6 +384,7 @@ DM_Particle_DP::DM_Particle_DP(double mDM)
 DM_Particle_DP::DM_Particle_DP(double mDM, double sigma_p)
 : DM_Particle(mDM), alpha_dark(aEM), q_reference(aEM * mElectron), FF_DM("Contact"), m_dark_photon(GeV)
 {
+	using_cross_section = true;
 	DD_use_eta_function = true;
 	Set_Sigma_Proton(sigma_p);
 }

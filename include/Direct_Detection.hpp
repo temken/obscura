@@ -36,6 +36,13 @@ class DM_Detector
 	std::vector<unsigned long int> bin_observed_events;
 	std::vector<double> bin_expected_background;
 
+	// Fiducial values used for finding upper limits with (binned) Poisson statistics
+	// To find a limit, the (binned) expecation values are only computed once per mass, and then re-scaled.
+	bool using_fiducial_values = false;
+	double fiducial_coupling   = 0.0;
+	double fiducial_signals	   = 0.0;
+	std::vector<double> fiducial_spectrum;
+
 	// (c) Maximum gap a'la Yellin
 	std::vector<double> maximum_gap_energy_data;
 	double P_Value_Maximum_Gap(const DM_Particle& DM, DM_Distribution& DM_distr);

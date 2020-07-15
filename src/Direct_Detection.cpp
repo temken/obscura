@@ -60,27 +60,35 @@ double DM_Detector::P_Value(const DM_Particle& DM, DM_Distribution& DM_distr)
 	double p_value = 1.0;
 	if(statistical_analysis == "Poisson")
 	{
-		// //Compute test-statistic t
-		// double log_likelihood_0 = Likelihood_Poisson(0.0, observed_events, expected_background );
-		// double log_likelihood = Log_Likelihood(DM, DM_distr);
-		// double t = -2.0 * (log_likelihood - log_likelihood_0);
-		// //Integrate 1/2 chi-square distribution with 1 degree of freedom (dof) over t' larger than t.
-		// double dof = 1.0;
-		// p_value = 0.5* (1.0 - CDF_Chi_Square(t, dof));
+		double DM_expectation_value;
+		if(using_fiducial_values)
+		{
+			double coupling = DM.Get_Interaction_Parameter(targets);
 
-		double expectation_value = DM_Signals_Total(DM, DM_distr) + expected_background;
-		p_value					 = libphysica::CDF_Poisson(expectation_value, observed_events);
+			int rescaling_power = 2;
+			if(DM.Interaction_Parameter_Is_Cross_Section())
+				rescaling_power = 1;
+
+			DM_expectation_value = pow(coupling / fiducial_coupling, rescaling_power) * fiducial_signals;
+		}
+		else
+			DM_expectation_value = DM_Signals_Total(DM, DM_distr);
+		p_value = libphysica::CDF_Poisson(DM_expectation_value + expected_background, observed_events);
 	}
 	else if(statistical_analysis == "Binned Poisson")
 	{
-		// //Compute test-statistic t
-		// double log_likelihood_0 = Likelihood_Poisson_Binned(std::vector<double>(number_of_bins,0.0), bin_observed_events, bin_expected_background );
-		// double log_likelihood = Log_Likelihood(DM, DM_distr);
-		// double t = -2.0 * (log_likelihood - log_likelihood_0);
-		// //Integrate chi-square distribution with 1 degree of freedom (dof) over t' larger than t.
-		// double dof = 1.0;
-		// p_value = 0.5 * (1.0 - CDF_Chi_Square(t, dof));
-		std::vector<double> expectation_values = DM_Signals_Binned(DM, DM_distr);
+		std::vector<double> expectation_values;
+		if(using_fiducial_values)
+		{
+			double coupling		= DM.Get_Interaction_Parameter(targets);
+			int rescaling_power = 2;
+			if(DM.Interaction_Parameter_Is_Cross_Section())
+				rescaling_power = 1;
+			for(unsigned int i = 0; i < fiducial_spectrum.size(); i++)
+				expectation_values.push_back(pow(coupling / fiducial_coupling, rescaling_power) * fiducial_spectrum[i]);
+		}
+		else
+			expectation_values = DM_Signals_Binned(DM, DM_distr);
 		std::vector<double> p_values(number_of_bins, 0.0);
 		for(unsigned int i = 0; i < number_of_bins; i++)
 		{
@@ -325,6 +333,15 @@ std::vector<double> DM_Detector::DM_Signals_Binned(const DM_Particle& DM, DM_Dis
 double DM_Detector::Upper_Limit(DM_Particle& DM, DM_Distribution& DM_distr, double certainty)
 {
 	double interaction_parameter_original = DM.Get_Interaction_Parameter(targets);
+	if(statistical_analysis == "Binned Poisson" || statistical_analysis == "Poisson")
+	{
+		using_fiducial_values = true;
+		fiducial_coupling	  = interaction_parameter_original;
+		if(statistical_analysis == "Binned Poisson")
+			fiducial_spectrum = DM_Signals_Binned(DM, DM_distr);
+		else
+			fiducial_signals = DM_Signals_Total(DM, DM_distr);
+	}
 	// Find the interaction parameter such that p = 1-certainty
 	std::function<double(double)> func = [this, &DM, &DM_distr, certainty](double log10_parameter) {
 		double parameter = pow(10.0, log10_parameter);
@@ -335,6 +352,13 @@ double DM_Detector::Upper_Limit(DM_Particle& DM, DM_Distribution& DM_distr, doub
 	double log10_upper_bound = libphysica::Find_Root(func, -30.0, 10.0, 1.0e-4);
 
 	DM.Set_Interaction_Parameter(interaction_parameter_original, targets);
+	if(statistical_analysis == "Binned Poisson" || statistical_analysis == "Poisson")
+	{
+		using_fiducial_values = false;
+		fiducial_coupling	  = 0.0;
+		fiducial_signals	  = 0.0;
+		fiducial_spectrum.clear();
+	}
 	return pow(10.0, log10_upper_bound);
 }
 
