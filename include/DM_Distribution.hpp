@@ -71,6 +71,8 @@ class Standard_Halo_Model : public DM_Distribution
 	void Set_Observer_Velocity(const libphysica::Vector& vObserver);
 	void Set_Observer_Velocity(int day, int month, int year, int hour = 0, int minute = 0);
 
+	libphysica::Vector Get_Observer_Velocity() const;
+
 	//Distribution functions
 	virtual double PDF_Velocity(libphysica::Vector vel) override;
 	virtual double PDF_Speed(double v) override;

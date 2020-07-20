@@ -386,7 +386,8 @@ void Configuration::Construct_DM_Distribution()
 
 void Configuration::Construct_DM_Distribution_SHM()
 {
-	double DM_local_density, SHM_v0, SHM_vEarth, SHM_vEscape;
+	double DM_local_density, SHM_v0, SHM_vEscape;
+	libphysica::Vector vel_observer(3, 0.0);
 	try
 	{
 		DM_local_density = config.lookup("DM_local_density");
@@ -409,12 +410,19 @@ void Configuration::Construct_DM_Distribution_SHM()
 	}
 	try
 	{
-		SHM_vEarth = config.lookup("SHM_vEarth");
-		SHM_vEarth *= km / sec;
+		int entries = config.lookup("SHM_vObserver").getLength();
+		if(entries != 3)
+		{
+			std::cerr << "Error in Construct_DM_Distribution_SHM(): 'SHM_vObserver' is a " << entries << "-dimensional vector, not 3." << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		for(int i = 0; i < 3; i++)
+			vel_observer[i] = config.lookup("SHM_vObserver")[i];
+		vel_observer = vel_observer * km / sec;
 	}
 	catch(const SettingNotFoundException& nfex)
 	{
-		std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'SHM_vEarth' setting in configuration file." << std::endl;
+		std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'SHM_vObserver' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	try
@@ -427,7 +435,7 @@ void Configuration::Construct_DM_Distribution_SHM()
 		std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'SHM_vEscape' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
-	DM_distr = new Standard_Halo_Model(DM_local_density, SHM_v0, SHM_vEarth, SHM_vEscape);
+	DM_distr = new Standard_Halo_Model(DM_local_density, SHM_v0, vel_observer, SHM_vEscape);
 }
 
 void Configuration::Construct_DM_Detector()
