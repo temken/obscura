@@ -107,7 +107,7 @@ void Configuration::Copy_Config_File(int MPI_rank)
 	}
 }
 
-void Configuration::Print_Summary(int MPI_rank)
+void Configuration::Print_Summary_Base(int MPI_rank)
 {
 	if(MPI_rank == 0)
 	{
