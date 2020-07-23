@@ -44,7 +44,8 @@ find_path(LIBCONFIG_INCLUDE_DIRs libconfig.h++
 find_library(LIBCONFIGPP_LIBRARY config++
     /usr/local/lib
     /usr/lib
-    ~/libs/lib )
+    ~/libs/lib
+    ~/lib )
 
 target_include_directories(libobscura 
     PRIVATE
