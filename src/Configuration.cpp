@@ -348,18 +348,18 @@ void Configuration::Construct_DM_Particle_DP()
 		}
 	}
 	dynamic_cast<DM_Particle_DP*>(DM)->Set_FormFactor_DM(DM_form_factor, DM_mediator_mass);
-	double DM_cross_section_proton;
+	double DM_cross_section_electron;
 	try
 	{
-		DM_cross_section_proton = config.lookup("DM_cross_section_nucleon");
-		DM_cross_section_proton *= cm * cm;
+		DM_cross_section_electron = config.lookup("DM_cross_section_electron");
+		DM_cross_section_electron *= cm * cm;
 	}
 	catch(const SettingNotFoundException& nfex)
 	{
-		std::cerr << "Error in Configuration::Construct_DM_Particle_DP(): No 'DM_cross_section_proton' setting in configuration file." << std::endl;
+		std::cerr << "Error in Configuration::Construct_DM_Particle_DP(): No 'DM_cross_section_electron' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
-	DM->Set_Interaction_Parameter(DM_cross_section_proton, "Nuclei");
+	DM->Set_Interaction_Parameter(DM_cross_section_electron, "Electrons");
 }
 
 void Configuration::Construct_DM_Distribution()
