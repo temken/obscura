@@ -497,6 +497,7 @@ void Configuration::Construct_DM_Detector()
 
 void Configuration::Construct_DM_Detector_Nuclear()
 {
+	Import_Nuclear_Data();
 	std::vector<Element> DD_targets_nuclear;
 	std::vector<double> DD_targets_nuclear_abundances;
 	try
