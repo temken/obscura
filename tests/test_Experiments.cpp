@@ -9,5 +9,5 @@ TEST(TestExperiments, TestDamicN)
 	//ARRANGE
 	DM_Detector_Nucleus experiment = DAMIC_N();
 	// ACT & ASSERT
-	ASSERT_EQ(experiment.name, "DAMIC-N");
+	ASSERT_EQ(experiment.name, "DAMIC-2012");
 }

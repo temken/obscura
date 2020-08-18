@@ -460,9 +460,9 @@ void Configuration::Construct_DM_Detector()
 		Construct_DM_Detector_Semiconductor();
 
 	// Supported experiments:
-	else if(DD_experiment == "DAMIC-N")
+	else if(DD_experiment == "DAMIC-2012")
 		DM_detector = new DM_Detector_Nucleus(DAMIC_N());
-	else if(DD_experiment == "XENON1T-N")
+	else if(DD_experiment == "XENON1T-2017")
 		DM_detector = new DM_Detector_Nucleus(XENON1T_N());
 	else if(DD_experiment == "CRESST-II")
 		DM_detector = new DM_Detector_Nucleus(CRESST_II());
@@ -471,13 +471,13 @@ void Configuration::Construct_DM_Detector()
 	else if(DD_experiment == "CRESST-III")
 		DM_detector = new DM_Detector_Nucleus(CRESST_III());
 
-	else if(DD_experiment == "XENON10-e")
+	else if(DD_experiment == "XENON10-S2")
 		DM_detector = new DM_Detector_Ionization(XENON10_e());
-	else if(DD_experiment == "XENON100-e")
+	else if(DD_experiment == "XENON100-S2")
 		DM_detector = new DM_Detector_Ionization(XENON100_e());
-	else if(DD_experiment == "XENON1T-e")
+	else if(DD_experiment == "XENON1T-S2")
 		DM_detector = new DM_Detector_Ionization(XENON1T_e());
-	else if(DD_experiment == "DarkSide-50-e")
+	else if(DD_experiment == "DarkSide-50-S2")
 		DM_detector = new DM_Detector_Ionization(DarkSide_50_e());
 
 	else if(DD_experiment == "protoSENSEI@surface")
