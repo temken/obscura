@@ -24,6 +24,22 @@ DM_Particle_Standard::DM_Particle_Standard(double mDM, double pre)
 	DD_use_eta_function = true;
 }
 
+void DM_Particle_Standard::Set_Mass(double mDM)
+{
+	if(fp_relative != 0.0)
+	{
+		double sigma_p = Sigma_Proton();
+		mass		   = mDM;
+		Set_Sigma_Proton(sigma_p);
+	}
+	else
+	{
+		double sigma_n = Sigma_Neutron();
+		mass		   = mDM;
+		Set_Sigma_Neutron(sigma_n);
+	}
+}
+
 void DM_Particle_Standard::Set_Sigma_Proton(double sigma)
 {
 	fp = sqrt(M_PI * sigma / prefactor) / libphysica::Reduced_Mass(mass, mProton);
@@ -410,9 +426,9 @@ double DM_Particle_DP::FormFactor2_DM(double q) const
 
 void DM_Particle_DP::Set_Mass(double mDM)
 {
-	double sigma_p = Sigma_Proton();
+	double sigma_e = Sigma_Electron();
 	mass		   = mDM;
-	Set_Sigma_Proton(sigma_p);
+	Set_Sigma_Electron(sigma_e);
 }
 
 void DM_Particle_DP::Set_Epsilon(double e)

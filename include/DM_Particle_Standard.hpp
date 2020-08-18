@@ -35,6 +35,8 @@ class DM_Particle_Standard : public DM_Particle
 	DM_Particle_Standard();
 	DM_Particle_Standard(double mDM, double pre);
 
+	virtual void Set_Mass(double mDM) override;
+
 	// Primary interaction parameter, in this case the proton, neutron, or electron cross section
 	virtual double Get_Interaction_Parameter(std::string target) const override;
 	virtual void Set_Interaction_Parameter(double par, std::string target) override;
