@@ -193,6 +193,11 @@ void Standard_Halo_Model::Set_Observer_Velocity(int day, int month, int year, in
 	v_domain[1] = v_esc + v_observer;
 }
 
+libphysica::Vector Standard_Halo_Model::Get_Observer_Velocity() const
+{
+	return vel_observer;
+}
+
 //Compute N_esc
 void Standard_Halo_Model::Normalize_PDF()
 {

@@ -107,7 +107,7 @@ void Configuration::Copy_Config_File(int MPI_rank)
 	}
 }
 
-void Configuration::Print_Summary(int MPI_rank)
+void Configuration::Print_Summary_Base(int MPI_rank)
 {
 	if(MPI_rank == 0)
 	{
@@ -348,18 +348,18 @@ void Configuration::Construct_DM_Particle_DP()
 		}
 	}
 	dynamic_cast<DM_Particle_DP*>(DM)->Set_FormFactor_DM(DM_form_factor, DM_mediator_mass);
-	double DM_cross_section_proton;
+	double DM_cross_section_electron;
 	try
 	{
-		DM_cross_section_proton = config.lookup("DM_cross_section_nucleon");
-		DM_cross_section_proton *= cm * cm;
+		DM_cross_section_electron = config.lookup("DM_cross_section_electron");
+		DM_cross_section_electron *= cm * cm;
 	}
 	catch(const SettingNotFoundException& nfex)
 	{
-		std::cerr << "Error in Configuration::Construct_DM_Particle_DP(): No 'DM_cross_section_proton' setting in configuration file." << std::endl;
+		std::cerr << "Error in Configuration::Construct_DM_Particle_DP(): No 'DM_cross_section_electron' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
-	DM->Set_Interaction_Parameter(DM_cross_section_proton, "Nuclei");
+	DM->Set_Interaction_Parameter(DM_cross_section_electron, "Electrons");
 }
 
 void Configuration::Construct_DM_Distribution()
@@ -386,7 +386,8 @@ void Configuration::Construct_DM_Distribution()
 
 void Configuration::Construct_DM_Distribution_SHM()
 {
-	double DM_local_density, SHM_v0, SHM_vEarth, SHM_vEscape;
+	double DM_local_density, SHM_v0, SHM_vEscape;
+	libphysica::Vector vel_observer(3, 0.0);
 	try
 	{
 		DM_local_density = config.lookup("DM_local_density");
@@ -409,12 +410,19 @@ void Configuration::Construct_DM_Distribution_SHM()
 	}
 	try
 	{
-		SHM_vEarth = config.lookup("SHM_vEarth");
-		SHM_vEarth *= km / sec;
+		int entries = config.lookup("SHM_vObserver").getLength();
+		if(entries != 3)
+		{
+			std::cerr << "Error in Construct_DM_Distribution_SHM(): 'SHM_vObserver' is a " << entries << "-dimensional vector, not 3." << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		for(int i = 0; i < 3; i++)
+			vel_observer[i] = config.lookup("SHM_vObserver")[i];
+		vel_observer = vel_observer * km / sec;
 	}
 	catch(const SettingNotFoundException& nfex)
 	{
-		std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'SHM_vEarth' setting in configuration file." << std::endl;
+		std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'SHM_vObserver' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	try
@@ -427,7 +435,7 @@ void Configuration::Construct_DM_Distribution_SHM()
 		std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'SHM_vEscape' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
-	DM_distr = new Standard_Halo_Model(DM_local_density, SHM_v0, SHM_vEarth, SHM_vEscape);
+	DM_distr = new Standard_Halo_Model(DM_local_density, SHM_v0, vel_observer, SHM_vEscape);
 }
 
 void Configuration::Construct_DM_Detector()
@@ -452,9 +460,9 @@ void Configuration::Construct_DM_Detector()
 		Construct_DM_Detector_Semiconductor();
 
 	// Supported experiments:
-	else if(DD_experiment == "DAMIC-N")
+	else if(DD_experiment == "DAMIC-2012")
 		DM_detector = new DM_Detector_Nucleus(DAMIC_N());
-	else if(DD_experiment == "XENON1T-N")
+	else if(DD_experiment == "XENON1T-2017")
 		DM_detector = new DM_Detector_Nucleus(XENON1T_N());
 	else if(DD_experiment == "CRESST-II")
 		DM_detector = new DM_Detector_Nucleus(CRESST_II());
@@ -463,13 +471,13 @@ void Configuration::Construct_DM_Detector()
 	else if(DD_experiment == "CRESST-III")
 		DM_detector = new DM_Detector_Nucleus(CRESST_III());
 
-	else if(DD_experiment == "XENON10-e")
+	else if(DD_experiment == "XENON10-S2")
 		DM_detector = new DM_Detector_Ionization(XENON10_e());
-	else if(DD_experiment == "XENON100-e")
+	else if(DD_experiment == "XENON100-S2")
 		DM_detector = new DM_Detector_Ionization(XENON100_e());
-	else if(DD_experiment == "XENON1T-e")
+	else if(DD_experiment == "XENON1T-S2")
 		DM_detector = new DM_Detector_Ionization(XENON1T_e());
-	else if(DD_experiment == "DarkSide-50-e")
+	else if(DD_experiment == "DarkSide-50-S2")
 		DM_detector = new DM_Detector_Ionization(DarkSide_50_e());
 
 	else if(DD_experiment == "protoSENSEI@surface")
@@ -489,6 +497,7 @@ void Configuration::Construct_DM_Detector()
 
 void Configuration::Construct_DM_Detector_Nuclear()
 {
+	Import_Nuclear_Data();
 	std::vector<Element> DD_targets_nuclear;
 	std::vector<double> DD_targets_nuclear_abundances;
 	try

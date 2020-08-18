@@ -37,6 +37,8 @@ class Configuration
 
 	void Initialize_Parameters();
 
+	void Print_Summary_Base(int MPI_rank);
+
   public:
 	std::string ID;
 	std::string results_path;
@@ -55,7 +57,7 @@ class Configuration
 	Configuration();
 	explicit Configuration(std::string cfg_filename, int MPI_rank = 0);
 
-	void Print_Summary(int MPI_rank = 0);
+	virtual void Print_Summary(int MPI_rank = 0) { Print_Summary_Base(MPI_rank); };
 };
 
 }	// namespace obscura

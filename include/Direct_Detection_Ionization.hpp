@@ -16,8 +16,8 @@ extern double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution
 extern double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell);
 extern double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom);
 
-extern double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell);
-extern double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom);
+extern double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell, std::vector<double> electron_spectrum = {});
+extern double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom, std::vector<double> electron_spectrum = {});
 
 //2. Electron recoil direct detection experiment with isolated target atoms
 class DM_Detector_Ionization : public DM_Detector
@@ -27,7 +27,6 @@ class DM_Detector_Ionization : public DM_Detector
 
 	//DM functions
 	virtual double Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const override;
-	virtual double Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const override;
 
 	//Electron spectrum
 	unsigned int ne_threshold, ne_max;
@@ -55,6 +54,7 @@ class DM_Detector_Ionization : public DM_Detector
 
 	//DM functions
 	virtual double Minimum_DM_Speed(const DM_Particle& DM) const override;
+	virtual double Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const override;
 	virtual double dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr) override;
 	virtual double DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr) override;
 	virtual std::vector<double> DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr) override;

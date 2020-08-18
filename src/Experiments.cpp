@@ -17,7 +17,7 @@ DM_Detector_Nucleus DAMIC_N()
 	double DAMIC_Emax				   = 7.0 * keV;
 	unsigned int DAMIC_observed_events = 106;
 
-	DM_Detector_Nucleus detector("DAMIC-N", DAMIC_exposure, DAMIC_targets);
+	DM_Detector_Nucleus detector("DAMIC-2012", DAMIC_exposure, DAMIC_targets);
 	detector.Use_Energy_Threshold(DAMIC_threshold, DAMIC_Emax);
 	detector.Set_Observed_Events(DAMIC_observed_events);
 
@@ -33,7 +33,7 @@ DM_Detector_Nucleus XENON1T_N()
 	double XENON1T_efficiency			 = 0.82;
 	unsigned int XENON1T_observed_events = 0;
 
-	DM_Detector_Nucleus detector("XENON1T-N", XENON1T_exposure, XENON1T_targets);
+	DM_Detector_Nucleus detector("XENON1T-2017", XENON1T_exposure, XENON1T_targets);
 	detector.Set_Flat_Efficiency(XENON1T_efficiency);
 	detector.Use_Energy_Threshold(XENON1T_threshold, XENON1T_Emax);
 	detector.Set_Observed_Events(XENON1T_observed_events);
@@ -116,7 +116,7 @@ DM_Detector_Ionization XENON10_e()
 	std::vector<unsigned int> S2_bin_ranges			   = {14, 41, 68, 95, 122, 149, 176, 203};
 	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON10e/PE_Trigger_Efficiency.txt";
 
-	DM_Detector_Ionization detector("XENON10-e", exposure, target_name);
+	DM_Detector_Ionization detector("XENON10-S2", exposure, target_name);
 	detector.Set_Flat_Efficiency(flat_efficiency);
 	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
 	detector.Set_Observed_Events(observed_event_bins);
@@ -136,7 +136,7 @@ DM_Detector_Ionization XENON100_e()
 	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON100e/PE_Trigger_Efficiency.txt";
 	std::string acceptance_efficiency				   = PROJECT_DIR "data/XENON100e/PE_Acceptance_Efficiency.txt";
 
-	DM_Detector_Ionization detector("XENON100-e", exposure, target_name);
+	DM_Detector_Ionization detector("XENON100-S2", exposure, target_name);
 	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
 	detector.Set_Observed_Events(observed_event_bins);
 	detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
@@ -155,7 +155,7 @@ DM_Detector_Ionization XENON1T_e()
 	std::vector<unsigned int> S2_bin_ranges			   = {150, 200, 250, 300, 350};
 	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON1Te/XENON1T_TotalEfficiency.txt";
 
-	DM_Detector_Ionization detector("XENON1T-e", exposure, target_name);
+	DM_Detector_Ionization detector("XENON1T-S2", exposure, target_name);
 	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
 	detector.Set_Observed_Events(observed_event_bins);
 	detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
@@ -170,7 +170,7 @@ DM_Detector_Ionization DarkSide_50_e()
 	unsigned int ne_threshold						   = 3;
 	std::vector<unsigned long int> observed_event_bins = {6131, 673, 252, 227, 198, 199, 189, 247, 230, 261, 249, 329, 336};
 
-	DM_Detector_Ionization detector("DarkSide-50-e", exposure, target_name);
+	DM_Detector_Ionization detector("DarkSide-50-S2", exposure, target_name);
 	detector.Use_Electron_Bins(ne_threshold, 13);
 	detector.Set_Observed_Events(observed_event_bins);
 

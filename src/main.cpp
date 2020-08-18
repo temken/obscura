@@ -35,7 +35,13 @@ int main(int argc, char* argv[])
 	std::vector<double> DM_masses = libphysica::Log_Space(cfg.constraints_mass_min, cfg.constraints_mass_max, cfg.constraints_masses);
 
 	std::vector<std::vector<double>> exclusion_limits = cfg.DM_detector->Upper_Limit_Curve(*(cfg.DM), *(cfg.DM_distr), DM_masses, cfg.constraints_certainty);
-	libphysica::Export_Table(TOP_LEVEL_DIR "results/" + cfg.ID + "/constraints.txt", exclusion_limits, {GeV, cm * cm});
+	for(unsigned int i = 0; i < exclusion_limits.size(); i++)
+		std::cout << i + 1 << "/" << exclusion_limits.size()
+				  << "\tmDM = " << libphysica::Round(In_Units(exclusion_limits[i][0], (exclusion_limits[i][0] < GeV) ? MeV : GeV)) << ((exclusion_limits[i][0] < GeV) ? " MeV" : " GeV")
+				  << "\tUpper Bound:\t" << libphysica::Round(In_Units(exclusion_limits[i][1], cm * cm)) << std::endl;
+
+	int CL = std::round(cfg.constraints_certainty);
+	libphysica::Export_Table(TOP_LEVEL_DIR "results/" + cfg.ID + "/DD_Constraints" + std::to_string(CL) + ".txt", exclusion_limits, {GeV, cm * cm});
 
 	////////////////////////////////////////////////////////////////////////
 	//Final terminal output

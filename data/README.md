@@ -24,15 +24,15 @@ The files in */CRESST-surface/* are the arXiv ancillary files of
 
 > Angloher, G. *et al*, **Results on MeV-scale dark matter from a gram-scale cryogenic calorimeter operated above ground**, [Eur.Phys.J.C 77 (2017) 9, 637](https://link.springer.com/article/10.1140%2Fepjc%2Fs10052-017-5223-9) , [[arXiv:1707.06749]](https://arxiv.org/abs/1707.06749)
 
-### XENON10-e
+### XENON10-S2
 
 > Trigger efficiencies from [arXiv:1206.2644](https://arxiv.org/abs/1206.2644)
 
-### XENON100-e
+### XENON100-S2
 
 > Acceptance and trigger efficiencies from [arXiv:1605.06262](https://arxiv.org/abs/1605.06262)
 
-### XENON1T-e
+### XENON1T-S2
 > Efficiency from Fig. 2 of [arXiv:1907.11485](https://arxiv.org/abs/1907.11485) (see also App. E of [arXiv:1912.08204](https://arxiv.org/abs/1912.08204))
 
 ## Crystal form factors

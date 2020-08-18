@@ -332,6 +332,8 @@ std::vector<double> DM_Detector::DM_Signals_Binned(const DM_Particle& DM, DM_Dis
 //Limits/Constraints
 double DM_Detector::Upper_Limit(DM_Particle& DM, DM_Distribution& DM_distr, double certainty)
 {
+	bool found_limit = true;
+
 	double interaction_parameter_original = DM.Get_Interaction_Parameter(targets);
 	if(statistical_analysis == "Binned Poisson" || statistical_analysis == "Poisson")
 	{
@@ -349,7 +351,11 @@ double DM_Detector::Upper_Limit(DM_Particle& DM, DM_Distribution& DM_distr, doub
 		double p_value = P_Value(DM, DM_distr);
 		return p_value - (1.0 - certainty);
 	};
-	double log10_upper_bound = libphysica::Find_Root(func, -30.0, 10.0, 1.0e-4);
+	double log10_upper_bound;
+	if(func(-30.0) * func(10.0) > 0)
+		found_limit = false;
+	else
+		log10_upper_bound = libphysica::Find_Root(func, -30.0, 10.0, 1.0e-4);
 
 	DM.Set_Interaction_Parameter(interaction_parameter_original, targets);
 	if(statistical_analysis == "Binned Poisson" || statistical_analysis == "Poisson")
@@ -359,7 +365,10 @@ double DM_Detector::Upper_Limit(DM_Particle& DM, DM_Distribution& DM_distr, doub
 		fiducial_signals	  = 0.0;
 		fiducial_spectrum.clear();
 	}
-	return pow(10.0, log10_upper_bound);
+	if(found_limit)
+		return pow(10.0, log10_upper_bound);
+	else
+		return -1.0;
 }
 
 std::vector<std::vector<double>> DM_Detector::Upper_Limit_Curve(DM_Particle& DM, DM_Distribution& DM_distr, std::vector<double> masses, double certainty)
@@ -373,10 +382,9 @@ std::vector<std::vector<double>> DM_Detector::Upper_Limit_Curve(DM_Particle& DM,
 		if(masses[i] < lowest_mass)
 			continue;
 		DM.Set_Mass(masses[i]);
-		limit.push_back(std::vector<double> {masses[i], Upper_Limit(DM, DM_distr, certainty)});
-		std::cout << i + 1 << "/" << masses.size()
-				  << "\tmDM = " << libphysica::Round(In_Units(DM.mass, (DM.mass < GeV) ? MeV : GeV)) << ((DM.mass < GeV) ? " MeV" : " GeV")
-				  << "\tUpper Bound:\t" << libphysica::Round(In_Units(limit.back()[1], cm * cm)) << std::endl;
+		double upper_limit = Upper_Limit(DM, DM_distr, certainty);
+		if(upper_limit > 0.0)
+			limit.push_back(std::vector<double> {masses[i], upper_limit});
 	}
 	DM.Set_Mass(mOriginal);
 	return limit;

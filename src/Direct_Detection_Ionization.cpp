@@ -87,30 +87,32 @@ double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& 
 {
 	double result = 0.0;
 	for(unsigned int i = 0; i < atom.electrons.size(); i++)
-	{
 		result += R_ne_Ionization(ne, DM, DM_distr, atom.electrons[i]);
-	}
 	return result;
 }
 
-double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell)
+double R_PE_Ionization_aux(unsigned int nPE, double mu_PE, double sigma_PE, std::vector<double> R_ne_spectrum)
 {
 	double sum = 0.0;
 	for(int ne = 1; ne < 16; ne++)
-	{
-		sum += libphysica::PDF_Gauss(nPE, mu_PE * ne, sqrt(ne) * sigma_PE) * R_ne_Ionization(ne, DM, DM_distr, shell);
-	}
+		sum += libphysica::PDF_Gauss(nPE, mu_PE * ne, sqrt(ne) * sigma_PE) * R_ne_spectrum[ne - 1];
 	return sum;
 }
 
-double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom)
+double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell, std::vector<double> electron_spectrum)
 {
-	double result = 0.0;
-	for(unsigned int i = 0; i < atom.electrons.size(); i++)
-	{
-		result += R_PE_Ionization(nPE, mu_PE, sigma_PE, DM, DM_distr, atom.electrons[i]);
-	}
-	return result;
+	if(electron_spectrum.empty())
+		for(unsigned ne = 1; ne < 16; ne++)
+			electron_spectrum.push_back(R_ne_Ionization(ne, DM, DM_distr, shell));
+	return R_PE_Ionization_aux(nPE, mu_PE, sigma_PE, electron_spectrum);
+}
+
+double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom, std::vector<double> electron_spectrum)
+{
+	if(electron_spectrum.empty())
+		for(unsigned ne = 1; ne < 16; ne++)
+			electron_spectrum.push_back(R_ne_Ionization(ne, DM, DM_distr, atom));
+	return R_PE_Ionization_aux(nPE, mu_PE, sigma_PE, electron_spectrum);
 }
 
 //2. Electron recoil direct detection experiment with isolated target atoms
@@ -186,6 +188,10 @@ double DM_Detector_Ionization::DM_Signals_Total(const DM_Particle& DM, DM_Distri
 	}
 	else if(using_S2_threshold)
 	{
+		// Precompute the electron spectrum to speep up the computation of the S2 spectrum
+		std::vector<double> electron_spectrum;
+		for(unsigned int ne = 1; ne < 16; ne++)
+			electron_spectrum.push_back(R_ne_Ionization(ne, DM, DM_distr, target_atom));
 		for(unsigned int PE = PE_threshold; PE <= PE_max; PE++)
 		{
 			double PE_eff = 1.0;
@@ -193,7 +199,7 @@ double DM_Detector_Ionization::DM_Signals_Total(const DM_Particle& DM, DM_Distri
 				PE_eff *= Trigger_Efficiency_PE[PE - 1];
 			if(Acceptance_Efficiency_PE.empty() == false)
 				PE_eff *= Acceptance_Efficiency_PE[PE - 1];
-			N += flat_efficiency * PE_eff * exposure * R_PE_Ionization(PE, S2_mu, S2_sigma, DM, DM_distr, target_atom);
+			N += flat_efficiency * PE_eff * exposure * R_PE_Ionization(PE, S2_mu, S2_sigma, DM, DM_distr, target_atom, electron_spectrum);
 		}
 	}
 
@@ -287,13 +293,18 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle
 	}
 	else
 	{
+		// Precompute the electron spectrum to speep up the computation of the S2 spectrum
+		std::vector<double> electron_spectrum;
+		for(unsigned int ne = 1; ne < 16; ne++)
+			electron_spectrum.push_back(R_ne_Ionization(ne, DM, DM_distr, target_atom));
+
 		std::vector<double> signals;
 		for(unsigned int bin = 0; bin < number_of_bins; bin++)
 		{
 			double R_bin = 0.0;
 			for(unsigned int nPE = S2_bin_ranges[bin]; nPE < S2_bin_ranges[bin + 1]; nPE++)
 			{
-				double R_new = R_PE_Ionization(nPE, S2_mu, S2_sigma, DM, DM_distr, target_atom);
+				double R_new = R_PE_Ionization(nPE, S2_mu, S2_sigma, DM, DM_distr, target_atom, electron_spectrum);
 				if(Trigger_Efficiency_PE.empty() == false)
 					R_new *= Trigger_Efficiency_PE[nPE - 1];
 				if(Acceptance_Efficiency_PE.empty() == false)
