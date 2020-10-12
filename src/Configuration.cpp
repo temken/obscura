@@ -517,7 +517,7 @@ void Configuration::Construct_DM_Detector_Nuclear()
 		std::exit(EXIT_FAILURE);
 	}
 
-	double DD_threshold_nuclear, DD_Emax_nuclear, DD_exposure_nuclear, DD_efficiency_nuclear, DD_expected_background_nuclear;
+	double DD_threshold_nuclear, DD_Emax_nuclear, DD_exposure_nuclear, DD_efficiency_nuclear, DD_expected_background_nuclear, DD_energy_resolution;
 	unsigned int DD_observed_events_nuclear;
 	try
 	{
@@ -576,11 +576,23 @@ void Configuration::Construct_DM_Detector_Nuclear()
 		std::cerr << "No 'DD_expected_background' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
+	try
+	{
+		DD_energy_resolution = config.lookup("DD_energy_resolution");
+		DD_energy_resolution *= keV;
+	}
+	catch(const SettingNotFoundException& nfex)
+	{
+		std::cerr << "No 'DD_energy_resolution' setting in configuration file." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
 	DM_detector = new DM_Detector_Nucleus("Nuclear recoil", DD_exposure_nuclear, DD_targets_nuclear, DD_targets_nuclear_abundances);
 	DM_detector->Set_Flat_Efficiency(DD_efficiency_nuclear);
 	DM_detector->Use_Energy_Threshold(DD_threshold_nuclear, DD_Emax_nuclear);
 	DM_detector->Set_Observed_Events(DD_observed_events_nuclear);
 	DM_detector->Set_Expected_Background(DD_expected_background_nuclear);
+	if(DD_energy_resolution > 0.0)
+		dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Set_Resolution(DD_energy_resolution);
 }
 
 void Configuration::Construct_DM_Detector_Ionization()
