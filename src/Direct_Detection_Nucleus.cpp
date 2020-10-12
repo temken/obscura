@@ -148,7 +148,7 @@ double DM_Detector_Nucleus::dRdE(double E, const DM_Particle& DM, DM_Distributio
 	else
 	{
 		//Find minimum and maximum ER contributing to dR/dE(E):
-		std::vector<double> aux = {E - 6.0 * energy_resolution, energy_threshold - 2.0 * energy_resolution};
+		std::vector<double> aux = {E - 6.0 * energy_resolution, energy_threshold - 3.0 * energy_resolution, 2.0 * energy_resolution};
 		double eMin				= *std::max_element(aux.begin(), aux.end());
 		double eMax				= E + 6.0 * energy_resolution;
 
@@ -207,7 +207,7 @@ void DM_Detector_Nucleus::Print_Summary(int MPI_rank) const
 		}
 		std::cout << "\tThreshold [keV]:\t" << In_Units(energy_threshold, keV) << std::endl
 				  << "\tER_max [keV]:\t\t" << In_Units(energy_max, keV) << std::endl
-				  << "\tEnergy resolution [eV]:\t" << In_Units(energy_resolution, eV) << std::endl
+				  << "\tER resolution [keV]:\t" << In_Units(energy_resolution, keV) << std::endl
 				  << "----------------------------------------" << std::endl
 				  << std::endl;
 	}
