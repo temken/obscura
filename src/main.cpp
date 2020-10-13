@@ -40,8 +40,8 @@ int main(int argc, char* argv[])
 				  << "\tmDM = " << libphysica::Round(In_Units(exclusion_limits[i][0], (exclusion_limits[i][0] < GeV) ? MeV : GeV)) << ((exclusion_limits[i][0] < GeV) ? " MeV" : " GeV")
 				  << "\tUpper Bound:\t" << libphysica::Round(In_Units(exclusion_limits[i][1], cm * cm)) << std::endl;
 
-	int CL = std::round(cfg.constraints_certainty);
-	libphysica::Export_Table(TOP_LEVEL_DIR "results/" + cfg.ID + "/DD_Constraints" + std::to_string(CL) + ".txt", exclusion_limits, {GeV, cm * cm});
+	int CL = std::round(100.0 * cfg.constraints_certainty);
+	libphysica::Export_Table(TOP_LEVEL_DIR "results/" + cfg.ID + "/DD_Constraints_" + std::to_string(CL) + ".txt", exclusion_limits, {GeV, cm * cm});
 
 	////////////////////////////////////////////////////////////////////////
 	//Final terminal output
