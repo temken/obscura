@@ -304,11 +304,14 @@ double DM_Detector::DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_
 	}
 	else
 	{
-		std::function<double(double)> spectrum = [this, &DM, &DM_distr](double E) {
-			return dRdE(E, DM, DM_distr);
-		};
-		double epsilon = libphysica::Find_Epsilon(spectrum, energy_threshold, energy_max, 1e-6);
-		N			   = exposure * libphysica::Integrate(spectrum, energy_threshold, energy_max, epsilon);
+		std::vector<double> args = libphysica::Log_Space(energy_threshold, energy_max, 200);
+		std::vector<double> values;
+		for(auto& arg : args)
+		{
+			values.push_back(dRdE(arg, DM, DM_distr));
+		}
+		libphysica::Interpolation interpol(args, values);
+		N = exposure * interpol.Integrate(energy_threshold, energy_max);
 	}
 	return N;
 }

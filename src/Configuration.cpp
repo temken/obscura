@@ -460,10 +460,10 @@ void Configuration::Construct_DM_Detector()
 		Construct_DM_Detector_Semiconductor();
 
 	// Supported experiments:
-	else if(DD_experiment == "DAMIC-2012")
-		DM_detector = new DM_Detector_Nucleus(DAMIC_N());
-	else if(DD_experiment == "XENON1T-2017")
-		DM_detector = new DM_Detector_Nucleus(XENON1T_N());
+	else if(DD_experiment == "DAMIC_N_2011")
+		DM_detector = new DM_Detector_Nucleus(DAMIC_N_2011());
+	else if(DD_experiment == "XENON1T_N_2017")
+		DM_detector = new DM_Detector_Nucleus(XENON1T_N_2017());
 	else if(DD_experiment == "CRESST-II")
 		DM_detector = new DM_Detector_Nucleus(CRESST_II());
 	else if(DD_experiment == "CRESST-surface")
@@ -471,14 +471,14 @@ void Configuration::Construct_DM_Detector()
 	else if(DD_experiment == "CRESST-III")
 		DM_detector = new DM_Detector_Nucleus(CRESST_III());
 
-	else if(DD_experiment == "XENON10-S2")
-		DM_detector = new DM_Detector_Ionization(XENON10_e());
-	else if(DD_experiment == "XENON100-S2")
-		DM_detector = new DM_Detector_Ionization(XENON100_e());
-	else if(DD_experiment == "XENON1T-S2")
-		DM_detector = new DM_Detector_Ionization(XENON1T_e());
-	else if(DD_experiment == "DarkSide-50-S2")
-		DM_detector = new DM_Detector_Ionization(DarkSide_50_e());
+	else if(DD_experiment == "XENON10_S2")
+		DM_detector = new DM_Detector_Ionization(XENON10_S2());
+	else if(DD_experiment == "XENON100_S2")
+		DM_detector = new DM_Detector_Ionization(XENON100_S2());
+	else if(DD_experiment == "XENON1T_S2")
+		DM_detector = new DM_Detector_Ionization(XENON1T_S2());
+	else if(DD_experiment == "DarkSide-50_S2")
+		DM_detector = new DM_Detector_Ionization(DarkSide_50_S2());
 
 	else if(DD_experiment == "protoSENSEI@surface")
 		DM_detector = new DM_Detector_Semiconductor(protoSENSEI_at_Surface());
@@ -486,8 +486,10 @@ void Configuration::Construct_DM_Detector()
 		DM_detector = new DM_Detector_Semiconductor(protoSENSEI_at_MINOS());
 	else if(DD_experiment == "SENSEI@MINOS")
 		DM_detector = new DM_Detector_Semiconductor(SENSEI_at_MINOS());
-	else if(DD_experiment == "CDMS-HVeV")
-		DM_detector = new DM_Detector_Semiconductor(CDMS_HVeV());
+	else if(DD_experiment == "CDMS-HVeV_2018")
+		DM_detector = new DM_Detector_Semiconductor(CDMS_HVeV_2018());
+	else if(DD_experiment == "CDMS-HVeV_2020")
+		DM_detector = new DM_Detector_Semiconductor(CDMS_HVeV_2020());
 	else
 	{
 		std::cerr << "Error in obscura::Configuration::Construct_DM_Detector(): Experiment " << DD_experiment << " not recognized." << std::endl;
@@ -517,7 +519,7 @@ void Configuration::Construct_DM_Detector_Nuclear()
 		std::exit(EXIT_FAILURE);
 	}
 
-	double DD_threshold_nuclear, DD_Emax_nuclear, DD_exposure_nuclear, DD_efficiency_nuclear, DD_expected_background_nuclear;
+	double DD_threshold_nuclear, DD_Emax_nuclear, DD_exposure_nuclear, DD_efficiency_nuclear, DD_expected_background_nuclear, DD_energy_resolution;
 	unsigned int DD_observed_events_nuclear;
 	try
 	{
@@ -576,11 +578,23 @@ void Configuration::Construct_DM_Detector_Nuclear()
 		std::cerr << "No 'DD_expected_background' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
+	try
+	{
+		DD_energy_resolution = config.lookup("DD_energy_resolution");
+		DD_energy_resolution *= keV;
+	}
+	catch(const SettingNotFoundException& nfex)
+	{
+		std::cerr << "No 'DD_energy_resolution' setting in configuration file." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
 	DM_detector = new DM_Detector_Nucleus("Nuclear recoil", DD_exposure_nuclear, DD_targets_nuclear, DD_targets_nuclear_abundances);
 	DM_detector->Set_Flat_Efficiency(DD_efficiency_nuclear);
 	DM_detector->Use_Energy_Threshold(DD_threshold_nuclear, DD_Emax_nuclear);
 	DM_detector->Set_Observed_Events(DD_observed_events_nuclear);
 	DM_detector->Set_Expected_Background(DD_expected_background_nuclear);
+	if(DD_energy_resolution > 0.0)
+		dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Set_Resolution(DD_energy_resolution);
 }
 
 void Configuration::Construct_DM_Detector_Ionization()

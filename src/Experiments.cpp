@@ -9,23 +9,25 @@ namespace obscura
 using namespace libphysica::natural_units;
 
 //1. Nuclear recoil experiments
-DM_Detector_Nucleus DAMIC_N()
+DM_Detector_Nucleus DAMIC_N_2011()
 {
+	// Source: arXiv:1105.5191
 	double DAMIC_exposure			   = 0.107 * kg * day;
 	std::vector<Element> DAMIC_targets = {Get_Element(14)};
 	double DAMIC_threshold			   = 0.55 * keV;
 	double DAMIC_Emax				   = 7.0 * keV;
 	unsigned int DAMIC_observed_events = 106;
 
-	DM_Detector_Nucleus detector("DAMIC-2012", DAMIC_exposure, DAMIC_targets);
+	DM_Detector_Nucleus detector("DAMIC_N_2011", DAMIC_exposure, DAMIC_targets);
 	detector.Use_Energy_Threshold(DAMIC_threshold, DAMIC_Emax);
 	detector.Set_Observed_Events(DAMIC_observed_events);
 
 	return detector;
 }
 
-DM_Detector_Nucleus XENON1T_N()
+DM_Detector_Nucleus XENON1T_N_2017()
 {
+	// Source: arXiv:1705.06655
 	double XENON1T_exposure				 = 34.2 * day * 1042 * kg;
 	std::vector<Element> XENON1T_targets = {Get_Element(54)};
 	double XENON1T_threshold			 = 5.0 * keV;
@@ -33,7 +35,7 @@ DM_Detector_Nucleus XENON1T_N()
 	double XENON1T_efficiency			 = 0.82;
 	unsigned int XENON1T_observed_events = 0;
 
-	DM_Detector_Nucleus detector("XENON1T-2017", XENON1T_exposure, XENON1T_targets);
+	DM_Detector_Nucleus detector("XENON1T_N_2017", XENON1T_exposure, XENON1T_targets);
 	detector.Set_Flat_Efficiency(XENON1T_efficiency);
 	detector.Use_Energy_Threshold(XENON1T_threshold, XENON1T_Emax);
 	detector.Set_Observed_Events(XENON1T_observed_events);
@@ -43,6 +45,7 @@ DM_Detector_Nucleus XENON1T_N()
 
 DM_Detector_Nucleus CRESST_II()
 {
+	//Source: arXiv:1509.01515 and arXiv:1701.08157
 	double CRESST_II_exposure					= 52.15 * kg * day;
 	std::vector<Element> CRESST_II_targets		= {Get_Element(8), Get_Element(20), Get_Element(74)};	//CaOW
 	std::vector<double> CRESST_II_target_ratios = {4, 1, 1};
@@ -64,6 +67,7 @@ DM_Detector_Nucleus CRESST_II()
 
 DM_Detector_Nucleus CRESST_III()
 {
+	// Source: arXiv:1711.07692 and arXiv:1905.07335
 	double CRESST_III_exposure					 = 5.594 * kg * day;
 	std::vector<Element> CRESST_III_targets		 = {Get_Element(8), Get_Element(20), Get_Element(74)};	 //CaOW
 	std::vector<double> CRESST_III_target_ratios = {4, 1, 1};
@@ -87,6 +91,7 @@ DM_Detector_Nucleus CRESST_III()
 
 DM_Detector_Nucleus CRESST_surface()
 {
+	// Source: arXiv:1707.06749
 	double CRESST_surface_exposure					 = 0.046 * gram * day;
 	std::vector<Element> CRESST_surface_targets		 = {Get_Element(8), Get_Element(13)};
 	std::vector<double> CRESST_surface_target_ratios = {3, 2};
@@ -105,8 +110,9 @@ DM_Detector_Nucleus CRESST_surface()
 }
 
 //2. Electron recoil experiments - Ionization
-DM_Detector_Ionization XENON10_e()
+DM_Detector_Ionization XENON10_S2()
 {
+	// Source: arXiv:1104.3088, arXiv:1206.2644, and arXiv:1703.00910
 	std::string target_name							   = "Xenon";
 	double exposure									   = 15 * kg * day;
 	double flat_efficiency							   = 0.92;
@@ -116,7 +122,7 @@ DM_Detector_Ionization XENON10_e()
 	std::vector<unsigned int> S2_bin_ranges			   = {14, 41, 68, 95, 122, 149, 176, 203};
 	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON10e/PE_Trigger_Efficiency.txt";
 
-	DM_Detector_Ionization detector("XENON10-S2", exposure, target_name);
+	DM_Detector_Ionization detector("XENON10_S2", exposure, target_name);
 	detector.Set_Flat_Efficiency(flat_efficiency);
 	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
 	detector.Set_Observed_Events(observed_event_bins);
@@ -125,8 +131,9 @@ DM_Detector_Ionization XENON10_e()
 	return detector;
 }
 
-DM_Detector_Ionization XENON100_e()
+DM_Detector_Ionization XENON100_S2()
 {
+	// Source: arXiv:1605.06262, arXiv:1703.00910
 	std::string target_name							   = "Xenon";
 	double exposure									   = 30 * kg * year;
 	std::vector<unsigned long int> observed_event_bins = {794, 1218, 924, 776, 669, 630, 528, 488, 433, 387};
@@ -136,7 +143,7 @@ DM_Detector_Ionization XENON100_e()
 	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON100e/PE_Trigger_Efficiency.txt";
 	std::string acceptance_efficiency				   = PROJECT_DIR "data/XENON100e/PE_Acceptance_Efficiency.txt";
 
-	DM_Detector_Ionization detector("XENON100-S2", exposure, target_name);
+	DM_Detector_Ionization detector("XENON100_S2", exposure, target_name);
 	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
 	detector.Set_Observed_Events(observed_event_bins);
 	detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
@@ -145,8 +152,9 @@ DM_Detector_Ionization XENON100_e()
 	return detector;
 }
 
-DM_Detector_Ionization XENON1T_e()
+DM_Detector_Ionization XENON1T_S2()
 {
+	// Source: arXiv:1907.11485
 	std::string target_name							   = "Xenon";
 	double exposure									   = 80755.2 * kg * day;
 	std::vector<unsigned long int> observed_event_bins = {8, 7, 2, 1};
@@ -155,7 +163,7 @@ DM_Detector_Ionization XENON1T_e()
 	std::vector<unsigned int> S2_bin_ranges			   = {150, 200, 250, 300, 350};
 	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON1Te/XENON1T_TotalEfficiency.txt";
 
-	DM_Detector_Ionization detector("XENON1T-S2", exposure, target_name);
+	DM_Detector_Ionization detector("XENON1T_S2", exposure, target_name);
 	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
 	detector.Set_Observed_Events(observed_event_bins);
 	detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
@@ -163,14 +171,15 @@ DM_Detector_Ionization XENON1T_e()
 	return detector;
 }
 
-DM_Detector_Ionization DarkSide_50_e()
+DM_Detector_Ionization DarkSide_50_S2()
 {
+	// Source: arXiv:1802.06998
 	std::string target_name							   = "Argon";
 	double exposure									   = 6786.0 * kg * day;
 	unsigned int ne_threshold						   = 3;
 	std::vector<unsigned long int> observed_event_bins = {6131, 673, 252, 227, 198, 199, 189, 247, 230, 261, 249, 329, 336};
 
-	DM_Detector_Ionization detector("DarkSide-50-S2", exposure, target_name);
+	DM_Detector_Ionization detector("DarkSide-50_S2", exposure, target_name);
 	detector.Use_Electron_Bins(ne_threshold, 13);
 	detector.Set_Observed_Events(observed_event_bins);
 
@@ -180,6 +189,7 @@ DM_Detector_Ionization DarkSide_50_e()
 //3. Electron recoil experiments - Semiconductor
 DM_Detector_Semiconductor protoSENSEI_at_Surface()
 {
+	// Source: arXiv:1804.00088
 	double SENSEI_surface_exposure								  = 0.07 * gram * 456 * minute;
 	unsigned int SENSEI_surface_Q_threshold						  = 1;
 	unsigned int SENSEI_surface_N_bins							  = 5;
@@ -196,6 +206,7 @@ DM_Detector_Semiconductor protoSENSEI_at_Surface()
 
 DM_Detector_Semiconductor protoSENSEI_at_MINOS()
 {
+	// Source: arXiv:1901.10478
 	double SENSEI_exposure								  = 0.246 * gram * day;
 	unsigned int SENSEI_Q_threshold						  = 1;
 	unsigned int SENSEI_N_bins							  = 3;
@@ -212,6 +223,7 @@ DM_Detector_Semiconductor protoSENSEI_at_MINOS()
 
 DM_Detector_Semiconductor SENSEI_at_MINOS()
 {
+	// Source: arXiv:2004.11378
 	double SENSEI_exposure								  = 9.1 * gram * day;
 	unsigned int SENSEI_Q_threshold						  = 1;
 	unsigned int SENSEI_N_bins							  = 4;
@@ -226,8 +238,9 @@ DM_Detector_Semiconductor SENSEI_at_MINOS()
 	return detector;
 }
 
-DM_Detector_Semiconductor CDMS_HVeV()
+DM_Detector_Semiconductor CDMS_HVeV_2018()
 {
+	// Source: arXiv:1804.10697
 	double SuperCDMS_exposure								 = 0.487 * gram * day;
 	double SuperCDMS_flat_efficiency						 = 0.9545;
 	unsigned int SuperCDMS_Q_threshold						 = 1;
@@ -235,11 +248,26 @@ DM_Detector_Semiconductor CDMS_HVeV()
 	std::vector<double> SuperCDMS_efficiencies				 = {0.88, 0.91, 0.91, 0.91, 0.91, 0.91};
 	std::vector<unsigned long int> SuperCDMS_observed_events = {53000, 400, 74, 18, 7, 14};
 
-	DM_Detector_Semiconductor detector("CMDS-HVeV", SuperCDMS_exposure, "Si");
+	DM_Detector_Semiconductor detector("CMDS-HVeV_2018", SuperCDMS_exposure, "Si");
 	detector.Set_Flat_Efficiency(SuperCDMS_flat_efficiency);
 	detector.Use_Q_Bins(SuperCDMS_Q_threshold, SuperCDMS_N_bins);
 	detector.Set_Observed_Events(SuperCDMS_observed_events);
 	detector.Set_Bin_Efficiencies(SuperCDMS_efficiencies);
+
+	return detector;
+}
+
+DM_Detector_Semiconductor CDMS_HVeV_2020()
+{
+	// Source: arXiv:2005.14067
+	double SuperCDMS_exposure								 = 1.2 * gram * day;
+	unsigned int SuperCDMS_Q_threshold						 = 1;
+	unsigned int SuperCDMS_N_bins							 = 6;
+	std::vector<unsigned long int> SuperCDMS_observed_events = {178800, 1320, 248, 64, 19, 6};
+
+	DM_Detector_Semiconductor detector("CMDS-HVeV_2020", SuperCDMS_exposure, "Si");
+	detector.Use_Q_Bins(SuperCDMS_Q_threshold, SuperCDMS_N_bins);
+	detector.Set_Observed_Events(SuperCDMS_observed_events);
 
 	return detector;
 }
