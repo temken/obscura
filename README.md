@@ -73,7 +73,7 @@ SuperCDMS Collaboration (R. Agnese et al.)
 
 
 - *Constraints on low-mass, relic dark matter candidates from a surface-operated SuperCDMS single-charge sensitive detector*  
-SuperCDMS Collaboration (D.W. Amaral et al.)  
+SuperCDMS Collaboration (D.W. Amaral et al.)    
 <!-- [![Phys.Rev.Lett. 121 (2018) no.5, 051301](https://img.shields.io/badge/Phys.Rev.Lett.-121(2018)no.5,051301-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.121.051301) -->
 [![[arXiv:2005.14067]](https://img.shields.io/badge/arXiv-2005.14067-B31B1B.svg)](https://arxiv.org/abs/2005.14067)
 
