@@ -47,14 +47,14 @@ CRESST Collaboration (G. Angloher et al.)
 [![Eur.Phys.J. C77 (2017) no.9, 637](https://img.shields.io/badge/Eur.Phys.J.-C77(2017)no.9,637-255773.svg)](https://link.springer.com/article/10.1140%2Fepjc%2Fs10052-017-5223-9)
 [![[arXiv:1707.06749]](https://img.shields.io/badge/arXiv-1707.06749-B31B1B.svg)](https://arxiv.org/abs/1707.06749)
 
-#### DAMIC-2012
+#### DAMIC_N_2012
 
 - *Direct Search for Low Mass Dark Matter Particles with CCDs*  
 DAMIC Collaboration (J. Barreto et al.)  
 [![Phys.Lett. B711 (2012) 264](https://img.shields.io/badge/Phys.Lett.B-711(2012)264-255773.svg)](https://www.sciencedirect.com/science/article/pii/S0370269312003887?via%3Dihub)
 [![[arXiv:1105.5191]](https://img.shields.io/badge/arXiv-1105.5191-B31B1B.svg)](https://arxiv.org/abs/1105.5191)
 
-#### XENON1T-2017
+#### XENON1T_N_2017
 
 - *First Dark Matter Search Results from the XENON1T Experiment*  
 XENON Collaboration (E. Aprile et al.)  
@@ -64,7 +64,7 @@ XENON Collaboration (E. Aprile et al.)
 
 ### Electron recoil experiments
 
-#### CDMS-HVeV
+#### CDMS-HVeV_2018
 
 - *First Dark Matter Constraints from a SuperCDMS Single-Charge Sensitive Detector*  
 SuperCDMS Collaboration (R. Agnese et al.)  
@@ -72,10 +72,15 @@ SuperCDMS Collaboration (R. Agnese et al.)
 [![[arXiv:1804.10697]](https://img.shields.io/badge/arXiv-1804.10697-B31B1B.svg)](https://arxiv.org/abs/1804.10697)
 
 
+- *Constraints on low-mass, relic dark matter candidates from a surface-operated SuperCDMS single-charge sensitive detector*  
+SuperCDMS Collaboration (D.W. Amaral et al.)  
+<!-- [![Phys.Rev.Lett. 121 (2018) no.5, 051301](https://img.shields.io/badge/Phys.Rev.Lett.-121(2018)no.5,051301-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.121.051301) -->
+[![[arXiv:2005.14067]](https://img.shields.io/badge/arXiv-2005.14067-B31B1B.svg)](https://arxiv.org/abs/2005.14067)
+
 <!-- #### DAMIC-e -->
 <!-- 1907.12628 -->
 
-#### DarkSide-50-S2
+#### DarkSide-50_S2
 
 - *Constraints on Sub-GeV Dark-Matter–Electron Scattering from the DarkSide-50 Experiment*  
 DarkSide Collaboration (P. Agnes et al.)  
@@ -102,7 +107,7 @@ SENSEI Collaboration (Orr Abramoff et al.)
 SENSEI Collaboration (Liron Barak et al.) 
 [![[arXiv:2004.11378]](https://img.shields.io/badge/arXiv-2004.11378-B31B1B.svg)](https://arxiv.org/abs/2004.11378)
 
-#### XENON10-S2
+#### XENON10_S2
 
 - *A search for light dark matter in XENON10 data*  
 XENON10 Collaboration (J. Angle et al.)  
@@ -120,7 +125,7 @@ Rouven Essig, Tomer Volansky, Tien-Tien Yu
 [![[arXiv:1703.00910]](https://img.shields.io/badge/arXiv-1703.00910-B31B1B.svg)](https://arxiv.org/abs/1703.00910)
 
 
-#### XENON100-S2
+#### XENON100_S2
 
 - *Low-mass dark matter search using ionization signals in XENON100*  
 XENON Collaboration (E. Aprile et al.)   
@@ -132,7 +137,7 @@ Rouven Essig, Tomer Volansky, Tien-Tien Yu
 [![Phys.Rev. D96 (2017) no.4, 043017](https://img.shields.io/badge/Phys.Rev.D-96(2017)no.4-255773.svg)](https://journals.aps.org/prd/abstract/10.1103/PhysRevD.96.043017)
 [![[arXiv:1703.00910]](https://img.shields.io/badge/arXiv-1703.00910-B31B1B.svg)](https://arxiv.org/abs/1703.00910)
 
-#### XENON1T-S2
+#### XENON1T_S2
 
 - *Light Dark Matter Search with Ionization Signals in XENON1T*  
 XENON Collaboration (E. Aprile et al.)  

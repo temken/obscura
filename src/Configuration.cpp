@@ -460,10 +460,10 @@ void Configuration::Construct_DM_Detector()
 		Construct_DM_Detector_Semiconductor();
 
 	// Supported experiments:
-	else if(DD_experiment == "DAMIC-2012")
-		DM_detector = new DM_Detector_Nucleus(DAMIC_N());
-	else if(DD_experiment == "XENON1T-2017")
-		DM_detector = new DM_Detector_Nucleus(XENON1T_N());
+	else if(DD_experiment == "DAMIC_N_2011")
+		DM_detector = new DM_Detector_Nucleus(DAMIC_N_2011());
+	else if(DD_experiment == "XENON1T_N_2017")
+		DM_detector = new DM_Detector_Nucleus(XENON1T_N_2017());
 	else if(DD_experiment == "CRESST-II")
 		DM_detector = new DM_Detector_Nucleus(CRESST_II());
 	else if(DD_experiment == "CRESST-surface")
@@ -471,14 +471,14 @@ void Configuration::Construct_DM_Detector()
 	else if(DD_experiment == "CRESST-III")
 		DM_detector = new DM_Detector_Nucleus(CRESST_III());
 
-	else if(DD_experiment == "XENON10-S2")
-		DM_detector = new DM_Detector_Ionization(XENON10_e());
-	else if(DD_experiment == "XENON100-S2")
-		DM_detector = new DM_Detector_Ionization(XENON100_e());
-	else if(DD_experiment == "XENON1T-S2")
-		DM_detector = new DM_Detector_Ionization(XENON1T_e());
-	else if(DD_experiment == "DarkSide-50-S2")
-		DM_detector = new DM_Detector_Ionization(DarkSide_50_e());
+	else if(DD_experiment == "XENON10_S2")
+		DM_detector = new DM_Detector_Ionization(XENON10_S2());
+	else if(DD_experiment == "XENON100_S2")
+		DM_detector = new DM_Detector_Ionization(XENON100_S2());
+	else if(DD_experiment == "XENON1T_S2")
+		DM_detector = new DM_Detector_Ionization(XENON1T_S2());
+	else if(DD_experiment == "DarkSide-50_S2")
+		DM_detector = new DM_Detector_Ionization(DarkSide_50_S2());
 
 	else if(DD_experiment == "protoSENSEI@surface")
 		DM_detector = new DM_Detector_Semiconductor(protoSENSEI_at_Surface());
@@ -486,8 +486,10 @@ void Configuration::Construct_DM_Detector()
 		DM_detector = new DM_Detector_Semiconductor(protoSENSEI_at_MINOS());
 	else if(DD_experiment == "SENSEI@MINOS")
 		DM_detector = new DM_Detector_Semiconductor(SENSEI_at_MINOS());
-	else if(DD_experiment == "CDMS-HVeV")
-		DM_detector = new DM_Detector_Semiconductor(CDMS_HVeV());
+	else if(DD_experiment == "CDMS-HVeV_2018")
+		DM_detector = new DM_Detector_Semiconductor(CDMS_HVeV_2018());
+	else if(DD_experiment == "CDMS-HVeV_2020")
+		DM_detector = new DM_Detector_Semiconductor(CDMS_HVeV_2020());
 	else
 	{
 		std::cerr << "Error in obscura::Configuration::Construct_DM_Detector(): Experiment " << DD_experiment << " not recognized." << std::endl;
