@@ -23,14 +23,13 @@ class Configuration
 	void Create_Result_Folder(int MPI_rank = 0);
 	void Copy_Config_File(int MPI_rank = 0);
 
-	void Construct_DM_Particle();
+	virtual void Construct_DM_Particle();
 	void Construct_DM_Particle_Standard(std::string DM_interaction);
-	void Construct_DM_Particle_DP();
 
-	void Construct_DM_Distribution();
+	virtual void Construct_DM_Distribution();
 	void Construct_DM_Distribution_SHM();
 
-	void Construct_DM_Detector();
+	virtual void Construct_DM_Detector();
 	void Construct_DM_Detector_Nuclear();
 	void Construct_DM_Detector_Ionization();
 	void Construct_DM_Detector_Semiconductor();
