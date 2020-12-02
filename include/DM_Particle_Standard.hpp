@@ -50,7 +50,7 @@ class DM_Particle_Standard : public DM_Particle
 	void Fix_fp_over_fn(double ratio);
 	void Unfix_Coupling_Ratios();
 
-	// Differential cross sections with nuclear isotopes, elements, and electrons
+	// Differential cross sections
 	virtual double dSigma_dq2_Nucleus(double q, const Isotope& target, double vDM) const override
 	{
 		return 0;
@@ -64,12 +64,6 @@ class DM_Particle_Standard : public DM_Particle
 	virtual double Sigma_Proton() const override;
 	virtual double Sigma_Neutron() const override;
 	virtual double Sigma_Electron() const override;
-
-	// Total cross sections with nuclear isotopes, elements, and electrons
-	virtual double Sigma_Nucleus(const Isotope& target, double vDM = 1e-3) const override
-	{
-		return 0;
-	};
 };
 
 // 2. Spin-independent (SI) interactions
@@ -90,12 +84,21 @@ class DM_Particle_SI : public DM_Particle_Standard
 	void Set_FormFactor_DM(std::string ff, double mMed = -1.0);
 	void Set_Mediator_Mass(double m);
 
-	// Differential cross sections with nuclear isotopes, elements, and electrons
+	// Differential cross sections
 	virtual double dSigma_dq2_Nucleus(double q, const Isotope& target, double vDM) const override;
 	virtual double dSigma_dq2_Electron(double q, double vDM) const override;
 
-	// Total cross sections with nuclear isotopes, elements, and electrons
+	// Total cross sections
 	virtual double Sigma_Nucleus(const Isotope& isotope, double vDM = 1e-3) const override;
+	virtual double Sigma_Total_Electron(double vDM) const override;
+
+	// Scattering angle functions
+	virtual double PDF_Scattering_Angle_Nucleus(double cos_alpha, const Isotope& target, double vDM) override;
+	virtual double PDF_Scattering_Angle_Electron(double cos_alpha, double vDM) override;
+	virtual double CDF_Scattering_Angle_Nucleus(double cos_alpha, const Isotope& target, double vDM) override;
+	virtual double CDF_Scattering_Angle_Electron(double cos_alpha, double vDM) override;
+	virtual double Sample_Scattering_Angle_Nucleus(const Isotope& target, double vDM, std::mt19937& PRNG) override;
+	virtual double Sample_Scattering_Angle_Electron(double vDM, std::mt19937& PRNG) override;
 
 	virtual void Print_Summary(int MPI_rank = 0) const override;
 };
@@ -115,54 +118,17 @@ class DM_Particle_SD : public DM_Particle_Standard
 	virtual double dSigma_dq2_Nucleus(double q, const Isotope& target, double vDM) const override;
 	virtual double dSigma_dq2_Electron(double q, double vDM) const override;
 
-	// Total cross sections with nuclear isotopes, elements, and electrons
+	// Total cross sections
 	virtual double Sigma_Nucleus(const Isotope& isotope, double vDM = 1e-3) const override;
+	virtual double Sigma_Total_Electron(double vDM) const override;
 
-	virtual void Print_Summary(int MPI_rank = 0) const override;
-};
-
-// 4. Dark photon model with kinetic mixing
-class DM_Particle_DP : public DM_Particle
-{
-  private:
-	double epsilon, alpha_dark;
-
-	// Dark matter form factor
-	double q_reference;
-	std::string FF_DM;
-	double m_dark_photon;
-	double FormFactor2_DM(double q) const;
-
-  public:
-	// Constructors
-	DM_Particle_DP();
-	explicit DM_Particle_DP(double mDM);
-	explicit DM_Particle_DP(double mDM, double sigma_p);
-
-	virtual void Set_Mass(double mDM) override;
-
-	void Set_Epsilon(double e);
-	double Get_Epsilon();
-
-	// Dark matter form factor
-	void Set_FormFactor_DM(std::string ff, double mMed = -1.0);
-	void Set_Dark_Photon_Mass(double m);
-
-	// Primary interaction parameter, such as a coupling constant or cross section
-	virtual double Get_Interaction_Parameter(std::string target) const override;
-	virtual void Set_Interaction_Parameter(double par, std::string target) override;
-
-	virtual void Set_Sigma_Proton(double sigma) override;
-	virtual void Set_Sigma_Electron(double sigma) override;
-
-	// Differential cross sections with nuclear isotopes, elements, and electrons
-	virtual double dSigma_dq2_Nucleus(double q, const Isotope& target, double vDM) const override;
-	virtual double dSigma_dq2_Electron(double q, double vDM) const override;
-
-	// Total cross sections with nuclear isotopes, elements, and electrons
-	virtual double Sigma_Proton() const override;
-	virtual double Sigma_Electron() const override;
-	virtual double Sigma_Nucleus(const Isotope& target, double vDM) const override;
+	// Scattering angle functions
+	virtual double PDF_Scattering_Angle_Nucleus(double cos_alpha, const Isotope& target, double vDM) override;
+	virtual double PDF_Scattering_Angle_Electron(double cos_alpha, double vDM) override;
+	virtual double CDF_Scattering_Angle_Nucleus(double cos_alpha, const Isotope& target, double vDM) override;
+	virtual double CDF_Scattering_Angle_Electron(double cos_alpha, double vDM) override;
+	virtual double Sample_Scattering_Angle_Nucleus(const Isotope& target, double vDM, std::mt19937& PRNG) override;
+	virtual double Sample_Scattering_Angle_Electron(double vDM, std::mt19937& PRNG) override;
 
 	virtual void Print_Summary(int MPI_rank = 0) const override;
 };
