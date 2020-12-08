@@ -58,7 +58,7 @@ void Configuration::Initialize_Result_Folder(int MPI_rank)
 		std::cerr << "Error in obscura::Configuration::Initialize_Result_Folder(): No 'ID' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
-
+	results_path = TOP_LEVEL_DIR "results/" + ID + "/";
 	Create_Result_Folder(MPI_rank);
 	Copy_Config_File(MPI_rank);
 }
@@ -78,8 +78,7 @@ void Configuration::Create_Result_Folder(int MPI_rank)
 #endif
 
 		//2. Create a /result/<ID>/ folder for result files.
-		results_path = results_folder + "/" + ID + "/";
-		int nError	 = 0;
+		int nError = 0;
 #if defined(_WIN32)
 		nError = _mkdir(results_path.c_str());	 // can be used on Windows
 #else
