@@ -16,7 +16,7 @@ using namespace libphysica::natural_units;
 double dRdEe_Migdal(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Isotope& isotope, Atomic_Electron& shell)
 {
 	std::function<double(double)> ER_integrand = [Ee, &DM, &DM_distr, &isotope, &shell](double ER) {
-		double vMin = vMinimal_Nucleus(ER, DM.mass, isotope.mass);
+		double vMin = (ER > 0) ? vMinimal_Nucleus(ER, DM.mass, isotope.mass) : 1.0e-20 * cm / sec;
 		double q	= sqrt(2.0 * isotope.mass * ER);
 		double qe	= mElectron / isotope.mass * q;
 		if(DM.DD_use_eta_function && DM_distr.DD_use_eta_function)
