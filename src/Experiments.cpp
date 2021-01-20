@@ -272,4 +272,64 @@ DM_Detector_Semiconductor CDMS_HVeV_2020()
 	return detector;
 }
 
+//4. Migdal scattering experiments
+DM_Detector_Migdal XENON10_Migdal()
+{
+	// Source: arXiv:1104.3088, arXiv:1206.2644, and arXiv:1703.00910
+	std::string target_name							   = "Xe";
+	double exposure									   = 15 * kg * day;
+	double flat_efficiency							   = 0.92;
+	std::vector<unsigned long int> observed_event_bins = {126, 60, 12, 3, 2, 0, 2};
+	double muPE										   = 27.0;
+	double sigPE									   = 6.7;
+	std::vector<unsigned int> S2_bin_ranges			   = {14, 41, 68, 95, 122, 149, 176, 203};
+	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON10e/PE_Trigger_Efficiency.txt";
+
+	DM_Detector_Migdal detector("XENON10_Migdal", exposure, target_name);
+	detector.Set_Flat_Efficiency(flat_efficiency);
+	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+	detector.Set_Observed_Events(observed_event_bins);
+	detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
+
+	return detector;
+}
+DM_Detector_Migdal XENON100_Migdal()
+{
+	// Source: arXiv:1605.06262, arXiv:1703.00910
+	std::string target_name							   = "Xe";
+	double exposure									   = 30 * kg * year;
+	std::vector<unsigned long int> observed_event_bins = {794, 1218, 924, 776, 669, 630, 528, 488, 433, 387};
+	double muPE										   = 19.7;
+	double sigPE									   = 6.2;
+	std::vector<unsigned int> S2_bin_ranges			   = {80, 90, 110, 130, 150, 170, 190, 210, 230, 250, 270};
+	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON100e/PE_Trigger_Efficiency.txt";
+	std::string acceptance_efficiency				   = PROJECT_DIR "data/XENON100e/PE_Acceptance_Efficiency.txt";
+
+	DM_Detector_Migdal detector("XENON100_Migdal", exposure, target_name);
+	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+	detector.Set_Observed_Events(observed_event_bins);
+	detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
+	detector.Import_Acceptance_Efficiency_PE(acceptance_efficiency);
+
+	return detector;
+}
+DM_Detector_Migdal XENON1T_Migdal()
+{
+	// Source: arXiv:1907.11485
+	std::string target_name							   = "Xe";
+	double exposure									   = 80755.2 * kg * day;
+	std::vector<unsigned long int> observed_event_bins = {8, 7, 2, 1};
+	double muPE										   = 33.0;
+	double sigPE									   = 7.0;
+	std::vector<unsigned int> S2_bin_ranges			   = {150, 200, 250, 300, 350};
+	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON1Te/XENON1T_TotalEfficiency.txt";
+
+	DM_Detector_Migdal detector("XENON1T_Migdal", exposure, target_name);
+	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+	detector.Set_Observed_Events(observed_event_bins);
+	detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
+
+	return detector;
+}
+
 }	// namespace obscura

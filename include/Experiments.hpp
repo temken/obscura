@@ -2,6 +2,7 @@
 #define __Experiments_hpp_
 
 #include "Direct_Detection_Ionization.hpp"
+#include "Direct_Detection_Migdal.hpp"
 #include "Direct_Detection_Nucleus.hpp"
 #include "Direct_Detection_Semiconductor.hpp"
 
@@ -24,6 +25,10 @@ extern DM_Detector_Semiconductor protoSENSEI_at_MINOS();
 extern DM_Detector_Semiconductor SENSEI_at_MINOS();
 extern DM_Detector_Semiconductor CDMS_HVeV_2018();
 extern DM_Detector_Semiconductor CDMS_HVeV_2020();
+//4. Migdal scattering experiments
+extern DM_Detector_Migdal XENON10_Migdal();
+extern DM_Detector_Migdal XENON100_Migdal();
+extern DM_Detector_Migdal XENON1T_Migdal();
 
 }	// namespace obscura
 

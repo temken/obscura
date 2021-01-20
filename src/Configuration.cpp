@@ -9,6 +9,7 @@
 
 #include "DM_Particle_Standard.hpp"
 #include "Direct_Detection_Ionization.hpp"
+#include "Direct_Detection_Migdal.hpp"
 #include "Direct_Detection_Nucleus.hpp"
 #include "Direct_Detection_Semiconductor.hpp"
 #include "Experiments.hpp"
@@ -445,6 +446,14 @@ void Configuration::Construct_DM_Detector()
 		DM_detector = new DM_Detector_Semiconductor(CDMS_HVeV_2018());
 	else if(DD_experiment == "CDMS-HVeV_2020")
 		DM_detector = new DM_Detector_Semiconductor(CDMS_HVeV_2020());
+
+	else if(DD_experiment == "XENON10_Migdal")
+		DM_detector = new DM_Detector_Migdal(XENON10_Migdal());
+	else if(DD_experiment == "XENON100_Migdal")
+		DM_detector = new DM_Detector_Migdal(XENON100_Migdal());
+	else if(DD_experiment == "XENON1T_Migdal")
+		DM_detector = new DM_Detector_Migdal(XENON1T_Migdal());
+
 	else
 	{
 		std::cerr << "Error in obscura::Configuration::Construct_DM_Detector(): Experiment " << DD_experiment << " not recognized." << std::endl;
