@@ -13,6 +13,7 @@ namespace obscura
 extern double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell);
 extern double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom);
 
+extern double PDF_ne(unsigned int ne, double Ee, const Atomic_Electron& shell);
 extern double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell);
 extern double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom);
 
