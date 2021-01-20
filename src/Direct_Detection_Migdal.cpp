@@ -18,13 +18,18 @@ using namespace libphysica::natural_units;
 double dRdEe_Migdal(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Isotope& isotope, Atomic_Electron& shell)
 {
 	std::function<double(double)> ER_integrand = [Ee, &DM, &DM_distr, &isotope, &shell](double ER) {
-		double vMin = (ER > 0) ? vMinimal_Nucleus(ER, DM.mass, isotope.mass) : 1.0e-20 * cm / sec;
 		double q	= sqrt(2.0 * isotope.mass * ER);
 		double qe	= mElectron / isotope.mass * q;
+		double vMin = (q > 0) ? vMinimal_Electrons(q, (Ee + shell.binding_energy), DM.mass) : 1.0e-20 * cm / sec;
+		if(vMin >= DM_distr.Maximum_DM_Speed())
+			return 0.0;
 		if(DM.DD_use_eta_function && DM_distr.DD_use_eta_function)
 		{
-			double vDM = 1.0e-3;   // cancels
-			return DM_distr.DM_density / DM.mass * DM_distr.Eta_Function(vMin) * DM.dSigma_dER_Nucleus(ER, isotope, vDM) * vDM * vDM * shell.Ionization_Form_Factor(qe, Ee);
+			double vDM	  = 1.0e-3;	  // cancels
+			double result = DM_distr.DM_density / DM.mass * DM_distr.Eta_Function(vMin) * DM.dSigma_dER_Nucleus(ER, isotope, vDM) * vDM * vDM * shell.Ionization_Form_Factor(qe, Ee);
+			if(result == 0.0)
+				std::cout << vMin / km * sec << "\t" << DM_distr.Eta_Function(vMin) << "\t" << DM.dSigma_dER_Nucleus(ER, isotope, vDM) * vDM * vDM << "\t" << shell.Ionization_Form_Factor(qe, Ee) << std::endl;
+			return result;
 		}
 		else
 		{
@@ -36,9 +41,18 @@ double dRdEe_Migdal(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr,
 			return shell.Ionization_Form_Factor(qe, Ee) * v_integral;
 		}
 	};
-	double ER_max	   = Maximum_Nuclear_Recoil_Energy(DM_distr.Maximum_DM_Speed(), DM.mass, isotope.mass);
-	double epsilon	   = libphysica::Find_Epsilon(ER_integrand, 0.0, ER_max, 1.0e-4);
-	double ER_integral = libphysica::Integrate(ER_integrand, 0.0, ER_max, epsilon);
+	double vMax = DM_distr.Maximum_DM_Speed();
+
+	double qMin	  = shell.binding_energy / vMax;
+	double qMax	  = 2.0 * libphysica::Reduced_Mass(DM.mass, isotope.mass) * vMax;
+	double ER_min = qMin * qMin / 2.0 / isotope.mass;
+	double ER_max = qMax * qMax / 2.0 / isotope.mass;
+
+	std::vector<double> ER_list = libphysica::Log_Space(ER_min, ER_max, 50);
+	double dln_ER				= log(ER_list[1] / ER_list[0]);
+	double ER_integral			= 0.0;
+	for(auto& ER : ER_list)
+		ER_integral += dln_ER * ER * ER_integrand(ER);
 	return 1.0 / isotope.mass / 4.0 / Ee * ER_integral;
 }
 
