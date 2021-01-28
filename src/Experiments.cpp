@@ -228,7 +228,7 @@ DM_Detector_Semiconductor SENSEI_at_MINOS()
 	unsigned int SENSEI_Q_threshold						  = 1;
 	unsigned int SENSEI_N_bins							  = 4;
 	std::vector<double> SENSEI_efficiencies				  = {1.38 / 9.1, 2.09 / 9.1, 9.03 / 9.1, 1.0};
-	std::vector<unsigned long int> SENSEI_observed_events = {1312, 5, 0, 0};
+	std::vector<unsigned long int> SENSEI_observed_events = {578, 5, 0, 0};
 
 	DM_Detector_Semiconductor detector("SENSEI@MINOS", SENSEI_exposure, "Si");
 	detector.Use_Q_Bins(SENSEI_Q_threshold, SENSEI_N_bins);
