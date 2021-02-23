@@ -4,6 +4,8 @@
 
 # obscura - Direct detection of dark matter with nucleus and electron recoil experiments
 
+[![DOI](https://zenodo.org/badge/250298432.svg)](https://zenodo.org/badge/latestdoi/250298432)
+
 A C++ tool and library for dark matter direct detection computations for both nuclear and electron recoil experiments.
 
 <img src="results/obscura_DD_Constraints.png" width="500">
