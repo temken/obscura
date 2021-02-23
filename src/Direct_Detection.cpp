@@ -316,6 +316,11 @@ double DM_Detector::DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_
 	return N;
 }
 
+double DM_Detector::DM_Signal_Rate_Total(const DM_Particle& DM, DM_Distribution& DM_distr)
+{
+	return DM_Signals_Total(DM, DM_distr) / exposure;
+}
+
 std::vector<double> DM_Detector::DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr)
 {
 	if(statistical_analysis != "Binned Poisson")

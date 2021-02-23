@@ -9,6 +9,7 @@
 
 #include "DM_Particle_Standard.hpp"
 #include "Direct_Detection_Ionization.hpp"
+#include "Direct_Detection_Migdal.hpp"
 #include "Direct_Detection_Nucleus.hpp"
 #include "Direct_Detection_Semiconductor.hpp"
 #include "Experiments.hpp"
@@ -58,7 +59,7 @@ void Configuration::Initialize_Result_Folder(int MPI_rank)
 		std::cerr << "Error in obscura::Configuration::Initialize_Result_Folder(): No 'ID' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
-
+	results_path = TOP_LEVEL_DIR "results/" + ID + "/";
 	Create_Result_Folder(MPI_rank);
 	Copy_Config_File(MPI_rank);
 }
@@ -78,8 +79,7 @@ void Configuration::Create_Result_Folder(int MPI_rank)
 #endif
 
 		//2. Create a /result/<ID>/ folder for result files.
-		results_path = results_folder + "/" + ID + "/";
-		int nError	 = 0;
+		int nError = 0;
 #if defined(_WIN32)
 		nError = _mkdir(results_path.c_str());	 // can be used on Windows
 #else
@@ -204,8 +204,6 @@ void Configuration::Construct_DM_Particle()
 	//3.2.1 SI and SD
 	if(DM_interaction == "SI" || DM_interaction == "SD")
 		Configuration::Construct_DM_Particle_Standard(DM_interaction);
-	else if(DM_interaction == "DP")
-		Configuration::Construct_DM_Particle_DP();
 	else
 	{
 		std::cerr << "Error in obscura::Configuration::Construct_DM_Particle(): 'DM_interaction' setting " << DM_interaction << " in configuration file not recognized." << std::endl;
@@ -318,50 +316,6 @@ void Configuration::Construct_DM_Particle_Standard(std::string DM_interaction)
 	DM->Set_Sigma_Electron(DM_cross_section_electron);
 }
 
-void Configuration::Construct_DM_Particle_DP()
-{
-	DM = new DM_Particle_DP();
-
-	//DM form factor
-	std::string DM_form_factor;
-	double DM_mediator_mass = -1.0;
-	try
-	{
-		DM_form_factor = config.lookup("DM_form_factor").c_str();
-	}
-	catch(const SettingNotFoundException& nfex)
-	{
-		std::cerr << "Error in Configuration::Construct_DM_Particle_DP(): No 'DM_form_factor' setting in configuration file." << std::endl;
-		std::exit(EXIT_FAILURE);
-	}
-	if(DM_form_factor == "General")
-	{
-		try
-		{
-			DM_mediator_mass = config.lookup("DM_mediator_mass");
-			DM_mediator_mass *= MeV;
-		}
-		catch(const SettingNotFoundException& nfex)
-		{
-			std::cerr << "Error in Configuration::Construct_DM_Particle_DP(): No 'DM_mediator_mass' setting in configuration file." << std::endl;
-			std::exit(EXIT_FAILURE);
-		}
-	}
-	dynamic_cast<DM_Particle_DP*>(DM)->Set_FormFactor_DM(DM_form_factor, DM_mediator_mass);
-	double DM_cross_section_electron;
-	try
-	{
-		DM_cross_section_electron = config.lookup("DM_cross_section_electron");
-		DM_cross_section_electron *= cm * cm;
-	}
-	catch(const SettingNotFoundException& nfex)
-	{
-		std::cerr << "Error in Configuration::Construct_DM_Particle_DP(): No 'DM_cross_section_electron' setting in configuration file." << std::endl;
-		std::exit(EXIT_FAILURE);
-	}
-	DM->Set_Interaction_Parameter(DM_cross_section_electron, "Electrons");
-}
-
 void Configuration::Construct_DM_Distribution()
 {
 	std::string DM_distribution;
@@ -451,6 +405,8 @@ void Configuration::Construct_DM_Detector()
 		std::exit(EXIT_FAILURE);
 	}
 
+	Import_Nuclear_Data();
+
 	// User-defined experiments:
 	if(DD_experiment == "Nuclear recoil")
 		Construct_DM_Detector_Nuclear();
@@ -490,6 +446,14 @@ void Configuration::Construct_DM_Detector()
 		DM_detector = new DM_Detector_Semiconductor(CDMS_HVeV_2018());
 	else if(DD_experiment == "CDMS-HVeV_2020")
 		DM_detector = new DM_Detector_Semiconductor(CDMS_HVeV_2020());
+
+	else if(DD_experiment == "XENON10_Migdal")
+		DM_detector = new DM_Detector_Migdal(XENON10_Migdal());
+	else if(DD_experiment == "XENON100_Migdal")
+		DM_detector = new DM_Detector_Migdal(XENON100_Migdal());
+	else if(DD_experiment == "XENON1T_Migdal")
+		DM_detector = new DM_Detector_Migdal(XENON1T_Migdal());
+
 	else
 	{
 		std::cerr << "Error in obscura::Configuration::Construct_DM_Detector(): Experiment " << DD_experiment << " not recognized." << std::endl;
@@ -499,7 +463,6 @@ void Configuration::Construct_DM_Detector()
 
 void Configuration::Construct_DM_Detector_Nuclear()
 {
-	Import_Nuclear_Data();
 	std::vector<Element> DD_targets_nuclear;
 	std::vector<double> DD_targets_nuclear_abundances;
 	try

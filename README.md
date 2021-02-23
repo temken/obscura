@@ -144,6 +144,10 @@ XENON Collaboration (E. Aprile et al.)
 [![Phys.Rev.Lett. 123 (2019) no.25, 251801](https://img.shields.io/badge/Phys.Rev.Lett.-123(2019)no.25,251801-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.123.251801)
 [![[arXiv:1907.11485]](https://img.shields.io/badge/arXiv-1907.11485-B31B1B.svg)](https://arxiv.org/abs/1907.11485)
 
+## VERSION HISTORY
+
+- 23.02.2021: Release of version 0.1.0
+
 ## AUTHORS & CONTACT
 
 The author of this tool/library is Timon Emken.

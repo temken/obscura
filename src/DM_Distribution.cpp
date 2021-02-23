@@ -220,9 +220,26 @@ double Standard_Halo_Model::PDF_Speed(double v)
 	if(v < v_domain[0] || v > v_domain[1])
 		return 0.0;
 	else if(v_observer > 0)
-		return v / N_esc / v_0 / sqrt(M_PI) / v_observer * (2 * exp(-(v * v + v_observer * v_observer) / v_0 / v_0) * sinh(2 * v * v_observer / v_0 / v_0) + (exp(-pow(v + v_observer, 2.0) / v_0 / v_0) - exp(-v_esc * v_esc / v_0 / v_0)) * libphysica::StepFunction(fabs(v + v_observer) - v_esc) - (exp(-pow(v - v_observer, 2.0) / v_0 / v_0) - exp(-v_esc * v_esc / v_0 / v_0)) * libphysica::StepFunction(fabs(v - v_observer) - v_esc));
+		return v / N_esc / v_0 / sqrt(M_PI) / v_observer * (2 * exp(-(v * v + v_observer * v_observer) / v_0 / v_0) * sinh(2 * v * v_observer / v_0 / v_0) + (exp(-pow(v + v_observer, 2.0) / v_0 / v_0) - exp(-v_esc * v_esc / v_0 / v_0)) * libphysica::StepFunction(fabs(v + v_observer) - v_esc));	 // - (exp(-pow(v - v_observer, 2.0) / v_0 / v_0) - exp(-v_esc * v_esc / v_0 / v_0)) * libphysica::StepFunction(fabs(v - v_observer) - v_esc));
 	else
 		return 4.0 * v * v / N_esc / sqrt(M_PI) / v_0 / v_0 / v_0 * exp(-v * v / v_0 / v_0) * libphysica::StepFunction(Maximum_DM_Speed() - v);
+}
+
+double Standard_Halo_Model::CDF_Speed(double v)
+{
+	if(v <= v_domain[0])
+		return 0.0;
+	else if(v >= v_domain[1])
+		return 1.0;
+	else if(v_observer > 0)
+	{
+		double cdf = 1.0 / 2.0 / N_esc * (erf((v - v_observer) / v_0) + erf((v + v_observer) / v_0) - v_0 / v_observer / sqrt(M_PI) * (exp(-(v - v_observer) * (v - v_observer) / v_0 / v_0) - exp(-(v + v_observer) * (v + v_observer) / v_0 / v_0)));
+		if(v > (v_esc - v_observer))
+			cdf += 1.0 / 2.0 / N_esc * (erf(v_esc / v_0) - erf((v + v_observer) / v_0) - v_0 / v_observer / sqrt(M_PI) * exp(-(v + v_observer) * (v + v_observer) / v_0 / v_0) + (v_0 * v_0 - v * v + (v_esc - v_observer) * (v_esc - v_observer)) / v_observer / v_0 / sqrt(M_PI) * exp(-v_esc * v_esc / v_0 / v_0));
+		return cdf;
+	}
+	else
+		return 1.0 / N_esc * (erf(v / v_0) - 2.0 * v / sqrt(M_PI) / v_0 * exp(-v * v / v_0 / v_0));
 }
 
 //Eta-function for direct detection

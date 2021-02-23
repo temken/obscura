@@ -76,6 +76,7 @@ class Standard_Halo_Model : public DM_Distribution
 	//Distribution functions
 	virtual double PDF_Velocity(libphysica::Vector vel) override;
 	virtual double PDF_Speed(double v) override;
+	virtual double CDF_Speed(double v) override;
 
 	//Eta-function for direct detection
 	virtual double Eta_Function(double vMin) override;

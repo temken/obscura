@@ -75,6 +75,7 @@ class DM_Detector
 	virtual double Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const { return 0.0; };
 	virtual double dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr) { return 0.0; };
 	virtual double DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr);
+	double DM_Signal_Rate_Total(const DM_Particle& DM, DM_Distribution& DM_distr);
 	virtual std::vector<double> DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr);
 
 	//Statistics
