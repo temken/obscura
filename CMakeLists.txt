@@ -23,7 +23,7 @@ include(FetchContent)
 set(LIBPHYSICA_DIR   ${EXTERNAL_DIR}/libphysica)
 FetchContent_Declare(libphysica
   GIT_REPOSITORY  https://github.com/temken/libphysica.git
-  GIT_TAG         origin/master
+  GIT_TAG         v0.1.0
   SOURCE_DIR     "${LIBPHYSICA_DIR}"
   CMAKE_ARGS     "-DCMAKE_BUILD_TYPE=Release -DCODE_COVERAGE=OFF" )
 FetchContent_GetProperties(libphysica)
@@ -31,19 +31,6 @@ if(NOT libphysica_POPULATED)
     FetchContent_Populate(libphysica)
     add_subdirectory( ${libphysica_SOURCE_DIR} )
 endif()
-
-# # libconfig
-# set(LIBCONFIG_DIR   ${EXTERNAL_DIR}/libconfig)
-# FetchContent_Declare(libconfig
-#   GIT_REPOSITORY  https://github.com/hyperrealm/libconfig.git
-#   GIT_TAG         origin/master
-#   SOURCE_DIR     "${LIBCONFIG_DIR}"
-#   CMAKE_ARGS     -DBUILD_EXAMPLES=OFF -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTS=OFF )
-# FetchContent_GetProperties(libconfig)
-# if(NOT libconfig_POPULATED)
-#     FetchContent_Populate(libconfig)
-#     add_subdirectory( ${libconfig_SOURCE_DIR} )
-# endif()
 
 # Googletest
 set(GTEST_DIR   ${EXTERNAL_DIR}/googletest)
