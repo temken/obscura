@@ -1,4 +1,4 @@
-#include "Direct_Detection_Semiconductor.hpp"
+#include "obscura/Direct_Detection_Semiconductor.hpp"
 
 #include <cmath>
 #include <numeric>

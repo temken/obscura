@@ -1,13 +1,13 @@
 #include "gtest/gtest.h"
 
-#include "Direct_Detection_Nucleus.hpp"
+#include "obscura/Direct_Detection_Nucleus.hpp"
 
 #include <cmath>
 
 #include "libphysica/Natural_Units.hpp"
 
-#include "DM_Particle_Standard.hpp"
-#include "Target_Nucleus.hpp"
+#include "obscura/DM_Particle_Standard.hpp"
+#include "obscura/Target_Nucleus.hpp"
 
 using namespace obscura;
 using namespace libphysica::natural_units;

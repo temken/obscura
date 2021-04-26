@@ -2,7 +2,7 @@
 
 #include "libphysica/Natural_Units.hpp"
 
-#include "Astronomy.hpp"
+#include "obscura/Astronomy.hpp"
 
 using namespace obscura;
 using namespace libphysica::natural_units;

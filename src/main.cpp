@@ -7,7 +7,7 @@
 #include "libphysica/Numerics.hpp"
 #include "libphysica/Utilities.hpp"
 
-#include "Configuration.hpp"
+#include "obscura/Configuration.hpp"
 #include "version.hpp"
 
 using namespace libphysica::natural_units;

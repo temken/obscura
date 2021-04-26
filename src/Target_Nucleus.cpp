@@ -1,4 +1,4 @@
-#include "Target_Nucleus.hpp"
+#include "obscura/Target_Nucleus.hpp"
 
 #include <cmath>
 #include <fstream>

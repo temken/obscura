@@ -1,4 +1,4 @@
-#include "DM_Particle_Standard.hpp"
+#include "obscura/DM_Particle_Standard.hpp"
 
 #include <cmath>
 

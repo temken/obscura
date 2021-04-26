@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-#include "Target_Nucleus.hpp"
+#include "obscura/Target_Nucleus.hpp"
 
 #include "libphysica/Natural_Units.hpp"
 

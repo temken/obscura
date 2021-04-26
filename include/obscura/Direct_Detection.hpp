@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "DM_Distribution.hpp"
-#include "DM_Particle.hpp"
+#include "obscura/DM_Distribution.hpp"
+#include "obscura/DM_Particle.hpp"
 
 namespace obscura
 {

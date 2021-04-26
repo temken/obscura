@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "Configuration.hpp"
+#include "obscura/Configuration.hpp"
 
 #include "libphysica/Natural_Units.hpp"
 

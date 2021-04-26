@@ -1,4 +1,4 @@
-#include "DM_Distribution.hpp"
+#include "obscura/DM_Distribution.hpp"
 
 #include <cmath>
 #include <functional>
@@ -7,7 +7,7 @@
 #include "libphysica/Natural_Units.hpp"
 #include "libphysica/Numerics.hpp"
 
-#include "Astronomy.hpp"
+#include "obscura/Astronomy.hpp"
 
 namespace obscura
 {

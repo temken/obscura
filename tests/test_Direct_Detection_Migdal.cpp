@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "Direct_Detection_Migdal.hpp"
+#include "obscura/Direct_Detection_Migdal.hpp"
 
 using namespace obscura;
 

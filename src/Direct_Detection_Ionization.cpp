@@ -1,4 +1,4 @@
-#include "Direct_Detection_Ionization.hpp"
+#include "obscura/Direct_Detection_Ionization.hpp"
 
 #include <cmath>
 

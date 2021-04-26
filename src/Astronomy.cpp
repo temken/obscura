@@ -1,4 +1,4 @@
-#include "Astronomy.hpp"
+#include "obscura/Astronomy.hpp"
 
 #include <cmath>
 

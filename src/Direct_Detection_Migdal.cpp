@@ -1,4 +1,4 @@
-#include "Direct_Detection_Migdal.hpp"
+#include "obscura/Direct_Detection_Migdal.hpp"
 
 #include <cmath>
 
@@ -7,7 +7,7 @@
 #include "libphysica/Statistics.hpp"
 #include "libphysica/Utilities.hpp"
 
-#include "Direct_Detection_Ionization.hpp"
+#include "obscura/Direct_Detection_Ionization.hpp"
 
 namespace obscura
 {

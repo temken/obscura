@@ -1,4 +1,4 @@
-#include "Configuration.hpp"
+#include "obscura/Configuration.hpp"
 
 #include <fstream>
 #include <sys/stat.h>	 //required to create a folder
@@ -6,12 +6,12 @@
 
 #include "libphysica/Utilities.hpp"
 
-#include "DM_Particle_Standard.hpp"
-#include "Direct_Detection_Ionization.hpp"
-#include "Direct_Detection_Migdal.hpp"
-#include "Direct_Detection_Nucleus.hpp"
-#include "Direct_Detection_Semiconductor.hpp"
-#include "Experiments.hpp"
+#include "obscura/DM_Particle_Standard.hpp"
+#include "obscura/Direct_Detection_Ionization.hpp"
+#include "obscura/Direct_Detection_Migdal.hpp"
+#include "obscura/Direct_Detection_Nucleus.hpp"
+#include "obscura/Direct_Detection_Semiconductor.hpp"
+#include "obscura/Experiments.hpp"
 #include "version.hpp"
 
 namespace obscura

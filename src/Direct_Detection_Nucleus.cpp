@@ -1,4 +1,4 @@
-#include "Direct_Detection_Nucleus.hpp"
+#include "obscura/Direct_Detection_Nucleus.hpp"
 
 #include <algorithm>   //for std::min_element, std::max_element, std::sort
 #include <cmath>
