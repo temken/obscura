@@ -4,12 +4,12 @@
 #include <fstream>
 #include <iostream>
 
-//Headers from libphysica library
-#include "Natural_Units.hpp"
-#include "Numerics.hpp"
+#include "libphysica/Natural_Units.hpp"
+#include "libphysica/Numerics.hpp"
 
 namespace obscura
 {
+
 using namespace libphysica::natural_units;
 
 //1. Kinematic functions

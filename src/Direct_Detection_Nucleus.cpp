@@ -4,9 +4,8 @@
 #include <cmath>
 #include <numeric>	 //for std::accumulate
 
-//Headers from libphysica library
-#include "Statistics.hpp"
-#include "Utilities.hpp"
+#include "libphysica/Statistics.hpp"
+#include "libphysica/Utilities.hpp"
 
 namespace obscura
 {

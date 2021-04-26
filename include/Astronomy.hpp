@@ -1,8 +1,7 @@
 #ifndef __Astronomy_hpp_
 #define __Astronomy_hpp_
 
-//Headers from libphysica library
-#include "Linear_Algebra.hpp"
+#include "libphysica/Linear_Algebra.hpp"
 
 namespace obscura
 {

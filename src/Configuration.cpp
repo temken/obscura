@@ -4,8 +4,7 @@
 #include <sys/stat.h>	 //required to create a folder
 #include <sys/types.h>	 // required for stat.h
 
-//Headers from libphysica library
-#include "Utilities.hpp"
+#include "libphysica/Utilities.hpp"
 
 #include "DM_Particle_Standard.hpp"
 #include "Direct_Detection_Ionization.hpp"
@@ -17,6 +16,7 @@
 
 namespace obscura
 {
+
 using namespace libconfig;
 using namespace libphysica::natural_units;
 

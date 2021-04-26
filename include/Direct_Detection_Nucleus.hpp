@@ -4,9 +4,8 @@
 #include <string>
 #include <vector>
 
-//Headers from libphysica library
-#include "Natural_Units.hpp"
-#include "Numerics.hpp"
+#include "libphysica/Natural_Units.hpp"
+#include "libphysica/Numerics.hpp"
 
 #include "DM_Distribution.hpp"
 #include "DM_Particle.hpp"

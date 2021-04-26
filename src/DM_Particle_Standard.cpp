@@ -2,9 +2,8 @@
 
 #include <cmath>
 
-//Headers from libphysica library
-#include "Numerics.hpp"
-#include "Statistics.hpp"
+#include "libphysica/Numerics.hpp"
+#include "libphysica/Statistics.hpp"
 
 namespace obscura
 {

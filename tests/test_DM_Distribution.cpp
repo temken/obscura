@@ -2,9 +2,8 @@
 
 #include "DM_Distribution.hpp"
 
-// Headers from libphysica
-#include "Natural_Units.hpp"
-#include "Numerics.hpp"
+#include "libphysica/Natural_Units.hpp"
+#include "libphysica/Numerics.hpp"
 
 #include "Astronomy.hpp"
 

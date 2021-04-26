@@ -3,8 +3,7 @@
 
 #include <string>
 
-// Headers from libphysica library
-#include "Natural_Units.hpp"
+#include "libphysica/Natural_Units.hpp"
 
 #include "DM_Particle.hpp"
 

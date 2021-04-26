@@ -3,9 +3,8 @@
 #include <cmath>
 #include <fstream>
 
-//Headers from libphysica library
-#include "Natural_Units.hpp"
-#include "Utilities.hpp"
+#include "libphysica/Natural_Units.hpp"
+#include "libphysica/Utilities.hpp"
 
 namespace obscura
 {

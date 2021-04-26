@@ -4,8 +4,7 @@
 
 #include <cmath>
 
-// Headers from libphysica
-#include "Natural_Units.hpp"
+#include "libphysica/Natural_Units.hpp"
 
 #include "DM_Particle_Standard.hpp"
 #include "Target_Nucleus.hpp"
