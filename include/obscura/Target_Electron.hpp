@@ -4,8 +4,7 @@
 #include <string>
 #include <vector>
 
-// Headers from libphysica
-#include "Numerics.hpp"
+#include "libphysica/Numerics.hpp"
 
 #include "version.hpp"
 

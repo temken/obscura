@@ -1,29 +1,30 @@
-#ifndef __Direct_Detection_Ionization_hpp_
-#define __Direct_Detection_Ionization_hpp_
+#ifndef __Direct_Detection_Migdal_hpp_
+#define __Direct_Detection_Migdal_hpp_
 
-#include "DM_Distribution.hpp"
-#include "DM_Particle.hpp"
-#include "Direct_Detection.hpp"
-#include "Target_Electron.hpp"
+#include "obscura/DM_Distribution.hpp"
+#include "obscura/DM_Particle.hpp"
+#include "obscura/Direct_Detection.hpp"
+#include "obscura/Target_Electron.hpp"
+#include "obscura/Target_Nucleus.hpp"
 
 namespace obscura
 {
 
 //1. Event spectra and rates
-extern double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell);
-extern double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom);
+extern double dRdEe_Migdal(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Isotope& isotope, Atomic_Electron& shell);
+extern double dRdEe_Migdal(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Element& element, Atomic_Electron& shell);
 
-extern double PDF_ne(unsigned int ne, double Ee, const Atomic_Electron& shell);
-extern double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell);
-extern double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom);
+extern double R_ne_Migdal(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, Element& element, Atomic_Electron& shell);
+extern double R_ne_Migdal(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, Element& element, Atom& atom);
 
-extern double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell, std::vector<double> electron_spectrum = {});
-extern double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom, std::vector<double> electron_spectrum = {});
+extern double R_PE_Migdal(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Element& element, Atomic_Electron& shell, std::vector<double> electron_spectrum = {});
+extern double R_PE_Migdal(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Element& element, Atom& atom, std::vector<double> electron_spectrum = {});
 
 //2. Electron recoil direct detection experiment with isolated target atoms
-class DM_Detector_Ionization : public DM_Detector
+class DM_Detector_Migdal : public DM_Detector
 {
   private:
+	Element target_element;
 	Atom target_atom;
 
 	//DM functions
@@ -50,8 +51,8 @@ class DM_Detector_Ionization : public DM_Detector
 	std::vector<double> DM_Signals_PE_Bins(const DM_Particle& DM, DM_Distribution& DM_distr);
 
   public:
-	DM_Detector_Ionization();
-	DM_Detector_Ionization(std::string label, double expo, std::string atom);
+	DM_Detector_Migdal();
+	DM_Detector_Migdal(std::string label, double expo, std::string atom);
 
 	//DM functions
 	virtual double Minimum_DM_Speed(const DM_Particle& DM) const override;

@@ -1,12 +1,11 @@
 #include "gtest/gtest.h"
 
-#include "DM_Distribution.hpp"
+#include "obscura/DM_Distribution.hpp"
 
-// Headers from libphysica
-#include "Natural_Units.hpp"
-#include "Numerics.hpp"
+#include "libphysica/Natural_Units.hpp"
+#include "libphysica/Numerics.hpp"
 
-#include "Astronomy.hpp"
+#include "obscura/Astronomy.hpp"
 
 using namespace obscura;
 using namespace libphysica::natural_units;

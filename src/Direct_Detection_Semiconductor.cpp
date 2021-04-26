@@ -1,11 +1,10 @@
-#include "Direct_Detection_Semiconductor.hpp"
+#include "obscura/Direct_Detection_Semiconductor.hpp"
 
 #include <cmath>
 #include <numeric>
 
-//Headers from libphysica library
-#include "Natural_Units.hpp"
-#include "Numerics.hpp"
+#include "libphysica/Natural_Units.hpp"
+#include "libphysica/Numerics.hpp"
 
 namespace obscura
 {

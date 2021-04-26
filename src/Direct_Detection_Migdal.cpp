@@ -1,14 +1,13 @@
-#include "Direct_Detection_Migdal.hpp"
+#include "obscura/Direct_Detection_Migdal.hpp"
 
 #include <cmath>
 
-//Headers from libphysica library
-#include "Natural_Units.hpp"
-#include "Numerics.hpp"
-#include "Statistics.hpp"
-#include "Utilities.hpp"
+#include "libphysica/Natural_Units.hpp"
+#include "libphysica/Numerics.hpp"
+#include "libphysica/Statistics.hpp"
+#include "libphysica/Utilities.hpp"
 
-#include "Direct_Detection_Ionization.hpp"
+#include "obscura/Direct_Detection_Ionization.hpp"
 
 namespace obscura
 {
@@ -21,6 +20,7 @@ double dRdEe_Migdal(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr,
 		double q	= sqrt(2.0 * isotope.mass * ER);
 		double qe	= mElectron / isotope.mass * q;
 		double vMin = (q > 0) ? vMinimal_Electrons(q, (Ee + shell.binding_energy), DM.mass) : 1.0e-20 * cm / sec;
+		// check eq 5 of https://arxiv.org/pdf/1711.09906.pdf
 		if(vMin >= DM_distr.Maximum_DM_Speed())
 			return 0.0;
 		if(DM.DD_use_eta_function && DM_distr.DD_use_eta_function)

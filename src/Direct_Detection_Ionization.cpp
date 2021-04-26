@@ -1,11 +1,10 @@
-#include "Direct_Detection_Ionization.hpp"
+#include "obscura/Direct_Detection_Ionization.hpp"
 
 #include <cmath>
 
-//Headers from libphysica library
-#include "Natural_Units.hpp"
-#include "Statistics.hpp"
-#include "Utilities.hpp"
+#include "libphysica/Natural_Units.hpp"
+#include "libphysica/Statistics.hpp"
+#include "libphysica/Utilities.hpp"
 
 namespace obscura
 {

@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "Direct_Detection_Ionization.hpp"
+#include "obscura/Direct_Detection_Ionization.hpp"
 
 using namespace obscura;
 

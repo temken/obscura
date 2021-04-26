@@ -1,13 +1,13 @@
-#include "Astronomy.hpp"
+#include "obscura/Astronomy.hpp"
 
 #include <cmath>
 
-#include "Natural_Units.hpp"
-
-using namespace libphysica::natural_units;
+#include "libphysica/Natural_Units.hpp"
 
 namespace obscura
 {
+
+using namespace libphysica::natural_units;
 
 //1. Transform between astronomical coordinate systems.
 //Transformation matrices

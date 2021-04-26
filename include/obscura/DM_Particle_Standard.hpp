@@ -3,10 +3,9 @@
 
 #include <string>
 
-// Headers from libphysica library
-#include "Natural_Units.hpp"
+#include "libphysica/Natural_Units.hpp"
 
-#include "DM_Particle.hpp"
+#include "obscura/DM_Particle.hpp"
 
 namespace obscura
 {

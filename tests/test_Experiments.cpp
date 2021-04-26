@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "Experiments.hpp"
+#include "obscura/Experiments.hpp"
 
 using namespace obscura;
 

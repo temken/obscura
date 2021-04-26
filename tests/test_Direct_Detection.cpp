@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "Direct_Detection.hpp"
+#include "obscura/Direct_Detection.hpp"
 
 using namespace obscura;
 

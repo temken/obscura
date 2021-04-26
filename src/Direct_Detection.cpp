@@ -1,15 +1,14 @@
-#include "Direct_Detection.hpp"
+#include "obscura/Direct_Detection.hpp"
 
 #include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <numeric>
 
-//Headers from libphysica library
-#include "Natural_Units.hpp"
-#include "Numerics.hpp"
-#include "Statistics.hpp"
-#include "Utilities.hpp"
+#include "libphysica/Natural_Units.hpp"
+#include "libphysica/Numerics.hpp"
+#include "libphysica/Statistics.hpp"
+#include "libphysica/Utilities.hpp"
 
 namespace obscura
 {

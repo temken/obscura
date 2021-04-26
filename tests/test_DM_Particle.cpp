@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "DM_Particle.hpp"
+#include "obscura/DM_Particle.hpp"
 
 using namespace obscura;
 

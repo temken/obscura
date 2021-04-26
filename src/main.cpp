@@ -3,12 +3,11 @@
 #include <cstring>	 // for strlen
 #include <iostream>
 
-//Headers from libphysica library
-#include "Natural_Units.hpp"
-#include "Numerics.hpp"
-#include "Utilities.hpp"
+#include "libphysica/Natural_Units.hpp"
+#include "libphysica/Numerics.hpp"
+#include "libphysica/Utilities.hpp"
 
-#include "Configuration.hpp"
+#include "obscura/Configuration.hpp"
 #include "version.hpp"
 
 using namespace libphysica::natural_units;

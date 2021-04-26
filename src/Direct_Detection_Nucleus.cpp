@@ -1,12 +1,11 @@
-#include "Direct_Detection_Nucleus.hpp"
+#include "obscura/Direct_Detection_Nucleus.hpp"
 
 #include <algorithm>   //for std::min_element, std::max_element, std::sort
 #include <cmath>
 #include <numeric>	 //for std::accumulate
 
-//Headers from libphysica library
-#include "Statistics.hpp"
-#include "Utilities.hpp"
+#include "libphysica/Statistics.hpp"
+#include "libphysica/Utilities.hpp"
 
 namespace obscura
 {

@@ -4,9 +4,9 @@
 #include <libconfig.h++>
 #include <string>
 
-#include "DM_Distribution.hpp"
-#include "DM_Particle.hpp"
-#include "Direct_Detection.hpp"
+#include "obscura/DM_Distribution.hpp"
+#include "obscura/DM_Particle.hpp"
+#include "obscura/Direct_Detection.hpp"
 
 namespace obscura
 {

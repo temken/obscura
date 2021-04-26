@@ -4,8 +4,7 @@
 #include <string>
 #include <vector>
 
-//Headers from libphysica library
-#include "Linear_Algebra.hpp"
+#include "libphysica/Linear_Algebra.hpp"
 
 namespace obscura
 {

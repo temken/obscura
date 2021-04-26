@@ -1,9 +1,8 @@
 #include "gtest/gtest.h"
 
-#include "Configuration.hpp"
+#include "obscura/Configuration.hpp"
 
-// Headers from libphysica
-#include "Natural_Units.hpp"
+#include "libphysica/Natural_Units.hpp"
 
 using namespace obscura;
 using namespace libphysica::natural_units;

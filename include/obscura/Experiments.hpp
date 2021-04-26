@@ -1,10 +1,10 @@
 #ifndef __Experiments_hpp_
 #define __Experiments_hpp_
 
-#include "Direct_Detection_Ionization.hpp"
-#include "Direct_Detection_Migdal.hpp"
-#include "Direct_Detection_Nucleus.hpp"
-#include "Direct_Detection_Semiconductor.hpp"
+#include "obscura/Direct_Detection_Ionization.hpp"
+#include "obscura/Direct_Detection_Migdal.hpp"
+#include "obscura/Direct_Detection_Nucleus.hpp"
+#include "obscura/Direct_Detection_Semiconductor.hpp"
 
 namespace obscura
 {
