@@ -154,7 +154,7 @@ XENON Collaboration (E. Aprile et al.)
 
 The author of this tool/library is Timon Emken.
 
-For questions, bug reports or other suggestions please contact [emken@chalmers.se](mailto:emken@chalmers.se).
+For questions, bug reports or other suggestions please contact [timon.emken@fysik.su.se](mailto:timon.emken@fysik.su.se).
 
 
 ## LICENSE
