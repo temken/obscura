@@ -10,14 +10,11 @@ namespace obscura
 {
 
 //1. Event spectra and rates
-extern double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell);
+extern double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, double m_nucleus, Atomic_Electron& shell);
 extern double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom);
 
-extern double PDF_ne(unsigned int ne, double Ee, const Atomic_Electron& shell);
-extern double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell);
+extern double PDF_ne(unsigned int ne, double Ee, double W, int n_secondary);
 extern double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom);
-
-extern double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell, std::vector<double> electron_spectrum = {});
 extern double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom, std::vector<double> electron_spectrum = {});
 
 //2. Electron recoil direct detection experiment with isolated target atoms

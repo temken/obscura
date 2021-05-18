@@ -41,6 +41,7 @@ struct Isotope
 //3. Class for nucleus containing all isotopes occuring in nature
 struct Nucleus
 {
+	int Z;
 	std::vector<Isotope> isotopes;
 	std::string name;
 

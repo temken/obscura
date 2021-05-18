@@ -70,9 +70,9 @@ Nucleus::Nucleus()
 }
 
 Nucleus::Nucleus(const std::vector<Isotope>& iso)
-: isotopes(iso)
+: Z(iso[0].Z), isotopes(iso)
 {
-	name = Nucleus_Names[iso[0].Z - 1];
+	name = Nucleus_Names[Z - 1];
 }
 
 Nucleus::Nucleus(const Isotope& iso)

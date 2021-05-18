@@ -11,7 +11,7 @@ namespace obscura
 using namespace libphysica::natural_units;
 
 //1. Event spectra and rates
-double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell)
+double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, double m_nucleus, Atomic_Electron& shell)
 {
 	double vMax		= DM_distr.Maximum_DM_Speed();
 	double E_DM_max = DM.mass / 2.0 * vMax * vMax;
@@ -48,45 +48,45 @@ double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_di
 			}
 		}
 	}
-	return 1.0 / shell.nucleus_mass / Ee / 2.0 * integral;
+	return 1.0 / m_nucleus / Ee / 2.0 * integral;
 }
 
 double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom)
 {
-	double result = 0.0;
-	for(unsigned int i = 0; i < atom.electrons.size(); i++)
-	{
-		result += dRdEe_Ionization(Ee, DM, DM_distr, atom.electrons[i]);
-	}
+	double result	 = 0.0;
+	double m_nucleus = atom.nucleus.Average_Nuclear_Mass();
+	for(auto& electron : atom.electrons)
+		result += dRdEe_Ionization(Ee, DM, DM_distr, m_nucleus, electron);
 	return result;
 }
 
-double PDF_ne(unsigned int ne, double Ee, const Atomic_Electron& shell)
+double PDF_ne(unsigned int ne, double Ee, double W, int n_secondary)
 {
 	double fR	 = 0.0;
 	double NxNi	 = 0.2;
 	double fe	 = (1.0 - fR) / (1.0 + NxNi);
-	double neMax = shell.number_of_secondary_electrons + std::floor(Ee / shell.W);
+	double neMax = n_secondary + std::floor(Ee / W);
 	return libphysica::PMF_Binomial(neMax, fe, ne - 1);
 }
 
-double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell)
+double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, double m_nucleus, double W, Atomic_Electron& shell)
 {
 	double sum = 0.0;
 	for(unsigned int ki = 0; ki < shell.Nk; ki++)
 	{
 		double k  = shell.k_Grid[ki];
 		double Ee = k * k / 2.0 / mElectron;
-		sum += log(10.0) * shell.dlogk * k * k / mElectron * PDF_ne(ne, Ee, shell) * dRdEe_Ionization(Ee, DM, DM_distr, shell);
+		sum += log(10.0) * shell.dlogk * k * k / mElectron * PDF_ne(ne, Ee, W, shell.number_of_secondary_electrons) * dRdEe_Ionization(Ee, DM, DM_distr, m_nucleus, shell);
 	}
 	return sum;
 }
 
 double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom)
 {
-	double result = 0.0;
-	for(unsigned int i = 0; i < atom.electrons.size(); i++)
-		result += R_ne_Ionization(ne, DM, DM_distr, atom.electrons[i]);
+	double result	 = 0.0;
+	double m_nucleus = atom.nucleus.Average_Nuclear_Mass();
+	for(auto& electron : atom.electrons)
+		result += R_ne_Ionization(ne, DM, DM_distr, m_nucleus, atom.W, electron);
 	return result;
 }
 
@@ -98,11 +98,11 @@ double R_PE_Ionization_aux(unsigned int nPE, double mu_PE, double sigma_PE, std:
 	return sum;
 }
 
-double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Atomic_Electron& shell, std::vector<double> electron_spectrum)
+double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, double m_nucleus, double W, Atomic_Electron& shell, std::vector<double> electron_spectrum)
 {
 	if(electron_spectrum.empty())
 		for(unsigned ne = 1; ne < 16; ne++)
-			electron_spectrum.push_back(R_ne_Ionization(ne, DM, DM_distr, shell));
+			electron_spectrum.push_back(R_ne_Ionization(ne, DM, DM_distr, m_nucleus, W, shell));
 	return R_PE_Ionization_aux(nPE, mu_PE, sigma_PE, electron_spectrum);
 }
 
@@ -116,12 +116,12 @@ double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM
 
 //2. Electron recoil direct detection experiment with isolated target atoms
 DM_Detector_Ionization::DM_Detector_Ionization()
-: DM_Detector("Ionization experiment", kg * year, "Electrons"), target_atom(Import_Ionization_Form_Factors("Xenon")), ne_threshold(0), ne_max(0), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
+: DM_Detector("Ionization experiment", kg * year, "Electrons"), target_atom("Xe"), ne_threshold(0), ne_max(0), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
 {
 }
 
 DM_Detector_Ionization::DM_Detector_Ionization(std::string label, double expo, std::string atom)
-: DM_Detector(label, expo, "Electrons"), target_atom(Import_Ionization_Form_Factors(atom)), ne_threshold(0), ne_max(0), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
+: DM_Detector(label, expo, "Electrons"), target_atom(atom), ne_threshold(0), ne_max(0), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
 {
 }
 
@@ -177,8 +177,9 @@ double DM_Detector_Ionization::DM_Signals_Total(const DM_Particle& DM, DM_Distri
 			double Emax = kMax * kMax / 2.0 / mElectron;
 			if(Emax > energy_threshold)
 			{
-				std::function<double(double)> dNdE = [this, i, &DM, &DM_distr](double E) {
-					return flat_efficiency * exposure * dRdEe_Ionization(E, DM, DM_distr, target_atom[i]);
+				double m_nucleus				   = target_atom.nucleus.Average_Nuclear_Mass();
+				std::function<double(double)> dNdE = [this, m_nucleus, i, &DM, &DM_distr](double E) {
+					return flat_efficiency * exposure * dRdEe_Ionization(E, DM, DM_distr, m_nucleus, target_atom[i]);
 				};
 				double eps = libphysica::Find_Epsilon(dNdE, energy_threshold, Emax, 1e-6);
 				N += libphysica::Integrate(dNdE, energy_threshold, Emax, eps);
@@ -377,7 +378,7 @@ void DM_Detector_Ionization::Print_Summary(int MPI_rank) const
 	Print_Summary_Base();
 	std::cout << std::endl
 			  << "\tElectron recoil experiment (ionization)." << std::endl
-			  << "\tTarget:\t\t\t" << target_atom.name << std::endl
+			  << "\tTarget:\t\t\t" << target_atom.nucleus.name << std::endl
 			  << "\tElectron bins:\t\t" << (using_electron_bins ? "[x]" : "[ ]") << std::endl
 			  << "\tPE (S2) bins:\t\t" << (using_S2_bins ? "[x]" : "[ ]") << std::endl;
 	if(using_S2_bins || using_S2_threshold)

@@ -112,7 +112,7 @@ DM_Detector_Nucleus CRESST_surface()
 DM_Detector_Ionization XENON10_S2()
 {
 	// Source: arXiv:1104.3088, arXiv:1206.2644, and arXiv:1703.00910
-	std::string target_name							   = "Xenon";
+	std::string target_name							   = "Xe";
 	double exposure									   = 15 * kg * day;
 	double flat_efficiency							   = 0.92;
 	std::vector<unsigned long int> observed_event_bins = {126, 60, 12, 3, 2, 0, 2};
@@ -133,7 +133,7 @@ DM_Detector_Ionization XENON10_S2()
 DM_Detector_Ionization XENON100_S2()
 {
 	// Source: arXiv:1605.06262, arXiv:1703.00910
-	std::string target_name							   = "Xenon";
+	std::string target_name							   = "Xe";
 	double exposure									   = 30 * kg * year;
 	std::vector<unsigned long int> observed_event_bins = {794, 1218, 924, 776, 669, 630, 528, 488, 433, 387};
 	double muPE										   = 19.7;
@@ -154,7 +154,7 @@ DM_Detector_Ionization XENON100_S2()
 DM_Detector_Ionization XENON1T_S2()
 {
 	// Source: arXiv:1907.11485
-	std::string target_name							   = "Xenon";
+	std::string target_name							   = "Xe";
 	double exposure									   = 80755.2 * kg * day;
 	std::vector<unsigned long int> observed_event_bins = {8, 7, 2, 1};
 	double muPE										   = 33.0;
@@ -173,7 +173,7 @@ DM_Detector_Ionization XENON1T_S2()
 DM_Detector_Ionization DarkSide_50_S2()
 {
 	// Source: arXiv:1802.06998
-	std::string target_name							   = "Argon";
+	std::string target_name							   = "Ar";
 	double exposure									   = 6786.0 * kg * day;
 	unsigned int ne_threshold						   = 3;
 	std::vector<unsigned long int> observed_event_bins = {6131, 673, 252, 227, 198, 199, 189, 247, 230, 261, 249, 329, 336};
