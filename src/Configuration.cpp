@@ -7,9 +7,9 @@
 #include "libphysica/Utilities.hpp"
 
 #include "obscura/DM_Particle_Standard.hpp"
+#include "obscura/Direct_Detection_Crystal.hpp"
 #include "obscura/Direct_Detection_Ionization.hpp"
 #include "obscura/Direct_Detection_Nucleus.hpp"
-#include "obscura/Direct_Detection_Semiconductor.hpp"
 #include "obscura/Experiments.hpp"
 #include "version.hpp"
 
@@ -410,7 +410,7 @@ void Configuration::Construct_DM_Detector()
 	else if(DD_experiment == "Ionization")
 		Construct_DM_Detector_Ionization();
 	else if(DD_experiment == "Semiconductor")
-		Construct_DM_Detector_Semiconductor();
+		Construct_DM_Detector_Crystal();
 
 	// Supported experiments:
 	else if(DD_experiment == "DAMIC_N_2011")
@@ -434,15 +434,15 @@ void Configuration::Construct_DM_Detector()
 		DM_detector = new DM_Detector_Ionization(DarkSide_50_S2());
 
 	else if(DD_experiment == "protoSENSEI@surface")
-		DM_detector = new DM_Detector_Semiconductor(protoSENSEI_at_Surface());
+		DM_detector = new DM_Detector_Crystal(protoSENSEI_at_Surface());
 	else if(DD_experiment == "protoSENSEI@MINOS")
-		DM_detector = new DM_Detector_Semiconductor(protoSENSEI_at_MINOS());
+		DM_detector = new DM_Detector_Crystal(protoSENSEI_at_MINOS());
 	else if(DD_experiment == "SENSEI@MINOS")
-		DM_detector = new DM_Detector_Semiconductor(SENSEI_at_MINOS());
+		DM_detector = new DM_Detector_Crystal(SENSEI_at_MINOS());
 	else if(DD_experiment == "CDMS-HVeV_2018")
-		DM_detector = new DM_Detector_Semiconductor(CDMS_HVeV_2018());
+		DM_detector = new DM_Detector_Crystal(CDMS_HVeV_2018());
 	else if(DD_experiment == "CDMS-HVeV_2020")
-		DM_detector = new DM_Detector_Semiconductor(CDMS_HVeV_2020());
+		DM_detector = new DM_Detector_Crystal(CDMS_HVeV_2020());
 
 	else
 	{
@@ -618,7 +618,7 @@ void Configuration::Construct_DM_Detector_Ionization()
 	DM_detector->Set_Expected_Background(DD_expected_background_ionization);
 }
 
-void Configuration::Construct_DM_Detector_Semiconductor()
+void Configuration::Construct_DM_Detector_Crystal()
 {
 	std::string DD_target_semiconductor;
 	unsigned int DD_threshold_semiconductor, DD_observed_events_semiconductor;
@@ -679,9 +679,9 @@ void Configuration::Construct_DM_Detector_Semiconductor()
 		std::exit(EXIT_FAILURE);
 	}
 
-	DM_detector = new DM_Detector_Semiconductor("Semiconductor", DD_exposure_semiconductor, DD_target_semiconductor);
+	DM_detector = new DM_Detector_Crystal("Semiconductor", DD_exposure_semiconductor, DD_target_semiconductor);
 	DM_detector->Set_Flat_Efficiency(DD_efficiency_semiconductor);
-	dynamic_cast<DM_Detector_Semiconductor*>(DM_detector)->Use_Q_Threshold(DD_threshold_semiconductor);
+	dynamic_cast<DM_Detector_Crystal*>(DM_detector)->Use_Q_Threshold(DD_threshold_semiconductor);
 	DM_detector->Set_Observed_Events(DD_observed_events_semiconductor);
 	DM_detector->Set_Expected_Background(DD_expected_background_semiconductor);
 }

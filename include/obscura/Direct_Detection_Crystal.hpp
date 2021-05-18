@@ -1,5 +1,5 @@
-#ifndef __Direct_Detection_Semiconductor_hpp_
-#define __Direct_Detection_Semiconductor_hpp_
+#ifndef __Direct_Detection_Crystal_hpp_
+#define __Direct_Detection_Crystal_hpp_
 
 #include <string>
 #include <vector>
@@ -7,21 +7,21 @@
 #include "obscura/DM_Distribution.hpp"
 #include "obscura/DM_Particle.hpp"
 #include "obscura/Direct_Detection.hpp"
-#include "obscura/Target_Electron.hpp"
+#include "obscura/Target_Crystal.hpp"
 
 namespace obscura
 {
 
 //1. Event spectra and rates
-extern double dRdEe_Semiconductor(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Semiconductor& target_crystal);
-extern double R_Q_Semiconductor(int Q, const DM_Particle& DM, DM_Distribution& DM_distr, Semiconductor& target_crystal);
-extern double R_total_Semiconductor(int Qthreshold, const DM_Particle& DM, DM_Distribution& DM_distr, Semiconductor& target_crystal);
+extern double dRdEe_Crystal(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Crystal& target_crystal);
+extern double R_Q_Crystal(int Q, const DM_Particle& DM, DM_Distribution& DM_distr, Crystal& target_crystal);
+extern double R_total_Crystal(int Qthreshold, const DM_Particle& DM, DM_Distribution& DM_distr, Crystal& target_crystal);
 
 //2. Electron recoil direct detection experiment with semiconductor target
-class DM_Detector_Semiconductor : public DM_Detector
+class DM_Detector_Crystal : public DM_Detector
 {
   private:
-	Semiconductor semiconductor_target;
+	Crystal target_crystal;
 
 	//DM functions
 	virtual double Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const override;
@@ -37,8 +37,8 @@ class DM_Detector_Semiconductor : public DM_Detector
 	std::vector<double> DM_Signals_Q_Bins(const DM_Particle& DM, DM_Distribution& DM_distr);
 
   public:
-	DM_Detector_Semiconductor();
-	DM_Detector_Semiconductor(std::string label, double expo, std::string crys);
+	DM_Detector_Crystal();
+	DM_Detector_Crystal(std::string label, double expo, std::string crys);
 
 	//DM functions
 	virtual double Minimum_DM_Speed(const DM_Particle& DM) const override;

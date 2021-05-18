@@ -1,9 +1,9 @@
 #ifndef __Experiments_hpp_
 #define __Experiments_hpp_
 
+#include "obscura/Direct_Detection_Crystal.hpp"
 #include "obscura/Direct_Detection_Ionization.hpp"
 #include "obscura/Direct_Detection_Nucleus.hpp"
-#include "obscura/Direct_Detection_Semiconductor.hpp"
 
 namespace obscura
 {
@@ -18,12 +18,12 @@ extern DM_Detector_Ionization XENON10_S2();
 extern DM_Detector_Ionization XENON100_S2();
 extern DM_Detector_Ionization XENON1T_S2();
 extern DM_Detector_Ionization DarkSide_50_S2();
-//3. Electron recoil experiments - Semiconductor
-extern DM_Detector_Semiconductor protoSENSEI_at_Surface();
-extern DM_Detector_Semiconductor protoSENSEI_at_MINOS();
-extern DM_Detector_Semiconductor SENSEI_at_MINOS();
-extern DM_Detector_Semiconductor CDMS_HVeV_2018();
-extern DM_Detector_Semiconductor CDMS_HVeV_2020();
+//3. Electron recoil experiments - Semiconductor/crystals
+extern DM_Detector_Crystal protoSENSEI_at_Surface();
+extern DM_Detector_Crystal protoSENSEI_at_MINOS();
+extern DM_Detector_Crystal SENSEI_at_MINOS();
+extern DM_Detector_Crystal CDMS_HVeV_2018();
+extern DM_Detector_Crystal CDMS_HVeV_2020();
 
 }	// namespace obscura
 

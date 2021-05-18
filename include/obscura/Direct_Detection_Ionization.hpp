@@ -4,7 +4,7 @@
 #include "obscura/DM_Distribution.hpp"
 #include "obscura/DM_Particle.hpp"
 #include "obscura/Direct_Detection.hpp"
-#include "obscura/Target_Electron.hpp"
+#include "obscura/Target_Atom.hpp"
 
 namespace obscura
 {

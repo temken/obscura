@@ -186,7 +186,7 @@ DM_Detector_Ionization DarkSide_50_S2()
 }
 
 //3. Electron recoil experiments - Semiconductor
-DM_Detector_Semiconductor protoSENSEI_at_Surface()
+DM_Detector_Crystal protoSENSEI_at_Surface()
 {
 	// Source: arXiv:1804.00088
 	double SENSEI_surface_exposure								  = 0.07 * gram * 456 * minute;
@@ -195,7 +195,7 @@ DM_Detector_Semiconductor protoSENSEI_at_Surface()
 	std::vector<double> SENSEI_surface_efficiencies				  = {0.668, 0.41, 0.32, 0.27, 0.24};
 	std::vector<unsigned long int> SENSEI_surface_observed_events = {140302, 4676, 131, 1, 0};
 
-	DM_Detector_Semiconductor detector("protoSENSEI@surface", SENSEI_surface_exposure, "Si");
+	DM_Detector_Crystal detector("protoSENSEI@surface", SENSEI_surface_exposure, "Si");
 	detector.Use_Q_Bins(SENSEI_surface_Q_threshold, SENSEI_surface_N_bins);
 	detector.Set_Observed_Events(SENSEI_surface_observed_events);
 	detector.Set_Bin_Efficiencies(SENSEI_surface_efficiencies);
@@ -203,7 +203,7 @@ DM_Detector_Semiconductor protoSENSEI_at_Surface()
 	return detector;
 }
 
-DM_Detector_Semiconductor protoSENSEI_at_MINOS()
+DM_Detector_Crystal protoSENSEI_at_MINOS()
 {
 	// Source: arXiv:1901.10478
 	double SENSEI_exposure								  = 0.246 * gram * day;
@@ -212,7 +212,7 @@ DM_Detector_Semiconductor protoSENSEI_at_MINOS()
 	std::vector<double> SENSEI_efficiencies				  = {1.0, 0.62, 0.48};
 	std::vector<unsigned long int> SENSEI_observed_events = {8516, 87, 0};
 
-	DM_Detector_Semiconductor detector("protoSENSEI@MINOS", SENSEI_exposure, "Si");
+	DM_Detector_Crystal detector("protoSENSEI@MINOS", SENSEI_exposure, "Si");
 	detector.Use_Q_Bins(SENSEI_Q_threshold, SENSEI_N_bins);
 	detector.Set_Observed_Events(SENSEI_observed_events);
 	detector.Set_Bin_Efficiencies(SENSEI_efficiencies);
@@ -220,7 +220,7 @@ DM_Detector_Semiconductor protoSENSEI_at_MINOS()
 	return detector;
 }
 
-DM_Detector_Semiconductor SENSEI_at_MINOS()
+DM_Detector_Crystal SENSEI_at_MINOS()
 {
 	// Source: arXiv:2004.11378
 	double SENSEI_exposure								  = 9.1 * gram * day;
@@ -229,7 +229,7 @@ DM_Detector_Semiconductor SENSEI_at_MINOS()
 	std::vector<double> SENSEI_efficiencies				  = {1.38 / 9.1, 2.09 / 9.1, 9.03 / 9.1, 1.0};
 	std::vector<unsigned long int> SENSEI_observed_events = {578, 5, 0, 0};
 
-	DM_Detector_Semiconductor detector("SENSEI@MINOS", SENSEI_exposure, "Si");
+	DM_Detector_Crystal detector("SENSEI@MINOS", SENSEI_exposure, "Si");
 	detector.Use_Q_Bins(SENSEI_Q_threshold, SENSEI_N_bins);
 	detector.Set_Observed_Events(SENSEI_observed_events);
 	detector.Set_Bin_Efficiencies(SENSEI_efficiencies);
@@ -237,7 +237,7 @@ DM_Detector_Semiconductor SENSEI_at_MINOS()
 	return detector;
 }
 
-DM_Detector_Semiconductor CDMS_HVeV_2018()
+DM_Detector_Crystal CDMS_HVeV_2018()
 {
 	// Source: arXiv:1804.10697
 	double SuperCDMS_exposure								 = 0.487 * gram * day;
@@ -247,7 +247,7 @@ DM_Detector_Semiconductor CDMS_HVeV_2018()
 	std::vector<double> SuperCDMS_efficiencies				 = {0.88, 0.91, 0.91, 0.91, 0.91, 0.91};
 	std::vector<unsigned long int> SuperCDMS_observed_events = {53000, 400, 74, 18, 7, 14};
 
-	DM_Detector_Semiconductor detector("CMDS-HVeV_2018", SuperCDMS_exposure, "Si");
+	DM_Detector_Crystal detector("CMDS-HVeV_2018", SuperCDMS_exposure, "Si");
 	detector.Set_Flat_Efficiency(SuperCDMS_flat_efficiency);
 	detector.Use_Q_Bins(SuperCDMS_Q_threshold, SuperCDMS_N_bins);
 	detector.Set_Observed_Events(SuperCDMS_observed_events);
@@ -256,7 +256,7 @@ DM_Detector_Semiconductor CDMS_HVeV_2018()
 	return detector;
 }
 
-DM_Detector_Semiconductor CDMS_HVeV_2020()
+DM_Detector_Crystal CDMS_HVeV_2020()
 {
 	// Source: arXiv:2005.14067
 	double SuperCDMS_exposure								 = 1.2 * gram * day;
@@ -264,7 +264,7 @@ DM_Detector_Semiconductor CDMS_HVeV_2020()
 	unsigned int SuperCDMS_N_bins							 = 6;
 	std::vector<unsigned long int> SuperCDMS_observed_events = {178800, 1320, 248, 64, 19, 6};
 
-	DM_Detector_Semiconductor detector("CMDS-HVeV_2020", SuperCDMS_exposure, "Si");
+	DM_Detector_Crystal detector("CMDS-HVeV_2020", SuperCDMS_exposure, "Si");
 	detector.Use_Q_Bins(SuperCDMS_Q_threshold, SuperCDMS_N_bins);
 	detector.Set_Observed_Events(SuperCDMS_observed_events);
 

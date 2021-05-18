@@ -67,17 +67,17 @@ install(TARGETS test_Direct_Detection_Nucleus DESTINATION ${TESTS_DIR})
 add_test(NAME Test_Direct_Detection_Nucleus COMMAND test_Direct_Detection_Nucleus
 	WORKING_DIRECTORY ${TESTS_DIR})
 
-# 7. Direct_Detection_Semiconductor
-add_executable(test_Direct_Detection_Semiconductor test_Direct_Detection_Semiconductor.cpp)
-target_link_libraries(test_Direct_Detection_Semiconductor 
+# 7. Direct_Detection_Crystal
+add_executable(test_Direct_Detection_Crystal test_Direct_Detection_Crystal.cpp)
+target_link_libraries(test_Direct_Detection_Crystal 
 	PRIVATE
 		libobscura
 		gtest_main	#contains the main function
 )
-target_include_directories(test_Direct_Detection_Semiconductor PRIVATE ${GENERATED_DIR} )
-target_compile_options(test_Direct_Detection_Semiconductor PUBLIC -Wall -pedantic)
-install(TARGETS test_Direct_Detection_Semiconductor DESTINATION ${TESTS_DIR})
-add_test(NAME Test_Direct_Detection_Semiconductor COMMAND test_Direct_Detection_Semiconductor
+target_include_directories(test_Direct_Detection_Crystal PRIVATE ${GENERATED_DIR} )
+target_compile_options(test_Direct_Detection_Crystal PUBLIC -Wall -pedantic)
+install(TARGETS test_Direct_Detection_Crystal DESTINATION ${TESTS_DIR})
+add_test(NAME Test_Direct_Detection_Crystal COMMAND test_Direct_Detection_Crystal
 	WORKING_DIRECTORY ${TESTS_DIR})
 
 # 8. DM_Distribution
@@ -132,20 +132,33 @@ install(TARGETS test_Experiments DESTINATION ${TESTS_DIR})
 add_test(NAME Test_Experiments COMMAND test_Experiments
 	WORKING_DIRECTORY ${TESTS_DIR})
 
-# 12. Target_Electron
-add_executable(test_Target_Electron test_Target_Electron.cpp)
-target_link_libraries(test_Target_Electron 
+# 12. Target_Atom
+add_executable(test_Target_Atom test_Target_Atom.cpp)
+target_link_libraries(test_Target_Atom 
 	PRIVATE
 		libobscura
 		gtest_main	#contains the main function
 )
-target_include_directories(test_Target_Electron PRIVATE ${GENERATED_DIR} )
-target_compile_options(test_Target_Electron PUBLIC -Wall -pedantic)
-install(TARGETS test_Target_Electron DESTINATION ${TESTS_DIR})
-add_test(NAME Test_Target_Electron COMMAND test_Target_Electron
+target_include_directories(test_Target_Atom PRIVATE ${GENERATED_DIR} )
+target_compile_options(test_Target_Atom PUBLIC -Wall -pedantic)
+install(TARGETS test_Target_Atom DESTINATION ${TESTS_DIR})
+add_test(NAME Test_Target_Atom COMMAND test_Target_Atom
 	WORKING_DIRECTORY ${TESTS_DIR})
 
-# 13. Target_Nucleus
+# 13. Target_Crystal
+add_executable(test_Target_Crystal test_Target_Crystal.cpp)
+target_link_libraries(test_Target_Crystal 
+	PRIVATE
+		libobscura
+		gtest_main	#contains the main function
+)
+target_include_directories(test_Target_Crystal PRIVATE ${GENERATED_DIR} )
+target_compile_options(test_Target_Crystal PUBLIC -Wall -pedantic)
+install(TARGETS test_Target_Crystal DESTINATION ${TESTS_DIR})
+add_test(NAME Test_Target_Crystal COMMAND test_Target_Crystal
+	WORKING_DIRECTORY ${TESTS_DIR})
+
+# 14. Target_Nucleus
 add_executable(test_Target_Nucleus test_Target_Nucleus.cpp)
 target_link_libraries(test_Target_Nucleus 
 	PRIVATE

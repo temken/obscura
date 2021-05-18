@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "obscura/Target_Electron.hpp"
+#include "obscura/Target_Atom.hpp"
 
 #include "libphysica/Natural_Units.hpp"
 

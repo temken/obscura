@@ -32,7 +32,7 @@ class Configuration
 	virtual void Construct_DM_Detector();
 	void Construct_DM_Detector_Nuclear();
 	void Construct_DM_Detector_Ionization();
-	void Construct_DM_Detector_Semiconductor();
+	void Construct_DM_Detector_Crystal();
 
 	void Initialize_Parameters();
 
