@@ -12,7 +12,7 @@ DM_Detector_Nucleus DAMIC_N_2011()
 {
 	// Source: arXiv:1105.5191
 	double DAMIC_exposure			   = 0.107 * kg * day;
-	std::vector<Element> DAMIC_targets = {Get_Element(14)};
+	std::vector<Nucleus> DAMIC_targets = {Get_Nucleus(14)};
 	double DAMIC_threshold			   = 0.55 * keV;
 	double DAMIC_Emax				   = 7.0 * keV;
 	unsigned int DAMIC_observed_events = 106;
@@ -28,7 +28,7 @@ DM_Detector_Nucleus XENON1T_N_2017()
 {
 	// Source: arXiv:1705.06655
 	double XENON1T_exposure				 = 34.2 * day * 1042 * kg;
-	std::vector<Element> XENON1T_targets = {Get_Element(54)};
+	std::vector<Nucleus> XENON1T_targets = {Get_Nucleus(54)};
 	double XENON1T_threshold			 = 5.0 * keV;
 	double XENON1T_Emax					 = 40.0 * keV;
 	double XENON1T_efficiency			 = 0.82;
@@ -46,7 +46,7 @@ DM_Detector_Nucleus CRESST_II()
 {
 	//Source: arXiv:1509.01515 and arXiv:1701.08157
 	double CRESST_II_exposure					= 52.15 * kg * day;
-	std::vector<Element> CRESST_II_targets		= {Get_Element(8), Get_Element(20), Get_Element(74)};	//CaOW
+	std::vector<Nucleus> CRESST_II_targets		= {Get_Nucleus(8), Get_Nucleus(20), Get_Nucleus(74)};	//CaOW
 	std::vector<double> CRESST_II_target_ratios = {4, 1, 1};
 	double CRESST_II_threshold					= 307 * eV;
 	double CRESST_II_Emax						= 40.0 * keV;
@@ -68,7 +68,7 @@ DM_Detector_Nucleus CRESST_III()
 {
 	// Source: arXiv:1711.07692 and arXiv:1905.07335
 	double CRESST_III_exposure					 = 5.594 * kg * day;
-	std::vector<Element> CRESST_III_targets		 = {Get_Element(8), Get_Element(20), Get_Element(74)};	 //CaOW
+	std::vector<Nucleus> CRESST_III_targets		 = {Get_Nucleus(8), Get_Nucleus(20), Get_Nucleus(74)};	 //CaOW
 	std::vector<double> CRESST_III_target_ratios = {4, 1, 1};
 	double CRESST_III_threshold					 = 30.1 * eV;
 	double CRESST_III_Emax						 = 16 * keV;
@@ -92,7 +92,7 @@ DM_Detector_Nucleus CRESST_surface()
 {
 	// Source: arXiv:1707.06749
 	double CRESST_surface_exposure					 = 0.046 * gram * day;
-	std::vector<Element> CRESST_surface_targets		 = {Get_Element(8), Get_Element(13)};
+	std::vector<Nucleus> CRESST_surface_targets		 = {Get_Nucleus(8), Get_Nucleus(13)};
 	std::vector<double> CRESST_surface_target_ratios = {3, 2};
 	double CRESST_surface_threshold					 = 19.7 * eV;
 	double CRESST_surface_Emax						 = 600 * eV;

@@ -404,8 +404,6 @@ void Configuration::Construct_DM_Detector()
 		std::exit(EXIT_FAILURE);
 	}
 
-	Import_Nuclear_Data();
-
 	// User-defined experiments:
 	if(DD_experiment == "Nuclear recoil")
 		Construct_DM_Detector_Nuclear();
@@ -455,7 +453,7 @@ void Configuration::Construct_DM_Detector()
 
 void Configuration::Construct_DM_Detector_Nuclear()
 {
-	std::vector<Element> DD_targets_nuclear;
+	std::vector<Nucleus> DD_targets_nuclear;
 	std::vector<double> DD_targets_nuclear_abundances;
 	try
 	{
@@ -465,7 +463,7 @@ void Configuration::Construct_DM_Detector_Nuclear()
 			double abund = config.lookup("DD_targets_nuclear")[j][0];
 			int Z		 = config.lookup("DD_targets_nuclear")[j][1];
 			DD_targets_nuclear_abundances.push_back(abund);
-			DD_targets_nuclear.push_back(Get_Element(Z));
+			DD_targets_nuclear.push_back(Get_Nucleus(Z));
 		}
 	}
 	catch(const SettingNotFoundException& nfex)

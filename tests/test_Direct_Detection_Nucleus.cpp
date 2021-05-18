@@ -29,7 +29,7 @@ TEST(TestDirectDetectionNucleus, TestdRdERNucleusIsotope)
 	ASSERT_DOUBLE_EQ(dRdER_Nucleus(ER, DM, SHM, hydrogen), result);
 }
 
-TEST(TestDirectDetectionNucleus, TestdRdERNucleusElement)
+TEST(TestDirectDetectionNucleus, TestdRdERNucleusNucleus)
 {
 	// ARRANGE
 	double mDM	   = 10.0 * GeV;
@@ -43,7 +43,7 @@ TEST(TestDirectDetectionNucleus, TestdRdERNucleusElement)
 	double result				  = SHM.DM_density / mDM * sigma_p / 2.0 / libphysica::Reduced_Mass(mDM, mProton) / libphysica::Reduced_Mass(mDM, mProton) * 0.5 * (SHM.Eta_Function(vMinimal_Nucleus(ER, mDM, mProton)) + 4.0 * SHM.Eta_Function(vMinimal_Nucleus(ER, mDM, 2 * mNucleon)));
 
 	// ACT & ASSERT
-	ASSERT_DOUBLE_EQ(dRdER_Nucleus(ER, DM, SHM, Element(hydrogen)), result);
+	ASSERT_DOUBLE_EQ(dRdER_Nucleus(ER, DM, SHM, Nucleus(hydrogen)), result);
 }
 
 TEST(TestDirectDetectionNucleus, TestDefaultConstructor)
@@ -84,7 +84,7 @@ TEST(TestDirectDetectionNucleus, TestSimpleLimit)
 
 	Standard_Halo_Model SHM;
 
-	Element target(Isotope(54, 131));
+	Nucleus target(Isotope(54, 131));
 	DM_Detector_Nucleus detector("Test", kg * day, {target});
 	detector.Use_Energy_Threshold(3 * keV, 30 * keV);
 

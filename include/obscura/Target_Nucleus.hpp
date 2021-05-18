@@ -38,19 +38,17 @@ struct Isotope
 	void Print_Summary(unsigned int MPI_rank) const;
 };
 
-//3. Class for elements containing all isotopes occuring in nature
-struct Element
+//3. Class for nucleus containing all isotopes occuring in nature
+struct Nucleus
 {
 	std::vector<Isotope> isotopes;
 	std::string name;
 
-	Element();
-	Element(const std::vector<Isotope>& iso);
-	Element(const Isotope& iso);
+	Nucleus();
+	Nucleus(const std::vector<Isotope>& iso);
+	Nucleus(const Isotope& iso);
 
 	unsigned int Number_of_Isotopes() const;
-
-	// void Add_Isotope(Isotope& isotope);
 
 	Isotope Get_Isotope(unsigned int A) const;
 
@@ -69,11 +67,10 @@ struct Element
 };
 
 //4. Nuclear data
-extern void Import_Nuclear_Data();
-extern std::vector<Element> Elements;
+extern std::vector<Nucleus> Import_Nuclear_Data();
 extern Isotope Get_Isotope(unsigned int Z, unsigned int A);
-extern Element Get_Element(unsigned int Z);
-extern Element Get_Element(std::string name);
+extern Nucleus Get_Nucleus(unsigned int Z);
+extern Nucleus Get_Nucleus(std::string name);
 
 }	// namespace obscura
 

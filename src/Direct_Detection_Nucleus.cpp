@@ -35,34 +35,33 @@ double dRdER_Nucleus(double ER, const DM_Particle& DM, DM_Distribution& DM_distr
 	}
 }
 
-double dRdER_Nucleus(double ER, const DM_Particle& DM, DM_Distribution& DM_distr, const Element& target_element)
+double dRdER_Nucleus(double ER, const DM_Particle& DM, DM_Distribution& DM_distr, const Nucleus& target_nucleus)
 {
 	double dRate = 0.0;
-	for(unsigned int i = 0; i < target_element.Number_of_Isotopes(); i++)
-	{
-		dRate += target_element[i].abundance * dRdER_Nucleus(ER, DM, DM_distr, target_element[i]);
-	};
+	for(unsigned int i = 0; i < target_nucleus.Number_of_Isotopes(); i++)
+		dRate += target_nucleus[i].abundance * dRdER_Nucleus(ER, DM, DM_distr, target_nucleus[i]);
+
 	return dRate;
 }
 
 //2. Nuclear recoil direct detection experiment
 //Constructors
 DM_Detector_Nucleus::DM_Detector_Nucleus()
-: DM_Detector("Nuclear recoil experiment", kg * day, "Nuclei"), target_elements({Get_Element(54)}), relative_mass_fractions({1.0}), energy_resolution(0.0), using_efficiency_tables(false)
+: DM_Detector("Nuclear recoil experiment", kg * day, "Nuclei"), target_nuclei({Get_Nucleus(54)}), relative_mass_fractions({1.0}), energy_resolution(0.0), using_efficiency_tables(false)
 {
 }
 
-DM_Detector_Nucleus::DM_Detector_Nucleus(std::string label, double expo, std::vector<Element> elements, std::vector<double> abund)
-: DM_Detector(label, expo, "Nuclei"), target_elements(elements), energy_resolution(0.0), using_efficiency_tables(false)
+DM_Detector_Nucleus::DM_Detector_Nucleus(std::string label, double expo, std::vector<Nucleus> nuclei, std::vector<double> abund)
+: DM_Detector(label, expo, "Nuclei"), target_nuclei(nuclei), energy_resolution(0.0), using_efficiency_tables(false)
 {
 	double tot = std::accumulate(abund.begin(), abund.end(), 0.0);
 	if(abund.empty() || tot > 1.0)
 	{
-		//Compute relative abundance of the target elements by weight.
-		for(unsigned int i = 0; i < target_elements.size(); i++)
+		//Compute relative abundance of the target nuclei by weight.
+		for(unsigned int i = 0; i < target_nuclei.size(); i++)
 		{
 			double proportion = (abund.empty()) ? 1.0 : abund[i];
-			double mi		  = proportion * target_elements[i].Average_Nuclear_Mass();
+			double mi		  = proportion * target_nuclei[i].Average_Nuclear_Mass();
 			relative_mass_fractions.push_back(mi);
 		}
 		double Mtot = std::accumulate(relative_mass_fractions.begin(), relative_mass_fractions.end(), 0.0);
@@ -77,12 +76,12 @@ double DM_Detector_Nucleus::Maximum_Energy_Deposit(const DM_Particle& DM, const 
 {
 	double vDM	= DM_distr.Maximum_DM_Speed();
 	double Emax = 0.0;
-	for(unsigned int i = 0; i < target_elements.size(); i++)
+	for(unsigned int i = 0; i < target_nuclei.size(); i++)
 	{
-		for(unsigned int j = 0; j < target_elements[i].Number_of_Isotopes(); j++)
+		for(unsigned int j = 0; j < target_nuclei[i].Number_of_Isotopes(); j++)
 		{
-			double ERmax = Maximum_Nuclear_Recoil_Energy(vDM, DM.mass, target_elements[i][j].mass);
-			if(ERmax > Emax && DM.Sigma_Nucleus(target_elements[i][j], vDM) > 0.0)
+			double ERmax = Maximum_Nuclear_Recoil_Energy(vDM, DM.mass, target_nuclei[i][j].mass);
+			if(ERmax > Emax && DM.Sigma_Nucleus(target_nuclei[i][j], vDM) > 0.0)
 				Emax = ERmax;
 		}
 	}
@@ -93,12 +92,12 @@ double DM_Detector_Nucleus::Minimum_DM_Mass(DM_Particle& DM, const DM_Distributi
 {
 	std::vector<double> aux;
 	double vMax = DM_distr.Maximum_DM_Speed();
-	for(unsigned int i = 0; i < target_elements.size(); i++)
+	for(unsigned int i = 0; i < target_nuclei.size(); i++)
 	{
-		for(unsigned int j = 0; j < target_elements[i].Number_of_Isotopes(); j++)
+		for(unsigned int j = 0; j < target_nuclei[i].Number_of_Isotopes(); j++)
 		{
-			double mMin = target_elements[i][j].mass / (sqrt(2.0 * target_elements[i][j].mass / (energy_threshold - 2.0 * energy_resolution)) * vMax - 1.0);
-			if(DM.Sigma_Nucleus(target_elements[i][j], vMax) > 0.0)
+			double mMin = target_nuclei[i][j].mass / (sqrt(2.0 * target_nuclei[i][j].mass / (energy_threshold - 2.0 * energy_resolution)) * vMax - 1.0);
+			if(DM.Sigma_Nucleus(target_nuclei[i][j], vMax) > 0.0)
 				aux.push_back(mMin);
 		}
 	}
@@ -132,16 +131,16 @@ double DM_Detector_Nucleus::dRdE(double E, const DM_Particle& DM, DM_Distributio
 	if(energy_resolution < 1e-6 * eV)
 	{
 		double eff = 1.0;
-		for(unsigned int i = 0; i < target_elements.size(); i++)
+		for(unsigned int i = 0; i < target_nuclei.size(); i++)
 		{
 			if(using_efficiency_tables)
 			{
 				if(efficiencies.size() == 1)
 					eff = efficiencies[0](E);
-				else if(efficiencies.size() == target_elements.size())
+				else if(efficiencies.size() == target_nuclei.size())
 					eff = efficiencies[i](E);
 			}
-			dR += eff * flat_efficiency * relative_mass_fractions[i] * dRdER_Nucleus(E, DM, DM_distr, target_elements[i]);
+			dR += eff * flat_efficiency * relative_mass_fractions[i] * dRdER_Nucleus(E, DM, DM_distr, target_nuclei[i]);
 		}
 	}
 	else
@@ -154,17 +153,17 @@ double DM_Detector_Nucleus::dRdE(double E, const DM_Particle& DM, DM_Distributio
 		//Convolute theoretical spectrum with Gaussian
 		std::function<double(double)> integrand = [this, E, &DM, &DM_distr](double ER) {
 			double dRtheory = 0.0;
-			for(unsigned int i = 0; i < target_elements.size(); i++)
+			for(unsigned int i = 0; i < target_nuclei.size(); i++)
 			{
 				double eff = 1.0;
 				if(using_efficiency_tables)
 				{
 					if(efficiencies.size() == 1)
 						eff = efficiencies[0](E);
-					else if(efficiencies.size() == target_elements.size())
+					else if(efficiencies.size() == target_nuclei.size())
 						eff = efficiencies[i](E);
 				}
-				dRtheory += eff * flat_efficiency * relative_mass_fractions[i] * dRdER_Nucleus(ER, DM, DM_distr, target_elements[i]);
+				dRtheory += eff * flat_efficiency * relative_mass_fractions[i] * dRdER_Nucleus(ER, DM, DM_distr, target_nuclei[i]);
 			}
 			return libphysica::PDF_Gauss(E, ER, energy_resolution) * dRtheory;
 		};
@@ -178,12 +177,12 @@ double DM_Detector_Nucleus::Minimum_DM_Speed(const DM_Particle& DM) const
 {
 	double Emin = energy_threshold - 2.0 * energy_resolution;
 	double vcut = 1.0;
-	for(unsigned int i = 0; i < target_elements.size(); i++)
+	for(unsigned int i = 0; i < target_nuclei.size(); i++)
 	{
-		for(unsigned int j = 0; j < target_elements[i].Number_of_Isotopes(); j++)
+		for(unsigned int j = 0; j < target_nuclei[i].Number_of_Isotopes(); j++)
 		{
-			double vmin = vMinimal_Nucleus(Emin, DM.mass, target_elements[i][j].mass);
-			if(vmin < vcut && DM.Sigma_Nucleus(target_elements[i][j], 1.0e-3) > 0.0)
+			double vmin = vMinimal_Nucleus(Emin, DM.mass, target_nuclei[i][j].mass);
+			if(vmin < vcut && DM.Sigma_Nucleus(target_nuclei[i][j], 1.0e-3) > 0.0)
 				vcut = vmin;
 		}
 	}
@@ -199,10 +198,10 @@ void DM_Detector_Nucleus::Print_Summary(int MPI_rank) const
 				  << "\tNuclear recoil experiment." << std::endl
 				  << "\tNuclear targets:" << std::endl
 				  << "\t\tNucl.\tabund." << std::endl;
-		for(unsigned int i = 0; i < target_elements.size(); i++)
+		for(unsigned int i = 0; i < target_nuclei.size(); i++)
 		{
-			std::cout << "\t\t" << target_elements[i].name << "\t" << libphysica::Round(100.0 * relative_mass_fractions[i]) << "%" << std::endl;
-			// target_elements[i].Print_Summary();
+			std::cout << "\t\t" << target_nuclei[i].name << "\t" << libphysica::Round(100.0 * relative_mass_fractions[i]) << "%" << std::endl;
+			// target_nuclei[i].Print_Summary();
 		}
 		std::cout << "\tThreshold [keV]:\t" << In_Units(energy_threshold, keV) << std::endl
 				  << "\tER_max [keV]:\t\t" << In_Units(energy_max, keV) << std::endl

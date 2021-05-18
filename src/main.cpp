@@ -11,6 +11,7 @@
 #include "version.hpp"
 
 using namespace libphysica::natural_units;
+using namespace obscura;
 
 int main(int argc, char* argv[])
 {
@@ -27,7 +28,6 @@ int main(int argc, char* argv[])
 	////////////////////////////////////////////////////////////////////////
 
 	//Import nuclear data and configuration file
-	obscura::Import_Nuclear_Data();
 	obscura::Configuration cfg(argv[1]);
 	cfg.Print_Summary();
 
