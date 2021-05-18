@@ -54,19 +54,6 @@ install(TARGETS test_Direct_Detection_Ionization DESTINATION ${TESTS_DIR})
 add_test(NAME Test_Direct_Detection_Ionization COMMAND test_Direct_Detection_Ionization
 	WORKING_DIRECTORY ${TESTS_DIR})
 
-# 5. Direct_Detection_Migdal
-add_executable(test_Direct_Detection_Migdal test_Direct_Detection_Migdal.cpp)
-target_link_libraries(test_Direct_Detection_Migdal 
-	PRIVATE
-		libobscura
-		gtest_main	#contains the main function
-)
-target_include_directories(test_Direct_Detection_Migdal PRIVATE ${GENERATED_DIR} )
-target_compile_options(test_Direct_Detection_Migdal PUBLIC -Wall -pedantic)
-install(TARGETS test_Direct_Detection_Migdal DESTINATION ${TESTS_DIR})
-add_test(NAME Test_Direct_Detection_Migdal COMMAND test_Direct_Detection_Migdal
-	WORKING_DIRECTORY ${TESTS_DIR})
-
 # 6. Direct_Detection_Nucleus
 add_executable(test_Direct_Detection_Nucleus test_Direct_Detection_Nucleus.cpp)
 target_link_libraries(test_Direct_Detection_Nucleus 
