@@ -20,6 +20,7 @@ add_library(libobscura STATIC
     Astronomy.cpp
     Configuration.cpp
     Direct_Detection.cpp
+    Direct_Detection_DMe.cpp
     Direct_Detection_Ionization.cpp
     Direct_Detection_Nucleus.cpp
     Direct_Detection_Crystal.cpp

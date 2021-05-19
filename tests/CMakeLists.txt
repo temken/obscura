@@ -41,6 +41,19 @@ install(TARGETS test_Direct_Detection DESTINATION ${TESTS_DIR})
 add_test(NAME Test_Direct_Detection COMMAND test_Direct_Detection
 	WORKING_DIRECTORY ${TESTS_DIR})
 
+# 4. Direct_Detection_DMe
+add_executable(test_Direct_Detection_DMe test_Direct_Detection_DMe.cpp)
+target_link_libraries(test_Direct_Detection_DMe 
+	PRIVATE
+		libobscura
+		gtest_main	#contains the main function
+)
+target_include_directories(test_Direct_Detection_DMe PRIVATE ${GENERATED_DIR} )
+target_compile_options(test_Direct_Detection_DMe PUBLIC -Wall -pedantic)
+install(TARGETS test_Direct_Detection_DMe DESTINATION ${TESTS_DIR})
+add_test(NAME Test_Direct_Detection_DMe COMMAND test_Direct_Detection_DMe
+	WORKING_DIRECTORY ${TESTS_DIR})
+
 # 4. Direct_Detection_Ionization
 add_executable(test_Direct_Detection_Ionization test_Direct_Detection_Ionization.cpp)
 target_link_libraries(test_Direct_Detection_Ionization 

@@ -10,146 +10,148 @@ namespace obscura
 {
 using namespace libphysica::natural_units;
 
-//1. Event spectra and rates
-double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, double m_nucleus, Atomic_Electron& shell)
+double DM_Detector_Ionization::Energy_Gap() const
 {
-	double vMax		= DM_distr.Maximum_DM_Speed();
-	double E_DM_max = DM.mass / 2.0 * vMax * vMax;
-	if(E_DM_max < shell.binding_energy)
-		return 0.0;
-
-	double qMin = DM.mass * vMax - sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
-	double qMax = DM.mass * vMax + sqrt(DM.mass * DM.mass * vMax * vMax - 2.0 * DM.mass * shell.binding_energy);
-	if(qMin > shell.q_max)
-		return 0.0;
-	else if(qMax > shell.q_max)
-		qMax = shell.q_max;
-
-	std::vector<double> q_grid = libphysica::Log_Space(qMin, qMax, 50);
-	double d_lnq			   = log(q_grid[1] / q_grid[0]);
-	double integral			   = 0.0;
-	for(auto& q : q_grid)
-	{
-		double vMin = vMinimal_Electrons(q, shell.binding_energy + Ee, DM.mass);
-		if(vMin < vMax)
-		{
-			if(DM.DD_use_eta_function && DM_distr.DD_use_eta_function)
-			{
-				double vDM = 1.0e-3;   // cancels
-				integral += d_lnq * q * q * DM.dSigma_dq2_Electron(q, vDM) * vDM * vDM * DM_distr.DM_density / DM.mass * DM_distr.Eta_Function(vMin) * shell.Ionization_Form_Factor(q, Ee);
-			}
-			else
-			{
-				auto integrand = [&DM_distr, &DM, q](double v) {
-					return DM_distr.Differential_DM_Flux(v, DM.mass) * DM.dSigma_dq2_Electron(q, v);
-				};
-				double eps = libphysica::Find_Epsilon(integrand, vMin, vMax, 1.0e-4);
-				integral += d_lnq * q * q * shell.Ionization_Form_Factor(q, Ee) * libphysica::Integrate(integrand, vMin, vMax, eps);
-			}
-		}
-	}
-	return 1.0 / m_nucleus / Ee / 2.0 * integral;
+	double gap = 1e10;
+	for(auto& atom : atomic_targets)
+		if(atom.Lowest_Binding_Energy() < gap)
+			gap = atom.Lowest_Binding_Energy();
+	return gap;
 }
 
-double dRdEe_Ionization(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom)
+double DM_Detector_Ionization::Lowest_W() const
 {
-	double result	 = 0.0;
-	double m_nucleus = atom.nucleus.Average_Nuclear_Mass();
-	for(auto& electron : atom.electrons)
-		result += dRdEe_Ionization(Ee, DM, DM_distr, m_nucleus, electron);
-	return result;
+	double W = 1e10;
+	for(auto& atom : atomic_targets)
+		if(atom.W < W)
+			W = atom.W;
+	return W;
 }
 
-double PDF_ne(unsigned int ne, double Ee, double W, int n_secondary)
-{
-	double fR	 = 0.0;
-	double NxNi	 = 0.2;
-	double fe	 = (1.0 - fR) / (1.0 + NxNi);
-	double neMax = n_secondary + std::floor(Ee / W);
-	return libphysica::PMF_Binomial(neMax, fe, ne - 1);
-}
-
-double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, double m_nucleus, double W, Atomic_Electron& shell)
-{
-	double sum = 0.0;
-	for(unsigned int ki = 0; ki < shell.Nk; ki++)
-	{
-		double k  = shell.k_Grid[ki];
-		double Ee = k * k / 2.0 / mElectron;
-		sum += log(10.0) * shell.dlogk * k * k / mElectron * PDF_ne(ne, Ee, W, shell.number_of_secondary_electrons) * dRdEe_Ionization(Ee, DM, DM_distr, m_nucleus, shell);
-	}
-	return sum;
-}
-
-double R_ne_Ionization(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom)
-{
-	double result	 = 0.0;
-	double m_nucleus = atom.nucleus.Average_Nuclear_Mass();
-	for(auto& electron : atom.electrons)
-		result += R_ne_Ionization(ne, DM, DM_distr, m_nucleus, atom.W, electron);
-	return result;
-}
-
-double R_PE_Ionization_aux(unsigned int nPE, double mu_PE, double sigma_PE, std::vector<double> R_ne_spectrum)
-{
-	double sum = 0.0;
-	for(int ne = 1; ne < 16; ne++)
-		sum += libphysica::PDF_Gauss(nPE, mu_PE * ne, sqrt(ne) * sigma_PE) * R_ne_spectrum[ne - 1];
-	return sum;
-}
-
-double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, double m_nucleus, double W, Atomic_Electron& shell, std::vector<double> electron_spectrum)
-{
-	if(electron_spectrum.empty())
-		for(unsigned ne = 1; ne < 16; ne++)
-			electron_spectrum.push_back(R_ne_Ionization(ne, DM, DM_distr, m_nucleus, W, shell));
-	return R_PE_Ionization_aux(nPE, mu_PE, sigma_PE, electron_spectrum);
-}
-
-double R_PE_Ionization(unsigned int nPE, double mu_PE, double sigma_PE, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom, std::vector<double> electron_spectrum)
-{
-	if(electron_spectrum.empty())
-		for(unsigned ne = 1; ne < 16; ne++)
-			electron_spectrum.push_back(R_ne_Ionization(ne, DM, DM_distr, atom));
-	return R_PE_Ionization_aux(nPE, mu_PE, sigma_PE, electron_spectrum);
-}
-
-//2. Electron recoil direct detection experiment with isolated target atoms
-DM_Detector_Ionization::DM_Detector_Ionization()
-: DM_Detector("Ionization experiment", kg * year, "Electrons"), target_atom("Xe"), ne_threshold(0), ne_max(0), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
-{
-}
-
-DM_Detector_Ionization::DM_Detector_Ionization(std::string label, double expo, std::string atom)
-: DM_Detector(label, expo, "Electrons"), target_atom(atom), ne_threshold(0), ne_max(0), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
-{
-}
-
-//DM functions
 double DM_Detector_Ionization::Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const
 {
 	double vMax = DM_distr.Maximum_DM_Speed();
 	return DM.mass / 2.0 * vMax * vMax;
 }
 
+//Electron spectrum
+std::vector<double> DM_Detector_Ionization::DM_Signals_Electron_Bins(const DM_Particle& DM, DM_Distribution& DM_distr)
+{
+	if(!using_electron_bins)
+	{
+		std::cerr << "Error in obscura::DM_Detector_Ionization::DM_Signals_Electron_Bins(const DM_Particle&,DM_Distribution&): Not using electron bins." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+	else
+	{
+		std::vector<double> signals;
+		for(unsigned int bin = 0; bin < number_of_bins; bin++)
+		{
+			unsigned int ne = ne_threshold + bin;
+			double R_bin	= R_ne(ne, DM, DM_distr);
+			signals.push_back(bin_efficiencies[bin] * exposure * R_bin);
+		}
+		return signals;
+	}
+}
+
+//PE (or S2) spectrum
+double DM_Detector_Ionization::R_S2_Bin(unsigned int S2_1, unsigned int S2_2, const DM_Particle& DM, DM_Distribution& DM_distr, std::vector<double> electron_spectrum)
+{
+	double R = 0.0;
+	// Precompute the electron spectrum to speep up the computation of the S2 spectrum
+	if(electron_spectrum.empty())
+		for(unsigned int ne = 1; ne < 16; ne++)
+			electron_spectrum.push_back(R_ne(ne, DM, DM_distr));
+	for(unsigned int PE = S2_1; PE <= S2_2; PE++)
+	{
+		double PE_eff = 1.0;
+		if(Trigger_Efficiency_PE.empty() == false)
+			PE_eff *= Trigger_Efficiency_PE[PE - 1];
+		if(Acceptance_Efficiency_PE.empty() == false)
+			PE_eff *= Acceptance_Efficiency_PE[PE - 1];
+		R += PE_eff * R_S2(PE, DM, DM_distr, electron_spectrum);
+	}
+	return R;
+}
+
+std::vector<double> DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle& DM, DM_Distribution& DM_distr)
+{
+	if(!using_S2_bins)
+	{
+		std::cerr << "Error in obscura::DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle&,DM_Distribution&): Not using PE bins." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+	else
+	{
+		// Precompute the electron spectrum to speep up the computation of the S2 spectrum
+		std::vector<double> electron_spectrum;
+		for(unsigned int ne = 1; ne < 16; ne++)
+			electron_spectrum.push_back(R_ne(ne, DM, DM_distr));
+
+		std::vector<double> signals;
+		for(unsigned int bin = 0; bin < number_of_bins; bin++)
+		{
+			double R_bin = R_S2_Bin(S2_bin_ranges[bin], S2_bin_ranges[bin + 1] - 1, DM, DM_distr, electron_spectrum);
+			signals.push_back(bin_efficiencies[bin] * exposure * R_bin);
+		}
+		return signals;
+	}
+}
+
+DM_Detector_Ionization::DM_Detector_Ionization()
+: DM_Detector("Ionization experiment", kg * year, "Electrons"), atomic_targets({Atom("Xe")}), relative_mass_fractions({1.0}), ne_threshold(0), ne_max(0), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
+{
+}
+
+DM_Detector_Ionization::DM_Detector_Ionization(std::string label, double expo, std::string atom)
+: DM_Detector(label, expo, "Electrons"), atomic_targets({atom}), relative_mass_fractions({1.0}), ne_threshold(0), ne_max(0), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
+{
+}
+
+DM_Detector_Ionization::DM_Detector_Ionization(std::string label, double expo, std::vector<std::string> atoms, std::vector<double> mass_fractions)
+: DM_Detector(label, expo, "Electrons"), relative_mass_fractions(mass_fractions), ne_threshold(0), ne_max(0), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
+
+{
+	for(auto& atom_name : atoms)
+		atomic_targets.push_back(Atom(atom_name));
+	if(relative_mass_fractions.size() == 0)
+		relative_mass_fractions = std::vector<double>(atoms.size(), 1.0 / atoms.size());
+	else if(relative_mass_fractions.size() != atomic_targets.size())
+	{
+		std::cerr << "Error in DM_Detector_Ionization::DM_Detector_Ionization(): Length of atomic_targets (" << atomic_targets.size() << ") and relative_mass_fractions (" << relative_mass_fractions.size() << ") does not match." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+	else
+	{
+		double total = std::accumulate(relative_mass_fractions.begin(), relative_mass_fractions.end(), 0.0);
+		if(total > 1.0)
+			for(auto& entry : relative_mass_fractions)
+				entry = entry / total;
+	}
+}
+
 double DM_Detector_Ionization::Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const
 {
 	double vMax	 = DM_distr.Maximum_DM_Speed();
-	double E_min = target_atom.Lowest_Binding_Energy();
+	double E_min = Energy_Gap();
 	if(using_electron_bins)
-		E_min += (ne_threshold - 1.0) * target_atom.W;
+		E_min += (ne_threshold - 1.0) * Lowest_W();
 	double mMin = 2.0 * E_min / vMax / vMax;
 	return mMin;
 }
 
 double DM_Detector_Ionization::Minimum_DM_Speed(const DM_Particle& DM) const
 {
-	return sqrt(2.0 * target_atom.Lowest_Binding_Energy() / DM.mass);
+	return sqrt(2.0 * Energy_Gap() / DM.mass);
 }
 
 double DM_Detector_Ionization::dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr)
 {
-	return flat_efficiency * dRdEe_Ionization(E, DM, DM_distr, target_atom);
+	double dRdE = 0.0;
+	for(auto i = 0; i < atomic_targets.size(); i++)
+		dRdE += relative_mass_fractions[i] * dRdE_Ionization(E, DM, DM_distr, atomic_targets[i]);
+	return dRdE;
 }
 
 double DM_Detector_Ionization::DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr)
@@ -162,46 +164,25 @@ double DM_Detector_Ionization::DM_Signals_Total(const DM_Particle& DM, DM_Distri
 		N								  = std::accumulate(binned_events.begin(), binned_events.end(), 0.0);
 	}
 	else if(using_electron_threshold)
-	{
 		for(unsigned int ne = ne_threshold; ne <= ne_max; ne++)
-		{
-			N += flat_efficiency * exposure * R_ne_Ionization(ne, DM, DM_distr, target_atom);
-		}
-	}
+			N += exposure * R_ne(ne, DM, DM_distr);
 	else if(using_energy_threshold)
-	{
-
-		for(unsigned int i = 0; i < target_atom.electrons.size(); i++)
-		{
-			double kMax = target_atom[i].k_max;
-			double Emax = kMax * kMax / 2.0 / mElectron;
-			if(Emax > energy_threshold)
+		for(auto i = 0; i < atomic_targets.size(); i++)
+			for(auto& electron : atomic_targets[i].electrons)
 			{
-				double m_nucleus				   = target_atom.nucleus.Average_Nuclear_Mass();
-				std::function<double(double)> dNdE = [this, m_nucleus, i, &DM, &DM_distr](double E) {
-					return flat_efficiency * exposure * dRdEe_Ionization(E, DM, DM_distr, m_nucleus, target_atom[i]);
-				};
-				double eps = libphysica::Find_Epsilon(dNdE, energy_threshold, Emax, 1e-6);
-				N += libphysica::Integrate(dNdE, energy_threshold, Emax, eps);
+				double kMax = electron.k_max;
+				double Emax = kMax * kMax / 2.0 / mElectron;
+				if(Emax > energy_threshold)
+				{
+					std::function<double(double)> dNdE = [this, i, &electron, &DM, &DM_distr](double E) {
+						return exposure * dRdE_Ionization(E, DM, DM_distr, atomic_targets[i].nucleus, electron);
+					};
+					double eps = libphysica::Find_Epsilon(dNdE, energy_threshold, Emax, 1e-6);
+					N += relative_mass_fractions[i] * libphysica::Integrate(dNdE, energy_threshold, Emax, eps);
+				}
 			}
-		}
-	}
 	else if(using_S2_threshold)
-	{
-		// Precompute the electron spectrum to speep up the computation of the S2 spectrum
-		std::vector<double> electron_spectrum;
-		for(unsigned int ne = 1; ne < 16; ne++)
-			electron_spectrum.push_back(R_ne_Ionization(ne, DM, DM_distr, target_atom));
-		for(unsigned int PE = PE_threshold; PE <= PE_max; PE++)
-		{
-			double PE_eff = 1.0;
-			if(Trigger_Efficiency_PE.empty() == false)
-				PE_eff *= Trigger_Efficiency_PE[PE - 1];
-			if(Acceptance_Efficiency_PE.empty() == false)
-				PE_eff *= Acceptance_Efficiency_PE[PE - 1];
-			N += flat_efficiency * PE_eff * exposure * R_PE_Ionization(PE, S2_mu, S2_sigma, DM, DM_distr, target_atom, electron_spectrum);
-		}
-	}
+		N = exposure * R_S2_Bin(PE_threshold, PE_max, DM, DM_distr);
 
 	return N;
 }
@@ -232,25 +213,57 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_Binned(const DM_Particle&
 	}
 }
 
-//Electron spectrum
-std::vector<double> DM_Detector_Ionization::DM_Signals_Electron_Bins(const DM_Particle& DM, DM_Distribution& DM_distr)
+//Energy spectrum
+double DM_Detector_Ionization::dRdE_Ionization(double E, const DM_Particle& DM, DM_Distribution& DM_distr, const Nucleus& nucleus, Atomic_Electron& shell)
 {
-	if(!using_electron_bins)
+	return 0.0;
+}
+
+double DM_Detector_Ionization::dRdE_Ionization(double E, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom)
+{
+	double dRdE = 0.0;
+	for(auto& electron : atom.electrons)
+		dRdE += dRdE_Ionization(E, DM, DM_distr, atom.nucleus, electron);
+	return dRdE;
+}
+
+// Electron spectrum
+
+double PDF_ne(unsigned int ne, double Ee, double W, int n_secondary)
+{
+	double fR	 = 0.0;
+	double NxNi	 = 0.2;
+	double fe	 = (1.0 - fR) / (1.0 + NxNi);
+	double neMax = n_secondary + std::floor(Ee / W);
+	return libphysica::PMF_Binomial(neMax, fe, ne - 1);
+}
+
+double DM_Detector_Ionization::R_ne(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, double W, const Nucleus& nucleus, Atomic_Electron& shell)
+{
+	double R = 0.0;
+	for(auto& k : shell.k_Grid)
 	{
-		std::cerr << "Error in obscura::DM_Detector_Ionization::DM_Signals_Electron_Bins(const DM_Particle&,DM_Distribution&): Not using electron bins." << std::endl;
-		std::exit(EXIT_FAILURE);
+		double Ee = k * k / 2.0 / mElectron;
+		R += log(10.0) * shell.dlogk * k * k / mElectron * PDF_ne(ne, Ee, W, shell.number_of_secondary_electrons) * dRdE_Ionization(Ee, DM, DM_distr, nucleus, shell);
 	}
-	else
-	{
-		std::vector<double> signals;
-		for(unsigned int bin = 0; bin < number_of_bins; bin++)
-		{
-			unsigned int ne = ne_threshold + bin;
-			double R_bin	= R_ne_Ionization(ne, DM, DM_distr, target_atom);
-			signals.push_back(flat_efficiency * bin_efficiencies[bin] * exposure * R_bin);
-		}
-		return signals;
-	}
+	return R;
+}
+
+double DM_Detector_Ionization::R_ne(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom)
+{
+	double R = 0.0;
+	for(auto& electron : atom.electrons)
+		R += R_ne(ne, DM, DM_distr, atom.W, atom.nucleus, electron);
+	return R;
+}
+
+double DM_Detector_Ionization::R_ne(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr)
+{
+	double R = 0.0;
+	for(auto i = 0; i < atomic_targets.size(); i++)
+
+		R += relative_mass_fractions[i] * R_ne(ne, DM, DM_distr, atomic_targets[i]);
+	return R;
 }
 
 void DM_Detector_Ionization::Use_Electron_Threshold(unsigned int ne_thr, unsigned int nemax)
@@ -284,37 +297,36 @@ void DM_Detector_Ionization::Use_Electron_Bins(unsigned int ne_thr, unsigned int
 }
 
 //PE (or S2) spectrum
-std::vector<double> DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle& DM, DM_Distribution& DM_distr)
+double R_S2_aux(unsigned int nPE, double mu_PE, double sigma_PE, std::vector<double> R_ne_spectrum)
 {
-	if(!using_S2_bins)
-	{
-		std::cerr << "Error in obscura::DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle&,DM_Distribution&): Not using PE bins." << std::endl;
-		std::exit(EXIT_FAILURE);
-	}
-	else
-	{
-		// Precompute the electron spectrum to speep up the computation of the S2 spectrum
-		std::vector<double> electron_spectrum;
-		for(unsigned int ne = 1; ne < 16; ne++)
-			electron_spectrum.push_back(R_ne_Ionization(ne, DM, DM_distr, target_atom));
+	double sum = 0.0;
+	for(int ne = 1; ne < 16; ne++)
+		sum += libphysica::PDF_Gauss(nPE, mu_PE * ne, sqrt(ne) * sigma_PE) * R_ne_spectrum[ne - 1];
+	return sum;
+}
 
-		std::vector<double> signals;
-		for(unsigned int bin = 0; bin < number_of_bins; bin++)
-		{
-			double R_bin = 0.0;
-			for(unsigned int nPE = S2_bin_ranges[bin]; nPE < S2_bin_ranges[bin + 1]; nPE++)
-			{
-				double R_new = R_PE_Ionization(nPE, S2_mu, S2_sigma, DM, DM_distr, target_atom, electron_spectrum);
-				if(Trigger_Efficiency_PE.empty() == false)
-					R_new *= Trigger_Efficiency_PE[nPE - 1];
-				if(Acceptance_Efficiency_PE.empty() == false)
-					R_new *= Acceptance_Efficiency_PE[nPE - 1];
-				R_bin += R_new;
-			}
-			signals.push_back(flat_efficiency * bin_efficiencies[bin] * exposure * R_bin);
-		}
-		return signals;
-	}
+double DM_Detector_Ionization::R_S2(unsigned int S2, const DM_Particle& DM, DM_Distribution& DM_distr, double W, const Nucleus& nucleus, Atomic_Electron& shell, std::vector<double> electron_spectrum)
+{
+	if(electron_spectrum.empty())
+		for(unsigned ne = 1; ne < 16; ne++)
+			electron_spectrum.push_back(R_ne(ne, DM, DM_distr, W, nucleus, shell));
+	return R_S2_aux(S2, S2_mu, S2_sigma, electron_spectrum);
+}
+
+double DM_Detector_Ionization::R_S2(unsigned int S2, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom, std::vector<double> electron_spectrum)
+{
+	if(electron_spectrum.empty())
+		for(unsigned ne = 1; ne < 16; ne++)
+			electron_spectrum.push_back(R_ne(ne, DM, DM_distr, atom));
+	return R_S2_aux(S2, S2_mu, S2_sigma, electron_spectrum);
+}
+
+double DM_Detector_Ionization::R_S2(unsigned int S2, const DM_Particle& DM, DM_Distribution& DM_distr, std::vector<double> electron_spectrum)
+{
+	if(electron_spectrum.empty())
+		for(unsigned ne = 1; ne < 16; ne++)
+			electron_spectrum.push_back(R_ne(ne, DM, DM_distr));
+	return R_S2_aux(S2, S2_mu, S2_sigma, electron_spectrum);
 }
 
 void DM_Detector_Ionization::Use_PE_Threshold(double S2mu, double S2sigma, unsigned int nPE_thr, unsigned int nPE_max)
@@ -378,8 +390,10 @@ void DM_Detector_Ionization::Print_Summary(int MPI_rank) const
 	Print_Summary_Base();
 	std::cout << std::endl
 			  << "\tElectron recoil experiment (ionization)." << std::endl
-			  << "\tTarget:\t\t\t" << target_atom.nucleus.name << std::endl
-			  << "\tElectron bins:\t\t" << (using_electron_bins ? "[x]" : "[ ]") << std::endl
+			  << "\tTarget(s):\t\t\t" << std::endl;
+	for(auto i = 0; i < atomic_targets.size(); i++)
+		std::cout << "\t\t\t" << atomic_targets[i].nucleus.name << "\t(" << libphysica::Round(100.0 * relative_mass_fractions[i]) << "%)" << std::endl;
+	std::cout << "\tElectron bins:\t\t" << (using_electron_bins ? "[x]" : "[ ]") << std::endl
 			  << "\tPE (S2) bins:\t\t" << (using_S2_bins ? "[x]" : "[ ]") << std::endl;
 	if(using_S2_bins || using_S2_threshold)
 	{
