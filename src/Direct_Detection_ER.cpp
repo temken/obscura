@@ -1,4 +1,4 @@
-#include "obscura/Direct_Detection_DMe.hpp"
+#include "obscura/Direct_Detection_ER.hpp"
 
 #include "libphysica/Natural_Units.hpp"
 #include "libphysica/Statistics.hpp"
@@ -9,7 +9,7 @@ namespace obscura
 using namespace libphysica::natural_units;
 
 //1. Event spectra and rates
-double dRdEe_Ionization_DMe(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, double m_nucleus, Atomic_Electron& shell)
+double dRdEe_Ionization_ER(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, double m_nucleus, Atomic_Electron& shell)
 {
 	double vMax		= DM_distr.Maximum_DM_Speed();
 	double E_DM_max = DM.mass / 2.0 * vMax * vMax;
@@ -49,27 +49,27 @@ double dRdEe_Ionization_DMe(double Ee, const DM_Particle& DM, DM_Distribution& D
 	return 1.0 / m_nucleus / Ee / 2.0 * integral;
 }
 
-double dRdEe_Ionization_DMe(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom)
+double dRdEe_Ionization_ER(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom)
 {
 	double result	 = 0.0;
 	double m_nucleus = atom.nucleus.Average_Nuclear_Mass();
 	for(auto& electron : atom.electrons)
-		result += dRdEe_Ionization_DMe(Ee, DM, DM_distr, m_nucleus, electron);
+		result += dRdEe_Ionization_ER(Ee, DM, DM_distr, m_nucleus, electron);
 	return result;
 }
 
-DM_Detector_Ionization_DMe::DM_Detector_Ionization_DMe()
+DM_Detector_Ionization_ER::DM_Detector_Ionization_ER()
 : DM_Detector_Ionization("DM-electron scattering experiment with atomic target", kg * day, "Electrons", "Xe") {}
-DM_Detector_Ionization_DMe::DM_Detector_Ionization_DMe(std::string label, double expo, std::string atom)
+DM_Detector_Ionization_ER::DM_Detector_Ionization_ER(std::string label, double expo, std::string atom)
 : DM_Detector_Ionization(label, expo, "Electrons", atom) {}
-DM_Detector_Ionization_DMe::DM_Detector_Ionization_DMe(std::string label, double expo, std::vector<std::string> atoms, std::vector<double> mass_fractions)
+DM_Detector_Ionization_ER::DM_Detector_Ionization_ER(std::string label, double expo, std::vector<std::string> atoms, std::vector<double> mass_fractions)
 : DM_Detector_Ionization(label, expo, "Electrons", atoms, mass_fractions)
 {
 }
 
-double DM_Detector_Ionization_DMe::dRdE_Ionization(double E, const DM_Particle& DM, DM_Distribution& DM_distr, const Nucleus& nucleus, Atomic_Electron& shell)
+double DM_Detector_Ionization_ER::dRdE_Ionization(double E, const DM_Particle& DM, DM_Distribution& DM_distr, const Nucleus& nucleus, Atomic_Electron& shell)
 {
-	return flat_efficiency * dRdEe_Ionization_DMe(E, DM, DM_distr, nucleus.Average_Nuclear_Mass(), shell);
+	return flat_efficiency * dRdEe_Ionization_ER(E, DM, DM_distr, nucleus.Average_Nuclear_Mass(), shell);
 }
 
 }	// namespace obscura
