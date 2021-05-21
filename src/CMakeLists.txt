@@ -22,6 +22,7 @@ add_library(libobscura STATIC
     Direct_Detection.cpp
     Direct_Detection_DMe.cpp
     Direct_Detection_Ionization.cpp
+    Direct_Detection_Migdal.cpp
     Direct_Detection_Nucleus.cpp
     Direct_Detection_Crystal.cpp
     DM_Distribution.cpp

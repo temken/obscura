@@ -128,12 +128,15 @@ DM_Detector_Ionization::DM_Detector_Ionization(std::string label, double expo, s
 
 double DM_Detector_Ionization::Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const
 {
-	double vMax	 = DM_distr.Maximum_DM_Speed();
-	double E_min = Energy_Gap();
-	if(using_electron_bins)
-		E_min += (ne_threshold - 1.0) * Lowest_W();
-	double mMin = 2.0 * E_min / vMax / vMax;
-	return mMin;
+	double vMax = DM_distr.Maximum_DM_Speed();
+	double E_min;
+	if(using_energy_threshold)
+		E_min = energy_threshold;
+	else if(using_electron_bins || using_electron_threshold)
+		E_min = Energy_Gap() + (ne_threshold - 1.0) * Lowest_W();
+	else
+		E_min = Energy_Gap();
+	return 2.0 * E_min / vMax / vMax;
 }
 
 double DM_Detector_Ionization::Minimum_DM_Speed(const DM_Particle& DM) const
