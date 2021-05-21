@@ -43,7 +43,6 @@ class DM_Detector_Ionization : public DM_Detector
 	std::vector<double> DM_Signals_PE_Bins(const DM_Particle& DM, DM_Distribution& DM_distr);
 
   public:
-	DM_Detector_Ionization();
 	DM_Detector_Ionization(std::string label, double expo, std::string target_particles, std::string atom);
 	DM_Detector_Ionization(std::string label, double expo, std::string target_particles, std::vector<std::string> atoms, std::vector<double> mass_fractions = {});
 
