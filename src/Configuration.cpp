@@ -426,13 +426,22 @@ void Configuration::Construct_DM_Detector()
 		DM_detector = new DM_Detector_Nucleus(CRESST_III());
 
 	else if(DD_experiment == "XENON10_S2")
-		DM_detector = new DM_Detector_Ionization_ER(XENON10_S2());
+		DM_detector = new DM_Detector_Ionization_ER(XENON10_S2_ER());
 	else if(DD_experiment == "XENON100_S2")
-		DM_detector = new DM_Detector_Ionization_ER(XENON100_S2());
+		DM_detector = new DM_Detector_Ionization_ER(XENON100_S2_ER());
 	else if(DD_experiment == "XENON1T_S2")
-		DM_detector = new DM_Detector_Ionization_ER(XENON1T_S2());
+		DM_detector = new DM_Detector_Ionization_ER(XENON1T_S2_ER());
 	else if(DD_experiment == "DarkSide-50_S2")
-		DM_detector = new DM_Detector_Ionization_ER(DarkSide_50_S2());
+		DM_detector = new DM_Detector_Ionization_ER(DarkSide50_S2_ER());
+
+	else if(DD_experiment == "XENON10_S2_Migdal")
+		DM_detector = new DM_Detector_Ionization_Migdal(XENON10_S2_Migdal());
+	else if(DD_experiment == "XENON100_S2_Migdal")
+		DM_detector = new DM_Detector_Ionization_Migdal(XENON100_S2_Migdal());
+	else if(DD_experiment == "XENON1T_S2_Migdal")
+		DM_detector = new DM_Detector_Ionization_Migdal(XENON1T_S2_Migdal());
+	else if(DD_experiment == "DarkSide-50_S2_Migdal")
+		DM_detector = new DM_Detector_Ionization_Migdal(DarkSide50_S2_Migdal());
 
 	else if(DD_experiment == "protoSENSEI@surface")
 		DM_detector = new DM_Detector_Crystal(protoSENSEI_at_Surface());
