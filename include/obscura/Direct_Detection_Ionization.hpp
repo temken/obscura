@@ -44,8 +44,8 @@ class DM_Detector_Ionization : public DM_Detector
 
   public:
 	DM_Detector_Ionization();
-	DM_Detector_Ionization(std::string label, double expo, std::string atom);
-	DM_Detector_Ionization(std::string label, double expo, std::vector<std::string> atoms, std::vector<double> mass_fractions = {});
+	DM_Detector_Ionization(std::string label, double expo, std::string target_particles, std::string atom);
+	DM_Detector_Ionization(std::string label, double expo, std::string target_particles, std::vector<std::string> atoms, std::vector<double> mass_fractions = {});
 
 	//DM functions from the base class
 	virtual double Minimum_DM_Speed(const DM_Particle& DM) const override;
