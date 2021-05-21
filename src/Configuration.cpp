@@ -8,7 +8,8 @@
 
 #include "obscura/DM_Particle_Standard.hpp"
 #include "obscura/Direct_Detection_Crystal.hpp"
-#include "obscura/Direct_Detection_Ionization.hpp"
+#include "obscura/Direct_Detection_ER.hpp"
+#include "obscura/Direct_Detection_Migdal.hpp"
 #include "obscura/Direct_Detection_Nucleus.hpp"
 #include "obscura/Experiments.hpp"
 #include "version.hpp"
@@ -407,8 +408,8 @@ void Configuration::Construct_DM_Detector()
 	// User-defined experiments:
 	if(DD_experiment == "Nuclear recoil")
 		Construct_DM_Detector_Nuclear();
-	else if(DD_experiment == "Ionization")
-		Construct_DM_Detector_Ionization();
+	else if(DD_experiment == "Electron recoil" || DD_experiment == "Migdal")
+		Construct_DM_Detector_Ionization(DD_experiment);
 	else if(DD_experiment == "Semiconductor")
 		Construct_DM_Detector_Crystal();
 
@@ -550,7 +551,7 @@ void Configuration::Construct_DM_Detector_Nuclear()
 		dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Set_Resolution(DD_energy_resolution);
 }
 
-void Configuration::Construct_DM_Detector_Ionization()
+void Configuration::Construct_DM_Detector_Ionization(std::string ER_or_Migdal)
 {
 	std::string DD_target_ionization;
 	unsigned int DD_threshold_ionization, DD_observed_events_ionization;
@@ -611,7 +612,10 @@ void Configuration::Construct_DM_Detector_Ionization()
 		std::exit(EXIT_FAILURE);
 	}
 
-	DM_detector = new DM_Detector_Ionization_ER("Ionization", DD_exposure_ionization, DD_target_ionization);
+	if(ER_or_Migdal == "Electron recoil")
+		DM_detector = new DM_Detector_Ionization_ER(ER_or_Migdal, DD_exposure_ionization, DD_target_ionization);
+	else if(ER_or_Migdal == "Migdal")
+		DM_detector = new DM_Detector_Ionization_Migdal(ER_or_Migdal, DD_exposure_ionization, DD_target_ionization);
 	DM_detector->Set_Flat_Efficiency(DD_efficiency_ionization);
 	dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_Electron_Threshold(DD_threshold_ionization);
 	DM_detector->Set_Observed_Events(DD_observed_events_ionization);
