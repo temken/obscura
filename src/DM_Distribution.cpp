@@ -6,6 +6,7 @@
 
 #include "libphysica/Natural_Units.hpp"
 #include "libphysica/Numerics.hpp"
+#include "libphysica/Utilities.hpp"
 
 #include "obscura/Astronomy.hpp"
 
@@ -99,11 +100,11 @@ double DM_Distribution::Average_Speed(double vMin)
 	return v_average;
 }
 
-double DM_Distribution::Eta_Function(double vMin)
+double DM_Distribution::Eta_Function_Base(double vMin)
 {
 	if(vMin < v_domain[0])
 	{
-		std::cerr << "Error in obscura::DM_Distribution::Eta_Function(double): vMin = " << In_Units(vMin, km / sec) << "km/sec lies below the domain [" << In_Units(v_domain[0], km / sec) << "km/sec," << In_Units(v_domain[1], km / sec) << "km/sec]." << std::endl;
+		std::cerr << "Error in obscura::DM_Distribution::Eta_Function_Base(): vMin = " << In_Units(vMin, km / sec) << "km/sec lies below the domain [" << In_Units(v_domain[0], km / sec) << "km/sec," << In_Units(v_domain[1], km / sec) << "km/sec]." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else if(vMin > v_domain[1])
@@ -121,20 +122,28 @@ double DM_Distribution::Eta_Function(double vMin)
 	}
 }
 
-void DM_Distribution::Print_Summary_Base(int MPI_rank)
+double DM_Distribution::Eta_Function(double vMin)
 {
-	if(MPI_rank == 0)
-	{
-		std::cout << "Dark matter distribution - Summary" << std::endl
-				  << "\t" << name << std::endl
-				  << std::endl
-				  << "\tLocal DM density[GeV/cm^3]:\t" << In_Units(DM_density, GeV / cm / cm / cm) << std::endl
-				  << "\tSpeed domain [km/sec]:\t\t[" << libphysica::Round(In_Units(v_domain[0], km / sec)) << "," << libphysica::Round(In_Units(v_domain[1], km / sec)) << "]" << std::endl
-				  << "\tAverage DM velocity [km/sec]:\t" << In_Units(Average_Velocity(), km / sec) << std::endl
-				  << "\tAverage DM speed [km/sec]:\t" << libphysica::Round(In_Units(Average_Speed(), km / sec)) << std::endl
-				  << std::endl;
-	}
+	return Eta_Function_Base(vMin);
 }
+
+void DM_Distribution::Print_Summary_Base()
+{
+	std::cout << "Dark matter distribution - Summary" << std::endl
+			  << "\t" << name << std::endl
+			  << std::endl
+			  << "\tLocal DM density[GeV/cm^3]:\t" << In_Units(DM_density, GeV / cm / cm / cm) << std::endl
+			  << "\tSpeed domain [km/sec]:\t\t[" << libphysica::Round(In_Units(v_domain[0], km / sec)) << "," << libphysica::Round(In_Units(v_domain[1], km / sec)) << "]" << std::endl
+			  << "\tAverage DM velocity [km/sec]:\t" << In_Units(Average_Velocity(), km / sec) << std::endl
+			  << "\tAverage DM speed [km/sec]:\t" << libphysica::Round(In_Units(Average_Speed(), km / sec)) << std::endl
+			  << std::endl;
+}
+
+void DM_Distribution::Print_Summary(int mpi_rank)
+{
+	if(mpi_rank == 0)
+		Print_Summary_Base();
+};
 
 //2. Standard halo model (SHM)
 //Constructors:
@@ -204,17 +213,16 @@ void Standard_Halo_Model::Normalize_PDF()
 }
 
 //Distribution functions
-double Standard_Halo_Model::PDF_Velocity(libphysica::Vector vel)
+double Standard_Halo_Model::PDF_Velocity_SHM(libphysica::Vector vel)
 {
 	double v = vel.Norm();
-	if(v > v_domain[1] || v < v_domain[0])
+	if(v > v_esc || v < v_domain[0])
 		return 0.0;
 	else
-	{
-		return 1.0 / N_esc * pow(v_0 * sqrt(M_PI), -3.0) * exp(-1.0 * (vel + vel_observer) * (vel + vel_observer) / v_0 / v_0);
-	}
+		return 1.0 / N_esc * pow(v_0 * sqrt(M_PI), -3.0) * exp(-1.0 * vel * vel / v_0 / v_0);
 }
-double Standard_Halo_Model::PDF_Speed(double v)
+
+double Standard_Halo_Model::PDF_Speed_SHM(double v)
 {
 	if(v < v_domain[0] || v > v_domain[1])
 		return 0.0;
@@ -224,7 +232,7 @@ double Standard_Halo_Model::PDF_Speed(double v)
 		return 4.0 * v * v / N_esc / sqrt(M_PI) / v_0 / v_0 / v_0 * exp(-v * v / v_0 / v_0) * libphysica::StepFunction(Maximum_DM_Speed() - v);
 }
 
-double Standard_Halo_Model::CDF_Speed(double v)
+double Standard_Halo_Model::CDF_Speed_SHM(double v)
 {
 	if(v <= v_domain[0])
 		return 0.0;
@@ -241,8 +249,21 @@ double Standard_Halo_Model::CDF_Speed(double v)
 		return 1.0 / N_esc * (erf(v / v_0) - 2.0 * v / sqrt(M_PI) / v_0 * exp(-v * v / v_0 / v_0));
 }
 
+double Standard_Halo_Model::PDF_Velocity(libphysica::Vector vel)
+{
+	return PDF_Velocity_SHM(vel + vel_observer);
+}
+double Standard_Halo_Model::PDF_Speed(double v)
+{
+	return PDF_Speed_SHM(v);
+}
+double Standard_Halo_Model::CDF_Speed(double v)
+{
+	return CDF_Speed_SHM(v);
+}
+
 //Eta-function for direct detection
-double Standard_Halo_Model::Eta_Function(double vMin)
+double Standard_Halo_Model::Eta_Function_SHM(double vMin)
 {
 	double xMin = vMin / v_0;
 	double xEsc = v_esc / v_0;
@@ -261,16 +282,26 @@ double Standard_Halo_Model::Eta_Function(double vMin)
 		return 1.0 / v_0 / xE;
 }
 
-void Standard_Halo_Model::Print_Summary(int MPI_rank)
+double Standard_Halo_Model::Eta_Function(double vMin)
 {
-	if(MPI_rank == 0)
+	return Eta_Function_SHM(vMin);
+}
+
+void Standard_Halo_Model::Print_Summary_SHM()
+{
+	std::cout << "\tSpeed dispersion v_0[km/sec]:\t" << In_Units(v_0, km / sec) << std::endl
+			  << "\tGal. escape velocity [km/sec]:\t" << In_Units(v_esc, km / sec) << std::endl
+			  << "\tObserver's velocity [km/sec]:\t" << In_Units(vel_observer, km / sec) << std::endl
+			  << "\tObserver's speed [km/sec]:\t" << In_Units(v_observer, km / sec) << std::endl
+			  << std::endl;
+}
+
+void Standard_Halo_Model::Print_Summary(int mpi_rank)
+{
+	if(mpi_rank == 0)
 	{
-		Print_Summary_Base(MPI_rank);
-		std::cout << "\tSpeed dispersion v_0[km/sec]:\t" << In_Units(v_0, km / sec) << std::endl
-				  << "\tGal. escape velocity [km/sec]:\t" << In_Units(v_esc, km / sec) << std::endl
-				  << "\tObserver's velocity [km/sec]:\t" << In_Units(vel_observer, km / sec) << std::endl
-				  << "\tObserver's speed [km/sec]:\t" << In_Units(v_observer, km / sec) << std::endl
-				  << std::endl;
+		Print_Summary_Base();
+		Print_Summary_SHM();
 	}
 }
 

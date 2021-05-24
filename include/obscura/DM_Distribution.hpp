@@ -15,8 +15,8 @@ class DM_Distribution
   protected:
 	std::string name;
 	std::vector<double> v_domain;
-
-	void Print_Summary_Base(int MPI_rank = 0);
+	double Eta_Function_Base(double vMin);
+	void Print_Summary_Base();
 
   public:
 	double DM_density;	 //Local DM density
@@ -44,7 +44,7 @@ class DM_Distribution
 	//Eta-function for direct detection
 	virtual double Eta_Function(double vMin);
 
-	virtual void Print_Summary(int MPI_rank = 0) { Print_Summary_Base(MPI_rank); };
+	virtual void Print_Summary(int mpi_rank = 0);
 };
 
 //2. Standard halo model (SHM)
@@ -56,7 +56,14 @@ class Standard_Halo_Model : public DM_Distribution
 
 	//Normalization
 	double N_esc;
-	void Normalize_PDF();
+	virtual void Normalize_PDF();
+
+	double PDF_Velocity_SHM(libphysica::Vector vel);
+	double PDF_Speed_SHM(double v);
+	double CDF_Speed_SHM(double v);
+	double Eta_Function_SHM(double vMin);
+
+	void Print_Summary_SHM();
 
   public:
 	//Constructors:
@@ -80,7 +87,7 @@ class Standard_Halo_Model : public DM_Distribution
 	//Eta-function for direct detection
 	virtual double Eta_Function(double vMin) override;
 
-	virtual void Print_Summary(int MPI_rank = 0) override;
+	virtual void Print_Summary(int mpi_rank = 0) override;
 };
 
 }	// namespace obscura
