@@ -34,6 +34,22 @@ double DM_Distribution::Maximum_DM_Speed() const
 	return v_domain[1];
 }
 
+double DM_Distribution::PDF_Speed(double v)
+{
+	auto integrand_theta = [this, v](double cos_theta) {
+		auto integrand_phi = [this, v, cos_theta](double phi) {
+			libphysica::Vector vel = libphysica::Spherical_Coordinates(v, acos(cos_theta), phi);
+			return v * v * PDF_Velocity(vel);
+		};
+		// double eps		= libphysica::Find_Epsilon(integrand_phi, 0.0, 2.0 * M_PI, 1.0e-6);
+		double integral = libphysica::Integrate(integrand_phi, 0.0, 2.0 * M_PI, 0.1);
+		return integral;
+	};
+	// double eps		= libphysica::Find_Epsilon(integrand_theta, -1.0, 1.0, 1.0e-6);
+	double integral = libphysica::Integrate(integrand_theta, -1.0, 1.0, 0.1);
+	return integral;
+}
+
 double DM_Distribution::CDF_Speed(double v)
 {
 	if(v < v_domain[0])
@@ -291,8 +307,8 @@ void Standard_Halo_Model::Print_Summary_SHM()
 {
 	std::cout << "\tSpeed dispersion v_0[km/sec]:\t" << In_Units(v_0, km / sec) << std::endl
 			  << "\tGal. escape velocity [km/sec]:\t" << In_Units(v_esc, km / sec) << std::endl
-			  << "\tObserver's velocity [km/sec]:\t" << In_Units(vel_observer, km / sec) << std::endl
-			  << "\tObserver's speed [km/sec]:\t" << In_Units(v_observer, km / sec) << std::endl
+			  << "\tObserver's velocity [km/sec]:\t" << libphysica::Round(In_Units(vel_observer, km / sec)) << std::endl
+			  << "\tObserver's speed [km/sec]:\t" << libphysica::Round(In_Units(v_observer, km / sec)) << std::endl
 			  << std::endl;
 }
 
@@ -302,6 +318,182 @@ void Standard_Halo_Model::Print_Summary(int mpi_rank)
 	{
 		Print_Summary_Base();
 		Print_Summary_SHM();
+	}
+}
+
+//3. Standard halo model++ (SHM++) as proposed by Evans, O'Hare and McCabe [arXiv:1810.11468]
+void SHM_Plus_Plus::Compute_Sigmas(double beta)
+{
+	sigma_r		= sqrt(3.0 * v_0 * v_0 / 2.0 / (3.0 - 2.0 * beta));
+	sigma_theta = sqrt(3.0 * v_0 * v_0 * (1.0 - beta) / 2.0 / (3.0 - 2.0 * beta));
+	sigma_phi	= sigma_theta;
+}
+
+void SHM_Plus_Plus::Normalize_PDF()
+{
+	N_esc	= erf(v_esc / v_0) - 2 * v_esc / v_0 / sqrt(M_PI) * exp(-v_esc * v_esc / v_0 / v_0);
+	N_esc_S = erf(v_esc / sqrt(2.0) / sigma_r) - sqrt((1.0 - beta) / beta) * exp(-v_esc * v_esc / 2.0 / sigma_theta / sigma_theta) * libphysica::Erfi(v_esc / sqrt(2.0) / sigma_r * sqrt(beta / (1.0 - beta)));
+}
+
+double SHM_Plus_Plus::PDF_Velocity_S(libphysica::Vector vel)
+{
+	double v = vel.Norm();
+	if(v > v_esc)
+		return 0.0;
+	else
+	{
+		double v_r	   = vel[0];
+		double v_theta = vel[1];
+		double v_phi   = vel[2];
+		return 1.0 / N_esc_S / std::pow(2.0 * M_PI, 1.5) / sigma_r / sigma_theta / sigma_phi * exp(-v_r * v_r / 2.0 / sigma_r / sigma_r - v_theta * v_theta / 2.0 / sigma_theta / sigma_theta - v_phi * v_phi / 2.0 / sigma_phi / sigma_phi);
+	}
+}
+
+double SHM_Plus_Plus::PDF_Speed_S(double v)
+{
+	auto integrand_theta = [this, v](double cos_theta) {
+		auto integrand_phi = [this, v, cos_theta](double phi) {
+			libphysica::Vector vel = libphysica::Spherical_Coordinates(v, acos(cos_theta), phi);
+			return v * v * PDF_Velocity_S(vel + vel_observer);
+		};
+		// double eps		= libphysica::Find_Epsilon(integrand_phi, 0.0, 2.0 * M_PI, 1.0e-6);
+		double integral = libphysica::Integrate(integrand_phi, 0.0, 2.0 * M_PI, 1e-3);
+		return integral;
+	};
+	// double eps		= libphysica::Find_Epsilon(integrand_theta, -1.0, 1.0, 1.0e-6);
+	double integral = libphysica::Integrate(integrand_theta, -1.0, 1.0, 1e-3);
+	return integral;
+}
+
+double SHM_Plus_Plus::CDF_Speed_S(double v)
+{
+	if(v < v_domain[0])
+		return 0.0;
+	else if(v > v_domain[1])
+		return 1.0;
+	else
+	{
+		std::function<double(double)> integrand = [this](double v) {
+			return PDF_Speed_S(v);
+		};
+		double cdf = libphysica::Integrate(integrand, v_domain[0], v, 1.0e-6);
+		return cdf;
+	}
+}
+
+double SHM_Plus_Plus::Eta_Function_S(double vMin)
+{
+	if(vMin < v_domain[0])
+		return 0.0;
+	else if(vMin > v_domain[1])
+		return 1.0;
+	else
+	{
+		std::function<double(double)> integrand = [this](double v) {
+			return PDF_Speed_S(v) / v;
+		};
+		double cdf = libphysica::Integrate(integrand, vMin, v_domain[1], 1.0e-6);
+		return cdf;
+	}
+}
+
+void SHM_Plus_Plus::Interpolate_Eta_Function_S(int v_points)
+{
+	std::vector<double> v_list	 = libphysica::Linear_Space(v_domain[0], v_domain[1], v_points);
+	std::vector<double> eta_list = {};
+	for(auto& v : v_list)
+		eta_list.push_back(Eta_Function_S(v));
+	eta_interpolation_s = libphysica::Interpolation(v_list, eta_list);
+}
+
+void SHM_Plus_Plus::Print_Summary_SHMpp()
+{
+	std::cout << "\tEta parameter:\t" << eta << std::endl
+			  << "\tBeta parameter:\t" << beta << std::endl
+			  << std::endl;
+}
+
+SHM_Plus_Plus::SHM_Plus_Plus(double e, double b)
+: Standard_Halo_Model(0.55 * GeV / cm / cm / cm, 233.0 * km / sec, 240.0 * km / sec, 528.0 * km / sec), eta(e), beta(b)
+{
+	name = "Refined Standard Halo Model (SHM++)";
+	Compute_Sigmas(beta);
+	Normalize_PDF();
+	// Interpolate_Eta_Function_S();
+}
+
+SHM_Plus_Plus::SHM_Plus_Plus(double rho, double v0, double vobs, double vesc, double e, double b)
+: Standard_Halo_Model(rho, v0, vobs, vesc), eta(e), beta(b)
+{
+	name = "Refined Standard Halo Model (SHM++)";
+	Compute_Sigmas(beta);
+	Normalize_PDF();
+	// Interpolate_Eta_Function_S();
+}
+
+SHM_Plus_Plus::SHM_Plus_Plus(double rho, double v0, libphysica::Vector& vel_obs, double vesc, double e, double b)
+: Standard_Halo_Model(rho, v0, vel_obs, vesc), eta(e), beta(b)
+{
+	name = "Refined Standard Halo Model (SHM++)";
+	Compute_Sigmas(beta);
+	Normalize_PDF();
+	// Interpolate_Eta_Function_S();
+}
+
+void SHM_Plus_Plus::Set_Speed_Dispersion(double v0)
+{
+	v_0 = v0;
+	Normalize_PDF();
+	Compute_Sigmas(beta);
+}
+
+void SHM_Plus_Plus::Set_Eta(double e)
+{
+	eta = e;
+}
+
+void SHM_Plus_Plus::Set_Beta(double b)
+{
+	beta = b;
+	Normalize_PDF();
+	Compute_Sigmas(beta);
+}
+
+double SHM_Plus_Plus::PDF_Velocity(libphysica::Vector vel)
+{
+	return (1.0 - eta) * PDF_Velocity_SHM(vel + vel_observer) + eta * PDF_Velocity_S(vel + vel_observer);
+}
+
+double SHM_Plus_Plus::PDF_Speed(double v)
+{
+	return (1.0 - eta) * PDF_Speed_SHM(v) + eta * PDF_Speed_S(v);
+}
+
+double SHM_Plus_Plus::CDF_Speed(double v)
+{
+	return (1.0 - eta) * CDF_Speed_SHM(v) + eta * CDF_Speed_S(v);
+}
+
+double SHM_Plus_Plus::Eta_Function(double vMin)
+{
+	if(vMin < v_domain[0])
+	{
+		std::cerr << "Error in obscura::SHM_Plus_Plus::Eta_Function: vMin = " << In_Units(vMin, km / sec) << "km/sec lies below the domain [" << In_Units(v_domain[0], km / sec) << "km/sec," << In_Units(v_domain[1], km / sec) << "km/sec]." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+	else if(vMin > v_domain[1])
+		return 0.0;
+	else
+		return (1.0 - eta) * Eta_Function_SHM(vMin) + eta * eta_interpolation_s(vMin);
+}
+
+void SHM_Plus_Plus::Print_Summary(int mpi_rank)
+{
+	if(mpi_rank == 0)
+	{
+		Print_Summary_Base();
+		Print_Summary_SHM();
+		Print_Summary_SHMpp();
 	}
 }
 
