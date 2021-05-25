@@ -57,7 +57,7 @@ bool DM_Particle::Interaction_Parameter_Is_Cross_Section() const
 	return using_cross_section;
 }
 
-double DM_Particle::Sigma_Nucleus_Base(const Isotope& target, double vDM) const
+double DM_Particle::Sigma_Nucleus_Total_Base(const Isotope& target, double vDM) const
 {
 	//Numerically integrate the differential cross section
 	double q2min						= 0;
@@ -105,12 +105,26 @@ double DM_Particle::dSigma_dER_Nucleus(double ER, const Isotope& target, double 
 	return 2.0 * target.mass * dSigma_dq2_Nucleus(q, target, vDM);
 }
 
+double DM_Particle::Sigma_Total_Nucleus(const Isotope& target, double vDM) const
+{
+	return Sigma_Nucleus_Total_Base(target, vDM);
+}
+double DM_Particle::Sigma_Total_Electron(double vDM) const
+{
+	return Sigma_Electron_Total_Base(vDM);
+}
+
+void DM_Particle::Print_Summary(int MPI_rank) const
+{
+	Print_Summary_Base(MPI_rank);
+}
+
 // Scattering angle functions
 double DM_Particle::PDF_Scattering_Angle_Nucleus_Base(double cos_alpha, const Isotope& target, double vDM)
 {
 	double q		= libphysica::Reduced_Mass(target.mass, mass) * vDM * sqrt(2.0 * (1.0 - cos_alpha));
 	double q2max	= 4.0 * libphysica::Reduced_Mass(target.mass, mass) * libphysica::Reduced_Mass(target.mass, mass) * vDM * vDM;
-	double SigmaTot = Sigma_Nucleus(target, vDM);
+	double SigmaTot = Sigma_Total_Nucleus(target, vDM);
 	if(SigmaTot != 0.0)
 		return q2max / 2.0 / SigmaTot * dSigma_dq2_Nucleus(q, target, vDM);
 	else
@@ -162,6 +176,36 @@ double DM_Particle::Sample_Scattering_Angle_Electron_Base(double vDM, std::mt199
 	};
 	double cos_alpha = libphysica::Find_Root(cdf, -1.0, 1.0, 1e-6);
 	return cos_alpha;
+}
+
+double DM_Particle::PDF_Scattering_Angle_Nucleus(double cos_alpha, const Isotope& target, double vDM)
+{
+	return PDF_Scattering_Angle_Nucleus_Base(cos_alpha, target, vDM);
+}
+
+double DM_Particle::PDF_Scattering_Angle_Electron(double cos_alpha, double vDM)
+{
+	return PDF_Scattering_Angle_Electron_Base(cos_alpha, vDM);
+}
+
+double DM_Particle::CDF_Scattering_Angle_Nucleus(double cos_alpha, const Isotope& target, double vDM)
+{
+	return CDF_Scattering_Angle_Nucleus_Base(cos_alpha, target, vDM);
+}
+
+double DM_Particle::CDF_Scattering_Angle_Electron(double cos_alpha, double vDM)
+{
+	return CDF_Scattering_Angle_Electron_Base(cos_alpha, vDM);
+}
+
+double DM_Particle::Sample_Scattering_Angle_Nucleus(const Isotope& target, double vDM, std::mt19937& PRNG)
+{
+	return Sample_Scattering_Angle_Nucleus_Base(target, vDM, PRNG);
+}
+
+double DM_Particle::Sample_Scattering_Angle_Electron(double vDM, std::mt19937& PRNG)
+{
+	return Sample_Scattering_Angle_Electron_Base(vDM, PRNG);
 }
 
 }	// namespace obscura

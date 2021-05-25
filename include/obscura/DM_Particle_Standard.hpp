@@ -88,7 +88,7 @@ class DM_Particle_SI : public DM_Particle_Standard
 	virtual double dSigma_dq2_Electron(double q, double vDM) const override;
 
 	// Total cross sections
-	virtual double Sigma_Nucleus(const Isotope& isotope, double vDM = 1e-3) const override;
+	virtual double Sigma_Total_Nucleus(const Isotope& isotope, double vDM = 1e-3) const override;
 	virtual double Sigma_Total_Electron(double vDM) const override;
 
 	// Scattering angle functions
@@ -118,7 +118,7 @@ class DM_Particle_SD : public DM_Particle_Standard
 	virtual double dSigma_dq2_Electron(double q, double vDM) const override;
 
 	// Total cross sections
-	virtual double Sigma_Nucleus(const Isotope& isotope, double vDM = 1e-3) const override;
+	virtual double Sigma_Total_Nucleus(const Isotope& isotope, double vDM = 1e-3) const override;
 	virtual double Sigma_Total_Electron(double vDM) const override;
 
 	// Scattering angle functions

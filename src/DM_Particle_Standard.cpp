@@ -287,7 +287,7 @@ double DM_Particle_SI::dSigma_dq2_Electron(double q, double vDM) const
 }
 
 //Total cross sections
-double DM_Particle_SI::Sigma_Nucleus(const Isotope& isotope, double vDM) const
+double DM_Particle_SI::Sigma_Total_Nucleus(const Isotope& isotope, double vDM) const
 {
 	double sigmatot = 0.0;
 	if(FF_DM != "Contact" && FF_DM != "General")
@@ -296,7 +296,7 @@ double DM_Particle_SI::Sigma_Nucleus(const Isotope& isotope, double vDM) const
 		std::exit(EXIT_FAILURE);
 	}
 	else if(!low_mass)
-		sigmatot = Sigma_Nucleus_Base(isotope, vDM);
+		sigmatot = Sigma_Nucleus_Total_Base(isotope, vDM);
 	else
 	{
 		sigmatot = pow(libphysica::Reduced_Mass(mass, isotope.mass), 2.0) / M_PI * pow(fp * isotope.Z + fn * (isotope.A - isotope.Z), 2.0);
@@ -491,7 +491,7 @@ double DM_Particle_SD::dSigma_dq2_Electron(double q, double vDM) const
 }
 
 //Total cross sections with nuclear isotopes, elements, and electrons
-double DM_Particle_SD::Sigma_Nucleus(const Isotope& isotope, double vDM) const
+double DM_Particle_SD::Sigma_Total_Nucleus(const Isotope& isotope, double vDM) const
 {
 	return (isotope.spin != 0) ? 4.0 * pow(libphysica::Reduced_Mass(mass, isotope.mass), 2.0) / M_PI * (isotope.spin + 1.0) / isotope.spin * pow(fp * isotope.sp + fn * isotope.sn, 2.0) : 0.0;
 }

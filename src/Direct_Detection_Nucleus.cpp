@@ -81,7 +81,7 @@ double DM_Detector_Nucleus::Maximum_Energy_Deposit(const DM_Particle& DM, const 
 		for(unsigned int j = 0; j < target_nuclei[i].Number_of_Isotopes(); j++)
 		{
 			double ERmax = Maximum_Nuclear_Recoil_Energy(vDM, DM.mass, target_nuclei[i][j].mass);
-			if(ERmax > Emax && DM.Sigma_Nucleus(target_nuclei[i][j], vDM) > 0.0)
+			if(ERmax > Emax && DM.Sigma_Total_Nucleus(target_nuclei[i][j], vDM) > 0.0)
 				Emax = ERmax;
 		}
 	}
@@ -97,7 +97,7 @@ double DM_Detector_Nucleus::Minimum_DM_Mass(DM_Particle& DM, const DM_Distributi
 		for(unsigned int j = 0; j < target_nuclei[i].Number_of_Isotopes(); j++)
 		{
 			double mMin = target_nuclei[i][j].mass / (sqrt(2.0 * target_nuclei[i][j].mass / (energy_threshold - 2.0 * energy_resolution)) * vMax - 1.0);
-			if(DM.Sigma_Nucleus(target_nuclei[i][j], vMax) > 0.0)
+			if(DM.Sigma_Total_Nucleus(target_nuclei[i][j], vMax) > 0.0)
 				aux.push_back(mMin);
 		}
 	}
@@ -182,7 +182,7 @@ double DM_Detector_Nucleus::Minimum_DM_Speed(const DM_Particle& DM) const
 		for(unsigned int j = 0; j < target_nuclei[i].Number_of_Isotopes(); j++)
 		{
 			double vmin = vMinimal_Nucleus(Emin, DM.mass, target_nuclei[i][j].mass);
-			if(vmin < vcut && DM.Sigma_Nucleus(target_nuclei[i][j], 1.0e-3) > 0.0)
+			if(vmin < vcut && DM.Sigma_Total_Nucleus(target_nuclei[i][j], 1.0e-3) > 0.0)
 				vcut = vmin;
 		}
 	}
