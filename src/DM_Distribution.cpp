@@ -161,6 +161,24 @@ void DM_Distribution::Print_Summary(int mpi_rank)
 		Print_Summary_Base();
 };
 
+void DM_Distribution::Export_PDF_Speed(std::string file_path, int v_points, bool log_scale)
+{
+	auto v_list = log_scale ? libphysica::Log_Space(v_domain[0], v_domain[1], v_points) : libphysica::Linear_Space(v_domain[0], v_domain[1], v_points);
+	auto pdf	= [this](double v) {
+		   return PDF_Speed(v);
+	};
+	libphysica::Export_Function(file_path, pdf, v_list, {km / sec, sec / km});
+}
+
+void DM_Distribution::Export_Eta_Function(std::string file_path, int v_points, bool log_scale)
+{
+	auto v_list = log_scale ? libphysica::Log_Space(v_domain[0], v_domain[1], v_points) : libphysica::Linear_Space(v_domain[0], v_domain[1], v_points);
+	auto eta	= [this](double v) {
+		   return Eta_Function(v);
+	};
+	libphysica::Export_Function(file_path, eta, v_list, {km / sec, sec / km});
+}
+
 //2. Standard halo model (SHM)
 //Constructors:
 Standard_Halo_Model::Standard_Halo_Model()
@@ -494,6 +512,76 @@ void SHM_Plus_Plus::Print_Summary(int mpi_rank)
 		Print_Summary_Base();
 		Print_Summary_SHM();
 		Print_Summary_SHMpp();
+	}
+}
+
+//4. Import a tabulated DM distribution from a file (format v[km/sec] :: f(v) [sec/km])
+void Imported_DM_Distribution::Check_Normalization()
+{
+	double norm = pdf_speed.Integrate(v_domain[0], v_domain[1]);
+	if(libphysica::Relative_Difference(norm, 1.0) > 1.0e-3)
+		std::cout << "Warning in obscura::Imported_DM_Distribution::Check_Normalization(): Imported pdf is not normalized (norm = " << norm << ")." << std::endl
+				  << std::endl;
+}
+
+void Imported_DM_Distribution::Interpolate_Eta()
+{
+	auto v_list = libphysica::Linear_Space(v_domain[0], v_domain[1], 500);
+	std::vector<std::vector<double>> eta_table;
+	for(auto& v : v_list)
+		eta_table.push_back({v, Eta_Function_Base(v)});
+	eta_function = libphysica::Interpolation(eta_table);
+}
+
+Imported_DM_Distribution::Imported_DM_Distribution(double rho, const std::string& filepath)
+: DM_Distribution("Imported DM distribution", rho, 0.0, 1.0), file_path(filepath)
+{
+	DD_use_eta_function = true;
+	auto pdf_table		= libphysica::Import_Table(file_path, {km / sec, sec / km});
+	pdf_speed			= libphysica::Interpolation(pdf_table);
+	v_domain			= pdf_speed.domain;
+	Check_Normalization();
+	Interpolate_Eta();
+}
+
+double Imported_DM_Distribution::PDF_Speed(double v)
+{
+	if(v < v_domain[0] || v > v_domain[1])
+		return 0.0;
+	else
+		return pdf_speed(v);
+}
+
+double Imported_DM_Distribution::CDF_Speed(double v)
+{
+	if(v < v_domain[0])
+		return 0.0;
+	else if(v > v_domain[1])
+		return 1.0;
+	else
+		return pdf_speed.Integrate(v_domain[0], v);
+}
+
+double Imported_DM_Distribution::Eta_Function(double vMin)
+{
+	if(vMin < v_domain[0])
+	{
+		std::cerr << "Error in obscura::Imported_DM_Distribution::Eta_Function(): vMin = " << In_Units(vMin, km / sec) << "km/sec lies below the domain [" << In_Units(v_domain[0], km / sec) << "km/sec," << In_Units(v_domain[1], km / sec) << "km/sec]." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+	else if(vMin > v_domain[1])
+		return 0.0;
+	else
+		return eta_function(vMin);
+}
+
+void Imported_DM_Distribution::Print_Summary(int mpi_rank)
+{
+	if(mpi_rank == 0)
+	{
+		Print_Summary_Base();
+		std::cout << "\tFile path:\t" << file_path << std::endl
+				  << std::endl;
 	}
 }
 

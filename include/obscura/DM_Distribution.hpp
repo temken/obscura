@@ -46,6 +46,8 @@ class DM_Distribution
 	virtual double Eta_Function(double vMin);
 
 	virtual void Print_Summary(int mpi_rank = 0);
+	void Export_PDF_Speed(std::string file_path, int v_points = 100, bool log_scale = false);
+	void Export_Eta_Function(std::string file_path, int v_points = 100, bool log_scale = false);
 };
 
 //2. Standard halo model (SHM)
@@ -138,6 +140,28 @@ class SHM_Plus_Plus : public Standard_Halo_Model
 	virtual void Print_Summary(int mpi_rank = 0) override;
 };
 
+//4. Import a tabulated DM distribution from a file (format v[km/sec] :: f(v) [sec/km])
+class Imported_DM_Distribution : public DM_Distribution
+{
+  protected:
+	std::string file_path;
+	libphysica::Interpolation pdf_speed, eta_function;
+
+	void Check_Normalization();
+
+	double Eta_Function_Int(double v_min);
+	void Interpolate_Eta();
+
+  public:
+	Imported_DM_Distribution(double rho, const std::string& filepath);
+
+	virtual double PDF_Speed(double v) override;
+	virtual double CDF_Speed(double v) override;
+
+	virtual double Eta_Function(double vMin) override;
+
+	virtual void Print_Summary(int mpi_rank = 0) override;
+};
 }	// namespace obscura
 
 #endif
