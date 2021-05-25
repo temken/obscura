@@ -27,7 +27,7 @@ class Configuration
 	void Construct_DM_Particle_Standard(std::string DM_interaction);
 
 	virtual void Construct_DM_Distribution();
-	void Construct_DM_Distribution_SHM();
+	void Construct_DM_Halo_Model(std::string model_label);
 
 	virtual void Construct_DM_Detector();
 	void Construct_DM_Detector_Nuclear();

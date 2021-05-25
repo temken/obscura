@@ -329,8 +329,8 @@ void Configuration::Construct_DM_Distribution()
 		std::exit(EXIT_FAILURE);
 	}
 
-	if(DM_distribution == "SHM")
-		Construct_DM_Distribution_SHM();
+	if(DM_distribution == "SHM" || DM_distribution == "SHM++")
+		Construct_DM_Halo_Model(DM_distribution);
 	else
 	{
 		std::cerr << "Error in obscura::Configuration::Construct_DM_Distribution(): 'DM_distribution' setting " << DM_distribution << " in configuration file not recognized." << std::endl;
@@ -338,7 +338,7 @@ void Configuration::Construct_DM_Distribution()
 	}
 }
 
-void Configuration::Construct_DM_Distribution_SHM()
+void Configuration::Construct_DM_Halo_Model(std::string model_label)
 {
 	double DM_local_density, SHM_v0, SHM_vEscape;
 	libphysica::Vector vel_observer(3, 0.0);
@@ -389,7 +389,31 @@ void Configuration::Construct_DM_Distribution_SHM()
 		std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'SHM_vEscape' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
-	DM_distr = new Standard_Halo_Model(DM_local_density, SHM_v0, vel_observer, SHM_vEscape);
+	if(model_label == "SHM")
+		DM_distr = new Standard_Halo_Model(DM_local_density, SHM_v0, vel_observer, SHM_vEscape);
+	else if(model_label == "SHM++")
+	{
+		double eta, beta;
+		try
+		{
+			eta = config.lookup("SHMpp_eta");
+		}
+		catch(const SettingNotFoundException& nfex)
+		{
+			std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'SHMpp_eta' setting in configuration file." << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		try
+		{
+			beta = config.lookup("SHMpp_beta");
+		}
+		catch(const SettingNotFoundException& nfex)
+		{
+			std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'SHMpp_beta' setting in configuration file." << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		DM_distr = new SHM_Plus_Plus(DM_local_density, SHM_v0, vel_observer, SHM_vEscape, eta, beta);
+	}
 }
 
 void Configuration::Construct_DM_Detector()
