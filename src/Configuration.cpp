@@ -331,6 +331,8 @@ void Configuration::Construct_DM_Distribution()
 
 	if(DM_distribution == "SHM" || DM_distribution == "SHM++")
 		Construct_DM_Halo_Model(DM_distribution);
+	else if(DM_distribution == "File")
+		Construct_Imported_Distribution();
 	else
 	{
 		std::cerr << "Error in obscura::Configuration::Construct_DM_Distribution(): 'DM_distribution' setting " << DM_distribution << " in configuration file not recognized." << std::endl;
@@ -414,6 +416,32 @@ void Configuration::Construct_DM_Halo_Model(std::string model_label)
 		}
 		DM_distr = new SHM_Plus_Plus(DM_local_density, SHM_v0, vel_observer, SHM_vEscape, eta, beta);
 	}
+}
+
+void Configuration::Construct_Imported_Distribution()
+{
+	double DM_local_density;
+	try
+	{
+		DM_local_density = config.lookup("DM_local_density");
+		DM_local_density *= GeV / cm / cm / cm;
+	}
+	catch(const SettingNotFoundException& nfex)
+	{
+		std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'DM_local_density' setting in configuration file." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+	std::string file_path;
+	try
+	{
+		file_path = config.lookup("file_path").c_str();
+	}
+	catch(const SettingNotFoundException& nfex)
+	{
+		std::cerr << "No 'file_path' setting in configuration file." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+	DM_distr = new Imported_DM_Distribution(DM_local_density, file_path);
 }
 
 void Configuration::Construct_DM_Detector()

@@ -28,6 +28,7 @@ class Configuration
 
 	virtual void Construct_DM_Distribution();
 	void Construct_DM_Halo_Model(std::string model_label);
+	void Construct_Imported_Distribution();
 
 	virtual void Construct_DM_Detector();
 	void Construct_DM_Detector_Nuclear();
