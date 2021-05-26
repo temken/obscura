@@ -1,5 +1,6 @@
 #include "obscura/Direct_Detection_Migdal.hpp"
 
+#include "libphysica/Integration.hpp"
 #include "libphysica/Natural_Units.hpp"
 #include "libphysica/Statistics.hpp"
 #include "libphysica/Utilities.hpp"

@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "libphysica/Natural_Units.hpp"
-#include "libphysica/Numerics.hpp"
+#include "libphysica/Special_Functions.hpp"
 #include "libphysica/Utilities.hpp"
 
 #include "obscura/Configuration.hpp"
@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 			  << std::endl;
 	////////////////////////////////////////////////////////////////////////
 
-	//Import nuclear data and configuration file
+	//Import configuration file
 	obscura::Configuration cfg(argv[1]);
 	cfg.Print_Summary();
 

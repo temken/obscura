@@ -4,6 +4,7 @@
 #include <cmath>
 #include <numeric>	 //for std::accumulate
 
+#include "libphysica/Special_Functions.hpp"
 #include "libphysica/Statistics.hpp"
 #include "libphysica/Utilities.hpp"
 

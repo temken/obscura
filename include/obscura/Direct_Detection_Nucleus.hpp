@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "libphysica/Integration.hpp"
 #include "libphysica/Natural_Units.hpp"
-#include "libphysica/Numerics.hpp"
 
 #include "obscura/DM_Distribution.hpp"
 #include "obscura/DM_Particle.hpp"

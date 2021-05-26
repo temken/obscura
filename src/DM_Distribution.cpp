@@ -4,8 +4,9 @@
 #include <functional>
 #include <iostream>
 
+#include "libphysica/Integration.hpp"
 #include "libphysica/Natural_Units.hpp"
-#include "libphysica/Numerics.hpp"
+#include "libphysica/Special_Functions.hpp"
 #include "libphysica/Utilities.hpp"
 
 #include "obscura/Astronomy.hpp"

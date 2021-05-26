@@ -32,6 +32,11 @@ jobs:
     - name: Install libconfig
       run: pushd libconfig-1.7.2 && ./configure && make && sudo make install && popd
 
+    # BOOST
+    - name: Install boost
+      shell: bash
+      run: sudo apt-get update && sudo apt-get install -yq libboost-all-dev
+
     # CODECOV
     - name: Install codecov
       shell: bash

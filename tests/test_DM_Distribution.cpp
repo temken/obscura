@@ -2,8 +2,8 @@
 
 #include "obscura/DM_Distribution.hpp"
 
+#include "libphysica/Integration.hpp"
 #include "libphysica/Natural_Units.hpp"
-#include "libphysica/Numerics.hpp"
 
 #include "obscura/Astronomy.hpp"
 

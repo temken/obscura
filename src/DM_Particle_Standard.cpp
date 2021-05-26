@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-#include "libphysica/Numerics.hpp"
+#include "libphysica/Special_Functions.hpp"
 #include "libphysica/Statistics.hpp"
 
 namespace obscura

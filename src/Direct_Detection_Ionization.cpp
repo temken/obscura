@@ -2,7 +2,9 @@
 
 #include <cmath>
 
+#include "libphysica/Integration.hpp"
 #include "libphysica/Natural_Units.hpp"
+#include "libphysica/Special_Functions.hpp"
 #include "libphysica/Statistics.hpp"
 #include "libphysica/Utilities.hpp"
 

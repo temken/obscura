@@ -3,8 +3,8 @@
 #include <cmath>
 #include <numeric>
 
+#include "libphysica/Integration.hpp"
 #include "libphysica/Natural_Units.hpp"
-#include "libphysica/Numerics.hpp"
 
 #include "obscura/Target_Atom.hpp"
 

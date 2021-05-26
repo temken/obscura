@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include "libphysica/Natural_Units.hpp"
-#include "libphysica/Numerics.hpp"
+#include "libphysica/Special_Functions.hpp"
 
 namespace obscura
 {
