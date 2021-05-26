@@ -12,6 +12,7 @@ using namespace libphysica::natural_units;
 //1. Event spectra and rates
 double dRdEe_Ionization_ER(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, double m_nucleus, Atomic_Electron& shell)
 {
+	double N_T		= 1.0 / m_nucleus;
 	double vMax		= DM_distr.Maximum_DM_Speed();
 	double E_DM_max = DM.mass / 2.0 * vMax * vMax;
 	if(E_DM_max < shell.binding_energy)
@@ -24,7 +25,7 @@ double dRdEe_Ionization_ER(double Ee, const DM_Particle& DM, DM_Distribution& DM
 	else if(qMax > shell.q_max)
 		qMax = shell.q_max;
 
-	std::vector<double> q_grid = libphysica::Log_Space(qMin, qMax, 50);
+	std::vector<double> q_grid = libphysica::Log_Space(qMin, qMax, 100);
 	double d_lnq			   = log(q_grid[1] / q_grid[0]);
 	double integral			   = 0.0;
 	for(auto& q : q_grid)
@@ -35,19 +36,18 @@ double dRdEe_Ionization_ER(double Ee, const DM_Particle& DM, DM_Distribution& DM
 			if(DM.DD_use_eta_function && DM_distr.DD_use_eta_function)
 			{
 				double vDM = 1.0e-3;   // cancels
-				integral += d_lnq * q * q * DM.dSigma_dq2_Electron(q, vDM) * vDM * vDM * DM_distr.DM_density / DM.mass * DM_distr.Eta_Function(vMin) * shell.Ionization_Form_Factor(q, Ee);
+				integral += 2.0 * d_lnq * q * q * DM.d2Sigma_dq2_dEe_Ionization(q, Ee, vDM, shell) * vDM * vDM * DM_distr.DM_density / DM.mass * DM_distr.Eta_Function(vMin);
 			}
 			else
 			{
-				auto integrand = [&DM_distr, &DM, q](double v) {
-					return DM_distr.Differential_DM_Flux(v, DM.mass) * DM.dSigma_dq2_Electron(q, v);
+				auto integrand = [&DM_distr, &DM, q, Ee, &shell](double v) {
+					return DM_distr.Differential_DM_Flux(v, DM.mass) * DM.d2Sigma_dq2_dEe_Ionization(q, Ee, v, shell);
 				};
-				double eps = libphysica::Find_Epsilon(integrand, vMin, vMax, 1.0e-4);
-				integral += d_lnq * q * q * shell.Ionization_Form_Factor(q, Ee) * libphysica::Integrate(integrand, vMin, vMax, eps);
+				integral += 2.0 * d_lnq * q * q * libphysica::Integrate(integrand, vMin, vMax);
 			}
 		}
 	}
-	return 1.0 / m_nucleus / Ee / 2.0 * integral;
+	return N_T * integral;
 }
 
 double dRdEe_Ionization_ER(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom)

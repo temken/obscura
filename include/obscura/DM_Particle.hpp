@@ -63,8 +63,8 @@ class DM_Particle
 
 	// Differential cross section for electron targets
 	virtual double dSigma_dq2_Electron(double q, double vDM) const { return 0.0; };
-	virtual double dSigma_dEe_Ionization(double Ee, double vDM, const Atomic_Electron& shell) const { return 0.0; };
-	virtual double dSigma_dEe_Crystal(double Ee, double vDM, const Crystal& crystal) const { return 0.0; };
+	virtual double d2Sigma_dq2_dEe_Ionization(double q, double Ee, double vDM, Atomic_Electron& shell) const { return 0.0; };
+	virtual double d2Sigma_dq2_dEe_Crystal(double q, double Ee, double vDM, Crystal& crystal) const { return 0.0; };
 
 	// Reference cross sections
 	virtual double Sigma_Proton() const { return 0.0; };

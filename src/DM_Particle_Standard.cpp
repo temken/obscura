@@ -286,6 +286,16 @@ double DM_Particle_SI::dSigma_dq2_Electron(double q, double vDM) const
 	return sigma_electron / pow(2.0 * libphysica::Reduced_Mass(mass, mElectron) * vDM, 2.0) * FormFactor2_DM(q);
 }
 
+double DM_Particle_SI::d2Sigma_dq2_dEe_Ionization(double q, double Ee, double vDM, Atomic_Electron& shell) const
+{
+	return 1.0 / 4.0 / Ee * dSigma_dq2_Electron(q, vDM) * shell.Ionization_Form_Factor(q, Ee);
+}
+
+double DM_Particle_SI::d2Sigma_dq2_dEe_Crystal(double q, double Ee, double vDM, Crystal& crystal) const
+{
+	return 0.0;
+}
+
 //Total cross sections
 double DM_Particle_SI::Sigma_Total_Nucleus(const Isotope& isotope, double vDM) const
 {

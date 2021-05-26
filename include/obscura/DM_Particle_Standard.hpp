@@ -83,9 +83,13 @@ class DM_Particle_SI : public DM_Particle_Standard
 	void Set_FormFactor_DM(std::string ff, double mMed = -1.0);
 	void Set_Mediator_Mass(double m);
 
-	// Differential cross sections
+	//Differential cross sections for nuclear targets
 	virtual double dSigma_dq2_Nucleus(double q, const Isotope& target, double vDM) const override;
+
+	// Differential cross section for electron targets
 	virtual double dSigma_dq2_Electron(double q, double vDM) const override;
+	virtual double d2Sigma_dq2_dEe_Ionization(double q, double Ee, double vDM, Atomic_Electron& shell) const override;
+	virtual double d2Sigma_dq2_dEe_Crystal(double q, double Ee, double vDM, Crystal& crystal) const override;
 
 	// Total cross sections
 	virtual double Sigma_Total_Nucleus(const Isotope& isotope, double vDM = 1e-3) const override;
