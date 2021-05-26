@@ -34,6 +34,7 @@ class DM_Distribution
 	virtual double PDF_Velocity(libphysica::Vector vel) { return 0.0; };
 	virtual double PDF_Speed(double v);
 	virtual double CDF_Speed(double v);
+	virtual double PDF_Norm();
 
 	virtual double Differential_DM_Flux(double v, double mDM);
 	virtual double Total_DM_Flux(double mDM);

@@ -37,18 +37,11 @@ double DM_Distribution::Maximum_DM_Speed() const
 
 double DM_Distribution::PDF_Speed(double v)
 {
-	auto integrand_theta = [this, v](double cos_theta) {
-		auto integrand_phi = [this, v, cos_theta](double phi) {
-			libphysica::Vector vel = libphysica::Spherical_Coordinates(v, acos(cos_theta), phi);
-			return v * v * PDF_Velocity(vel);
-		};
-		// double eps		= libphysica::Find_Epsilon(integrand_phi, 0.0, 2.0 * M_PI, 1.0e-6);
-		double integral = libphysica::Integrate(integrand_phi, 0.0, 2.0 * M_PI, 0.1);
-		return integral;
+	auto integrand = [this, v](double cos_theta, double phi) {
+		libphysica::Vector vel = libphysica::Spherical_Coordinates(v, acos(cos_theta), phi);
+		return v * v * PDF_Velocity(vel);
 	};
-	// double eps		= libphysica::Find_Epsilon(integrand_theta, -1.0, 1.0, 1.0e-6);
-	double integral = libphysica::Integrate(integrand_theta, -1.0, 1.0, 0.1);
-	return integral;
+	return libphysica::Integrate_2D(integrand, -1.0, 1.0, 0.0, 2.0 * M_PI);
 }
 
 double DM_Distribution::CDF_Speed(double v)
@@ -62,9 +55,16 @@ double DM_Distribution::CDF_Speed(double v)
 		std::function<double(double)> integrand = [this](double v) {
 			return PDF_Speed(v);
 		};
-		double cdf = libphysica::Integrate(integrand, v_domain[0], v, 1.0e-6);
-		return cdf;
+		return libphysica::Integrate(integrand, v_domain[0], v);
 	}
+}
+
+double DM_Distribution::PDF_Norm()
+{
+	auto integrand = [this](libphysica::Vector vel) {
+		return PDF_Velocity(vel);
+	};
+	return libphysica::Integrate_3D(integrand, v_domain[0], v_domain[1], -1.0, 1.0, 0.0, 2.0 * M_PI);
 }
 
 double DM_Distribution::Differential_DM_Flux(double v, double mDM)
@@ -77,9 +77,7 @@ double DM_Distribution::Total_DM_Flux(double mDM)
 	auto dFdv = [this, mDM](double v) {
 		return Differential_DM_Flux(v, mDM);
 	};
-	double eps	   = libphysica::Find_Epsilon(dFdv, v_domain[0], v_domain[1], 1.0e-5);
-	double F_total = libphysica::Integrate(dFdv, v_domain[0], v_domain[1], eps);
-	return F_total;
+	return libphysica::Integrate(dFdv, v_domain[0], v_domain[1]);
 }
 
 libphysica::Vector DM_Distribution::Average_Velocity()
@@ -108,7 +106,7 @@ double DM_Distribution::Average_Speed(double vMin)
 	std::function<double(double)> integrand = [this](double v) {
 		return v * PDF_Speed(v);
 	};
-	double v_average = libphysica::Integrate(integrand, vMin, v_domain[1], 1.0e-3 * km / sec);
+	double v_average = libphysica::Integrate(integrand, vMin, v_domain[1]);
 
 	// 3. Re-normalize in case of a sub-domain
 	if(agerage_over_subdomain)
@@ -133,9 +131,7 @@ double DM_Distribution::Eta_Function_Base(double vMin)
 		std::function<double(double)> integrand = [this](double v) {
 			return 1.0 / v * PDF_Speed(v);
 		};
-		double eps = libphysica::Integrate(integrand, vMin, v_domain[1], 1.0e-5);
-		double eta = libphysica::Integrate(integrand, vMin, v_domain[1], eps);
-		return eta;
+		return libphysica::Integrate(integrand, vMin, v_domain[1]);
 	}
 }
 
@@ -362,26 +358,19 @@ double SHM_Plus_Plus::PDF_Velocity_S(libphysica::Vector vel)
 	else
 	{
 		double v_r	   = vel[0];
-		double v_theta = vel[1];
-		double v_phi   = vel[2];
+		double v_theta = vel[2];
+		double v_phi   = vel[1];
 		return 1.0 / N_esc_S / std::pow(2.0 * M_PI, 1.5) / sigma_r / sigma_theta / sigma_phi * exp(-v_r * v_r / 2.0 / sigma_r / sigma_r - v_theta * v_theta / 2.0 / sigma_theta / sigma_theta - v_phi * v_phi / 2.0 / sigma_phi / sigma_phi);
 	}
 }
 
 double SHM_Plus_Plus::PDF_Speed_S(double v)
 {
-	auto integrand_theta = [this, v](double cos_theta) {
-		auto integrand_phi = [this, v, cos_theta](double phi) {
-			libphysica::Vector vel = libphysica::Spherical_Coordinates(v, acos(cos_theta), phi);
-			return v * v * PDF_Velocity_S(vel + vel_observer);
-		};
-		// double eps		= libphysica::Find_Epsilon(integrand_phi, 0.0, 2.0 * M_PI, 1.0e-6);
-		double integral = libphysica::Integrate(integrand_phi, 0.0, 2.0 * M_PI, 1e-3);
-		return integral;
+	auto integrand = [this, v](double cos_theta, double phi) {
+		libphysica::Vector vel = libphysica::Spherical_Coordinates(v, acos(cos_theta), phi);
+		return v * v * PDF_Velocity_S(vel + vel_observer);
 	};
-	// double eps		= libphysica::Find_Epsilon(integrand_theta, -1.0, 1.0, 1.0e-6);
-	double integral = libphysica::Integrate(integrand_theta, -1.0, 1.0, 1e-3);
-	return integral;
+	return libphysica::Integrate_2D(integrand, -1.0, 1.0, 0.0, 2.0 * M_PI);
 }
 
 double SHM_Plus_Plus::CDF_Speed_S(double v)
@@ -395,8 +384,7 @@ double SHM_Plus_Plus::CDF_Speed_S(double v)
 		std::function<double(double)> integrand = [this](double v) {
 			return PDF_Speed_S(v);
 		};
-		double cdf = libphysica::Integrate(integrand, v_domain[0], v, 1.0e-6);
-		return cdf;
+		return libphysica::Integrate(integrand, v_domain[0], v);
 	}
 }
 
@@ -411,8 +399,7 @@ double SHM_Plus_Plus::Eta_Function_S(double vMin)
 		std::function<double(double)> integrand = [this](double v) {
 			return PDF_Speed_S(v) / v;
 		};
-		double cdf = libphysica::Integrate(integrand, vMin, v_domain[1], 1.0e-6);
-		return cdf;
+		return libphysica::Integrate(integrand, vMin, v_domain[1]);
 	}
 }
 
@@ -438,7 +425,7 @@ SHM_Plus_Plus::SHM_Plus_Plus(double e, double b)
 	name = "Refined Standard Halo Model (SHM++)";
 	Compute_Sigmas(beta);
 	Normalize_PDF();
-	// Interpolate_Eta_Function_S();
+	Interpolate_Eta_Function_S();
 }
 
 SHM_Plus_Plus::SHM_Plus_Plus(double rho, double v0, double vobs, double vesc, double e, double b)
@@ -447,7 +434,7 @@ SHM_Plus_Plus::SHM_Plus_Plus(double rho, double v0, double vobs, double vesc, do
 	name = "Refined Standard Halo Model (SHM++)";
 	Compute_Sigmas(beta);
 	Normalize_PDF();
-	// Interpolate_Eta_Function_S();
+	Interpolate_Eta_Function_S();
 }
 
 SHM_Plus_Plus::SHM_Plus_Plus(double rho, double v0, libphysica::Vector& vel_obs, double vesc, double e, double b)
@@ -456,14 +443,14 @@ SHM_Plus_Plus::SHM_Plus_Plus(double rho, double v0, libphysica::Vector& vel_obs,
 	name = "Refined Standard Halo Model (SHM++)";
 	Compute_Sigmas(beta);
 	Normalize_PDF();
-	// Interpolate_Eta_Function_S();
+	Interpolate_Eta_Function_S();
 }
 
 void SHM_Plus_Plus::Set_Speed_Dispersion(double v0)
 {
 	v_0 = v0;
-	Normalize_PDF();
 	Compute_Sigmas(beta);
+	Normalize_PDF();
 }
 
 void SHM_Plus_Plus::Set_Eta(double e)
@@ -474,8 +461,8 @@ void SHM_Plus_Plus::Set_Eta(double e)
 void SHM_Plus_Plus::Set_Beta(double b)
 {
 	beta = b;
-	Normalize_PDF();
 	Compute_Sigmas(beta);
+	Normalize_PDF();
 }
 
 double SHM_Plus_Plus::PDF_Velocity(libphysica::Vector vel)

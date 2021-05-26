@@ -22,6 +22,6 @@ class Crystal
 
 	double Crystal_Form_Factor(double q, double E);
 };
-};	 // namespace obscura
+}	// namespace obscura
 
 #endif

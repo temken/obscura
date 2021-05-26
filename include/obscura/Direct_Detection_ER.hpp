@@ -20,6 +20,6 @@ class DM_Detector_Ionization_ER : public DM_Detector_Ionization
 	virtual double dRdE_Ionization(double E, const DM_Particle& DM, DM_Distribution& DM_distr, const Nucleus& nucleus, Atomic_Electron& shell) override;
 };
 
-};	 // namespace obscura
+}	// namespace obscura
 
 #endif
