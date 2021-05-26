@@ -293,7 +293,7 @@ double DM_Particle_SI::d2Sigma_dq2_dEe_Ionization(double q, double Ee, double vD
 
 double DM_Particle_SI::d2Sigma_dq2_dEe_Crystal(double q, double Ee, double vDM, Crystal& crystal) const
 {
-	return 0.0;
+	return 2.0 * aEM * mElectron * mElectron / q / q / q * dSigma_dq2_Electron(q, vDM) * crystal.Crystal_Form_Factor(q, Ee);
 }
 
 //Total cross sections

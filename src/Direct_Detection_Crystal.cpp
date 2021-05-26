@@ -26,8 +26,8 @@ unsigned int Electron_Hole_Pairs(double Ee, const Crystal& target)
 
 double dRdEe_Crystal(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Crystal& target_crystal)
 {
-	double prefactor = 4.0 / target_crystal.M_cell * aEM * mElectron * mElectron;
-	double sum		 = 0.0;
+	double N_T		= 1.0 / target_crystal.M_cell;
+	double integral = 0.0;
 	for(int qi = 0; qi < 900; qi++)
 	{
 		double q	= (qi + 1) * target_crystal.dq;
@@ -38,18 +38,17 @@ double dRdEe_Crystal(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr
 		else if(DM.DD_use_eta_function && DM_distr.DD_use_eta_function)
 		{
 			double vDM = 1e-3;	 //cancels in v^2 * dSigma/dq^2
-			sum += target_crystal.dq / q / q * DM_distr.DM_density / DM.mass * DM_distr.Eta_Function(vMin) * target_crystal.Crystal_Form_Factor(q, Ee) * vDM * vDM * DM.dSigma_dq2_Electron(q, vDM);
+			integral += 2.0 * q * target_crystal.dq * DM_distr.DM_density / DM.mass * DM_distr.Eta_Function(vMin) * vDM * vDM * DM.d2Sigma_dq2_dEe_Crystal(q, Ee, vDM, target_crystal);
 		}
 		else
 		{
-			auto integrand = [&DM_distr, &DM, q](double v) {
-				return DM_distr.Differential_DM_Flux(v, DM.mass) * DM.dSigma_dq2_Electron(q, v);
+			auto integrand = [&DM_distr, &DM, q, Ee, &target_crystal](double v) {
+				return DM_distr.Differential_DM_Flux(v, DM.mass) * DM.d2Sigma_dq2_dEe_Crystal(q, Ee, v, target_crystal);
 			};
-			double eps = libphysica::Find_Epsilon(integrand, vMin, vMax, 1.0e-4);
-			sum += target_crystal.dq / q / q * target_crystal.Crystal_Form_Factor(q, Ee) * libphysica::Integrate(integrand, vMin, vMax, eps);
+			integral += 2.0 * q * target_crystal.dq * libphysica::Integrate(integrand, vMin, vMax);
 		}
 	}
-	return prefactor * sum;
+	return N_T * integral;
 }
 
 double R_Q_Crystal(int Q, const DM_Particle& DM, DM_Distribution& DM_distr, Crystal& target_crystal)
