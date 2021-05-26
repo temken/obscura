@@ -83,7 +83,13 @@ double DM_Distribution::Total_DM_Flux(double mDM)
 libphysica::Vector DM_Distribution::Average_Velocity()
 {
 	libphysica::Vector v_average(3);
-	// Todo
+	for(unsigned int i = 0; i < v_average.Size(); i++)
+	{
+		auto integrand = [this, i](libphysica::Vector vel) {
+			return vel[i] * PDF_Velocity(vel);
+		};
+		v_average[i] = libphysica::Integrate_3D(integrand, v_domain[0], v_domain[1], -1.0, 1.0, 0.0, 2.0 * M_PI);
+	}
 	return v_average;
 }
 
@@ -147,7 +153,7 @@ void DM_Distribution::Print_Summary_Base()
 			  << std::endl
 			  << "\tLocal DM density[GeV/cm^3]:\t" << In_Units(DM_density, GeV / cm / cm / cm) << std::endl
 			  << "\tSpeed domain [km/sec]:\t\t[" << libphysica::Round(In_Units(v_domain[0], km / sec)) << "," << libphysica::Round(In_Units(v_domain[1], km / sec)) << "]" << std::endl
-			  << "\tAverage DM velocity [km/sec]:\t" << In_Units(Average_Velocity(), km / sec) << std::endl
+			  << "\tAverage DM velocity [km/sec]:\t" << libphysica::Round(In_Units(Average_Velocity(), km / sec)) << std::endl
 			  << "\tAverage DM speed [km/sec]:\t" << libphysica::Round(In_Units(Average_Speed(), km / sec)) << std::endl
 			  << std::endl;
 }
