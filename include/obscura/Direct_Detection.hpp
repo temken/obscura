@@ -81,6 +81,7 @@ class DM_Detector
 	//Statistics
 	double Log_Likelihood(const DM_Particle& DM, DM_Distribution& DM_distr);
 	double Likelihood(const DM_Particle& DM, DM_Distribution& DM_distr);
+	std::vector<std::vector<double>> Log_Likelihood_Scan(DM_Particle& DM, DM_Distribution& DM_distr, const std::vector<double>& masses, const std::vector<double>& couplings);
 	double P_Value(const DM_Particle& DM, DM_Distribution& DM_distr);
 
 	// (a) Poisson
