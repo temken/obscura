@@ -60,7 +60,7 @@ double dRdEe_Ionization_ER(double Ee, const DM_Particle& DM, DM_Distribution& DM
 }
 
 DM_Detector_Ionization_ER::DM_Detector_Ionization_ER()
-: DM_Detector_Ionization("DM-electron scattering experiment with atomic target", kg * day, "Electrons", "Xe") {}
+: DM_Detector_Ionization("Electron recoil experiment", kg * day, "Electrons", "Xe") {}
 DM_Detector_Ionization_ER::DM_Detector_Ionization_ER(std::string label, double expo, std::string atom)
 : DM_Detector_Ionization(label, expo, "Electrons", atom) {}
 DM_Detector_Ionization_ER::DM_Detector_Ionization_ER(std::string label, double expo, std::vector<std::string> atoms, std::vector<double> mass_fractions)

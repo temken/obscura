@@ -159,7 +159,7 @@ void DM_Distribution::Print_Summary(int mpi_rank)
 {
 	if(mpi_rank == 0)
 		Print_Summary_Base();
-};
+}
 
 void DM_Distribution::Export_PDF_Speed(std::string file_path, int v_points, bool log_scale)
 {

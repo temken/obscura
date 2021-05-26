@@ -55,4 +55,4 @@ double Crystal::Crystal_Form_Factor(double q, double E)
 	return form_factor_interpolation(q, E);
 }
 
-};	 // namespace obscura
+}	// namespace obscura
