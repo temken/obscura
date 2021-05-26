@@ -26,6 +26,7 @@ add_library(libobscura STATIC
     Direct_Detection_Nucleus.cpp
     Direct_Detection_Crystal.cpp
     DM_Distribution.cpp
+    DM_Halo_Models.cpp
     DM_Particle.cpp
     DM_Particle_Standard.cpp
     Experiments.cpp

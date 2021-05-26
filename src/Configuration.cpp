@@ -6,6 +6,7 @@
 
 #include "libphysica/Utilities.hpp"
 
+#include "obscura/DM_Halo_Models.hpp"
 #include "obscura/DM_Particle_Standard.hpp"
 #include "obscura/Direct_Detection_Crystal.hpp"
 #include "obscura/Direct_Detection_ER.hpp"

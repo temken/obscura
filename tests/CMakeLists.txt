@@ -119,7 +119,20 @@ install(TARGETS test_DM_Distribution DESTINATION ${TESTS_DIR})
 add_test(NAME Test_DM_Distribution COMMAND test_DM_Distribution
 	WORKING_DIRECTORY ${TESTS_DIR})
 
-# 10. DM_Particle
+# 10. DM_Halo_Models
+add_executable(test_DM_Halo_Models test_DM_Halo_Models.cpp)
+target_link_libraries(test_DM_Halo_Models 
+	PRIVATE
+		libobscura
+		gtest_main	#contains the main function
+)
+target_include_directories(test_DM_Halo_Models PRIVATE ${GENERATED_DIR} )
+target_compile_options(test_DM_Halo_Models PUBLIC -Wall -pedantic)
+install(TARGETS test_DM_Halo_Models DESTINATION ${TESTS_DIR})
+add_test(NAME Test_DM_Halo_Models COMMAND test_DM_Halo_Models
+	WORKING_DIRECTORY ${TESTS_DIR})
+
+# 11. DM_Particle
 add_executable(test_DM_Particle test_DM_Particle.cpp)
 target_link_libraries(test_DM_Particle 
 	PRIVATE
@@ -132,7 +145,7 @@ install(TARGETS test_DM_Particle DESTINATION ${TESTS_DIR})
 add_test(NAME Test_DM_Particle COMMAND test_DM_Particle
 	WORKING_DIRECTORY ${TESTS_DIR})
 
-# 11. DM_Particle_Standard
+# 12. DM_Particle_Standard
 add_executable(test_DM_Particle_Standard test_DM_Particle_Standard.cpp)
 target_link_libraries(test_DM_Particle_Standard 
 	PRIVATE
@@ -145,7 +158,7 @@ install(TARGETS test_DM_Particle_Standard DESTINATION ${TESTS_DIR})
 add_test(NAME Test_DM_Particle_Standard COMMAND test_DM_Particle_Standard
 	WORKING_DIRECTORY ${TESTS_DIR})
 
-# 12. Experiments
+# 13. Experiments
 add_executable(test_Experiments test_Experiments.cpp)
 target_link_libraries(test_Experiments 
 	PRIVATE
@@ -158,7 +171,7 @@ install(TARGETS test_Experiments DESTINATION ${TESTS_DIR})
 add_test(NAME Test_Experiments COMMAND test_Experiments
 	WORKING_DIRECTORY ${TESTS_DIR})
 
-# 13. Target_Atom
+# 14. Target_Atom
 add_executable(test_Target_Atom test_Target_Atom.cpp)
 target_link_libraries(test_Target_Atom 
 	PRIVATE
@@ -171,7 +184,7 @@ install(TARGETS test_Target_Atom DESTINATION ${TESTS_DIR})
 add_test(NAME Test_Target_Atom COMMAND test_Target_Atom
 	WORKING_DIRECTORY ${TESTS_DIR})
 
-# 14. Target_Crystal
+# 15. Target_Crystal
 add_executable(test_Target_Crystal test_Target_Crystal.cpp)
 target_link_libraries(test_Target_Crystal 
 	PRIVATE
@@ -184,7 +197,7 @@ install(TARGETS test_Target_Crystal DESTINATION ${TESTS_DIR})
 add_test(NAME Test_Target_Crystal COMMAND test_Target_Crystal
 	WORKING_DIRECTORY ${TESTS_DIR})
 
-# 15. Target_Nucleus
+# 16. Target_Nucleus
 add_executable(test_Target_Nucleus test_Target_Nucleus.cpp)
 target_link_libraries(test_Target_Nucleus 
 	PRIVATE
