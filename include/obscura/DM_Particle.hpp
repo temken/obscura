@@ -59,7 +59,7 @@ class DM_Particle
 	//Differential cross sections for nuclear targets
 	virtual double dSigma_dq2_Nucleus(double q, const Isotope& target, double vDM) const { return 0.0; };
 	double dSigma_dER_Nucleus(double ER, const Isotope& target, double vDM) const;
-	double dSigma_dEe_Migdal(double Ee, double vDM, const Isotope& isotope, Atomic_Electron& shell) const { return 0.0; };
+	double d2Sigma_dER_dEe_Migdal(double ER, double Ee, double vDM, const Isotope& isotope, Atomic_Electron& shell) const;
 
 	// Differential cross section for electron targets
 	virtual double dSigma_dq2_Electron(double q, double vDM) const { return 0.0; };

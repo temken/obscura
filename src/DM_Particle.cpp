@@ -105,6 +105,13 @@ double DM_Particle::dSigma_dER_Nucleus(double ER, const Isotope& target, double 
 	return 2.0 * target.mass * dSigma_dq2_Nucleus(q, target, vDM);
 }
 
+double DM_Particle::d2Sigma_dER_dEe_Migdal(double ER, double Ee, double vDM, const Isotope& isotope, Atomic_Electron& shell) const
+{
+	double q  = sqrt(2.0 * isotope.mass * ER);
+	double qe = mElectron / isotope.mass * q;
+	return 1.0 / 4.0 / Ee * dSigma_dER_Nucleus(ER, isotope, vDM) * shell.Ionization_Form_Factor(qe, Ee);
+}
+
 double DM_Particle::Sigma_Total_Nucleus(const Isotope& target, double vDM) const
 {
 	return Sigma_Nucleus_Total_Base(target, vDM);
