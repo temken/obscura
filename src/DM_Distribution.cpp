@@ -58,10 +58,10 @@ double DM_Distribution::CDF_Speed(double v)
 
 double DM_Distribution::PDF_Norm()
 {
-	auto integrand = [this](libphysica::Vector vel) {
-		return PDF_Velocity(vel);
+	auto integrand = [this](double v) {
+		return PDF_Speed(v);
 	};
-	return libphysica::Integrate_3D(integrand, v_domain[0], v_domain[1], -1.0, 1.0, 0.0, 2.0 * M_PI);
+	return libphysica::Integrate(integrand, v_domain[0], v_domain[1], "Trapezoidal");
 }
 
 double DM_Distribution::Differential_DM_Flux(double v, double mDM)

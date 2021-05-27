@@ -84,7 +84,7 @@ void Standard_Halo_Model::Normalize_PDF()
 double Standard_Halo_Model::PDF_Velocity_SHM(libphysica::Vector vel)
 {
 	double v = vel.Norm();
-	if(v > v_esc || v < v_domain[0])
+	if(v > v_esc || v <= v_domain[0])
 		return 0.0;
 	else
 		return 1.0 / N_esc * pow(v_0 * sqrt(M_PI), -3.0) * exp(-1.0 * vel * vel / v_0 / v_0);
@@ -203,6 +203,8 @@ double SHM_Plus_Plus::PDF_Velocity_S(libphysica::Vector vel)
 
 double SHM_Plus_Plus::PDF_Speed_S(double v)
 {
+	if(v <= v_domain[0] || v >= v_domain[1])
+		return 0.0;
 	auto integrand = [this, v](double cos_theta, double phi) {
 		libphysica::Vector vel = libphysica::Spherical_Coordinates(v, acos(cos_theta), phi);
 		return v * v * PDF_Velocity_S(vel + vel_observer);
@@ -212,9 +214,9 @@ double SHM_Plus_Plus::PDF_Speed_S(double v)
 
 double SHM_Plus_Plus::CDF_Speed_S(double v)
 {
-	if(v < v_domain[0])
+	if(v <= v_domain[0])
 		return 0.0;
-	else if(v > v_domain[1])
+	else if(v >= v_domain[1])
 		return 1.0;
 	else
 	{
@@ -227,10 +229,8 @@ double SHM_Plus_Plus::CDF_Speed_S(double v)
 
 double SHM_Plus_Plus::Eta_Function_S(double vMin)
 {
-	if(vMin < v_domain[0])
+	if(vMin < v_domain[0] || vMin >= v_domain[1])
 		return 0.0;
-	else if(vMin > v_domain[1])
-		return 1.0;
 	else
 	{
 		std::function<double(double)> integrand = [this](double v) {
