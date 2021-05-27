@@ -26,7 +26,7 @@ bibliography: paper.bib
 - list statistical methods
 - link to documentation
 - already used in damascus-sun
-- no assumption should be hard-coded, instead the code is written in terms of generic base classes agnostic to specific assumptions. number of standard ideas are implemented
+- 
 
 # Summary
 
@@ -57,6 +57,19 @@ This is reflected by the modular, polymorphic structure of all modules of the `o
  
 
 # The modular structure of direct detection computations
+
+Making predictions for direct detection experiments involves methods and results from statistics, astrophysics, particle physics, nuclear and atomic physics, and condensed matter physics.
+For each of these fields, we need to make choices and assumptions which affect our interpretation of DM searches.
+It is our ambition for the `obscura` code that the basic functionality does not rely on specific choices and that no particular assumption is hard-coded.
+Instead the basic code's setup is polymorphic and written in terms of generic base classes widely agnostic to specific assumptions.
+Of course a number of standard ideas are implemented as derived classes.
+The user is free to include their own ideas as their own derived classes.
+
+As an example, let us look at the energy spectrum of DM induced ionization events, as derived in **citation**.
+\begin{equation}
+ \frac{\mathrm{d} R_\mathrm{ion}}{\mathrm{d} E_e} = N_T \frac{\rho_\chi}{m_\chi}\sum_{n,\ell} \int \mathrm{d}q^2\int \mathrm{d}v\; v f_\chi(v) \frac{1}{4E_e}\frac{\mathrm{d}\sigma_e}{\mathrm{d}q^2} \left|f_\mathrm{ion}^{n\ell}(q,E_e)\right|^2\, .
+\end{equation}
+
 
 <!-- As derived [@Essig:2015cda] ... -->
 
