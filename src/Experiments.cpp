@@ -247,7 +247,7 @@ DM_Detector_Crystal CDMS_HVeV_2018()
 	std::vector<double> SuperCDMS_efficiencies				 = {0.88, 0.91, 0.91, 0.91, 0.91, 0.91};
 	std::vector<unsigned long int> SuperCDMS_observed_events = {53000, 400, 74, 18, 7, 14};
 
-	DM_Detector_Crystal detector("CMDS-HVeV_2018", SuperCDMS_exposure, "Si");
+	DM_Detector_Crystal detector("CDMS-HVeV_2018", SuperCDMS_exposure, "Si");
 	detector.Set_Flat_Efficiency(SuperCDMS_flat_efficiency);
 	detector.Use_Q_Bins(SuperCDMS_Q_threshold, SuperCDMS_N_bins);
 	detector.Set_Observed_Events(SuperCDMS_observed_events);
@@ -264,7 +264,7 @@ DM_Detector_Crystal CDMS_HVeV_2020()
 	unsigned int SuperCDMS_N_bins							 = 6;
 	std::vector<unsigned long int> SuperCDMS_observed_events = {178800, 1320, 248, 64, 19, 6};
 
-	DM_Detector_Crystal detector("CMDS-HVeV_2020", SuperCDMS_exposure, "Si");
+	DM_Detector_Crystal detector("CDMS-HVeV_2020", SuperCDMS_exposure, "Si");
 	detector.Use_Q_Bins(SuperCDMS_Q_threshold, SuperCDMS_N_bins);
 	detector.Set_Observed_Events(SuperCDMS_observed_events);
 
