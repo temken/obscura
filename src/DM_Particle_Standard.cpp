@@ -11,14 +11,14 @@ using namespace libphysica::natural_units;
 
 //1. Abstract parent class for SI and SD interactions
 DM_Particle_Standard::DM_Particle_Standard()
-: DM_Particle(), prefactor(1.0), fixed_coupling_relation(true), fp_relative(0.5), fn_relative(0.5), sigma_electron(0.0)
+: DM_Particle(), prefactor(1.0), fixed_coupling_relation(true), fp_relative(0.5), fn_relative(0.5), sigma_electron(1.0e-40 * cm * cm)
 {
 	using_cross_section = true;
 	DD_use_eta_function = true;
 }
 
 DM_Particle_Standard::DM_Particle_Standard(double mDM, double pre)
-: DM_Particle(mDM), prefactor(pre), fixed_coupling_relation(true), fp_relative(0.5), fn_relative(0.5), sigma_electron(0.0)
+: DM_Particle(mDM), prefactor(pre), fixed_coupling_relation(true), fp_relative(0.5), fn_relative(0.5), sigma_electron(1.0e-40 * cm * cm)
 {
 	using_cross_section = true;
 	DD_use_eta_function = true;
