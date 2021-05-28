@@ -8,13 +8,15 @@
 
 A C++ tool and library for dark matter direct detection computations for both nuclear and electron recoil experiments.
 
-<img src="results/obscura_DD_Constraints.png" width="500">
+<img src="paper/FlowChart.png" width="500">
 
 ## Dependencies
 
 - [libphysica](https://github.com/temken/libphysica)
 
 ## Included experiments
+
+<img src="paper/obscura_DD_Constraints.png" width="500">
 
 The following nuclear and electron recoil direct detection experiments are implemented.
 
@@ -145,6 +147,21 @@ Rouven Essig, Tomer Volansky, Tien-Tien Yu
 XENON Collaboration (E. Aprile et al.)  
 [![Phys.Rev.Lett. 123 (2019) no.25, 251801](https://img.shields.io/badge/Phys.Rev.Lett.-123(2019)no.25,251801-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.123.251801)
 [![[arXiv:1907.11485]](https://img.shields.io/badge/arXiv-1907.11485-B31B1B.svg)](https://arxiv.org/abs/1907.11485)
+
+## CITATION
+
+```
+@software{Emken2021-2,
+  author = {Emken, Timon},
+  title = {{obscura - A C++ library for dark matter detection computations [Code, v0.1.0]}},
+  year         = {2021},
+  publisher    = {Zenodo},
+  version      = {v0.1.0},
+  doi          = {DOI:10.5281/zenodo.4557188},
+  url          = {https://doi.org/10.5281/zenodo.4557188},
+  howpublished={The code can be found under \url{https://github.com/temken/obscura}. Version 0.1.0 is archived as \href{https://doi.org/10.5281/zenodo.4557188}{DOI:10.5281/zenodo.4557188}}
+}
+```
 
 ## VERSION HISTORY
 

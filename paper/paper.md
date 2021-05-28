@@ -16,7 +16,7 @@ affiliations:
 date: 01 July 2021
 bibliography: paper.bib
 ---
-
+<!-- 
 # Notes
 
 - Plot of constraints
@@ -26,7 +26,7 @@ bibliography: paper.bib
 - list statistical methods
 - link to documentation
 - already used in damascus-sun
-- 
+-  -->
 
 # Summary
 
@@ -51,6 +51,8 @@ There are many different experimental techniques used in direct detection.
 Additionally, due to our ignorance about DM there exists a plethora of viable assumptions and models.
 This is reflected by the modular, polymorphic structure of all modules of the `obscura` library which allows to easily extend `obscura`'s functionality to the users' favorite new idea on what the DM particles could be like or behave, or to a new detection technology.
 
+![Caption for example figure.\label{fig:example}](obscura_DD_Constraints.png){ width=80% } 
+
 # Statement of need
 
 
@@ -71,6 +73,10 @@ As an example, let us look at the energy spectrum of DM induced ionization event
 \end{equation}
 
 
+![Caption for example figure.\label{fig:example}](FlowChart.png){ width=70% } 
+
+<!-- Classes can be used like in the figure, but can also be used in all kinds of functions depending on the reserach project (see e.g. damascus-sun) -->
+
 <!-- As derived [@Essig:2015cda] ... -->
 
 <!-- Single dollars ($) are required for inline mathematics e.g. $f(x) = e^{\pi/x}$
@@ -87,16 +93,6 @@ You can also use plain \LaTeX for equations
 \hat f(\omega) = \int_{-\infty}^{\infty} f(x) e^{i\omega x} dx
 \end{equation}
 and refer to \autoref{eq:fourier} from text. -->
-
-# Included experimental analyses
-
-![Caption for example figure.\label{fig:example}](obscura_DD_Constraints.png)
-<!-- Figures can be included like this:
-![Caption for example figure.\label{fig:example}](obscura_DD_Constraints.png)
-and referenced from text using \autoref{fig:example}. -->
-
-<!-- Figure sizes can be customized by adding an optional second parameter:
-![Caption for example figure.](figure.png){ width=20% } -->
 
 # Citations
 
