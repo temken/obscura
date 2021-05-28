@@ -99,7 +99,7 @@ double DM_Distribution::Average_Speed(double vMin)
 		vMin				   = v_domain[0];
 		agerage_over_subdomain = false;
 	}
-	else if(vMin < v_domain[0] || vMin > v_domain[1])
+	else if(vMin < v_domain[0] || vMin >= v_domain[1])
 	{
 		std::cerr << "Error in DM_Distribution::Average_Speed(): vMin = " << In_Units(vMin, km / sec) << "lies outside the domain [" << In_Units(v_domain[0], km / sec) << "," << In_Units(v_domain[1], km / sec) << "]" << std::endl;
 		std::exit(EXIT_FAILURE);
@@ -125,7 +125,7 @@ double DM_Distribution::Eta_Function_Base(double vMin)
 		std::cerr << "Error in obscura::DM_Distribution::Eta_Function_Base(): vMin = " << In_Units(vMin, km / sec) << "km/sec lies below the domain [" << In_Units(v_domain[0], km / sec) << "km/sec," << In_Units(v_domain[1], km / sec) << "km/sec]." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
-	else if(vMin > v_domain[1])
+	else if(vMin >= v_domain[1])
 	{
 		return 0.0;
 	}
@@ -214,16 +214,6 @@ double Imported_DM_Distribution::PDF_Speed(double v)
 		return 0.0;
 	else
 		return pdf_speed(v);
-}
-
-double Imported_DM_Distribution::CDF_Speed(double v)
-{
-	if(v < v_domain[0])
-		return 0.0;
-	else if(v > v_domain[1])
-		return 1.0;
-	else
-		return pdf_speed.Integrate(v_domain[0], v);
 }
 
 double Imported_DM_Distribution::Eta_Function(double vMin)

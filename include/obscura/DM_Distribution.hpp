@@ -67,7 +67,6 @@ class Imported_DM_Distribution : public DM_Distribution
 	Imported_DM_Distribution(double rho, const std::string& filepath);
 
 	virtual double PDF_Speed(double v) override;
-	virtual double CDF_Speed(double v) override;
 
 	virtual double Eta_Function(double vMin) override;
 
