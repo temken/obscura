@@ -472,7 +472,7 @@ void DM_Particle_SI::Print_Summary(int MPI_rank) const
 //3. Spin-dependent (SD) interactions
 //Constructors:
 DM_Particle_SD::DM_Particle_SD()
-: DM_Particle_Standard(1.0 * GeV, 3.0)
+: DM_Particle_Standard(10.0 * GeV, 3.0)
 {
 	Set_Sigma_Proton(1e-40 * cm * cm);
 }
