@@ -102,12 +102,12 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle
 }
 
 DM_Detector_Ionization::DM_Detector_Ionization(std::string label, double expo, std::string target_particle, std::string atom)
-: DM_Detector(label, expo, target_particle), atomic_targets({atom}), relative_mass_fractions({1.0}), ne_threshold(3), ne_max(15), using_electron_threshold(false), using_electron_bins(true), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
+: DM_Detector(label, expo, target_particle), atomic_targets({atom}), relative_mass_fractions({1.0}), ne_threshold(3), ne_max(15), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
 {
 }
 
 DM_Detector_Ionization::DM_Detector_Ionization(std::string label, double expo, std::string target_particle, std::vector<std::string> atoms, std::vector<double> mass_fractions)
-: DM_Detector(label, expo, target_particle), relative_mass_fractions(mass_fractions), ne_threshold(3), ne_max(15), using_electron_threshold(true), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
+: DM_Detector(label, expo, target_particle), relative_mass_fractions(mass_fractions), ne_threshold(3), ne_max(15), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
 
 {
 	for(auto& atom_name : atoms)

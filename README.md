@@ -6,7 +6,7 @@
 
 [![DOI](https://zenodo.org/badge/250298432.svg)](https://zenodo.org/badge/latestdoi/250298432)
 
-A C++ tool and library for dark matter direct detection computations for both nuclear and electron recoil experiments.
+A modular C++ tool and library for dark matter direct detection computations for both nuclear and electron recoil experiments.
 
 <img src="paper/FlowChart.png" width="500">
 
