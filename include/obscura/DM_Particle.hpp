@@ -11,7 +11,7 @@
 namespace obscura
 {
 
-//1. Base class for a DM particle with virtual functions for the cross sections
+// 1. Base class for a DM particle with virtual functions for the cross sections
 class DM_Particle
 {
   protected:
@@ -20,15 +20,17 @@ class DM_Particle
 	// Base class implementations
 	void Print_Summary_Base(int MPI_rank = 0) const;
 
-	double Sigma_Nucleus_Total_Base(const Isotope& target, double vDM) const;
-	double Sigma_Electron_Total_Base(double vDM) const;
+	// Some function have an additional function argument 'param' which is not used by the classes included in obscura.
+	// It might be relevant for more complex derived classes to have an additional argument.
+	double Sigma_Nucleus_Total_Base(const Isotope& target, double vDM, double param = -1.0) const;
+	double Sigma_Electron_Total_Base(double vDM, double param = -1.0) const;
 
-	double PDF_Scattering_Angle_Nucleus_Base(double cos_alpha, const Isotope& target, double vDM);
-	double PDF_Scattering_Angle_Electron_Base(double cos_alpha, double vDM);
-	double CDF_Scattering_Angle_Nucleus_Base(double cos_alpha, const Isotope& target, double vDM);
-	double CDF_Scattering_Angle_Electron_Base(double cos_alpha, double vDM);
-	double Sample_Scattering_Angle_Nucleus_Base(const Isotope& target, double vDM, std::mt19937& PRNG);
-	double Sample_Scattering_Angle_Electron_Base(double vDM, std::mt19937& PRNG);
+	double PDF_Scattering_Angle_Nucleus_Base(double cos_alpha, const Isotope& target, double vDM, double param = -1.0);
+	double PDF_Scattering_Angle_Electron_Base(double cos_alpha, double vDM, double param = -1.0);
+	double CDF_Scattering_Angle_Nucleus_Base(double cos_alpha, const Isotope& target, double vDM, double param = -1.0);
+	double CDF_Scattering_Angle_Electron_Base(double cos_alpha, double vDM, double param = -1.0);
+	double Sample_Scattering_Angle_Nucleus_Base(std::mt19937& PRNG, const Isotope& target, double vDM, double param = -1.0);
+	double Sample_Scattering_Angle_Electron_Base(std::mt19937& PRNG, double vDM, double param = -1.0);
 
   public:
 	double mass, spin, fractional_density;
@@ -57,12 +59,12 @@ class DM_Particle
 	virtual void Set_Sigma_Electron(double sigma) {};
 
 	//Differential cross sections for nuclear targets
-	virtual double dSigma_dq2_Nucleus(double q, const Isotope& target, double vDM) const { return 0.0; };
-	double dSigma_dER_Nucleus(double ER, const Isotope& target, double vDM) const;
+	virtual double dSigma_dq2_Nucleus(double q, const Isotope& target, double vDM, double param = -1.0) const { return 0.0; };
+	double dSigma_dER_Nucleus(double ER, const Isotope& target, double vDM, double param = -1.0) const;
 	double d2Sigma_dER_dEe_Migdal(double ER, double Ee, double vDM, const Isotope& isotope, Atomic_Electron& shell) const;
 
 	// Differential cross section for electron targets
-	virtual double dSigma_dq2_Electron(double q, double vDM) const { return 0.0; };
+	virtual double dSigma_dq2_Electron(double q, double vDM, double param = -1.0) const { return 0.0; };
 	virtual double d2Sigma_dq2_dEe_Ionization(double q, double Ee, double vDM, Atomic_Electron& shell) const { return 0.0; };
 	virtual double d2Sigma_dq2_dEe_Crystal(double q, double Ee, double vDM, Crystal& crystal) const { return 0.0; };
 
@@ -71,18 +73,18 @@ class DM_Particle
 	virtual double Sigma_Neutron() const { return 0.0; };
 	virtual double Sigma_Electron() const { return 0.0; };
 
-	virtual double Sigma_Total_Nucleus(const Isotope& target, double vDM) const;
-	virtual double Sigma_Total_Electron(double vDM) const;
+	virtual double Sigma_Total_Nucleus(const Isotope& target, double vDM, double param = -1.0) const;
+	virtual double Sigma_Total_Electron(double vDM, double param = -1.0) const;
 
 	virtual void Print_Summary(int MPI_rank = 0) const;
 
 	// Scattering angle functions
-	virtual double PDF_Scattering_Angle_Nucleus(double cos_alpha, const Isotope& target, double vDM);
-	virtual double PDF_Scattering_Angle_Electron(double cos_alpha, double vDM);
-	virtual double CDF_Scattering_Angle_Nucleus(double cos_alpha, const Isotope& target, double vDM);
-	virtual double CDF_Scattering_Angle_Electron(double cos_alpha, double vDM);
-	virtual double Sample_Scattering_Angle_Nucleus(const Isotope& target, double vDM, std::mt19937& PRNG);
-	virtual double Sample_Scattering_Angle_Electron(double vDM, std::mt19937& PRNG);
+	virtual double PDF_Scattering_Angle_Nucleus(double cos_alpha, const Isotope& target, double vDM, double param = -1.0);
+	virtual double PDF_Scattering_Angle_Electron(double cos_alpha, double vDM, double param = -1.0);
+	virtual double CDF_Scattering_Angle_Nucleus(double cos_alpha, const Isotope& target, double vDM, double param = -1.0);
+	virtual double CDF_Scattering_Angle_Electron(double cos_alpha, double vDM, double param = -1.0);
+	virtual double Sample_Scattering_Angle_Nucleus(std::mt19937& PRNG, const Isotope& target, double vDM, double param = -1.0);
+	virtual double Sample_Scattering_Angle_Electron(std::mt19937& PRNG, double vDM, double param = -1.0);
 };
 
 }	// namespace obscura

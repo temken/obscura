@@ -275,13 +275,13 @@ double DM_Particle_SI::FormFactor2_DM(double q) const
 }
 
 //Differential Cross Sections
-double DM_Particle_SI::dSigma_dq2_Nucleus(double q, const Isotope& target, double vDM) const
+double DM_Particle_SI::dSigma_dq2_Nucleus(double q, const Isotope& target, double vDM, double param) const
 {
 	double nuclear_form_factor = (low_mass) ? 1.0 : target.Helm_Form_Factor(q);
 	return 1.0 / 4.0 / M_PI / vDM / vDM * pow((fp * target.Z + fn * (target.A - target.Z)), 2.0) * FormFactor2_DM(q) * nuclear_form_factor * nuclear_form_factor;
 }
 
-double DM_Particle_SI::dSigma_dq2_Electron(double q, double vDM) const
+double DM_Particle_SI::dSigma_dq2_Electron(double q, double vDM, double param) const
 {
 	return sigma_electron / pow(2.0 * libphysica::Reduced_Mass(mass, mElectron) * vDM, 2.0) * FormFactor2_DM(q);
 }
@@ -297,7 +297,7 @@ double DM_Particle_SI::d2Sigma_dq2_dEe_Crystal(double q, double Ee, double vDM, 
 }
 
 //Total cross sections
-double DM_Particle_SI::Sigma_Total_Nucleus(const Isotope& isotope, double vDM) const
+double DM_Particle_SI::Sigma_Total_Nucleus(const Isotope& isotope, double vDM, double param) const
 {
 	double sigmatot = 0.0;
 	if(FF_DM != "Contact" && FF_DM != "General")
@@ -306,7 +306,7 @@ double DM_Particle_SI::Sigma_Total_Nucleus(const Isotope& isotope, double vDM) c
 		std::exit(EXIT_FAILURE);
 	}
 	else if(!low_mass)
-		sigmatot = Sigma_Nucleus_Total_Base(isotope, vDM);
+		sigmatot = Sigma_Nucleus_Total_Base(isotope, vDM, param);
 	else
 	{
 		sigmatot = pow(libphysica::Reduced_Mass(mass, isotope.mass), 2.0) / M_PI * pow(fp * isotope.Z + fn * (isotope.A - isotope.Z), 2.0);
@@ -319,7 +319,7 @@ double DM_Particle_SI::Sigma_Total_Nucleus(const Isotope& isotope, double vDM) c
 	return sigmatot;
 }
 
-double DM_Particle_SI::Sigma_Total_Electron(double vDM) const
+double DM_Particle_SI::Sigma_Total_Electron(double vDM, double param) const
 {
 	double sigmatot = 0.0;
 	if(FF_DM != "Contact" && FF_DM != "General")
@@ -340,7 +340,7 @@ double DM_Particle_SI::Sigma_Total_Electron(double vDM) const
 }
 
 // Scattering angle functions
-double DM_Particle_SI::PDF_Scattering_Angle_Nucleus(double cos_alpha, const Isotope& target, double vDM)
+double DM_Particle_SI::PDF_Scattering_Angle_Nucleus(double cos_alpha, const Isotope& target, double vDM, double param)
 {
 	if(FF_DM != "Contact" && FF_DM != "General")
 	{
@@ -348,7 +348,7 @@ double DM_Particle_SI::PDF_Scattering_Angle_Nucleus(double cos_alpha, const Isot
 		std::exit(EXIT_FAILURE);
 	}
 	else if(!low_mass)
-		return PDF_Scattering_Angle_Nucleus_Base(cos_alpha, target, vDM);
+		return PDF_Scattering_Angle_Nucleus_Base(cos_alpha, target, vDM, param);
 	else if(FF_DM == "Contact")
 		return 0.5;
 	else
@@ -359,7 +359,7 @@ double DM_Particle_SI::PDF_Scattering_Angle_Nucleus(double cos_alpha, const Isot
 	}
 }
 
-double DM_Particle_SI::PDF_Scattering_Angle_Electron(double cos_alpha, double vDM)
+double DM_Particle_SI::PDF_Scattering_Angle_Electron(double cos_alpha, double vDM, double param)
 {
 	if(FF_DM != "Contact" && FF_DM != "General")
 	{
@@ -375,7 +375,8 @@ double DM_Particle_SI::PDF_Scattering_Angle_Electron(double cos_alpha, double vD
 		return 2.0 * m2 * (m2 + q2max) / pow(2 * m2 + q2max * (1.0 - cos_alpha), 2.0);
 	}
 }
-double DM_Particle_SI::CDF_Scattering_Angle_Nucleus(double cos_alpha, const Isotope& target, double vDM)
+
+double DM_Particle_SI::CDF_Scattering_Angle_Nucleus(double cos_alpha, const Isotope& target, double vDM, double param)
 {
 	if(FF_DM != "Contact" && FF_DM != "General")
 	{
@@ -383,7 +384,7 @@ double DM_Particle_SI::CDF_Scattering_Angle_Nucleus(double cos_alpha, const Isot
 		std::exit(EXIT_FAILURE);
 	}
 	else if(!low_mass)
-		return CDF_Scattering_Angle_Nucleus_Base(cos_alpha, target, vDM);
+		return CDF_Scattering_Angle_Nucleus_Base(cos_alpha, target, vDM, param);
 	else if(FF_DM == "Contact")
 		return (1.0 + cos_alpha) / 2.0;
 	else
@@ -393,7 +394,8 @@ double DM_Particle_SI::CDF_Scattering_Angle_Nucleus(double cos_alpha, const Isot
 		return (1.0 + cos_alpha) * m2 / (2.0 * m2 + q2max * (1.0 - cos_alpha));
 	}
 }
-double DM_Particle_SI::CDF_Scattering_Angle_Electron(double cos_alpha, double vDM)
+
+double DM_Particle_SI::CDF_Scattering_Angle_Electron(double cos_alpha, double vDM, double param)
 {
 	if(FF_DM != "Contact" && FF_DM != "General")
 	{
@@ -409,7 +411,8 @@ double DM_Particle_SI::CDF_Scattering_Angle_Electron(double cos_alpha, double vD
 		return (1.0 + cos_alpha) * m2 / (2.0 * m2 + q2max * (1.0 - cos_alpha));
 	}
 }
-double DM_Particle_SI::Sample_Scattering_Angle_Nucleus(const Isotope& target, double vDM, std::mt19937& PRNG)
+
+double DM_Particle_SI::Sample_Scattering_Angle_Nucleus(std::mt19937& PRNG, const Isotope& target, double vDM, double param)
 {
 	if(FF_DM != "Contact" && FF_DM != "General")
 	{
@@ -417,7 +420,7 @@ double DM_Particle_SI::Sample_Scattering_Angle_Nucleus(const Isotope& target, do
 		std::exit(EXIT_FAILURE);
 	}
 	else if(!low_mass)
-		return Sample_Scattering_Angle_Nucleus_Base(target, vDM, PRNG);
+		return Sample_Scattering_Angle_Nucleus_Base(PRNG, target, vDM, param);
 	else if(FF_DM == "Contact")
 	{
 		double xi = libphysica::Sample_Uniform(PRNG, 0.0, 1.0);
@@ -431,7 +434,8 @@ double DM_Particle_SI::Sample_Scattering_Angle_Nucleus(const Isotope& target, do
 		return (m2 * (2.0 * xi - 1.0) + q2max * xi) / (m2 + q2max * xi);
 	}
 }
-double DM_Particle_SI::Sample_Scattering_Angle_Electron(double vDM, std::mt19937& PRNG)
+
+double DM_Particle_SI::Sample_Scattering_Angle_Electron(std::mt19937& PRNG, double vDM, double param)
 {
 	double xi = libphysica::Sample_Uniform(PRNG, 0.0, 1.0);
 	if(FF_DM != "Contact" && FF_DM != "General")
@@ -490,63 +494,63 @@ DM_Particle_SD::DM_Particle_SD(double mDM, double sigmaP)
 }
 
 //Differential Cross Sections
-double DM_Particle_SD::dSigma_dq2_Nucleus(double q, const Isotope& target, double vDM) const
+double DM_Particle_SD::dSigma_dq2_Nucleus(double q, const Isotope& target, double vDM, double param) const
 {
 	return (target.spin == 0) ? 0.0 : 1.0 / M_PI / vDM / vDM * (target.spin + 1) / target.spin * pow((fp * target.sp + fn * target.sn), 2);
 }
 
-double DM_Particle_SD::dSigma_dq2_Electron(double q, double vDM) const
+double DM_Particle_SD::dSigma_dq2_Electron(double q, double vDM, double param) const
 {
 	return sigma_electron / pow(2.0 * libphysica::Reduced_Mass(mass, mElectron) * vDM, 2.0);
 }
 
 //Total cross sections with nuclear isotopes, elements, and electrons
-double DM_Particle_SD::Sigma_Total_Nucleus(const Isotope& isotope, double vDM) const
+double DM_Particle_SD::Sigma_Total_Nucleus(const Isotope& isotope, double vDM, double param) const
 {
 	return (isotope.spin != 0) ? 4.0 * pow(libphysica::Reduced_Mass(mass, isotope.mass), 2.0) / M_PI * (isotope.spin + 1.0) / isotope.spin * pow(fp * isotope.sp + fn * isotope.sn, 2.0) : 0.0;
 }
 
-double DM_Particle_SD::Sigma_Total_Electron(double vDM) const
+double DM_Particle_SD::Sigma_Total_Electron(double vDM, double param) const
 {
 	return Sigma_Electron();
 }
 
 // Scattering angle functions
-double DM_Particle_SD::PDF_Scattering_Angle_Nucleus(double cos_alpha, const Isotope& target, double vDM)
+double DM_Particle_SD::PDF_Scattering_Angle_Nucleus(double cos_alpha, const Isotope& target, double vDM, double param)
 {
 	if(!low_mass)
-		return PDF_Scattering_Angle_Nucleus_Base(cos_alpha, target, vDM);
+		return PDF_Scattering_Angle_Nucleus_Base(cos_alpha, target, vDM, param);
 	else
 		return 0.5;
 }
 
-double DM_Particle_SD::PDF_Scattering_Angle_Electron(double cos_alpha, double vDM)
+double DM_Particle_SD::PDF_Scattering_Angle_Electron(double cos_alpha, double vDM, double param)
 {
 	return 0.5;
 }
 
-double DM_Particle_SD::CDF_Scattering_Angle_Nucleus(double cos_alpha, const Isotope& target, double vDM)
+double DM_Particle_SD::CDF_Scattering_Angle_Nucleus(double cos_alpha, const Isotope& target, double vDM, double param)
 {
 	if(!low_mass)
-		return CDF_Scattering_Angle_Nucleus_Base(cos_alpha, target, vDM);
+		return CDF_Scattering_Angle_Nucleus_Base(cos_alpha, target, vDM, param);
 	else
 		return (1.0 + cos_alpha) / 2.0;
 }
-double DM_Particle_SD::CDF_Scattering_Angle_Electron(double cos_alpha, double vDM)
+double DM_Particle_SD::CDF_Scattering_Angle_Electron(double cos_alpha, double vDM, double param)
 {
 	return (1.0 + cos_alpha) / 2.0;
 }
-double DM_Particle_SD::Sample_Scattering_Angle_Nucleus(const Isotope& target, double vDM, std::mt19937& PRNG)
+double DM_Particle_SD::Sample_Scattering_Angle_Nucleus(std::mt19937& PRNG, const Isotope& target, double vDM, double param)
 {
 	if(!low_mass)
-		return Sample_Scattering_Angle_Nucleus_Base(target, vDM, PRNG);
+		return Sample_Scattering_Angle_Nucleus_Base(PRNG, target, vDM, param);
 	else
 	{
 		double xi = libphysica::Sample_Uniform(PRNG, 0.0, 1.0);
 		return 2.0 * xi - 1.0;
 	}
 }
-double DM_Particle_SD::Sample_Scattering_Angle_Electron(double vDM, std::mt19937& PRNG)
+double DM_Particle_SD::Sample_Scattering_Angle_Electron(std::mt19937& PRNG, double vDM, double param)
 {
 	double xi = libphysica::Sample_Uniform(PRNG, 0.0, 1.0);
 	return 2.0 * xi - 1.0;

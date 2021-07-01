@@ -200,13 +200,13 @@ TEST(TestDMParticle, TestScatteringAngleSampling)
 	double costheta_e = 0.0;
 	for(int i = 0; i < 100; i++)
 	{
-		double ct_n = dm.Sample_Scattering_Angle_Nucleus(target, vDM, PRNG);
+		double ct_n = dm.Sample_Scattering_Angle_Nucleus(PRNG, target, vDM);
 		EXPECT_LT(ct_n, 1.0);
 		EXPECT_GT(ct_n, -1.0);
 		EXPECT_NE(ct_n, costheta_n);
 		costheta_n = ct_n;
 
-		double ct_e = dm.Sample_Scattering_Angle_Electron(vDM, PRNG);
+		double ct_e = dm.Sample_Scattering_Angle_Electron(PRNG, vDM);
 		EXPECT_LT(ct_e, 1.0);
 		EXPECT_GT(ct_e, -1.0);
 		EXPECT_NE(ct_e, costheta_e);
