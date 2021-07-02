@@ -7,6 +7,7 @@
 #include "obscura/DM_Halo_Models.hpp"
 #include "obscura/DM_Particle_Standard.hpp"
 #include "obscura/Direct_Detection_Nucleus.hpp"
+#include "obscura/Experiments.hpp"
 #include "obscura/Target_Nucleus.hpp"
 
 using namespace obscura;
@@ -72,6 +73,30 @@ TEST(TestDirectDetection, TestLikelihoods)
 	detector.Print_Summary();
 	// ACT & ASSERT
 	ASSERT_GT(detector.Likelihood(dm, shm), 0.0);
+	ASSERT_DOUBLE_EQ(detector.Log_Likelihood(dm, shm), log(detector.Likelihood(dm, shm)));
+}
+
+TEST(TestDirectDetection, TestLogLikelihoodsMaxGap)
+{
+	// ARRANGE
+	auto detector = CRESST_II();
+	DM_Particle_SI dm(1.0 * GeV);
+	dm.Set_Sigma_Proton(pb);
+	Standard_Halo_Model shm;
+	// ACT & ASSERT
+	ASSERT_LT(detector.Log_Likelihood(dm, shm), 0.0);
+	ASSERT_DOUBLE_EQ(detector.Log_Likelihood(dm, shm), log(detector.Likelihood(dm, shm)));
+}
+
+TEST(TestDirectDetection, TestLogLikelihoodsBinnedPoisson)
+{
+	// ARRANGE
+	auto detector = XENON1T_S2_ER();
+	DM_Particle_SI dm(1.0 * GeV);
+	dm.Set_Sigma_Electron(0.001 * pb);
+	Standard_Halo_Model shm;
+	// ACT & ASSERT
+	ASSERT_LT(detector.Log_Likelihood(dm, shm), 0.0);
 	ASSERT_DOUBLE_EQ(detector.Log_Likelihood(dm, shm), log(detector.Likelihood(dm, shm)));
 }
 
