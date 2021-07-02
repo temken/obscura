@@ -26,16 +26,27 @@ DM_Particle_Standard::DM_Particle_Standard(double mDM, double pre)
 
 void DM_Particle_Standard::Set_Mass(double mDM)
 {
-	if(fp_relative != 0.0)
+	if(fixed_coupling_relation)
 	{
-		double sigma_p = Sigma_Proton();
-		mass		   = mDM;
-		Set_Sigma_Proton(sigma_p);
+		if(fp_relative != 0)
+		{
+			double sigma_p = Sigma_Proton();
+			mass		   = mDM;
+			Set_Sigma_Proton(sigma_p);
+		}
+		else
+		{
+			double sigma_n = Sigma_Neutron();
+			mass		   = mDM;
+			Set_Sigma_Neutron(sigma_n);
+		}
 	}
 	else
 	{
+		double sigma_p = Sigma_Proton();
 		double sigma_n = Sigma_Neutron();
 		mass		   = mDM;
+		Set_Sigma_Proton(sigma_p);
 		Set_Sigma_Neutron(sigma_n);
 	}
 }
@@ -129,7 +140,17 @@ void DM_Particle_Standard::Fix_Coupling_Ratio(double fp_rel, double fn_rel)
 	double tot	= fp_rel + fn_rel;
 	fp_relative = fp_rel / tot;
 	fn_relative = fn_rel / tot;
-	if(fp != 0.0)
+	if(fp_rel == 0.0)
+	{
+		fn = fp;
+		fp = 0.0;
+	}
+	else if(fn_rel == 0.0)
+	{
+		fp = fn;
+		fn = 0.0;
+	}
+	else if(fp != 0.0)
 		fn = fn_relative / fp_relative * fp;
 	else if(fn != 0.0)
 		fp = fp_relative / fn_relative * fp;
@@ -163,7 +184,9 @@ void DM_Particle_Standard::Fix_fp_over_fn(double ratio)
 
 	fp_relative = ratio;
 	fn_relative = 1.0;
-	if(fp != 0.0)
+	if(ratio == 0.0)
+		fp = 0.0;
+	else if(fp != 0.0)
 		fn = fn_relative / fp_relative * fp;
 	else if(fn != 0.0)
 		fp = fp_relative / fn_relative * fp;

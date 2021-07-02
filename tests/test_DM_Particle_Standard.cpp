@@ -14,7 +14,7 @@ TEST(TestDMParticleStandard, TestDefaultConstructor)
 	ASSERT_DOUBLE_EQ(dm.mass, 10.0);
 }
 
-TEST(TestDMParticleStandard, TestFixedRatios)
+TEST(TestDMParticleStandard, TestFixedRatios1)
 {
 	// ARRANGE
 	DM_Particle_SI dm;
@@ -31,6 +31,56 @@ TEST(TestDMParticleStandard, TestFixedRatios)
 	dm.Fix_Coupling_Ratio(1.0, 0.0);
 	EXPECT_DOUBLE_EQ(dm.Sigma_Neutron(), 0.0);
 	EXPECT_NE(dm.Sigma_Proton(), 0.0);
+	dm.Fix_Coupling_Ratio(0.0, 1.0);
+	EXPECT_DOUBLE_EQ(dm.Sigma_Proton(), 0.0);
+	EXPECT_NE(dm.Sigma_Neutron(), 0.0);
+}
+
+TEST(TestDMParticleStandard, TestFixedRatios2)
+{
+	// ARRANGE
+	DM_Particle_SI dm;
+	dm.Set_Sigma_Neutron(pb);
+	double ratio = 0.25;
+	// ACT & ASSERT
+	EXPECT_DOUBLE_EQ(dm.Sigma_Proton(), dm.Sigma_Neutron());
+	dm.Fix_Coupling_Ratio(1.0, 8.0);
+	EXPECT_DOUBLE_EQ(dm.Sigma_Proton(), 1.0 / 64. * dm.Sigma_Neutron());
+	dm.Fix_fn_over_fp(ratio);
+	EXPECT_DOUBLE_EQ(dm.Sigma_Neutron(), ratio * ratio * dm.Sigma_Proton());
+	dm.Fix_fp_over_fn(ratio);
+	EXPECT_DOUBLE_EQ(dm.Sigma_Proton(), ratio * ratio * dm.Sigma_Neutron());
+	dm.Fix_Coupling_Ratio(1.0, 0.0);
+	EXPECT_DOUBLE_EQ(dm.Sigma_Neutron(), 0.0);
+	EXPECT_NE(dm.Sigma_Proton(), 0.0);
+}
+
+TEST(TestDMParticleStandard, TestFnOverFp)
+{
+	// ARRANGE
+	DM_Particle_SI dm;
+	dm.Set_Sigma_Neutron(pb);
+	double ratio = 0.25;
+	// ACT & ASSERT
+	dm.Fix_fn_over_fp(ratio);
+	EXPECT_DOUBLE_EQ(dm.Sigma_Neutron(), ratio * ratio * dm.Sigma_Proton());
+	dm.Fix_fn_over_fp(0.0);
+	EXPECT_DOUBLE_EQ(dm.Sigma_Neutron(), 0.0);
+	EXPECT_NE(dm.Sigma_Proton(), 0.0);
+}
+
+TEST(TestDMParticleStandard, TestFpOverFn)
+{
+	// ARRANGE
+	DM_Particle_SI dm;
+	dm.Set_Sigma_Neutron(pb);
+	double ratio = 0.25;
+	// ACT & ASSERT
+	dm.Fix_fp_over_fn(ratio);
+	EXPECT_DOUBLE_EQ(dm.Sigma_Proton(), ratio * ratio * dm.Sigma_Neutron());
+	dm.Fix_fp_over_fn(0.0);
+	EXPECT_DOUBLE_EQ(dm.Sigma_Proton(), 0.0);
+	EXPECT_NE(dm.Sigma_Neutron(), 0.0);
 }
 
 TEST(TestDMParticleSI, TestDefaultConstructor)
@@ -88,6 +138,23 @@ TEST(TestDMParticleSI, TestSetFormFactorDM)
 	EXPECT_DOUBLE_EQ(dm.dSigma_dq2_Nucleus(q, target, vDM), pow(q0 / q, 4) * dsdq2_n);
 	dm.Set_FormFactor_DM("General", mMediator);
 	EXPECT_DOUBLE_EQ(dm.dSigma_dq2_Nucleus(q, target, vDM), pow((q0 * q0 + mMediator * mMediator) / (q * q + mMediator * mMediator), 2) * dsdq2_n);
+}
+
+TEST(TestDMParticleSI, TestSetMass)
+{
+	// ARRANGE
+	DM_Particle_SI dm;
+	double sigma_n = pb;
+	double mDM	   = 100.0;
+	dm.Unfix_Coupling_Ratios();
+	dm.Set_Sigma_Proton(0.0);
+	dm.Set_Sigma_Neutron(sigma_n);
+	// ACT
+	dm.Set_Mass(mDM);
+	// ASSERT
+	EXPECT_DOUBLE_EQ(dm.mass, mDM);
+	EXPECT_DOUBLE_EQ(dm.Sigma_Proton(), 0.0);
+	EXPECT_DOUBLE_EQ(dm.Sigma_Neutron(), sigma_n);
 }
 
 TEST(TestDMParticleSI, TestPrintSummary)
@@ -159,4 +226,67 @@ TEST(TestDMParticleSD, TestPrintSummary)
 	DM_Particle_SD dm;
 	// ACT & ASSERT
 	dm.Print_Summary();
+}
+
+TEST(TestDMParticleSD, TestScatteringAnglePDF)
+{
+	// ARRANGE
+	DM_Particle_SD dm;
+	dm.Set_Sigma_Proton(pb);
+	dm.Set_Sigma_Electron(0.9 * pb);
+	Isotope target = Get_Isotope(54, 131);
+	double vDM	   = 1e-3;
+
+	// ACT & ASSERT
+	EXPECT_DOUBLE_EQ(dm.PDF_Scattering_Angle_Nucleus(+0.5, target, vDM), dm.PDF_Scattering_Angle_Nucleus(-0.5, target, vDM));
+	EXPECT_DOUBLE_EQ(dm.PDF_Scattering_Angle_Electron(+0.5, vDM), dm.PDF_Scattering_Angle_Electron(-0.5, vDM));
+}
+
+TEST(TestDMParticleSD, TestScatteringAngleCDF)
+{
+	// ARRANGE
+	DM_Particle_SD dm;
+	dm.Set_Sigma_Proton(pb);
+	dm.Set_Sigma_Electron(0.9 * pb);
+	Isotope target = Get_Isotope(54, 131);
+	double vDM	   = 1e-3;
+
+	// ACT & ASSERT
+	EXPECT_GT(dm.CDF_Scattering_Angle_Nucleus(+0.5, target, vDM), dm.CDF_Scattering_Angle_Nucleus(-0.5, target, vDM));
+	EXPECT_GT(dm.CDF_Scattering_Angle_Electron(+0.5, vDM), dm.CDF_Scattering_Angle_Electron(-0.5, vDM));
+
+	EXPECT_DOUBLE_EQ(dm.CDF_Scattering_Angle_Nucleus(-1.0, target, vDM), 0.0);
+	EXPECT_DOUBLE_EQ(dm.CDF_Scattering_Angle_Nucleus(+1.0, target, vDM), 1.0);
+	EXPECT_DOUBLE_EQ(dm.CDF_Scattering_Angle_Electron(-1.0, vDM), 0.0);
+	EXPECT_DOUBLE_EQ(dm.CDF_Scattering_Angle_Electron(1.0, vDM), +1.0);
+}
+
+TEST(TestDMParticleSD, TestScatteringAngleSampling)
+{
+	// ARRANGE
+	std::random_device rd;
+	std::mt19937 PRNG(rd());
+	DM_Particle_SD dm;
+	dm.Set_Sigma_Proton(pb);
+	dm.Set_Sigma_Electron(0.9 * pb);
+	Isotope target = Get_Isotope(54, 131);
+	double vDM	   = 1e-3;
+
+	// ACT & ASSERT
+	double costheta_n = 0.0;
+	double costheta_e = 0.0;
+	for(int i = 0; i < 100; i++)
+	{
+		double ct_n = dm.Sample_Scattering_Angle_Nucleus(PRNG, target, vDM);
+		EXPECT_LT(ct_n, 1.0);
+		EXPECT_GT(ct_n, -1.0);
+		EXPECT_NE(ct_n, costheta_n);
+		costheta_n = ct_n;
+
+		double ct_e = dm.Sample_Scattering_Angle_Electron(PRNG, vDM);
+		EXPECT_LT(ct_e, 1.0);
+		EXPECT_GT(ct_e, -1.0);
+		EXPECT_NE(ct_e, costheta_e);
+		costheta_e = ct_e;
+	}
 }
