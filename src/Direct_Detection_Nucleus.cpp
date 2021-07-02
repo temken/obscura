@@ -30,8 +30,7 @@ double dRdER_Nucleus(double ER, const DM_Particle& DM, DM_Distribution& DM_distr
 		auto integrand = [ER, &DM, &DM_distr, &target_isotope](double v) {
 			return DM_distr.Differential_DM_Flux(v, DM.mass) * DM.dSigma_dER_Nucleus(ER, target_isotope, v);
 		};
-		double eps		= libphysica::Find_Epsilon(integrand, vMin, vMax, 1.0e-4);
-		double integral = libphysica::Integrate(integrand, vMin, vMax, eps);
+		double integral = libphysica::Integrate(integrand, vMin, vMax);
 		return DM.fractional_density / target_isotope.mass * integral;
 	}
 }
@@ -168,8 +167,7 @@ double DM_Detector_Nucleus::dRdE(double E, const DM_Particle& DM, DM_Distributio
 			}
 			return libphysica::PDF_Gauss(E, ER, energy_resolution) * dRtheory;
 		};
-		double epsilon = libphysica::Find_Epsilon(integrand, eMin, eMax, 1e-4);
-		dR			   = libphysica::Integrate(integrand, eMin, eMax, epsilon);
+		dR = libphysica::Integrate(integrand, eMin, eMax);
 	}
 	return dR;
 }

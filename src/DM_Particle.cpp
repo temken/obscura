@@ -65,8 +65,7 @@ double DM_Particle::Sigma_Nucleus_Total_Base(const Isotope& target, double vDM, 
 	std::function<double(double)> dodq2 = [this, &target, vDM, param](double q2) {
 		return dSigma_dq2_Nucleus(sqrt(q2), target, vDM, param);
 	};
-	double eps		= libphysica::Find_Epsilon(dodq2, q2min, q2max, 1.0e-6);
-	double sigmatot = libphysica::Integrate(dodq2, q2min, q2max, eps);
+	double sigmatot = libphysica::Integrate(dodq2, q2min, q2max);
 	return sigmatot;
 }
 
@@ -78,8 +77,7 @@ double DM_Particle::Sigma_Electron_Total_Base(double vDM, double param) const
 	std::function<double(double)> dodq2 = [this, vDM, param](double q2) {
 		return dSigma_dq2_Electron(sqrt(q2), vDM, param);
 	};
-	double eps		= libphysica::Find_Epsilon(dodq2, q2min, q2max, 1.0e-6);
-	double sigmatot = libphysica::Integrate(dodq2, q2min, q2max, eps);
+	double sigmatot = libphysica::Integrate(dodq2, q2min, q2max);
 	return sigmatot;
 }
 
@@ -151,17 +149,19 @@ double DM_Particle::PDF_Scattering_Angle_Electron_Base(double cos_alpha, double 
 
 double DM_Particle::CDF_Scattering_Angle_Nucleus_Base(double cos_alpha, const Isotope& target, double vDM, double param)
 {
+	if(cos_alpha <= -1.0)
+		return 0.0;
 	auto integrand = std::bind(&DM_Particle::PDF_Scattering_Angle_Nucleus_Base, this, std::placeholders::_1, target, vDM, param);
-	double epsilon = libphysica::Find_Epsilon(integrand, -1.0, cos_alpha, 1e-6);
-	double cdf	   = libphysica::Integrate(integrand, -1.0, cos_alpha, epsilon);
+	double cdf	   = libphysica::Integrate(integrand, -1.0, cos_alpha);
 	return cdf;
 }
 
 double DM_Particle::CDF_Scattering_Angle_Electron_Base(double cos_alpha, double vDM, double param)
 {
+	if(cos_alpha <= -1.0)
+		return 0.0;
 	auto integrand = std::bind(&DM_Particle::PDF_Scattering_Angle_Electron_Base, this, std::placeholders::_1, vDM, param);
-	double epsilon = libphysica::Find_Epsilon(integrand, -1.0, cos_alpha, 1e-6);
-	double cdf	   = libphysica::Integrate(integrand, -1.0, cos_alpha, epsilon);
+	double cdf	   = libphysica::Integrate(integrand, -1.0, cos_alpha);
 	return cdf;
 }
 

@@ -177,8 +177,7 @@ double DM_Detector_Ionization::DM_Signals_Total(const DM_Particle& DM, DM_Distri
 					std::function<double(double)> dNdE = [this, i, &electron, &DM, &DM_distr](double E) {
 						return exposure * dRdE_Ionization(E, DM, DM_distr, atomic_targets[i].nucleus, electron);
 					};
-					double eps = libphysica::Find_Epsilon(dNdE, energy_threshold, Emax, 1e-6);
-					N += relative_mass_fractions[i] * libphysica::Integrate(dNdE, energy_threshold, Emax, eps);
+					N += relative_mass_fractions[i] * libphysica::Integrate(dNdE, energy_threshold, Emax);
 				}
 			}
 	else if(using_S2_threshold)

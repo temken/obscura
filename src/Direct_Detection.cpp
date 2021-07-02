@@ -458,9 +458,7 @@ std::vector<double> DM_Detector::DM_Signals_Energy_Bins(const DM_Particle& DM, D
 		std::vector<double> mu_i;
 		for(unsigned int i = 0; i < number_of_bins; i++)
 		{
-
-			double epsilon = libphysica::Find_Epsilon(spectrum, bin_energies[i], bin_energies[i + 1], 1e-4);
-			double mu	   = exposure * libphysica::Integrate(spectrum, bin_energies[i], bin_energies[i + 1], epsilon);
+			double mu = exposure * libphysica::Integrate(spectrum, bin_energies[i], bin_energies[i + 1]);
 			mu_i.push_back(bin_efficiencies[i] * mu);
 		}
 		return mu_i;

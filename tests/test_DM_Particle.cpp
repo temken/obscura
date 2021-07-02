@@ -173,15 +173,16 @@ TEST(TestDMParticle, TestScatteringAngleCDF)
 	dm.Set_Sigma_Electron(0.9 * pb);
 	Isotope target = Get_Isotope(54, 131);
 	double vDM	   = 1e-3;
+	double tol	   = 1e-8;
 
 	// ACT & ASSERT
 	EXPECT_GT(dm.CDF_Scattering_Angle_Nucleus(+0.5, target, vDM), dm.CDF_Scattering_Angle_Nucleus(-0.5, target, vDM));
 	EXPECT_GT(dm.CDF_Scattering_Angle_Electron(+0.5, vDM), dm.CDF_Scattering_Angle_Electron(-0.5, vDM));
 
-	EXPECT_DOUBLE_EQ(dm.CDF_Scattering_Angle_Nucleus(-1.0, target, vDM), 0.0);
-	EXPECT_DOUBLE_EQ(dm.CDF_Scattering_Angle_Nucleus(+1.0, target, vDM), 1.0);
-	EXPECT_DOUBLE_EQ(dm.CDF_Scattering_Angle_Electron(-1.0, vDM), 0.0);
-	EXPECT_DOUBLE_EQ(dm.CDF_Scattering_Angle_Electron(1.0, vDM), +1.0);
+	EXPECT_NEAR(dm.CDF_Scattering_Angle_Nucleus(-1.0, target, vDM), 0.0, tol);
+	EXPECT_NEAR(dm.CDF_Scattering_Angle_Nucleus(+1.0, target, vDM), 1.0, tol);
+	EXPECT_NEAR(dm.CDF_Scattering_Angle_Electron(-1.0, vDM), 0.0, tol);
+	EXPECT_NEAR(dm.CDF_Scattering_Angle_Electron(1.0, vDM), +1.0, tol);
 }
 
 TEST(TestDMParticle, TestScatteringAngleSampling)

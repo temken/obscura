@@ -127,8 +127,7 @@ double DM_Detector_Crystal::DM_Signals_Total(const DM_Particle& DM, DM_Distribut
 		std::function<double(double)> spectrum = [this, &DM, &DM_distr](double E) {
 			return dRdE(E, DM, DM_distr);
 		};
-		double epsilon = libphysica::Find_Epsilon(spectrum, energy_threshold, energy_max, 1e-6);
-		N			   = exposure * libphysica::Integrate(spectrum, energy_threshold, energy_max, epsilon);
+		N = exposure * libphysica::Integrate(spectrum, energy_threshold, energy_max);
 	}
 	else if(using_Q_threshold)
 	{
