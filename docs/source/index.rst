@@ -10,11 +10,15 @@ Welcome to obscura's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   Getting_Started
+   Main_Modules
+   DM_Particle
+   DM_Distribution
+   DM_Detector
+   Targets
+   Citations
+   Release_History
+   Software
+   License
+   Contact
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
