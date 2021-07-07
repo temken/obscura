@@ -18,6 +18,7 @@ set(TESTS_DIR     ${PROJECT_SOURCE_DIR}/tests)
 set(EXTERNAL_DIR  ${PROJECT_SOURCE_DIR}/external)
 
 #External projects
+find_package(Boost 1.65  REQUIRED )
 include(FetchContent)
 # libphysica
 set(LIBPHYSICA_DIR   ${EXTERNAL_DIR}/libphysica)

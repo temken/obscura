@@ -329,7 +329,7 @@ double DM_Particle_SI::Sigma_Total_Nucleus(const Isotope& isotope, double vDM, d
 		std::exit(EXIT_FAILURE);
 	}
 	else if(!low_mass)
-		sigmatot = Sigma_Nucleus_Total_Base(isotope, vDM, param);
+		sigmatot = Sigma_Total_Nucleus_Base(isotope, vDM, param);
 	else
 	{
 		sigmatot = pow(libphysica::Reduced_Mass(mass, isotope.mass), 2.0) / M_PI * pow(fp * isotope.Z + fn * (isotope.A - isotope.Z), 2.0);

@@ -57,7 +57,7 @@ bool DM_Particle::Interaction_Parameter_Is_Cross_Section() const
 	return using_cross_section;
 }
 
-double DM_Particle::Sigma_Nucleus_Total_Base(const Isotope& target, double vDM, double param) const
+double DM_Particle::Sigma_Total_Nucleus_Base(const Isotope& target, double vDM, double param) const
 {
 	//Numerically integrate the differential cross section
 	double q2min						= 0;
@@ -69,7 +69,7 @@ double DM_Particle::Sigma_Nucleus_Total_Base(const Isotope& target, double vDM, 
 	return sigmatot;
 }
 
-double DM_Particle::Sigma_Electron_Total_Base(double vDM, double param) const
+double DM_Particle::Sigma_Total_Electron_Base(double vDM, double param) const
 {
 	//Numerically integrate the differential cross section
 	double q2min						= 0;
@@ -112,11 +112,11 @@ double DM_Particle::d2Sigma_dER_dEe_Migdal(double ER, double Ee, double vDM, con
 
 double DM_Particle::Sigma_Total_Nucleus(const Isotope& target, double vDM, double param) const
 {
-	return Sigma_Nucleus_Total_Base(target, vDM, param);
+	return Sigma_Total_Nucleus_Base(target, vDM, param);
 }
 double DM_Particle::Sigma_Total_Electron(double vDM, double param) const
 {
-	return Sigma_Electron_Total_Base(vDM, param);
+	return Sigma_Total_Electron_Base(vDM, param);
 }
 
 void DM_Particle::Print_Summary(int MPI_rank) const
@@ -151,18 +151,28 @@ double DM_Particle::CDF_Scattering_Angle_Nucleus_Base(double cos_alpha, const Is
 {
 	if(cos_alpha <= -1.0)
 		return 0.0;
-	auto integrand = std::bind(&DM_Particle::PDF_Scattering_Angle_Nucleus_Base, this, std::placeholders::_1, target, vDM, param);
-	double cdf	   = libphysica::Integrate(integrand, -1.0, cos_alpha);
-	return cdf;
+	else if(cos_alpha >= 1.0)
+		return 1.0;
+	else
+	{
+		auto integrand = std::bind(&DM_Particle::PDF_Scattering_Angle_Nucleus_Base, this, std::placeholders::_1, target, vDM, param);
+		double cdf	   = libphysica::Integrate(integrand, -1.0, cos_alpha);
+		return cdf;
+	}
 }
 
 double DM_Particle::CDF_Scattering_Angle_Electron_Base(double cos_alpha, double vDM, double param)
 {
 	if(cos_alpha <= -1.0)
 		return 0.0;
-	auto integrand = std::bind(&DM_Particle::PDF_Scattering_Angle_Electron_Base, this, std::placeholders::_1, vDM, param);
-	double cdf	   = libphysica::Integrate(integrand, -1.0, cos_alpha);
-	return cdf;
+	else if(cos_alpha >= 1.0)
+		return 1.0;
+	else
+	{
+		auto integrand = std::bind(&DM_Particle::PDF_Scattering_Angle_Electron_Base, this, std::placeholders::_1, vDM, param);
+		double cdf	   = libphysica::Integrate(integrand, -1.0, cos_alpha);
+		return cdf;
+	}
 }
 
 double DM_Particle::Sample_Scattering_Angle_Nucleus_Base(std::mt19937& PRNG, const Isotope& target, double vDM, double param)
