@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include "libphysica/Natural_Units.hpp"
-#include "libphysica/Numerics.hpp"
+#include "libphysica/Special_Functions.hpp"
 
 namespace obscura
 {
@@ -24,7 +24,7 @@ double Maximum_Nuclear_Recoil_Energy(double vDM, double mDM, double mNucleus)
 
 //2. Class for nuclear isotopes.
 //Auxiliary list with element names
-std::vector<std::string> ElementNames = {"H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og"};
+std::vector<std::string> Nucleus_Names = {"H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og"};
 
 Isotope::Isotope()
 : Z(1), A(1), abundance(1.0), spin(0.5), sp(0.5), sn(0)
@@ -36,7 +36,7 @@ Isotope::Isotope()
 Isotope::Isotope(unsigned int z, unsigned int a, double abund, double Spin, double Sp, double Sn)
 : Z(z), A(a), abundance(abund), spin(Spin), sp(Sp), sn(Sn)
 {
-	name = ElementNames[Z - 1] + "-" + std::to_string(A);
+	name = Nucleus_Names[Z - 1] + "-" + std::to_string(A);
 	mass = (A == 1) ? mProton : A * mNucleon;
 }
 
@@ -64,34 +64,34 @@ void Isotope::Print_Summary(unsigned int MPI_rank) const
 }
 
 //3. Class for elements containing all isotopes occuring in nature
-Element::Element()
+Nucleus::Nucleus()
 {
 	isotopes = {};
 }
 
-Element::Element(const std::vector<Isotope>& iso)
-: isotopes(iso)
+Nucleus::Nucleus(const std::vector<Isotope>& iso)
+: Z(iso[0].Z), isotopes(iso)
 {
-	name = ElementNames[iso[0].Z - 1];
+	name = Nucleus_Names[Z - 1];
 }
 
-Element::Element(const Isotope& iso)
+Nucleus::Nucleus(const Isotope& iso)
 : isotopes({iso})
 {
-	name = ElementNames[iso.Z - 1];
+	name = Nucleus_Names[iso.Z - 1];
 }
 
-unsigned int Element::Number_of_Isotopes() const
+unsigned int Nucleus::Number_of_Isotopes() const
 {
 	return isotopes.size();
 }
 
-// void Element::Add_Isotope(Isotope& isotope)
+// void Nucleus::Add_Isotope(Isotope& isotope)
 // {
 // 	isotopes.push_back(isotope);
 // }
 
-double Element::Average_Nuclear_Mass() const
+double Nucleus::Average_Nuclear_Mass() const
 {
 	double average_mass = 0.0;
 	for(unsigned int i = 0; i < Number_of_Isotopes(); i++)
@@ -99,7 +99,7 @@ double Element::Average_Nuclear_Mass() const
 	return average_mass;
 }
 
-void Element::Print_Summary(unsigned int MPI_rank) const
+void Nucleus::Print_Summary(unsigned int MPI_rank) const
 {
 	if(MPI_rank == 0)
 	{
@@ -118,21 +118,21 @@ void Element::Print_Summary(unsigned int MPI_rank) const
 	}
 }
 
-Isotope Element::Get_Isotope(unsigned int A) const
+Isotope Nucleus::Get_Isotope(unsigned int A) const
 {
 	for(unsigned int i = 0; i < Number_of_Isotopes(); i++)
 		if(isotopes[i].A == A)
 			return isotopes[i];
-	std::cout << "Error in obscura::Element::Get_Isotope(): Isotope A=" << A << " not existent for " << name << "." << std::endl;
+	std::cout << "Error in obscura::Nucleus::Get_Isotope(): Isotope A=" << A << " not existent for " << name << "." << std::endl;
 	std::exit(EXIT_FAILURE);
 }
 
 //4. Nuclear data
 //Import the nuclear data from a file
-std::vector<Element> Elements;
-void Import_Nuclear_Data()
+std::vector<Nucleus> all_nuclei;
+std::vector<Nucleus> Import_Nuclear_Data()
 {
-	Elements.clear();
+	std::vector<Nucleus> nuclei = {};
 	std::vector<Isotope> isotopes;
 	std::string path = PROJECT_DIR "data/Nuclear_Data.txt";
 	std::ifstream f;
@@ -150,44 +150,43 @@ void Import_Nuclear_Data()
 	{
 		if(Z > Zold)
 		{
-			Elements.push_back(Element(isotopes));
+			nuclei.push_back(Nucleus(isotopes));
 			isotopes.clear();
 			Zold = Z;
 		}
 		isotopes.push_back(Isotope(Z, A, abund, spin, sp, sn));
 	}
-	Elements.push_back(Element(isotopes));
+	nuclei.push_back(Nucleus(isotopes));
 	f.close();
+	return nuclei;
 }
 
 Isotope Get_Isotope(unsigned int Z, unsigned int A)
 {
-	return Get_Element(Z).Get_Isotope(A);
+	return Get_Nucleus(Z).Get_Isotope(A);
 }
 
-Element Get_Element(unsigned int Z)
+Nucleus Get_Nucleus(unsigned int Z)
 {
 	if(Z < 1 || Z > 92)
 	{
-		std::cerr << "Error in obscura::Get_Element(): Input Z=" << Z << " is not a value between 1 and 92." << std::endl;
+		std::cerr << "Error in obscura::Get_Nucleus(): Input Z=" << Z << " is not a value between 1 and 92." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
-	else if(Elements.size() == 0)
-	{
-		std::cerr << "Warning in obscura::Get_Element(): Nuclear data not imported yet. Import_Nuclear_Data() is performed now." << std::endl;
-		Import_Nuclear_Data();
-	}
-	return Elements[Z - 1];
+	else if(all_nuclei.size() == 0)
+		all_nuclei = Import_Nuclear_Data();
+
+	return all_nuclei[Z - 1];
 }
 
-Element Get_Element(std::string name)
+Nucleus Get_Nucleus(std::string name)
 {
 	for(int Z = 1; Z <= 92; Z++)
 	{
-		if(Get_Element(Z).name == name)
-			return Get_Element(Z);
+		if(Get_Nucleus(Z).name == name)
+			return Get_Nucleus(Z);
 	}
-	std::cerr << "Error in obscura::Get_Element(): Element " << name << " not recognized." << std::endl;
+	std::cerr << "Error in obscura::Get_Nucleus(): Nucleus " << name << " not recognized." << std::endl;
 	std::exit(EXIT_FAILURE);
 }
 

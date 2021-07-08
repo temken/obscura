@@ -4,13 +4,14 @@
 #include <iostream>
 
 #include "libphysica/Natural_Units.hpp"
-#include "libphysica/Numerics.hpp"
+#include "libphysica/Special_Functions.hpp"
 #include "libphysica/Utilities.hpp"
 
 #include "obscura/Configuration.hpp"
 #include "version.hpp"
 
 using namespace libphysica::natural_units;
+using namespace obscura;
 
 int main(int argc, char* argv[])
 {
@@ -26,8 +27,7 @@ int main(int argc, char* argv[])
 			  << std::endl;
 	////////////////////////////////////////////////////////////////////////
 
-	//Import nuclear data and configuration file
-	obscura::Import_Nuclear_Data();
+	//Import configuration file
 	obscura::Configuration cfg(argv[1]);
 	cfg.Print_Summary();
 

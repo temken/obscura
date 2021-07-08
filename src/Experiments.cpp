@@ -12,7 +12,7 @@ DM_Detector_Nucleus DAMIC_N_2011()
 {
 	// Source: arXiv:1105.5191
 	double DAMIC_exposure			   = 0.107 * kg * day;
-	std::vector<Element> DAMIC_targets = {Get_Element(14)};
+	std::vector<Nucleus> DAMIC_targets = {Get_Nucleus(14)};
 	double DAMIC_threshold			   = 0.55 * keV;
 	double DAMIC_Emax				   = 7.0 * keV;
 	unsigned int DAMIC_observed_events = 106;
@@ -28,7 +28,7 @@ DM_Detector_Nucleus XENON1T_N_2017()
 {
 	// Source: arXiv:1705.06655
 	double XENON1T_exposure				 = 34.2 * day * 1042 * kg;
-	std::vector<Element> XENON1T_targets = {Get_Element(54)};
+	std::vector<Nucleus> XENON1T_targets = {Get_Nucleus(54)};
 	double XENON1T_threshold			 = 5.0 * keV;
 	double XENON1T_Emax					 = 40.0 * keV;
 	double XENON1T_efficiency			 = 0.82;
@@ -46,7 +46,7 @@ DM_Detector_Nucleus CRESST_II()
 {
 	//Source: arXiv:1509.01515 and arXiv:1701.08157
 	double CRESST_II_exposure					= 52.15 * kg * day;
-	std::vector<Element> CRESST_II_targets		= {Get_Element(8), Get_Element(20), Get_Element(74)};	//CaOW
+	std::vector<Nucleus> CRESST_II_targets		= {Get_Nucleus(8), Get_Nucleus(20), Get_Nucleus(74)};	//CaOW
 	std::vector<double> CRESST_II_target_ratios = {4, 1, 1};
 	double CRESST_II_threshold					= 307 * eV;
 	double CRESST_II_Emax						= 40.0 * keV;
@@ -68,7 +68,7 @@ DM_Detector_Nucleus CRESST_III()
 {
 	// Source: arXiv:1711.07692 and arXiv:1905.07335
 	double CRESST_III_exposure					 = 5.594 * kg * day;
-	std::vector<Element> CRESST_III_targets		 = {Get_Element(8), Get_Element(20), Get_Element(74)};	 //CaOW
+	std::vector<Nucleus> CRESST_III_targets		 = {Get_Nucleus(8), Get_Nucleus(20), Get_Nucleus(74)};	 //CaOW
 	std::vector<double> CRESST_III_target_ratios = {4, 1, 1};
 	double CRESST_III_threshold					 = 30.1 * eV;
 	double CRESST_III_Emax						 = 16 * keV;
@@ -92,7 +92,7 @@ DM_Detector_Nucleus CRESST_surface()
 {
 	// Source: arXiv:1707.06749
 	double CRESST_surface_exposure					 = 0.046 * gram * day;
-	std::vector<Element> CRESST_surface_targets		 = {Get_Element(8), Get_Element(13)};
+	std::vector<Nucleus> CRESST_surface_targets		 = {Get_Nucleus(8), Get_Nucleus(13)};
 	std::vector<double> CRESST_surface_target_ratios = {3, 2};
 	double CRESST_surface_threshold					 = 19.7 * eV;
 	double CRESST_surface_Emax						 = 600 * eV;
@@ -109,10 +109,10 @@ DM_Detector_Nucleus CRESST_surface()
 }
 
 //2. Electron recoil experiments - Ionization
-DM_Detector_Ionization XENON10_S2()
+DM_Detector_Ionization_ER XENON10_S2_ER()
 {
 	// Source: arXiv:1104.3088, arXiv:1206.2644, and arXiv:1703.00910
-	std::string target_name							   = "Xenon";
+	std::string target_name							   = "Xe";
 	double exposure									   = 15 * kg * day;
 	double flat_efficiency							   = 0.92;
 	std::vector<unsigned long int> observed_event_bins = {126, 60, 12, 3, 2, 0, 2};
@@ -121,7 +121,7 @@ DM_Detector_Ionization XENON10_S2()
 	std::vector<unsigned int> S2_bin_ranges			   = {14, 41, 68, 95, 122, 149, 176, 203};
 	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON10e/PE_Trigger_Efficiency.txt";
 
-	DM_Detector_Ionization detector("XENON10_S2", exposure, target_name);
+	DM_Detector_Ionization_ER detector("XENON10_S2", exposure, target_name);
 	detector.Set_Flat_Efficiency(flat_efficiency);
 	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
 	detector.Set_Observed_Events(observed_event_bins);
@@ -130,10 +130,10 @@ DM_Detector_Ionization XENON10_S2()
 	return detector;
 }
 
-DM_Detector_Ionization XENON100_S2()
+DM_Detector_Ionization_ER XENON100_S2_ER()
 {
 	// Source: arXiv:1605.06262, arXiv:1703.00910
-	std::string target_name							   = "Xenon";
+	std::string target_name							   = "Xe";
 	double exposure									   = 30 * kg * year;
 	std::vector<unsigned long int> observed_event_bins = {794, 1218, 924, 776, 669, 630, 528, 488, 433, 387};
 	double muPE										   = 19.7;
@@ -142,7 +142,7 @@ DM_Detector_Ionization XENON100_S2()
 	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON100e/PE_Trigger_Efficiency.txt";
 	std::string acceptance_efficiency				   = PROJECT_DIR "data/XENON100e/PE_Acceptance_Efficiency.txt";
 
-	DM_Detector_Ionization detector("XENON100_S2", exposure, target_name);
+	DM_Detector_Ionization_ER detector("XENON100_S2", exposure, target_name);
 	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
 	detector.Set_Observed_Events(observed_event_bins);
 	detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
@@ -151,10 +151,10 @@ DM_Detector_Ionization XENON100_S2()
 	return detector;
 }
 
-DM_Detector_Ionization XENON1T_S2()
+DM_Detector_Ionization_ER XENON1T_S2_ER()
 {
 	// Source: arXiv:1907.11485
-	std::string target_name							   = "Xenon";
+	std::string target_name							   = "Xe";
 	double exposure									   = 80755.2 * kg * day;
 	std::vector<unsigned long int> observed_event_bins = {8, 7, 2, 1};
 	double muPE										   = 33.0;
@@ -162,7 +162,7 @@ DM_Detector_Ionization XENON1T_S2()
 	std::vector<unsigned int> S2_bin_ranges			   = {150, 200, 250, 300, 350};
 	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON1Te/XENON1T_TotalEfficiency.txt";
 
-	DM_Detector_Ionization detector("XENON1T_S2", exposure, target_name);
+	DM_Detector_Ionization_ER detector("XENON1T_S2", exposure, target_name);
 	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
 	detector.Set_Observed_Events(observed_event_bins);
 	detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
@@ -170,15 +170,15 @@ DM_Detector_Ionization XENON1T_S2()
 	return detector;
 }
 
-DM_Detector_Ionization DarkSide_50_S2()
+DM_Detector_Ionization_ER DarkSide50_S2_ER()
 {
 	// Source: arXiv:1802.06998
-	std::string target_name							   = "Argon";
+	std::string target_name							   = "Ar";
 	double exposure									   = 6786.0 * kg * day;
 	unsigned int ne_threshold						   = 3;
 	std::vector<unsigned long int> observed_event_bins = {6131, 673, 252, 227, 198, 199, 189, 247, 230, 261, 249, 329, 336};
 
-	DM_Detector_Ionization detector("DarkSide-50_S2", exposure, target_name);
+	DM_Detector_Ionization_ER detector("DarkSide-50_S2", exposure, target_name);
 	detector.Use_Electron_Bins(ne_threshold, 13);
 	detector.Set_Observed_Events(observed_event_bins);
 
@@ -186,7 +186,7 @@ DM_Detector_Ionization DarkSide_50_S2()
 }
 
 //3. Electron recoil experiments - Semiconductor
-DM_Detector_Semiconductor protoSENSEI_at_Surface()
+DM_Detector_Crystal protoSENSEI_at_Surface()
 {
 	// Source: arXiv:1804.00088
 	double SENSEI_surface_exposure								  = 0.07 * gram * 456 * minute;
@@ -195,7 +195,7 @@ DM_Detector_Semiconductor protoSENSEI_at_Surface()
 	std::vector<double> SENSEI_surface_efficiencies				  = {0.668, 0.41, 0.32, 0.27, 0.24};
 	std::vector<unsigned long int> SENSEI_surface_observed_events = {140302, 4676, 131, 1, 0};
 
-	DM_Detector_Semiconductor detector("protoSENSEI@surface", SENSEI_surface_exposure, "Si");
+	DM_Detector_Crystal detector("protoSENSEI@surface", SENSEI_surface_exposure, "Si");
 	detector.Use_Q_Bins(SENSEI_surface_Q_threshold, SENSEI_surface_N_bins);
 	detector.Set_Observed_Events(SENSEI_surface_observed_events);
 	detector.Set_Bin_Efficiencies(SENSEI_surface_efficiencies);
@@ -203,7 +203,7 @@ DM_Detector_Semiconductor protoSENSEI_at_Surface()
 	return detector;
 }
 
-DM_Detector_Semiconductor protoSENSEI_at_MINOS()
+DM_Detector_Crystal protoSENSEI_at_MINOS()
 {
 	// Source: arXiv:1901.10478
 	double SENSEI_exposure								  = 0.246 * gram * day;
@@ -212,7 +212,7 @@ DM_Detector_Semiconductor protoSENSEI_at_MINOS()
 	std::vector<double> SENSEI_efficiencies				  = {1.0, 0.62, 0.48};
 	std::vector<unsigned long int> SENSEI_observed_events = {8516, 87, 0};
 
-	DM_Detector_Semiconductor detector("protoSENSEI@MINOS", SENSEI_exposure, "Si");
+	DM_Detector_Crystal detector("protoSENSEI@MINOS", SENSEI_exposure, "Si");
 	detector.Use_Q_Bins(SENSEI_Q_threshold, SENSEI_N_bins);
 	detector.Set_Observed_Events(SENSEI_observed_events);
 	detector.Set_Bin_Efficiencies(SENSEI_efficiencies);
@@ -220,7 +220,7 @@ DM_Detector_Semiconductor protoSENSEI_at_MINOS()
 	return detector;
 }
 
-DM_Detector_Semiconductor SENSEI_at_MINOS()
+DM_Detector_Crystal SENSEI_at_MINOS()
 {
 	// Source: arXiv:2004.11378
 	double SENSEI_exposure								  = 9.1 * gram * day;
@@ -229,7 +229,7 @@ DM_Detector_Semiconductor SENSEI_at_MINOS()
 	std::vector<double> SENSEI_efficiencies				  = {1.38 / 9.1, 2.09 / 9.1, 9.03 / 9.1, 1.0};
 	std::vector<unsigned long int> SENSEI_observed_events = {578, 5, 0, 0};
 
-	DM_Detector_Semiconductor detector("SENSEI@MINOS", SENSEI_exposure, "Si");
+	DM_Detector_Crystal detector("SENSEI@MINOS", SENSEI_exposure, "Si");
 	detector.Use_Q_Bins(SENSEI_Q_threshold, SENSEI_N_bins);
 	detector.Set_Observed_Events(SENSEI_observed_events);
 	detector.Set_Bin_Efficiencies(SENSEI_efficiencies);
@@ -237,7 +237,7 @@ DM_Detector_Semiconductor SENSEI_at_MINOS()
 	return detector;
 }
 
-DM_Detector_Semiconductor CDMS_HVeV_2018()
+DM_Detector_Crystal CDMS_HVeV_2018()
 {
 	// Source: arXiv:1804.10697
 	double SuperCDMS_exposure								 = 0.487 * gram * day;
@@ -247,7 +247,7 @@ DM_Detector_Semiconductor CDMS_HVeV_2018()
 	std::vector<double> SuperCDMS_efficiencies				 = {0.88, 0.91, 0.91, 0.91, 0.91, 0.91};
 	std::vector<unsigned long int> SuperCDMS_observed_events = {53000, 400, 74, 18, 7, 14};
 
-	DM_Detector_Semiconductor detector("CMDS-HVeV_2018", SuperCDMS_exposure, "Si");
+	DM_Detector_Crystal detector("CDMS-HVeV_2018", SuperCDMS_exposure, "Si");
 	detector.Set_Flat_Efficiency(SuperCDMS_flat_efficiency);
 	detector.Use_Q_Bins(SuperCDMS_Q_threshold, SuperCDMS_N_bins);
 	detector.Set_Observed_Events(SuperCDMS_observed_events);
@@ -256,7 +256,7 @@ DM_Detector_Semiconductor CDMS_HVeV_2018()
 	return detector;
 }
 
-DM_Detector_Semiconductor CDMS_HVeV_2020()
+DM_Detector_Crystal CDMS_HVeV_2020()
 {
 	// Source: arXiv:2005.14067
 	double SuperCDMS_exposure								 = 1.2 * gram * day;
@@ -264,15 +264,15 @@ DM_Detector_Semiconductor CDMS_HVeV_2020()
 	unsigned int SuperCDMS_N_bins							 = 6;
 	std::vector<unsigned long int> SuperCDMS_observed_events = {178800, 1320, 248, 64, 19, 6};
 
-	DM_Detector_Semiconductor detector("CMDS-HVeV_2020", SuperCDMS_exposure, "Si");
+	DM_Detector_Crystal detector("CDMS-HVeV_2020", SuperCDMS_exposure, "Si");
 	detector.Use_Q_Bins(SuperCDMS_Q_threshold, SuperCDMS_N_bins);
 	detector.Set_Observed_Events(SuperCDMS_observed_events);
 
 	return detector;
 }
 
-//4. Migdal scattering experiments
-DM_Detector_Migdal XENON10_Migdal()
+//4. Migdal experiments - Ionization
+DM_Detector_Ionization_Migdal XENON10_S2_Migdal()
 {
 	// Source: arXiv:1104.3088, arXiv:1206.2644, and arXiv:1703.00910
 	std::string target_name							   = "Xe";
@@ -284,7 +284,7 @@ DM_Detector_Migdal XENON10_Migdal()
 	std::vector<unsigned int> S2_bin_ranges			   = {14, 41, 68, 95, 122, 149, 176, 203};
 	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON10e/PE_Trigger_Efficiency.txt";
 
-	DM_Detector_Migdal detector("XENON10_Migdal", exposure, target_name);
+	DM_Detector_Ionization_Migdal detector("XENON10_S2", exposure, target_name);
 	detector.Set_Flat_Efficiency(flat_efficiency);
 	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
 	detector.Set_Observed_Events(observed_event_bins);
@@ -292,7 +292,8 @@ DM_Detector_Migdal XENON10_Migdal()
 
 	return detector;
 }
-DM_Detector_Migdal XENON100_Migdal()
+
+DM_Detector_Ionization_Migdal XENON100_S2_Migdal()
 {
 	// Source: arXiv:1605.06262, arXiv:1703.00910
 	std::string target_name							   = "Xe";
@@ -304,7 +305,7 @@ DM_Detector_Migdal XENON100_Migdal()
 	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON100e/PE_Trigger_Efficiency.txt";
 	std::string acceptance_efficiency				   = PROJECT_DIR "data/XENON100e/PE_Acceptance_Efficiency.txt";
 
-	DM_Detector_Migdal detector("XENON100_Migdal", exposure, target_name);
+	DM_Detector_Ionization_Migdal detector("XENON100_S2", exposure, target_name);
 	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
 	detector.Set_Observed_Events(observed_event_bins);
 	detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
@@ -312,7 +313,8 @@ DM_Detector_Migdal XENON100_Migdal()
 
 	return detector;
 }
-DM_Detector_Migdal XENON1T_Migdal()
+
+DM_Detector_Ionization_Migdal XENON1T_S2_Migdal()
 {
 	// Source: arXiv:1907.11485
 	std::string target_name							   = "Xe";
@@ -323,10 +325,25 @@ DM_Detector_Migdal XENON1T_Migdal()
 	std::vector<unsigned int> S2_bin_ranges			   = {150, 200, 250, 300, 350};
 	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON1Te/XENON1T_TotalEfficiency.txt";
 
-	DM_Detector_Migdal detector("XENON1T_Migdal", exposure, target_name);
+	DM_Detector_Ionization_Migdal detector("XENON1T_S2", exposure, target_name);
 	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
 	detector.Set_Observed_Events(observed_event_bins);
 	detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
+
+	return detector;
+}
+
+DM_Detector_Ionization_Migdal DarkSide50_S2_Migdal()
+{
+	// Source: arXiv:1802.06998
+	std::string target_name							   = "Ar";
+	double exposure									   = 6786.0 * kg * day;
+	unsigned int ne_threshold						   = 3;
+	std::vector<unsigned long int> observed_event_bins = {6131, 673, 252, 227, 198, 199, 189, 247, 230, 261, 249, 329, 336};
+
+	DM_Detector_Ionization_Migdal detector("DarkSide-50_S2", exposure, target_name);
+	detector.Use_Electron_Bins(ne_threshold, 13);
+	detector.Set_Observed_Events(observed_event_bins);
 
 	return detector;
 }

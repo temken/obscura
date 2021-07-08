@@ -6,19 +6,107 @@
 
 [![DOI](https://zenodo.org/badge/250298432.svg)](https://zenodo.org/badge/latestdoi/250298432)
 
-A C++ tool and library for dark matter direct detection computations for both nuclear and electron recoil experiments.
+A modular C++ tool and library for dark matter direct detection computations for both nuclear and electron recoil experiments.
 
-<img src="results/obscura_DD_Constraints.png" width="500">
+<img src="paper/FlowChart.png" width="500">
 
-## Dependencies
+<details><summary>Repository content</summary>
+<p>
 
-- [libphysica](https://github.com/temken/libphysica)
+The included folders are:
+
+- *bin/*:
+
+</p>
+</details>
+
+## Getting started
+
+<details><summary>1. Dependencies</summary>
+
+<details><summary>[boost](https://www.boost.org/)</summary>
+To install `boost` on a Mac using [homebrew](https://brew.sh/), simply run
+```
+>brew install boost
+```
+
+On Linux machines, run
+```
+>sudo apt-get update && sudo apt-get install -yq libboost-all-dev
+```
+</p>
+</details>
+
+<details><summary>[libconfig](https://hyperrealm.github.io/libconfig/)</summary>
+To install `libconfig` on a Mac using [homebrew](https://brew.sh/), simply run
+```
+>brew install libconfig
+```
+
+On Linux machines, you can build `libconfig` via
+```
+>wget https://hyperrealm.github.io/libconfig/dist/libconfig-1.7.2.tar.gz
+>tar -xvzf libconfig-1.7.2.tar.gz
+>pushd libconfig-1.7.2
+>./configure
+>make
+>sudo make install
+>popd
+```
+
+</p>
+</details>
+
+<details><summary>[libphysica](https://github.com/temken/libphysica)</summary>
+`libphysica` does not need to be installed. It will be downloaded and compiled during the CMake build.
+</p>
+</details>
+
+</p>
+</details>
+
+<details><summary>2. Download & Installation</summary>
+The `obscura` source code can be downloaded by cloning this git repository:
+
+```
+>git clone https://github.com/temken/`obscura`.git 
+>cd obscura
+```
+
+The code is compiled and the executable is created using CMake.
+
+```
+>cmake -E make_directory build
+>cd build
+>cmake -DCMAKE_BUILD_TYPE=Release -DCODE_COVERAGE=OFF ..
+>cmake --build . --config Release
+>cmake --install .
+```
+
+If everything worked well, there should be the executable *obscura* in the */bin/* folder.
+
+</p>
+</details>
+
+<details><summary>3. Usage as a tool</summary>
+
+</p>
+</details>
+
+<details><summary>4. Usage as an external library</summary>
+
+</p>
+</details>
+
 
 ## Included experiments
 
+<img src="paper/obscura_DD_Constraints.png" width="500">
+
 The following nuclear and electron recoil direct detection experiments are implemented.
 
-### Nuclear recoil experiments
+<details><summary>Nuclear recoil experiments</summary>
+<p>
 
 #### CRESST-II
 
@@ -63,8 +151,11 @@ XENON Collaboration (E. Aprile et al.)
 [![Phys.Rev.Lett. 119 (2017) no.18, 181301](https://img.shields.io/badge/Phys.Rev.Lett.-119(2017)no.18,181301-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.119.181301)
 [![[arXiv:1705.06655]](https://img.shields.io/badge/arXiv-1705.06655-B31B1B.svg)](https://arxiv.org/abs/1705.06655)
 
+</p>
+</details>
 
-### Electron recoil experiments
+<details><summary>Electron recoil experiments</summary>
+<p>
 
 #### CDMS-HVeV_2018
 
@@ -146,6 +237,30 @@ XENON Collaboration (E. Aprile et al.)
 [![Phys.Rev.Lett. 123 (2019) no.25, 251801](https://img.shields.io/badge/Phys.Rev.Lett.-123(2019)no.25,251801-255773.svg)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.123.251801)
 [![[arXiv:1907.11485]](https://img.shields.io/badge/arXiv-1907.11485-B31B1B.svg)](https://arxiv.org/abs/1907.11485)
 
+</p>
+</details>
+
+## CITATION
+
+<details><summary>Bibtex entry</summary>
+<p>
+
+```
+@software{obscura,
+  author = {Emken, Timon},
+  title = {{obscura - A C++ library for dark matter detection computations [Code, v0.1.0]}},
+  year         = {2021},
+  publisher    = {Zenodo},
+  version      = {v0.1.0},
+  doi          = {DOI:10.5281/zenodo.4557188},
+  url          = {https://doi.org/10.5281/zenodo.4557188},
+  howpublished={The code can be found under \url{https://github.com/temken/obscura}. Version 0.1.0 is archived as \href{https://doi.org/10.5281/zenodo.4557188}{DOI:10.5281/zenodo.4557188}}
+}
+```
+
+</p>
+</details>
+
 ## VERSION HISTORY
 
 - 23.02.2021: Release of version 0.1.0
@@ -154,7 +269,7 @@ XENON Collaboration (E. Aprile et al.)
 
 The author of this tool/library is Timon Emken.
 
-For questions, bug reports or other suggestions please contact [emken@chalmers.se](mailto:emken@chalmers.se).
+For questions, bug reports or other suggestions please contact [timon.emken@fysik.su.se](mailto:timon.emken@fysik.su.se).
 
 
 ## LICENSE

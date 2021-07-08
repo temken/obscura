@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(obscura VERSION "0.1.0")
+project(obscura VERSION "0.1.1")
 
 # Use C++-11
 set(CMAKE_CXX_STANDARD 11)
@@ -18,6 +18,7 @@ set(TESTS_DIR     ${PROJECT_SOURCE_DIR}/tests)
 set(EXTERNAL_DIR  ${PROJECT_SOURCE_DIR}/external)
 
 #External projects
+find_package(Boost 1.65  REQUIRED )
 include(FetchContent)
 # libphysica
 set(LIBPHYSICA_DIR   ${EXTERNAL_DIR}/libphysica)

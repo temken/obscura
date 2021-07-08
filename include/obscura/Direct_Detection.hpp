@@ -62,9 +62,9 @@ class DM_Detector
   public:
 	std::string name;
 	DM_Detector()
-	: targets("base targets"), exposure(0.0), flat_efficiency(1.0), statistical_analysis("default"), observed_events(0), expected_background(0.0), number_of_bins(0), energy_threshold(0), energy_max(0), using_energy_threshold(false), using_energy_bins(false), name("base name") {};
+	: targets("base targets"), exposure(0.0), flat_efficiency(1.0), statistical_analysis("Poisson"), observed_events(0), expected_background(0.0), number_of_bins(0), energy_threshold(0), energy_max(0), using_energy_threshold(false), using_energy_bins(false), name("base name") {};
 	DM_Detector(std::string label, double expo, std::string target_type)
-	: targets(target_type), exposure(expo), flat_efficiency(1.0), statistical_analysis("default"), observed_events(0), expected_background(0.0), number_of_bins(0), energy_threshold(0), energy_max(0), using_energy_threshold(false), using_energy_bins(false), name(label) {};
+	: targets(target_type), exposure(expo), flat_efficiency(1.0), statistical_analysis("Poisson"), observed_events(0), expected_background(0.0), number_of_bins(0), energy_threshold(0), energy_max(0), using_energy_threshold(false), using_energy_bins(false), name(label) {};
 
 	std::string Target_Particles();
 
@@ -81,6 +81,7 @@ class DM_Detector
 	//Statistics
 	double Log_Likelihood(const DM_Particle& DM, DM_Distribution& DM_distr);
 	double Likelihood(const DM_Particle& DM, DM_Distribution& DM_distr);
+	std::vector<std::vector<double>> Log_Likelihood_Scan(DM_Particle& DM, DM_Distribution& DM_distr, const std::vector<double>& masses, const std::vector<double>& couplings);
 	double P_Value(const DM_Particle& DM, DM_Distribution& DM_distr);
 
 	// (a) Poisson

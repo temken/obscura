@@ -5,18 +5,19 @@
 #include <vector>
 
 #include "libphysica/Linear_Algebra.hpp"
+#include "libphysica/Numerics.hpp"
 
 namespace obscura
 {
 
-//1. Abstract base class for DM distributions that can be used to compute direct detection recoil spectra.
+// 1. Abstract base class for DM distributions that can be used to compute direct detection recoil spectra.
 class DM_Distribution
 {
   protected:
 	std::string name;
 	std::vector<double> v_domain;
-
-	void Print_Summary_Base(int MPI_rank = 0);
+	double Eta_Function_Base(double vMin);
+	void Print_Summary_Base();
 
   public:
 	double DM_density;	 //Local DM density
@@ -31,8 +32,9 @@ class DM_Distribution
 
 	//Distribution functions
 	virtual double PDF_Velocity(libphysica::Vector vel) { return 0.0; };
-	virtual double PDF_Speed(double v) { return 0.0; };
+	virtual double PDF_Speed(double v);
 	virtual double CDF_Speed(double v);
+	virtual double PDF_Norm();
 
 	virtual double Differential_DM_Flux(double v, double mDM);
 	virtual double Total_DM_Flux(double mDM);
@@ -44,45 +46,32 @@ class DM_Distribution
 	//Eta-function for direct detection
 	virtual double Eta_Function(double vMin);
 
-	virtual void Print_Summary(int MPI_rank = 0) { Print_Summary_Base(MPI_rank); };
+	virtual void Print_Summary(int mpi_rank = 0);
+	void Export_PDF_Speed(std::string file_path, int v_points = 100, bool log_scale = false);
+	void Export_Eta_Function(std::string file_path, int v_points = 100, bool log_scale = false);
 };
 
-//2. Standard halo model (SHM)
-class Standard_Halo_Model : public DM_Distribution
+// 2. Import a tabulated DM distribution from a file (format v[km/sec] :: f(v) [sec/km])
+class Imported_DM_Distribution : public DM_Distribution
 {
   protected:
-	double v_0, v_esc, v_observer;
-	libphysica::Vector vel_observer;
+	std::string file_path;
+	libphysica::Interpolation pdf_speed, eta_function;
 
-	//Normalization
-	double N_esc;
-	void Normalize_PDF();
+	void Check_Normalization();
+
+	double Eta_Function_Int(double v_min);
+	void Interpolate_Eta();
 
   public:
-	//Constructors:
-	Standard_Halo_Model();
-	Standard_Halo_Model(double rho, double v0, double vobs, double vesc = 1.0);
-	Standard_Halo_Model(double rho, double v0, libphysica::Vector& vel_obs, double vesc = 1.0);
+	Imported_DM_Distribution(double rho, const std::string& filepath);
 
-	//Set SHM parameters
-	void Set_Speed_Dispersion(double v0);
-	void Set_Escape_Velocity(double vesc);
-	void Set_Observer_Velocity(const libphysica::Vector& vObserver);
-	void Set_Observer_Velocity(int day, int month, int year, int hour = 0, int minute = 0);
-
-	libphysica::Vector Get_Observer_Velocity() const;
-
-	//Distribution functions
-	virtual double PDF_Velocity(libphysica::Vector vel) override;
 	virtual double PDF_Speed(double v) override;
-	virtual double CDF_Speed(double v) override;
 
-	//Eta-function for direct detection
 	virtual double Eta_Function(double vMin) override;
 
-	virtual void Print_Summary(int MPI_rank = 0) override;
+	virtual void Print_Summary(int mpi_rank = 0) override;
 };
-
 }	// namespace obscura
 
 #endif

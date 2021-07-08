@@ -27,12 +27,13 @@ class Configuration
 	void Construct_DM_Particle_Standard(std::string DM_interaction);
 
 	virtual void Construct_DM_Distribution();
-	void Construct_DM_Distribution_SHM();
+	void Construct_DM_Halo_Model(std::string model_label);
+	void Construct_Imported_Distribution();
 
 	virtual void Construct_DM_Detector();
 	void Construct_DM_Detector_Nuclear();
-	void Construct_DM_Detector_Ionization();
-	void Construct_DM_Detector_Semiconductor();
+	void Construct_DM_Detector_Ionization(std::string ER_or_Migdal);
+	void Construct_DM_Detector_Crystal();
 
 	void Initialize_Parameters();
 

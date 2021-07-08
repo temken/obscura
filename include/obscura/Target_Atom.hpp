@@ -1,11 +1,12 @@
-#ifndef __Target_Electron_hpp_
-#define __Target_Electron_hpp_
+#ifndef __Target_Atom_hpp_
+#define __Target_Atom_hpp_
 
 #include <string>
 #include <vector>
 
 #include "libphysica/Numerics.hpp"
 
+#include "Target_Nucleus.hpp"
 #include "version.hpp"
 
 namespace obscura
@@ -14,25 +15,7 @@ namespace obscura
 //1. Kinematic functions
 extern double vMinimal_Electrons(double q, double Delta_E, double mDM);
 
-//2. Semiconductor crystal target
-class Semiconductor
-{
-  private:
-	libphysica::Interpolation_2D form_factor_interpolation;
-
-  public:
-	std::string name;
-	double dE, dq;
-	double M_cell;
-	double energy_gap, epsilon;
-	unsigned int Q_max;
-
-	explicit Semiconductor(std::string target);
-
-	double Crystal_Form_Factor(double q, double E);
-};
-
-//3. Bound electrons in isolated atoms
+//2. Bound electrons in isolated atoms
 struct Atomic_Electron
 {
 	// Ionization form factor tables
@@ -46,11 +29,9 @@ struct Atomic_Electron
 	unsigned int n, l;
 	std::string name;
 	double binding_energy;
-	double nucleus_mass;
-	double W;
 	unsigned int number_of_secondary_electrons;
 
-	Atomic_Electron(std::string element, double A, int N, int L, double Ebinding, double kMin, double kMax, double qMin, double qMax, double w, unsigned int neSecondary = 0);
+	Atomic_Electron(std::string element, int N, int L, double Ebinding, double kMin, double kMax, double qMin, double qMax, unsigned int neSecondary = 0);
 
 	//Squared ionization form factor.
 	double Ionization_Form_Factor(double q, double E);
@@ -60,15 +41,13 @@ struct Atomic_Electron
 
 struct Atom
 {
-	std::string name;
-	int Z;
-	double A;
-	double mass;
-	double W;
+	Nucleus nucleus;
 	std::vector<Atomic_Electron> electrons;
+	double W;
 
 	//Constructor
-	Atom(std::string element_name, int z, double a, double w, std::vector<Atomic_Electron> shells = {});
+	Atom(int z, double w, std::vector<Atomic_Electron> shells = {});
+	Atom(const std::string& element_name);
 
 	double Lowest_Binding_Energy() const;
 
@@ -87,8 +66,6 @@ struct Atom
 
 	void Print_Summary(unsigned int MPI_rank = 0) const;
 };
-
-extern Atom Import_Ionization_Form_Factors(std::string element);
 
 }	// namespace obscura
 

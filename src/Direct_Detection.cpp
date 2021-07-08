@@ -5,8 +5,9 @@
 #include <iostream>
 #include <numeric>
 
+#include "libphysica/Integration.hpp"
 #include "libphysica/Natural_Units.hpp"
-#include "libphysica/Numerics.hpp"
+#include "libphysica/Special_Functions.hpp"
 #include "libphysica/Statistics.hpp"
 #include "libphysica/Utilities.hpp"
 
@@ -33,9 +34,7 @@ double DM_Detector::Log_Likelihood(const DM_Particle& DM, DM_Distribution& DM_di
 		std::vector<unsigned long int> n = bin_observed_events;
 		std::vector<double> b			 = bin_expected_background;
 		// for(unsigned int i = 0; i < b.size(); i++)
-		// {
 		// 	if(b[i] < 1.0e-4 && (n[i] > s[i])) b[i] = n[i]-s[i]; // see eq.(29) of [arXiv:1705.07920]
-		// }
 		return libphysica::Log_Likelihood_Poisson_Binned(s, n, b);
 	}
 	else if(statistical_analysis == "Maximum Gap")
@@ -52,6 +51,25 @@ double DM_Detector::Log_Likelihood(const DM_Particle& DM, DM_Distribution& DM_di
 double DM_Detector::Likelihood(const DM_Particle& DM, DM_Distribution& DM_distr)
 {
 	return exp(Log_Likelihood(DM, DM_distr));
+}
+
+std::vector<std::vector<double>> DM_Detector::Log_Likelihood_Scan(DM_Particle& DM, DM_Distribution& DM_distr, const std::vector<double>& masses, const std::vector<double>& couplings)
+{
+	double m_original		 = DM.mass;
+	double coupling_original = DM.Get_Interaction_Parameter(targets);
+	std::vector<std::vector<double>> log_likelihoods;
+	for(auto& mass : masses)
+	{
+		DM.Set_Mass(mass);
+		for(auto& coupling : couplings)
+		{
+			DM.Set_Interaction_Parameter(coupling, targets);
+			log_likelihoods.push_back({mass, coupling, Log_Likelihood(DM, DM_distr)});
+		}
+	}
+	DM.Set_Mass(m_original);
+	DM.Set_Interaction_Parameter(coupling_original, targets);
+	return log_likelihoods;
 }
 
 double DM_Detector::P_Value(const DM_Particle& DM, DM_Distribution& DM_distr)
@@ -440,9 +458,7 @@ std::vector<double> DM_Detector::DM_Signals_Energy_Bins(const DM_Particle& DM, D
 		std::vector<double> mu_i;
 		for(unsigned int i = 0; i < number_of_bins; i++)
 		{
-
-			double epsilon = libphysica::Find_Epsilon(spectrum, bin_energies[i], bin_energies[i + 1], 1e-4);
-			double mu	   = exposure * libphysica::Integrate(spectrum, bin_energies[i], bin_energies[i + 1], epsilon);
+			double mu = exposure * libphysica::Integrate(spectrum, bin_energies[i], bin_energies[i + 1]);
 			mu_i.push_back(bin_efficiencies[i] * mu);
 		}
 		return mu_i;

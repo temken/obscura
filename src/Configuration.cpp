@@ -6,11 +6,12 @@
 
 #include "libphysica/Utilities.hpp"
 
+#include "obscura/DM_Halo_Models.hpp"
 #include "obscura/DM_Particle_Standard.hpp"
-#include "obscura/Direct_Detection_Ionization.hpp"
+#include "obscura/Direct_Detection_Crystal.hpp"
+#include "obscura/Direct_Detection_ER.hpp"
 #include "obscura/Direct_Detection_Migdal.hpp"
 #include "obscura/Direct_Detection_Nucleus.hpp"
-#include "obscura/Direct_Detection_Semiconductor.hpp"
 #include "obscura/Experiments.hpp"
 #include "version.hpp"
 
@@ -329,8 +330,10 @@ void Configuration::Construct_DM_Distribution()
 		std::exit(EXIT_FAILURE);
 	}
 
-	if(DM_distribution == "SHM")
-		Construct_DM_Distribution_SHM();
+	if(DM_distribution == "SHM" || DM_distribution == "SHM++")
+		Construct_DM_Halo_Model(DM_distribution);
+	else if(DM_distribution == "File")
+		Construct_Imported_Distribution();
 	else
 	{
 		std::cerr << "Error in obscura::Configuration::Construct_DM_Distribution(): 'DM_distribution' setting " << DM_distribution << " in configuration file not recognized." << std::endl;
@@ -338,7 +341,7 @@ void Configuration::Construct_DM_Distribution()
 	}
 }
 
-void Configuration::Construct_DM_Distribution_SHM()
+void Configuration::Construct_DM_Halo_Model(std::string model_label)
 {
 	double DM_local_density, SHM_v0, SHM_vEscape;
 	libphysica::Vector vel_observer(3, 0.0);
@@ -389,7 +392,57 @@ void Configuration::Construct_DM_Distribution_SHM()
 		std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'SHM_vEscape' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
-	DM_distr = new Standard_Halo_Model(DM_local_density, SHM_v0, vel_observer, SHM_vEscape);
+	if(model_label == "SHM")
+		DM_distr = new Standard_Halo_Model(DM_local_density, SHM_v0, vel_observer, SHM_vEscape);
+	else if(model_label == "SHM++")
+	{
+		double eta, beta;
+		try
+		{
+			eta = config.lookup("SHMpp_eta");
+		}
+		catch(const SettingNotFoundException& nfex)
+		{
+			std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'SHMpp_eta' setting in configuration file." << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		try
+		{
+			beta = config.lookup("SHMpp_beta");
+		}
+		catch(const SettingNotFoundException& nfex)
+		{
+			std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'SHMpp_beta' setting in configuration file." << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		DM_distr = new SHM_Plus_Plus(DM_local_density, SHM_v0, vel_observer, SHM_vEscape, eta, beta);
+	}
+}
+
+void Configuration::Construct_Imported_Distribution()
+{
+	double DM_local_density;
+	try
+	{
+		DM_local_density = config.lookup("DM_local_density");
+		DM_local_density *= GeV / cm / cm / cm;
+	}
+	catch(const SettingNotFoundException& nfex)
+	{
+		std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'DM_local_density' setting in configuration file." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+	std::string file_path;
+	try
+	{
+		file_path = config.lookup("file_path").c_str();
+	}
+	catch(const SettingNotFoundException& nfex)
+	{
+		std::cerr << "No 'file_path' setting in configuration file." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+	DM_distr = new Imported_DM_Distribution(DM_local_density, file_path);
 }
 
 void Configuration::Construct_DM_Detector()
@@ -405,15 +458,13 @@ void Configuration::Construct_DM_Detector()
 		std::exit(EXIT_FAILURE);
 	}
 
-	Import_Nuclear_Data();
-
 	// User-defined experiments:
 	if(DD_experiment == "Nuclear recoil")
 		Construct_DM_Detector_Nuclear();
-	else if(DD_experiment == "Ionization")
-		Construct_DM_Detector_Ionization();
+	else if(DD_experiment == "Electron recoil" || DD_experiment == "Migdal")
+		Construct_DM_Detector_Ionization(DD_experiment);
 	else if(DD_experiment == "Semiconductor")
-		Construct_DM_Detector_Semiconductor();
+		Construct_DM_Detector_Crystal();
 
 	// Supported experiments:
 	else if(DD_experiment == "DAMIC_N_2011")
@@ -428,31 +479,33 @@ void Configuration::Construct_DM_Detector()
 		DM_detector = new DM_Detector_Nucleus(CRESST_III());
 
 	else if(DD_experiment == "XENON10_S2")
-		DM_detector = new DM_Detector_Ionization(XENON10_S2());
+		DM_detector = new DM_Detector_Ionization_ER(XENON10_S2_ER());
 	else if(DD_experiment == "XENON100_S2")
-		DM_detector = new DM_Detector_Ionization(XENON100_S2());
+		DM_detector = new DM_Detector_Ionization_ER(XENON100_S2_ER());
 	else if(DD_experiment == "XENON1T_S2")
-		DM_detector = new DM_Detector_Ionization(XENON1T_S2());
+		DM_detector = new DM_Detector_Ionization_ER(XENON1T_S2_ER());
 	else if(DD_experiment == "DarkSide-50_S2")
-		DM_detector = new DM_Detector_Ionization(DarkSide_50_S2());
+		DM_detector = new DM_Detector_Ionization_ER(DarkSide50_S2_ER());
+
+	else if(DD_experiment == "XENON10_S2_Migdal")
+		DM_detector = new DM_Detector_Ionization_Migdal(XENON10_S2_Migdal());
+	else if(DD_experiment == "XENON100_S2_Migdal")
+		DM_detector = new DM_Detector_Ionization_Migdal(XENON100_S2_Migdal());
+	else if(DD_experiment == "XENON1T_S2_Migdal")
+		DM_detector = new DM_Detector_Ionization_Migdal(XENON1T_S2_Migdal());
+	else if(DD_experiment == "DarkSide-50_S2_Migdal")
+		DM_detector = new DM_Detector_Ionization_Migdal(DarkSide50_S2_Migdal());
 
 	else if(DD_experiment == "protoSENSEI@surface")
-		DM_detector = new DM_Detector_Semiconductor(protoSENSEI_at_Surface());
+		DM_detector = new DM_Detector_Crystal(protoSENSEI_at_Surface());
 	else if(DD_experiment == "protoSENSEI@MINOS")
-		DM_detector = new DM_Detector_Semiconductor(protoSENSEI_at_MINOS());
+		DM_detector = new DM_Detector_Crystal(protoSENSEI_at_MINOS());
 	else if(DD_experiment == "SENSEI@MINOS")
-		DM_detector = new DM_Detector_Semiconductor(SENSEI_at_MINOS());
+		DM_detector = new DM_Detector_Crystal(SENSEI_at_MINOS());
 	else if(DD_experiment == "CDMS-HVeV_2018")
-		DM_detector = new DM_Detector_Semiconductor(CDMS_HVeV_2018());
+		DM_detector = new DM_Detector_Crystal(CDMS_HVeV_2018());
 	else if(DD_experiment == "CDMS-HVeV_2020")
-		DM_detector = new DM_Detector_Semiconductor(CDMS_HVeV_2020());
-
-	else if(DD_experiment == "XENON10_Migdal")
-		DM_detector = new DM_Detector_Migdal(XENON10_Migdal());
-	else if(DD_experiment == "XENON100_Migdal")
-		DM_detector = new DM_Detector_Migdal(XENON100_Migdal());
-	else if(DD_experiment == "XENON1T_Migdal")
-		DM_detector = new DM_Detector_Migdal(XENON1T_Migdal());
+		DM_detector = new DM_Detector_Crystal(CDMS_HVeV_2020());
 
 	else
 	{
@@ -463,7 +516,7 @@ void Configuration::Construct_DM_Detector()
 
 void Configuration::Construct_DM_Detector_Nuclear()
 {
-	std::vector<Element> DD_targets_nuclear;
+	std::vector<Nucleus> DD_targets_nuclear;
 	std::vector<double> DD_targets_nuclear_abundances;
 	try
 	{
@@ -473,7 +526,7 @@ void Configuration::Construct_DM_Detector_Nuclear()
 			double abund = config.lookup("DD_targets_nuclear")[j][0];
 			int Z		 = config.lookup("DD_targets_nuclear")[j][1];
 			DD_targets_nuclear_abundances.push_back(abund);
-			DD_targets_nuclear.push_back(Get_Element(Z));
+			DD_targets_nuclear.push_back(Get_Nucleus(Z));
 		}
 	}
 	catch(const SettingNotFoundException& nfex)
@@ -560,7 +613,7 @@ void Configuration::Construct_DM_Detector_Nuclear()
 		dynamic_cast<DM_Detector_Nucleus*>(DM_detector)->Set_Resolution(DD_energy_resolution);
 }
 
-void Configuration::Construct_DM_Detector_Ionization()
+void Configuration::Construct_DM_Detector_Ionization(std::string ER_or_Migdal)
 {
 	std::string DD_target_ionization;
 	unsigned int DD_threshold_ionization, DD_observed_events_ionization;
@@ -621,14 +674,17 @@ void Configuration::Construct_DM_Detector_Ionization()
 		std::exit(EXIT_FAILURE);
 	}
 
-	DM_detector = new DM_Detector_Ionization("Ionization", DD_exposure_ionization, DD_target_ionization);
+	if(ER_or_Migdal == "Electron recoil")
+		DM_detector = new DM_Detector_Ionization_ER(ER_or_Migdal, DD_exposure_ionization, DD_target_ionization);
+	else if(ER_or_Migdal == "Migdal")
+		DM_detector = new DM_Detector_Ionization_Migdal(ER_or_Migdal, DD_exposure_ionization, DD_target_ionization);
 	DM_detector->Set_Flat_Efficiency(DD_efficiency_ionization);
 	dynamic_cast<DM_Detector_Ionization*>(DM_detector)->Use_Electron_Threshold(DD_threshold_ionization);
 	DM_detector->Set_Observed_Events(DD_observed_events_ionization);
 	DM_detector->Set_Expected_Background(DD_expected_background_ionization);
 }
 
-void Configuration::Construct_DM_Detector_Semiconductor()
+void Configuration::Construct_DM_Detector_Crystal()
 {
 	std::string DD_target_semiconductor;
 	unsigned int DD_threshold_semiconductor, DD_observed_events_semiconductor;
@@ -689,9 +745,9 @@ void Configuration::Construct_DM_Detector_Semiconductor()
 		std::exit(EXIT_FAILURE);
 	}
 
-	DM_detector = new DM_Detector_Semiconductor("Semiconductor", DD_exposure_semiconductor, DD_target_semiconductor);
+	DM_detector = new DM_Detector_Crystal("Semiconductor", DD_exposure_semiconductor, DD_target_semiconductor);
 	DM_detector->Set_Flat_Efficiency(DD_efficiency_semiconductor);
-	dynamic_cast<DM_Detector_Semiconductor*>(DM_detector)->Use_Q_Threshold(DD_threshold_semiconductor);
+	dynamic_cast<DM_Detector_Crystal*>(DM_detector)->Use_Q_Threshold(DD_threshold_semiconductor);
 	DM_detector->Set_Observed_Events(DD_observed_events_semiconductor);
 	DM_detector->Set_Expected_Background(DD_expected_background_semiconductor);
 }

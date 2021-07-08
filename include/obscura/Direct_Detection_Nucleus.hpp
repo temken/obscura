@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "libphysica/Integration.hpp"
 #include "libphysica/Natural_Units.hpp"
-#include "libphysica/Numerics.hpp"
 
 #include "obscura/DM_Distribution.hpp"
 #include "obscura/DM_Particle.hpp"
@@ -16,14 +16,14 @@ namespace obscura
 
 //1. Theoretical nuclear recoil spectrum [events per time, energy, and target mass]
 extern double dRdER_Nucleus(double ER, const DM_Particle& DM, DM_Distribution& DM_distr, const Isotope& target_isotope);
-extern double dRdER_Nucleus(double ER, const DM_Particle& DM, DM_Distribution& DM_distr, const Element& target_element);
+extern double dRdER_Nucleus(double ER, const DM_Particle& DM, DM_Distribution& DM_distr, const Nucleus& target_nucleus);
 
 //2. Nuclear recoil direct detection experiment
 class DM_Detector_Nucleus : public DM_Detector
 {
   private:
 	//Target material
-	std::vector<Element> target_elements;
+	std::vector<Nucleus> target_nuclei;
 	std::vector<double> relative_mass_fractions;
 
 	//Experimental parameters
@@ -35,7 +35,7 @@ class DM_Detector_Nucleus : public DM_Detector
 
   public:
 	DM_Detector_Nucleus();
-	DM_Detector_Nucleus(std::string label, double expo, std::vector<Element> elements, std::vector<double> abund = {});
+	DM_Detector_Nucleus(std::string label, double expo, std::vector<Nucleus> nuclei, std::vector<double> abund = {});
 
 	void Set_Resolution(double res);
 	void Import_Efficiency(std::string filename, double dim);

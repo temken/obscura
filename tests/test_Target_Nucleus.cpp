@@ -51,12 +51,11 @@ TEST(TestTargetNucleus, TestIsotopeConstructor)
 TEST(TestTargetNucleus, TestThomasFermiRadius)
 {
 	// ARRANGE
-	Import_Nuclear_Data();
 	double tol = 0.01 * Bohr_Radius;
 	// ACT & ASSERT
 	for(unsigned Z = 1; Z < 50; Z++)
 	{
-		Isotope iso = Get_Element(Z)[0];
+		Isotope iso = Get_Nucleus(Z)[0];
 		ASSERT_NEAR(iso.Thomas_Fermi_Radius(), 0.89 / pow(Z, 1.0 / 3.0) * Bohr_Radius, tol);
 	}
 }
@@ -73,94 +72,82 @@ TEST(TestTargetNucleus, TestHelmFormFactor)
 	ASSERT_NEAR(xenon.Helm_Form_Factor(q), 0.322894, 1.0e-4);
 }
 
-// TEST(TestTargetNucleus, TestPrintSummary)
-// {
-// 	// ARRANGE
-// 	unsigned int Z = 2;
-// 	unsigned int A = 4;
-// 	Isotope helium(Z, A);
-// 	// ACT & ASSERT
-// }
+TEST(TestTargetNucleus, TestPrintSummaryIsotope)
+{
+	// ARRANGE
+	unsigned int Z = 2;
+	unsigned int A = 4;
+	Isotope helium(Z, A);
+	// ACT & ASSERT
+	helium.Print_Summary(0);
+}
 
-//3. Class for elements containing all isotopes occuring in nature
-
-TEST(TestTargetNucleus, TestElementConstructor)
+//3. Class for nuclei containing all isotopes occuring in nature
+TEST(TestTargetNucleus, TestNucleusConstructor)
 {
 	// ARRANGE
 	Isotope iso(1, 1);
 	// ACT & ASSERT
-	ASSERT_EQ(Element(iso).name, "H");
-	ASSERT_EQ(Element(iso).Number_of_Isotopes(), 1);
+	ASSERT_EQ(Nucleus(iso).name, "H");
+	ASSERT_EQ(Nucleus(iso).Number_of_Isotopes(), 1);
 }
 
-TEST(TestTargetNucleus, TestElementNumberOfIsotopes)
+TEST(TestTargetNucleus, TestNucleusNumberOfIsotopes)
 {
-	// ARRANGE
-	Import_Nuclear_Data();
+	auto nuclei = Import_Nuclear_Data();
 	// ACT & ASSERT
-	for(auto& element : Elements)
+	for(auto& element : nuclei)
 		ASSERT_EQ(element.Number_of_Isotopes(), element.isotopes.size());
 }
 
-// TEST(TestTargetNucleus, TestElementAddIsotope)
-// {
-// 	// ARRANGE
-// 	Isotope iso(1, 1);
-// 	Element hydrogen(iso);
-// 	// ACT
-// 	hydrogen.Add_Isotope(Isotope(1,2));
-// 	// ACT & ASSERT
-// }
-
-TEST(TestTargetNucleus, TestElementGetIsotope)
+TEST(TestTargetNucleus, TestNucleusGetIsotope)
 {
 	// ARRANGE
-	Import_Nuclear_Data();
-	Element oxygen = Get_Element(8);
+	Nucleus oxygen = Get_Nucleus(8);
 	// ACT & ASSERT
 	ASSERT_EQ(oxygen.Get_Isotope(17).Z, 8);
 	ASSERT_EQ(oxygen.Get_Isotope(17).A, 17);
 }
 
-TEST(TestTargetNucleus, TestElementBrackets)
+TEST(TestTargetNucleus, TestNucleusBrackets)
 {
 	// ARRANGE
-	Import_Nuclear_Data();
-	Element oxygen = Get_Element(8);
+	Nucleus oxygen = Get_Nucleus(8);
 	// ACT & ASSERT
 	ASSERT_EQ(oxygen[0].A, 16);
 	ASSERT_EQ(oxygen[1].A, 17);
 	ASSERT_EQ(oxygen[2].A, 18);
 }
 
-TEST(TestTargetNucleus, TestElementAverageNuclearMass)
+TEST(TestTargetNucleus, TestNucleusAverageNuclearMass)
 {
 	// ARRANGE
-	Import_Nuclear_Data();
-	Element oxygen = Get_Element(8);
+	Nucleus oxygen = Get_Nucleus(8);
 	// ACT & ASSERT
 	oxygen.Print_Summary();
 	ASSERT_NEAR(oxygen.Average_Nuclear_Mass() / mNucleon, 16.0044, 0.001);
 }
 
-// TEST(TestTargetNucleus, TestPrintSummary)
-// {
-// 	// ARRANGE
+TEST(TestTargetNucleus, TestPrintSummaryNucleus)
+{
+	// ARRANGE
+	Nucleus oxygen = Get_Nucleus(8);
 
-// 	// ACT & ASSERT
-// }
+	// ACT & ASSERT
+	oxygen.Print_Summary();
+}
 
 //4. Nuclear data
 TEST(TestTargetNucleus, TestImportNuclearData)
 {
 	// ARRANGE
 	// ACT
-	Import_Nuclear_Data();
+	auto all_nuclei					= Import_Nuclear_Data();
 	unsigned int number_of_isotopes = 0;
-	for(auto& element : Elements)
-		number_of_isotopes += element.Number_of_Isotopes();
+	for(auto& nucleus : all_nuclei)
+		number_of_isotopes += nucleus.Number_of_Isotopes();
 	// ASSERT
-	ASSERT_EQ(Elements.size(), 92);
+	ASSERT_EQ(all_nuclei.size(), 92);
 	ASSERT_EQ(number_of_isotopes, 295);
 }
 
@@ -180,23 +167,21 @@ TEST(TestTargetNucleus, TestGetIsotope)
 	ASSERT_DOUBLE_EQ(iso.spin, 1.5);
 }
 
-TEST(TestTargetNucleus, TestGetElementByZ)
+TEST(TestTargetNucleus, TestGetNucleusByZ)
 {
 	// ARRANGE
-	Import_Nuclear_Data();
 	unsigned int Z = 28;
 	// ACT & ASSERT
-	ASSERT_EQ(Get_Element(Z).name, "Ni");
-	ASSERT_EQ(Get_Element(Z).Number_of_Isotopes(), 5);
+	ASSERT_EQ(Get_Nucleus(Z).name, "Ni");
+	ASSERT_EQ(Get_Nucleus(Z).Number_of_Isotopes(), 5);
 }
 
-TEST(TestTargetNucleus, TestGetElementByName)
+TEST(TestTargetNucleus, TestGetNucleusByName)
 {
 	// ARRANGE
-	Import_Nuclear_Data();
 	std::string name = "U";
 	// ACT & ASSERT
-	ASSERT_EQ(Get_Element(name).name, name);
-	ASSERT_EQ(Get_Element(name)[0].Z, 92);
-	ASSERT_EQ(Get_Element(name).Number_of_Isotopes(), 3);
+	ASSERT_EQ(Get_Nucleus(name).name, name);
+	ASSERT_EQ(Get_Nucleus(name)[0].Z, 92);
+	ASSERT_EQ(Get_Nucleus(name).Number_of_Isotopes(), 3);
 }

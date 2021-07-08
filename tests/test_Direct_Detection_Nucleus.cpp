@@ -6,6 +6,7 @@
 
 #include "libphysica/Natural_Units.hpp"
 
+#include "obscura/DM_Halo_Models.hpp"
 #include "obscura/DM_Particle_Standard.hpp"
 #include "obscura/Target_Nucleus.hpp"
 
@@ -29,7 +30,7 @@ TEST(TestDirectDetectionNucleus, TestdRdERNucleusIsotope)
 	ASSERT_DOUBLE_EQ(dRdER_Nucleus(ER, DM, SHM, hydrogen), result);
 }
 
-TEST(TestDirectDetectionNucleus, TestdRdERNucleusElement)
+TEST(TestDirectDetectionNucleus, TestdRdERNucleusNucleus)
 {
 	// ARRANGE
 	double mDM	   = 10.0 * GeV;
@@ -43,7 +44,7 @@ TEST(TestDirectDetectionNucleus, TestdRdERNucleusElement)
 	double result				  = SHM.DM_density / mDM * sigma_p / 2.0 / libphysica::Reduced_Mass(mDM, mProton) / libphysica::Reduced_Mass(mDM, mProton) * 0.5 * (SHM.Eta_Function(vMinimal_Nucleus(ER, mDM, mProton)) + 4.0 * SHM.Eta_Function(vMinimal_Nucleus(ER, mDM, 2 * mNucleon)));
 
 	// ACT & ASSERT
-	ASSERT_DOUBLE_EQ(dRdER_Nucleus(ER, DM, SHM, Element(hydrogen)), result);
+	ASSERT_DOUBLE_EQ(dRdER_Nucleus(ER, DM, SHM, Nucleus(hydrogen)), result);
 }
 
 TEST(TestDirectDetectionNucleus, TestDefaultConstructor)
@@ -57,24 +58,32 @@ TEST(TestDirectDetectionNucleus, TestDefaultConstructor)
 // TEST(TestDirectDetectionNucleus, TestMaximumEnergyDeposit)
 // {
 // 	// ARRANGE
-// 	double exposure = 1.0*kg*day;
-// 	std::vector<Element> elements = {Element(Isotope(8,16))};
-// 	double mT = 16*mNucleon;
-// 	DM_Detector_Nucleus detector("Test", exposure, elements);
+// 	double exposure				 = 1.0 * kg * day;
+// 	std::vector<Nucleus> targets = {Nucleus({Get_Isotope(8, 16)})};
+// 	double mT					 = 16 * mNucleon;
+// 	DM_Detector_Nucleus detector("Test", exposure, targets);
 
 // 	double mDM = 10.0 * GeV;
 // 	DM_Particle_SI DM(mDM);
 // 	Standard_Halo_Model SHM;
 // 	// ACT & ASSERT
-// 	ASSERT_DOUBLE_EQ(detector.Maximum_Energy_Deposit(DM,SHM), 2.0 * pow(libphysica::Reduced_Mass(mDM,mT)*SHM.Maximum_DM_Speed(),2.0)/mT);
+// 	ASSERT_DOUBLE_EQ(detector.Maximum_Energy_Deposit(DM, SHM), 2.0 * pow(libphysica::Reduced_Mass(mDM, mT) * SHM.Maximum_DM_Speed(), 2.0) / mT);
 // }
 
-// TEST(TestDirectDetectionNucleus, TestMinimumDMMass)
-// {
-// 	// ARRANGE
-
-// 	// ACT & ASSERT
-// }
+TEST(TestDirectDetectionNucleus, TestMinimumDMMass)
+{
+	// ARRANGE
+	double exposure				 = 1.0 * kg * day;
+	std::vector<Nucleus> targets = {Nucleus({Get_Isotope(8, 16)})};
+	double mT					 = 16 * mNucleon;
+	DM_Detector_Nucleus detector("Test", exposure, targets);
+	detector.Use_Energy_Threshold(keV, 10 * keV);
+	double mDM = 10.0 * GeV;
+	DM_Particle_SI DM(mDM);
+	Standard_Halo_Model SHM;
+	// ACT & ASSERT
+	ASSERT_DOUBLE_EQ(detector.Minimum_DM_Mass(DM, SHM), mT / (sqrt(2.0 * mT / keV) * SHM.Maximum_DM_Speed() - 1.0));
+}
 
 TEST(TestDirectDetectionNucleus, TestSimpleLimit)
 {
@@ -84,7 +93,7 @@ TEST(TestDirectDetectionNucleus, TestSimpleLimit)
 
 	Standard_Halo_Model SHM;
 
-	Element target(Isotope(54, 131));
+	Nucleus target(Isotope(54, 131));
 	DM_Detector_Nucleus detector("Test", kg * day, {target});
 	detector.Use_Energy_Threshold(3 * keV, 30 * keV);
 
@@ -99,38 +108,40 @@ TEST(TestDirectDetectionNucleus, TestSimpleLimit)
 	EXPECT_NEAR(detector.DM_Signals_Total(DM, SHM), log(20), tol);
 }
 
-// TEST(TestDirectDetectionNucleus, ImportEfficiency1)
-// {
-// 	// ARRANGE
+TEST(TestDirectDetectionNucleus, TestMinimumDMSpeed)
+{
+	// ARRANGE
+	double exposure				 = 1.0 * kg * day;
+	std::vector<Nucleus> targets = {Nucleus({Get_Isotope(8, 16)})};
+	double mT					 = 16 * mNucleon;
+	DM_Detector_Nucleus detector("Test", exposure, targets);
+	detector.Use_Energy_Threshold(keV, 10 * keV);
+	double mDM = 10.0 * GeV;
+	DM_Particle_SI DM(mDM);
+	Standard_Halo_Model SHM;
+	// ACT & ASSERT
+	ASSERT_DOUBLE_EQ(detector.Minimum_DM_Speed(DM), vMinimal_Nucleus(keV, DM.mass, mT));
+}
 
-// 	// ACT & ASSERT
-// }
+TEST(TestDirectDetectionNucleus, dRdE)
+{
+	// ARRANGE
+	double exposure				 = 1.0 * kg * day;
+	std::vector<Nucleus> targets = {Nucleus({Isotope(8, 16)})};
+	DM_Detector_Nucleus detector("Test", exposure, targets);
+	DM_Particle_SI DM(10.0);
+	Standard_Halo_Model SHM;
+	double ER = 0.4 * keV;
+	// ACT & ASSERT
+	ASSERT_DOUBLE_EQ(detector.dRdE(ER, DM, SHM), dRdER_Nucleus(ER, DM, SHM, Isotope(8, 16)));
+}
 
-// TEST(TestDirectDetectionNucleus, ImportEfficiency2)
-// {
-// 	// ARRANGE
-
-// 	// ACT & ASSERT
-// }
-
-// TEST(TestDirectDetectionNucleus, Minimum_DM_Speed)
-// {
-// 	// ARRANGE
-
-// 	// ACT & ASSERT
-// }
-
-// TEST(TestDirectDetectionNucleus, dRdE)
-// {
-// 	// ARRANGE
-
-// 	// ACT & ASSERT
-// }
-
-// TEST(TestDirectDetectionNucleus, PrintSummary)
-// {
-// 	// ARRANGE
-
-// 	// ACT & ASSERT
-
-// }
+TEST(TestDirectDetectionNucleus, PrintSummary)
+{
+	// ARRANGE
+	double exposure				 = 1.0 * kg * day;
+	std::vector<Nucleus> targets = {Nucleus({Get_Isotope(8, 16)})};
+	DM_Detector_Nucleus detector("Test", exposure, targets);
+	// ACT & ASSERT
+	detector.Print_Summary();
+}
