@@ -1,2 +1,0 @@
-Research software using *obscura*
-=================================
