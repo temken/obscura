@@ -179,4 +179,6 @@ Using *obscura* as a library
 
 If we want to use *obscura* functions in an external code, we can do so and import is as a library.
 We recommend to do this inside your CMake build, where *obscura* can be downloaded, built, included, and linked automatically during the build of your code.
-As an example `this repository <https://github.com/temken/template_cpp_cmake_obscura>_` contains a C++ project template built with CMake that makes use of *obscura*.
+
+
+As an instructional example `this repository <https://github.com/temken/template_cpp_cmake_obscura>`_ contains a C++ project template built with CMake that imports and uses the *obscura* library.
