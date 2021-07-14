@@ -5,7 +5,19 @@
 .. image:: https://raw.githubusercontent.com/temken/obscura/master/paper/obscura_DD_Constraints.png
     :width: 500
 
-The following nuclear and electron recoil direct detection experiments are implemented.
+The following nuclear and electron recoil direct detection experiments are implemented in the module `Experiments.hpp <https://github.com/temken/obscura/blob/master/include/obscura/Experiments.hpp>`_, which contains a series of functions that build these experiments as instances of the ``DM_Detector`` class and its derivatives.
+
+For example, for an analysis based on the CRESST-II experiment, we can construct the class instance via
+
+.. code-block:: c++
+
+    #include "obscura/Experiments.hpp"
+
+    // ...
+    
+    DM_Detector_Nucleus detector = CRESST_II();
+
+    // ...
 
 --------------------------
 Nuclear recoil experiments
