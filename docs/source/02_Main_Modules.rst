@@ -21,7 +21,7 @@ These depend on a multitude of assumptions which can change in different project
 If the base classes are defined properly, it is also possible and straight-forward to 
 
 #. extend *obscura* by implementing further derived classes overriding the virtual functions of the base class.
-#. formulate research software that is agnostic to the detailed implementation and thereby very generally applicable to a variety of scenarios.
+#. design research software that is agnostic to the detailed implementation and thereby very generally applicable to a variety of scenarios. As long as our scientific functions are formulated in terms of these base functions, they will be able to handle any new implementation that comes in the form of derived classes.
 
 The three most important abstract base classes of *obscura* are
 
