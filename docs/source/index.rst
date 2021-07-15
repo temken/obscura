@@ -40,4 +40,5 @@ A modular C++ tool and library for dark matter direct detection computations for
    10_Release_History
    11_License
    12_Contact
+   References
 

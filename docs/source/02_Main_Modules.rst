@@ -30,3 +30,4 @@ The three most important abstract base classes of *obscura* are
 #. ``DM_Detector``
 
 We will discuss the interface each of these classes provide in more detail.
+But first we take a look at the detection targets in direct DM search experiments, namely nuclei, bound electrons in atoms, and bound electrons in crystals.

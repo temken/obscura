@@ -1,3 +1,5 @@
+.. _Section_DM_Particle:
+
 ==============================
 4. The ``DM_Particle`` classes
 ==============================
@@ -96,6 +98,7 @@ The interface / base class
 ----------------------------------
 Spin-Independent (SI) interactions
 ----------------------------------
+
 
 --------------------------------
 Spin-Dependent (SD) interactions
