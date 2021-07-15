@@ -1,37 +1,26 @@
 ---
-title: 'obscura: A modular C++ tool and library for the direct detection of dark matter particles via nuclear and electron recoils'
-tags:
-  - C++
+title: 'obscura: A modular C++ tool and library for the direct detection of (sub-GeV) dark matter particles via nuclear and electron recoils'
+tags: 
+  - c++
   - astroparticle physics
   - dark matter
   - direct detection
-  - sub-GeV dark matter
- authors:
+authors: 
   - name: Timon Emken
     orcid: 0000-0002-4251-2229
     affiliation: 1
-affiliations:
- - name: The Oskar Klein Centre, Department of Physics, Stockholm University, AlbaNova, SE-10691 Stockholm, Sweden
-   index: 1
-date: 01 July 2021
+affiliations: 
+  - name: The Oskar Klein Centre, Department of Physics, Stockholm University, AlbaNova, SE-10691 Stockholm, Sweden 
+    index: 1
+date: 15 July 2021
 bibliography: paper.bib
 ---
-<!-- 
-# Notes
+# Summary
 
-- Plot of constraints
-- Emphasize polymorphisms and modular structure
-- cite ddcalc
-- cite included experiments
-- list statistical methods
+<!-- 
 - link to documentation
 - already used in damascus-sun
 -  -->
-
-# Summary
-
-<!-- https://joss.readthedocs.io/en/latest/submitting.html#example-paper-and-bibliography -->
-<!-- https://joss.readthedocs.io/en/latest/submitting.html#submission-requirements -->
 
 The observation of a large number of gravitational anomalies on astrophysical and cosmological scales have convinced us that the majority of matter in the Universe is invisible **citation**.
 This *dark matter* (DM) must be fundamentally different from the visible matter we can describe using the Standard Model of Particle Physics (SM).
@@ -55,10 +44,13 @@ This is reflected by the modular, polymorphic structure of all modules of the `o
 
 # Statement of need
 
+<!-- - cite ddcalc and new wimp python library https://arxiv.org/pdf/2106.06207.pdf -->
 
  
 
 # The modular structure of direct detection computations
+
+<!-- - Emphasize polymorphisms and modular structure -->
 
 Making predictions for direct detection experiments involves methods and results from statistics, astrophysics, particle physics, nuclear and atomic physics, and condensed matter physics.
 For each of these fields, we need to make choices and assumptions which affect our interpretation of DM searches.
@@ -106,6 +98,7 @@ For a quick reference, the following citation commands can be used:
 - `[@author1:2001; @author2:2001]` -> "(Author1 et al., 2001; Author2 et al., 2002)" -->
 
 # Acknowledgements
-
+The author thanks Radovan Bast for  valuable  discussions and support regarding research software engineering.
+The author was supported by the Knut & Alice Wallen-berg Foundation.
 
 # References
