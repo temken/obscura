@@ -13,18 +13,11 @@ A modular C++ tool and library for dark matter direct detection computations for
 
 You can find more detailed documentation of *obscura* [here](https://obscura.readthedocs.io/en/latest/index.html). The documentation contains e.g. a [guide to get started](https://obscura.readthedocs.io/en/latest/01_Getting_Started.html) and a [list of all included experiments](https://obscura.readthedocs.io/en/latest/08_Experiments.html).
 
-<details><summary>Repository content</summary>
-<p>
-
-The included folders are:
-
-- *bin/*:
-
-</p>
-</details>
-
-
 ## CITATION
+
+If you decide to use this code, or if you want to add a reference to it, please cite the latest archived version,
+
+> Emken, T., 2021, obscura - A C++ library for dark matter detection computations [Code, v0.1.0] [[DOI:10.5281/zenodo.4557188]](https://zenodo.org/record/4557188).
 
 <details><summary>Bibtex entry</summary>
 <p>
@@ -53,7 +46,7 @@ The included folders are:
 
 The author of *obscura* is [Timon Emken](https://timonemken.com/).
 
-For questions, support, bug reports, or other suggestions, please contact [timon.emken@fysik.su.se](mailto:timon.emken@fysik.su.se).
+For questions, support, bug reports, or other suggestions, please contact [timon.emken@fysik.su.se](mailto:timon.emken@fysik.su.se) or open an [issue](https://github.com/temken/obscura/issues).
 
 
 ## LICENSE
