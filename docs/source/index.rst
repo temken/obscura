@@ -21,6 +21,11 @@
 
 A modular C++ tool and library for dark matter direct detection computations for both nuclear and electron recoil experiments.
 
+The purpose of this documentation or manual is to provide insight into the polymorphic class structure of *obscura* and how it can be applied in different contexts.
+It should also serve as a guide and describe the usage of *obscura* via code examples.
+The documentation does not contain a review of the physics implemented in the library.
+For more physics details, we refer to e.g. chapter 3 of [Emken2019]_ or [Nobile2021]_.
+
 .. image:: https://raw.githubusercontent.com/temken/obscura/master/paper/FlowChart.png
    :width: 500
 

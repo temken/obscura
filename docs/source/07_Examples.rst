@@ -243,7 +243,7 @@ Let us set up the different objects to obtain the limits.
    double limit_Ar = argon_experiment.Upper_Limit(dm, shm, 0.95);
    double limit_Si = silicon_experiment.Upper_Limit(dm, shm, 0.95);
 
-1. As in the previous example, the results are given in natural units in powers of GeV. We convert it to :math:`\mathrm{cm}^2`, and print the result on the terminal.
+5. As in the previous example, the results are given in natural units in powers of GeV. We convert it to :math:`\mathrm{cm}^2`, and print the result on the terminal.
 
 .. code-block:: c++
 

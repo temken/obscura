@@ -2,8 +2,6 @@
 2. The modular structure of *obscura*
 ========================================
 
-
-
 The computation of e.g. the electron recoil spectrum probed in direct detection experiments combines inputs from various fields of physics.
 We need to specify the assumed *particle physics* of the DM particle.
 The properties of the DM halo of the Milky way is an important *astrophysics* input.
