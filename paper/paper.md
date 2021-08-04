@@ -20,6 +20,15 @@ bibliography: paper.bib
 <!-- 
 - link to documentation
 - already used in damascus-sun
+- Your paper should include:
+
+    A list of the authors of the software and their affiliations, using the correct format (see the example below).
+    A summary describing the high-level functionality and purpose of the software for a diverse, non-specialist audience.
+    A Statement of Need section that clearly illustrates the research purpose of the software.
+    A list of key references, including to other software addressing related needs. Note that the references should include full names of venues, e.g., journals and conferences, not abbreviations only understood in the context of a specific discipline.
+    Mention (if applicable) a representative set of past or ongoing research projects using the software and recent scholarly publications enabled by it.
+    Acknowledgement of any financial support.
+
 -  -->
 
 The observation of a large number of gravitational anomalies on astrophysical and cosmological scales have convinced us that the majority of matter in the Universe is invisible **citation**.
@@ -46,6 +55,7 @@ This is reflected by the modular, polymorphic structure of all modules of the `o
 
 <!-- - cite ddcalc and new wimp python library https://arxiv.org/pdf/2106.06207.pdf -->
 
+Test reference [@Essig:2015cda]
  
 
 # The modular structure of direct detection computations
