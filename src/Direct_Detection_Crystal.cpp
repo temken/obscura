@@ -94,7 +94,7 @@ DM_Detector_Crystal::DM_Detector_Crystal(std::string label, double expo, std::st
 }
 
 //DM functions
-double DM_Detector_Crystal::Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const
+double DM_Detector_Crystal::Maximum_Energy_Deposit(DM_Particle& DM, const DM_Distribution& DM_distr) const
 {
 	return DM.mass / 2.0 * pow(DM_distr.Maximum_DM_Speed(), 2.0);
 }
@@ -104,7 +104,7 @@ double DM_Detector_Crystal::Minimum_DM_Mass(DM_Particle& DM, const DM_Distributi
 	return 2.0 * energy_threshold * pow(DM_distr.Maximum_DM_Speed(), -2.0);
 }
 
-double DM_Detector_Crystal::Minimum_DM_Speed(const DM_Particle& DM) const
+double DM_Detector_Crystal::Minimum_DM_Speed(DM_Particle& DM) const
 {
 	return sqrt(2.0 * energy_threshold / DM.mass);
 }

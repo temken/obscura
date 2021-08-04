@@ -24,7 +24,7 @@ class DM_Detector_Crystal : public DM_Detector
 	Crystal target_crystal;
 
 	//DM functions
-	virtual double Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const override;
+	virtual double Maximum_Energy_Deposit(DM_Particle& DM, const DM_Distribution& DM_distr) const override;
 
 	//Q spectrum
 	unsigned int Q_threshold;
@@ -41,7 +41,7 @@ class DM_Detector_Crystal : public DM_Detector
 	DM_Detector_Crystal(std::string label, double expo, std::string crys);
 
 	//DM functions
-	virtual double Minimum_DM_Speed(const DM_Particle& DM) const override;
+	virtual double Minimum_DM_Speed(DM_Particle& DM) const override;
 	virtual double Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const override;
 	virtual double dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr) override;
 	virtual double DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr) override;

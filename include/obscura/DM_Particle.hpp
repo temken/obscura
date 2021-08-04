@@ -22,8 +22,8 @@ class DM_Particle
 
 	// Some function have an additional function argument 'param' which is not used by the classes included in obscura.
 	// It might be relevant for more complex derived classes to have an additional argument.
-	double Sigma_Total_Nucleus_Base(const Isotope& target, double vDM, double param = -1.0) const;
-	double Sigma_Total_Electron_Base(double vDM, double param = -1.0) const;
+	double Sigma_Total_Nucleus_Base(const Isotope& target, double vDM, double param = -1.0);
+	double Sigma_Total_Electron_Base(double vDM, double param = -1.0);
 
 	double PDF_Scattering_Angle_Nucleus_Base(double cos_alpha, const Isotope& target, double vDM, double param = -1.0);
 	double PDF_Scattering_Angle_Electron_Base(double cos_alpha, double vDM, double param = -1.0);
@@ -73,8 +73,8 @@ class DM_Particle
 	virtual double Sigma_Neutron() const { return 0.0; };
 	virtual double Sigma_Electron() const { return 0.0; };
 
-	virtual double Sigma_Total_Nucleus(const Isotope& target, double vDM, double param = -1.0) const;
-	virtual double Sigma_Total_Electron(double vDM, double param = -1.0) const;
+	virtual double Sigma_Total_Nucleus(const Isotope& target, double vDM, double param = -1.0);
+	virtual double Sigma_Total_Electron(double vDM, double param = -1.0);
 
 	virtual void Print_Summary(int MPI_rank = 0) const;
 

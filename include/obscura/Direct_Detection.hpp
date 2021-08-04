@@ -18,7 +18,7 @@ class DM_Detector
 	double exposure, flat_efficiency;
 
 	//DM functions
-	virtual double Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const { return 0.0; };
+	virtual double Maximum_Energy_Deposit(DM_Particle& DM, const DM_Distribution& DM_distr) const { return 0.0; };
 
 	//Statistics
 	std::string statistical_analysis;
@@ -44,7 +44,7 @@ class DM_Detector
 
 	// (c) Maximum gap a'la Yellin
 	std::vector<double> maximum_gap_energy_data;
-	double P_Value_Maximum_Gap(const DM_Particle& DM, DM_Distribution& DM_distr);
+	double P_Value_Maximum_Gap(DM_Particle& DM, DM_Distribution& DM_distr);
 
 	//Energy spectrum
 	double energy_threshold, energy_max;
@@ -71,7 +71,7 @@ class DM_Detector
 	void Set_Flat_Efficiency(double eff);
 
 	//DM functions
-	virtual double Minimum_DM_Speed(const DM_Particle& DM) const { return 0.0; };
+	virtual double Minimum_DM_Speed(DM_Particle& DM) const { return 0.0; };
 	virtual double Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const { return 0.0; };
 	virtual double dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr) { return 0.0; };
 	virtual double DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr);
@@ -79,10 +79,10 @@ class DM_Detector
 	virtual std::vector<double> DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr);
 
 	//Statistics
-	double Log_Likelihood(const DM_Particle& DM, DM_Distribution& DM_distr);
-	double Likelihood(const DM_Particle& DM, DM_Distribution& DM_distr);
+	double Log_Likelihood(DM_Particle& DM, DM_Distribution& DM_distr);
+	double Likelihood(DM_Particle& DM, DM_Distribution& DM_distr);
 	std::vector<std::vector<double>> Log_Likelihood_Scan(DM_Particle& DM, DM_Distribution& DM_distr, const std::vector<double>& masses, const std::vector<double>& couplings);
-	double P_Value(const DM_Particle& DM, DM_Distribution& DM_distr);
+	double P_Value(DM_Particle& DM, DM_Distribution& DM_distr);
 
 	// (a) Poisson
 	void Set_Observed_Events(unsigned long int N);

@@ -320,7 +320,7 @@ double DM_Particle_SI::d2Sigma_dq2_dEe_Crystal(double q, double Ee, double vDM, 
 }
 
 //Total cross sections
-double DM_Particle_SI::Sigma_Total_Nucleus(const Isotope& isotope, double vDM, double param) const
+double DM_Particle_SI::Sigma_Total_Nucleus(const Isotope& isotope, double vDM, double param)
 {
 	double sigmatot = 0.0;
 	if(FF_DM != "Contact" && FF_DM != "General")
@@ -342,7 +342,7 @@ double DM_Particle_SI::Sigma_Total_Nucleus(const Isotope& isotope, double vDM, d
 	return sigmatot;
 }
 
-double DM_Particle_SI::Sigma_Total_Electron(double vDM, double param) const
+double DM_Particle_SI::Sigma_Total_Electron(double vDM, double param)
 {
 	double sigmatot = 0.0;
 	if(FF_DM != "Contact" && FF_DM != "General")
@@ -528,12 +528,12 @@ double DM_Particle_SD::dSigma_dq2_Electron(double q, double vDM, double param) c
 }
 
 //Total cross sections with nuclear isotopes, elements, and electrons
-double DM_Particle_SD::Sigma_Total_Nucleus(const Isotope& isotope, double vDM, double param) const
+double DM_Particle_SD::Sigma_Total_Nucleus(const Isotope& isotope, double vDM, double param)
 {
 	return (isotope.spin != 0) ? 4.0 * pow(libphysica::Reduced_Mass(mass, isotope.mass), 2.0) / M_PI * (isotope.spin + 1.0) / isotope.spin * pow(fp * isotope.sp + fn * isotope.sn, 2.0) : 0.0;
 }
 
-double DM_Particle_SD::Sigma_Total_Electron(double vDM, double param) const
+double DM_Particle_SD::Sigma_Total_Electron(double vDM, double param)
 {
 	return Sigma_Electron();
 }
