@@ -18,7 +18,7 @@ using namespace libphysica::natural_units;
 // DM Detector base class, which provides the statistical methods and energy bins.
 //Statistics
 //Likelihoods
-double DM_Detector::Log_Likelihood(const DM_Particle& DM, DM_Distribution& DM_distr)
+double DM_Detector::Log_Likelihood(DM_Particle& DM, DM_Distribution& DM_distr)
 {
 	if(statistical_analysis == "Poisson")
 	{
@@ -48,7 +48,7 @@ double DM_Detector::Log_Likelihood(const DM_Particle& DM, DM_Distribution& DM_di
 	}
 }
 
-double DM_Detector::Likelihood(const DM_Particle& DM, DM_Distribution& DM_distr)
+double DM_Detector::Likelihood(DM_Particle& DM, DM_Distribution& DM_distr)
 {
 	return exp(Log_Likelihood(DM, DM_distr));
 }
@@ -72,7 +72,7 @@ std::vector<std::vector<double>> DM_Detector::Log_Likelihood_Scan(DM_Particle& D
 	return log_likelihoods;
 }
 
-double DM_Detector::P_Value(const DM_Particle& DM, DM_Distribution& DM_distr)
+double DM_Detector::P_Value(DM_Particle& DM, DM_Distribution& DM_distr)
 {
 	double p_value = 1.0;
 	if(statistical_analysis == "Poisson")
@@ -265,7 +265,7 @@ double CDF_Maximum_Gap(double x, double mu)
 	}
 }
 
-double DM_Detector::P_Value_Maximum_Gap(const DM_Particle& DM, DM_Distribution& DM_distr)
+double DM_Detector::P_Value_Maximum_Gap(DM_Particle& DM, DM_Distribution& DM_distr)
 {
 	// Interpolate the spectrum
 	unsigned int interpolation_points = 400;

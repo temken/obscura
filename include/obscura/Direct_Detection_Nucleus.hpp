@@ -31,7 +31,7 @@ class DM_Detector_Nucleus : public DM_Detector
 	bool using_efficiency_tables;
 	std::vector<libphysica::Interpolation> efficiencies;
 
-	virtual double Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const override;
+	virtual double Maximum_Energy_Deposit(DM_Particle& DM, const DM_Distribution& DM_distr) const override;
 
   public:
 	DM_Detector_Nucleus();
@@ -41,7 +41,7 @@ class DM_Detector_Nucleus : public DM_Detector
 	void Import_Efficiency(std::string filename, double dim);
 	void Import_Efficiency(std::vector<std::string> filenames, double dim);
 
-	virtual double Minimum_DM_Speed(const DM_Particle& DM) const override;
+	virtual double Minimum_DM_Speed(DM_Particle& DM) const override;
 	virtual double Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const override;
 	virtual double dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr) override;
 

@@ -30,7 +30,7 @@ double DM_Detector_Ionization::Lowest_W() const
 	return W;
 }
 
-double DM_Detector_Ionization::Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const
+double DM_Detector_Ionization::Maximum_Energy_Deposit(DM_Particle& DM, const DM_Distribution& DM_distr) const
 {
 	double vMax = DM_distr.Maximum_DM_Speed();
 	return DM.mass / 2.0 * vMax * vMax;
@@ -141,7 +141,7 @@ double DM_Detector_Ionization::Minimum_DM_Mass(DM_Particle& DM, const DM_Distrib
 	return 2.0 * E_min / vMax / vMax;
 }
 
-double DM_Detector_Ionization::Minimum_DM_Speed(const DM_Particle& DM) const
+double DM_Detector_Ionization::Minimum_DM_Speed(DM_Particle& DM) const
 {
 	return sqrt(2.0 * Energy_Gap() / DM.mass);
 }

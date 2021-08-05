@@ -19,7 +19,7 @@ class DM_Detector_Ionization : public DM_Detector
 	double Lowest_W() const;
 
 	//DM functions
-	virtual double Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const override;
+	virtual double Maximum_Energy_Deposit(DM_Particle& DM, const DM_Distribution& DM_distr) const override;
 
 	//Electron spectrum
 	unsigned int ne_threshold, ne_max;
@@ -47,7 +47,7 @@ class DM_Detector_Ionization : public DM_Detector
 	DM_Detector_Ionization(std::string label, double expo, std::string target_particles, std::vector<std::string> atoms, std::vector<double> mass_fractions = {});
 
 	//DM functions from the base class
-	virtual double Minimum_DM_Speed(const DM_Particle& DM) const override;
+	virtual double Minimum_DM_Speed(DM_Particle& DM) const override;
 	virtual double Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const override;
 
 	virtual double dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr) override;

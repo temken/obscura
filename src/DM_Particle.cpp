@@ -57,7 +57,7 @@ bool DM_Particle::Interaction_Parameter_Is_Cross_Section() const
 	return using_cross_section;
 }
 
-double DM_Particle::Sigma_Total_Nucleus_Base(const Isotope& target, double vDM, double param) const
+double DM_Particle::Sigma_Total_Nucleus_Base(const Isotope& target, double vDM, double param)
 {
 	//Numerically integrate the differential cross section
 	double q2min						= 0;
@@ -69,7 +69,7 @@ double DM_Particle::Sigma_Total_Nucleus_Base(const Isotope& target, double vDM, 
 	return sigmatot;
 }
 
-double DM_Particle::Sigma_Total_Electron_Base(double vDM, double param) const
+double DM_Particle::Sigma_Total_Electron_Base(double vDM, double param)
 {
 	//Numerically integrate the differential cross section
 	double q2min						= 0;
@@ -110,11 +110,11 @@ double DM_Particle::d2Sigma_dER_dEe_Migdal(double ER, double Ee, double vDM, con
 	return 1.0 / 4.0 / Ee * dSigma_dER_Nucleus(ER, isotope, vDM) * shell.Ionization_Form_Factor(qe, Ee);
 }
 
-double DM_Particle::Sigma_Total_Nucleus(const Isotope& target, double vDM, double param) const
+double DM_Particle::Sigma_Total_Nucleus(const Isotope& target, double vDM, double param)
 {
 	return Sigma_Total_Nucleus_Base(target, vDM, param);
 }
-double DM_Particle::Sigma_Total_Electron(double vDM, double param) const
+double DM_Particle::Sigma_Total_Electron(double vDM, double param)
 {
 	return Sigma_Total_Electron_Base(vDM, param);
 }

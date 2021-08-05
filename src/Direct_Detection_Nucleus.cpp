@@ -72,7 +72,7 @@ DM_Detector_Nucleus::DM_Detector_Nucleus(std::string label, double expo, std::ve
 		relative_mass_fractions = abund;
 }
 
-double DM_Detector_Nucleus::Maximum_Energy_Deposit(const DM_Particle& DM, const DM_Distribution& DM_distr) const
+double DM_Detector_Nucleus::Maximum_Energy_Deposit(DM_Particle& DM, const DM_Distribution& DM_distr) const
 {
 	double vDM	= DM_distr.Maximum_DM_Speed();
 	double Emax = 0.0;
@@ -172,7 +172,7 @@ double DM_Detector_Nucleus::dRdE(double E, const DM_Particle& DM, DM_Distributio
 	return dR;
 }
 
-double DM_Detector_Nucleus::Minimum_DM_Speed(const DM_Particle& DM) const
+double DM_Detector_Nucleus::Minimum_DM_Speed(DM_Particle& DM) const
 {
 	double Emin = energy_threshold - 2.0 * energy_resolution;
 	double vcut = 1.0;
