@@ -73,6 +73,7 @@ class DM_Particle
 	virtual double Sigma_Neutron() const { return 0.0; };
 	virtual double Sigma_Electron() const { return 0.0; };
 
+	virtual bool Is_Sigma_Total_V_Dependent() const { return true; };
 	virtual double Sigma_Total_Nucleus(const Isotope& target, double vDM, double param = -1.0);
 	virtual double Sigma_Total_Electron(double vDM, double param = -1.0);
 
