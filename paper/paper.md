@@ -23,7 +23,7 @@ This *dark matter* (DM) must be fundamentally different from the known matter we
 Its only established property is that it interacts gravitationally and indeed dominates the gravitational potential of galaxies and galaxy clusters.
 One of the leading hypothesis is that DM is made up of one or more new particles and that galaxies such as our Milky Way are embedded in gigantic haloes of these as of yet undetected particles.
 Our planet would at any moment be penetrated by a stream of these particles without much of an effect.
-If these dark particles interact with nuclei and/or electrons via some new force besides gravity, they would on occasion collide with a terrestrial atom.
+If these dark particles interact with nuclei and/or electrons via some new force besides gravity, they would on occasion collide with a terrestrial particle.
 *Direct detection experiments* search for these kind of interactions and aim to observe DM events within a detector caused by an interaction with target nuclei [@Goodman:1984dc;@Drukier:1986tm;@Wasserman:1986hh] or electrons [@Kopp:2009et;@Essig:2011nj].
 These experiments are typically placed deep underground to shield them from possible backgrounds e.g. due to cosmic rays.
 
@@ -34,14 +34,15 @@ In all cases, this requires making a number of assumptions about the possible pa
 `obscura` can e.g. be used to compute the expected event rates in terrestrial detectors looking for rare interactions between the DM and nuclei or electrons.
 There are many different experimental techniques and targets proposed and applied for direct detection experiments [@Griffin:2019mvc].
 Additionally, due to our ignorance about the particle physics of DM there exists a plethora of viable assumptions and models.
-This is reflected by the modular, polymorphic structure of all modules of the `obscura` library which allows to easily extend `obscura`'s functionality to the users' new idea on the fundamental nature of DM particles, or on a new detection technology.
+The vast variety of viable assumptions is reflected by the modular, polymorphic structure of all modules of the `obscura` library which allows to easily extend `obscura`'s functionality to the users' new idea on the fundamental nature of DM particles, or on a new detection technology.
+For example, the library can handle any kind of DM particles of any mass, provided that the scattering is well-described by non-relativistic dynamics, and that the differential (nucleus and/or electron) scattering cross sections depend only on the momentum transfer, the relative speed between DM and target, and at most one additional dynamic parameter such as the center-of-mass energy or the local temperature of the target.
 Furthermore, a generic structure also allows applications of (a subset of) the `obscura` classes in a variety of DM research projects even beyond an the context of direct detection.
 
 For more details on `obscura` and its implementation in C++, we refer to the [documentation](https://obscura.readthedocs.io)[^1].
 
 [^1]: The latest version of the documentation can be found under [https://obscura.readthedocs.io](https://obscura.readthedocs.io).
 
-![Excluded regions (95% confidence level) of the DM parameter space given by the $(m_\mathrm{DM},\sigma_i)$ plane, where $m_\mathrm{DM}$ is the assumed DM mass and $\sigma_i$ is the interaction cross section with target $i$. \label{fig:constraints}](obscura_DD_Constraints.png){ width=70% } 
+![Excluded regions (90% confidence level) of the DM parameter space given by the $(m_\mathrm{DM},\sigma_i)$ plane, where $m_\mathrm{DM}$ is the assumed DM mass and $\sigma_i$ is the interaction cross section with target $i$. For comparison, the dashed lines denote the official results published by the experimental collaborations. Some of the `obscura` results are conservative due to a simplified analysis.\label{fig:constraints}](obscura_DD_Constraints.png){ width=70% } 
 
 
 
@@ -57,7 +58,7 @@ As an example, let us look at the energy spectrum of DM induced ionization event
 The DM mass $m_\mathrm{DM}$ and the differential DM-electron scattering cross section $\frac{\mathrm{d}\sigma_e}{\mathrm{d}q^2}$ are defined by the assumed particle physics of the hypothetical DM particle the experiment is probing.
 The velocity distribution $f_\chi(v)$ and the local DM energy density $\rho_\chi$ are important inputs from astrophysics and cosmology.
 Lastly, the ionization form factor $f_\mathrm{ion}^{n\ell}(q,E_e)$ encapsulates the atomic physics of the electronic bound states and describes the probability of an electron with quantum numbers $(n\ell)$ to get ionized by an incoming DM particle.
-As we can see, the evaluation this expression for the electron recoil spectrum is highly modular combining inputes from various fields of research.
+As we can see, the evaluation of this expression for the electron recoil spectrum is highly modular combining inputs from various fields of research.
 This modularity should be reflected in the structure of corresponding research software.
 
 It is our ambition for the `obscura` code that the basic functionality does not rely on specific choices and that no particular assumption is hard-coded.

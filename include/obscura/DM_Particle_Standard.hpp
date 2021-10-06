@@ -92,6 +92,7 @@ class DM_Particle_SI : public DM_Particle_Standard
 	virtual double d2Sigma_dq2_dEe_Crystal(double q, double Ee, double vDM, Crystal& crystal) const override;
 
 	// Total cross sections
+	virtual bool Is_Sigma_Total_V_Dependent() const override;
 	virtual double Sigma_Total_Nucleus(const Isotope& isotope, double vDM = 1e-3, double param = -1.0) override;
 	virtual double Sigma_Total_Electron(double vDM, double param = -1.0) override;
 
@@ -122,6 +123,7 @@ class DM_Particle_SD : public DM_Particle_Standard
 	virtual double dSigma_dq2_Electron(double q, double vDM, double param = -1.0) const override;
 
 	// Total cross sections
+	virtual bool Is_Sigma_Total_V_Dependent() const override;
 	virtual double Sigma_Total_Nucleus(const Isotope& isotope, double vDM = 1e-3, double param = -1.0) override;
 	virtual double Sigma_Total_Electron(double vDM, double param = -1.0) override;
 
