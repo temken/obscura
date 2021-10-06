@@ -34,7 +34,8 @@ In all cases, this requires making a number of assumptions about the possible pa
 `obscura` can e.g. be used to compute the expected event rates in terrestrial detectors looking for rare interactions between the DM and nuclei or electrons.
 There are many different experimental techniques and targets proposed and applied for direct detection experiments [@Griffin:2019mvc].
 Additionally, due to our ignorance about the particle physics of DM there exists a plethora of viable assumptions and models.
-This is reflected by the modular, polymorphic structure of all modules of the `obscura` library which allows to easily extend `obscura`'s functionality to the users' new idea on the fundamental nature of DM particles, or on a new detection technology.
+The vast variety of viable assumptions is reflected by the modular, polymorphic structure of all modules of the `obscura` library which allows to easily extend `obscura`'s functionality to the users' new idea on the fundamental nature of DM particles, or on a new detection technology.
+For example, the library can handle any kind of DM particles of any mass, provided that the scattering is well-described by non-relativistic dynamics, and that the differential (nucleus and/or electron) scattering cross sections depend only on the momentum transfer, the relative speed between DM and target, and at most one additional dynamic parameter such as the center-of-mass energy or the local temperature of the target.
 Furthermore, a generic structure also allows applications of (a subset of) the `obscura` classes in a variety of DM research projects even beyond an the context of direct detection.
 
 For more details on `obscura` and its implementation in C++, we refer to the [documentation](https://obscura.readthedocs.io)[^1].
