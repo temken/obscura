@@ -41,7 +41,7 @@ For more details on `obscura` and its implementation in C++, we refer to the [do
 
 [^1]: The latest version of the documentation can be found under [https://obscura.readthedocs.io](https://obscura.readthedocs.io).
 
-![Excluded regions (95% confidence level) of the DM parameter space given by the $(m_\mathrm{DM},\sigma_i)$ plane, where $m_\mathrm{DM}$ is the assumed DM mass and $\sigma_i$ is the interaction cross section with target $i$. For comparison, the dashed lines denote the official results published by the experimental collaborations. Note that some of the collaborations present their results with 90% CL. Some of the `obscura` results are conservative due to a simplified analysis.\label{fig:constraints}](obscura_DD_Constraints.png){ width=70% } 
+![Excluded regions (90% confidence level) of the DM parameter space given by the $(m_\mathrm{DM},\sigma_i)$ plane, where $m_\mathrm{DM}$ is the assumed DM mass and $\sigma_i$ is the interaction cross section with target $i$. For comparison, the dashed lines denote the official results published by the experimental collaborations. Some of the `obscura` results are conservative due to a simplified analysis.\label{fig:constraints}](obscura_DD_Constraints.png){ width=70% } 
 
 
 
