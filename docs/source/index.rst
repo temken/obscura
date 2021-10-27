@@ -47,3 +47,9 @@ For more physics details, we refer to e.g. chapter 3 of [Emken2019]_ or [Nobile2
    12_Contact
    References
 
+For the interpretation of past and future direct searches for DM particles, it is important to be able to provide accurate predictions for event rates and spectra under a variety of possible and viable assumptions in a computationally efficient way.
+While there exists a few tools to compute DM induced nuclear recoil spectra, such as `DDCalc <https://ddcalc.hepforge.org/>`_ or `WimPyDD <https://wimpydd.hepforge.org/>`_, `obscura` is not limited to nuclear targets.
+Instead its main focus lies on sub-GeV DM searches probing electron recoils which typically requires methods from atomic and condensed matter physics, see e.g. [Essig2012]_ or [Catena2019]_.
+In the context of sub-GeV DM searches, new ideas such as target materials or detection techniques are being proposed regularly, and the theoretical modelling of these are getting improved continuosly.
+At the same time, currently running experiments continue to publish their results and analyses, setting increasingly strict bounds on the DM parameter space.
+In such a dynamic field, `obscura` can be an invaluable tool due to its high level of adaptability and facilitate and accelerate the development of new, reliable research software for the preparation of a DM discovery in the hopefully near future.
