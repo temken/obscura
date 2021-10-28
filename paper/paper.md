@@ -36,13 +36,13 @@ There are many different experimental techniques and targets proposed and applie
 Additionally, due to our ignorance about the particle physics of DM there exists a plethora of viable assumptions and models.
 The vast variety of viable assumptions is reflected by the modular, polymorphic structure of all modules of the `obscura` library which allows to easily extend `obscura`'s functionality to the users' new idea on the fundamental nature of DM particles, or on a new detection technology.
 For example, the library can handle any kind of DM particles of any mass, provided that the scattering is well-described by non-relativistic dynamics, and that the differential (nucleus and/or electron) scattering cross sections depend only on the momentum transfer, the relative speed between DM and target, and at most one additional dynamic parameter such as the center-of-mass energy or the local temperature of the target.
-Furthermore, a generic structure also allows applications of (a subset of) the `obscura` classes in a variety of DM research projects even beyond an the context of direct detection.
+Furthermore, a generic structure also allows applications of (a subset of) the `obscura` classes in a variety of DM research projects even beyond an the context of direct detection, e.g. to compute DM capture rates in the Sun [@Emken:2021lgc].
 
 For more details on `obscura` and its implementation in C++, we refer to the [documentation](https://obscura.readthedocs.io)[^1].
 
 [^1]: The latest version of the documentation can be found under [https://obscura.readthedocs.io](https://obscura.readthedocs.io).
 
-![Excluded regions (90% confidence level) of the DM parameter space given by the $(m_\mathrm{DM},\sigma_i)$ plane, where $m_\mathrm{DM}$ is the assumed DM mass and $\sigma_i$ is the interaction cross section with target $i$. For comparison, the dashed lines denote the official results published by the experimental collaborations. Some of the `obscura` results are conservative due to a simplified analysis.\label{fig:constraints}](obscura_DD_Constraints.png){ width=70% } 
+![Excluded regions (90% confidence level) of the DM parameter space given by the $(m_\mathrm{DM},\sigma_i)$ plane, where $m_\mathrm{DM}$ is the assumed DM mass and $\sigma_i$ is the interaction cross section with target $i$. For comparison, the dashed lines denote the official results published by the experimental collaborations. Some of the `obscura` results are conservative due to a simplified analysis.\label{fig:constraints}](obscura_DD_Constraints.png){ width=85% } 
 
 
 
