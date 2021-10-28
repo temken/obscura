@@ -25,7 +25,7 @@ If you decide to use this code, or if you want to add a reference to it, please 
     version      = {v0.1.1},
     doi          = {DOI:10.5281/zenodo.5163944},
     url          = {https://doi.org/10.5281/zenodo.5163944},
-    howpublished={The code can be found under \url{https://github.com/temken/obscura}. Version 0.1.1 is archived as \href{https://doi.org/10.5281/zenodo.5163944}{DOI:10.5281/zenodo.5163944}}
+    howpublished={The code can be found under \url{https://github.com/temken/obscura}.}
     }
 
 .. raw:: html

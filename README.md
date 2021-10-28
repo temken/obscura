@@ -32,7 +32,7 @@ If you decide to use this code, or if you want to add a reference to it, please 
   version      = {v0.1.1},
   doi          = {DOI:10.5281/zenodo.5163944},
   url          = {https://doi.org/10.5281/zenodo.5163944},
-  howpublished={The code can be found under \url{https://github.com/temken/obscura}. Version 0.1.1 is archived as \href{https://doi.org/10.5281/zenodo.5163944}{DOI:10.5281/zenodo.5163944}}
+  howpublished={The code can be found under \url{https://github.com/temken/obscura}.}
 }
 ```
 
@@ -41,7 +41,7 @@ If you decide to use this code, or if you want to add a reference to it, please 
 
 ## VERSION HISTORY
 
-- 05.08.2021: Release of version 0.1.1
+- 28.10.2021: Release of version 0.2.0
 - 23.02.2021: Release of version 0.1.0
 
 ## AUTHORS & CONTACT
