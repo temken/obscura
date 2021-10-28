@@ -15,9 +15,12 @@
 *obscura* - Direct detection of dark matter with nucleus and electron recoil experiments
 ========================================================================================
 
-.. image:: https://zenodo.org/badge/250298432.svg
-   :target: https://zenodo.org/badge/latestdoi/250298432
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.5607961.svg
+   :target: https://doi.org/10.5281/zenodo.5607961
    :alt: DOI
+.. image:: https://joss.theoj.org/papers/fd8076268036956d3bf08193c4fc2db9/status.svg
+   :target: https://joss.theoj.org/papers/fd8076268036956d3bf08193c4fc2db9
+   :alt: JOSS paper
 
 A modular C++ tool and library for dark matter direct detection computations for both nuclear and electron recoil experiments.
 
