@@ -46,19 +46,36 @@ FetchContent_Declare(googletest
   TEST_COMMAND      "")
 
 # Version header
-execute_process( # Git branch
+execute_process( # Git commit hash
   COMMAND git rev-parse --abbrev-ref HEAD
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
   OUTPUT_VARIABLE GIT_BRANCH
-  OUTPUT_STRIP_TRAILING_WHITESPACE )
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
 execute_process( # Git commit hash
   COMMAND git log -1 --format=%h
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
   OUTPUT_VARIABLE GIT_COMMIT_HASH
-  OUTPUT_STRIP_TRAILING_WHITESPACE )
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+execute_process( # Git commit hash
+  COMMAND git rev-parse --abbrev-ref HEAD
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE CMAKE_GIT_BRANCH
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+execute_process( # Git commit hash
+  COMMAND git log -1 --format=%h
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE CMAKE_GIT_COMMIT_HASH
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
 configure_file(
   ${INCLUDE_DIR}/version.hpp.in
-  ${GENERATED_DIR}/version.hpp )
+  ${GENERATED_DIR}/version.hpp
+)
 
 # Source and include directories
 include_directories( ${INCLUDE_DIR} )

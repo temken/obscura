@@ -69,7 +69,7 @@ void Configuration::Create_Result_Folder(int MPI_rank)
 {
 	if(MPI_rank == 0)
 	{
-		//1. Create the /results/ folder if necessary
+		// 1. Create the /results/ folder if necessary
 		std::string results_folder = TOP_LEVEL_DIR "results";
 		mode_t nMode			   = 0733;	 // UNIX style permissions
 		int nError_1			   = 0;
@@ -79,7 +79,7 @@ void Configuration::Create_Result_Folder(int MPI_rank)
 		nError_1 = mkdir(results_folder.c_str(), nMode);   // can be used on non-Windows
 #endif
 
-		//2. Create a /result/<ID>/ folder for result files.
+		// 2. Create a /result/<ID>/ folder for result files.
 		int nError = 0;
 #if defined(_WIN32)
 		nError = _mkdir(results_path.c_str());	 // can be used on Windows
@@ -101,7 +101,7 @@ void Configuration::Copy_Config_File(int MPI_rank)
 		std::ofstream outFile;
 		inFile.open(cfg_file);
 		outFile.open(TOP_LEVEL_DIR "results/" + ID + "/" + ID + ".cfg");
-		outFile << "// " << PROJECT_NAME << "-v" << PROJECT_VERSION << "\tgit:" << GIT_BRANCH << "/" << GIT_COMMIT_HASH << std::endl;
+		outFile << "// " << TOP_LEVEL_PROJECT_NAME << "-v" << TOP_LEVEL_PROJECT_VERSION << "\tgit:" << TOP_LEVEL_GIT_BRANCH << "/" << TOP_LEVEL_GIT_COMMIT_HASH << std::endl;
 		outFile << inFile.rdbuf();
 		inFile.close();
 		outFile.close();
@@ -151,7 +151,7 @@ void Configuration::Construct_DM_Particle()
 {
 	double DM_mass, DM_spin, DM_fraction;
 	bool DM_light;
-	//3.1 General properties
+	// 3.1 General properties
 	try
 	{
 		DM_mass = config.lookup("DM_mass");
@@ -190,7 +190,7 @@ void Configuration::Construct_DM_Particle()
 		std::exit(EXIT_FAILURE);
 	}
 
-	//3.2 DM interactions
+	// 3.2 DM interactions
 	std::string DM_interaction;
 	try
 	{
@@ -202,7 +202,7 @@ void Configuration::Construct_DM_Particle()
 		std::exit(EXIT_FAILURE);
 	}
 
-	//3.2.1 SI and SD
+	// 3.2.1 SI and SD
 	if(DM_interaction == "SI" || DM_interaction == "SD")
 		Configuration::Construct_DM_Particle_Standard(DM_interaction);
 	else
@@ -219,12 +219,12 @@ void Configuration::Construct_DM_Particle()
 
 void Configuration::Construct_DM_Particle_Standard(std::string DM_interaction)
 {
-	//SI
+	// SI
 	if(DM_interaction == "SI")
 	{
 		DM = new DM_Particle_SI();
 
-		//DM form factor
+		// DM form factor
 		std::string DM_form_factor;
 		double DM_mediator_mass = -1.0;
 		try
@@ -252,13 +252,13 @@ void Configuration::Construct_DM_Particle_Standard(std::string DM_interaction)
 		dynamic_cast<DM_Particle_SI*>(DM)->Set_FormFactor_DM(DM_form_factor, DM_mediator_mass);
 	}
 
-	//SD
+	// SD
 	else if(DM_interaction == "SD")
 	{
 		DM = new DM_Particle_SD();
 	}
 
-	//SI and SD
+	// SI and SD
 	bool DM_isospin_conserved;
 	try
 	{
