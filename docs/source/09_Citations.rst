@@ -8,7 +8,7 @@ How to cite
 
 If you decide to use this code, or if you want to add a reference to it, please cite the latest archived version,
 
-    Emken, T., 2021, obscura - A C++ library for dark matter detection computations [Code, v1.0.0] [DOI:10.5281/zenodo.5607961]
+    Emken, T., 2021, obscura - A C++ library for dark matter detection computations [Code, v1.0.0] [DOI:10.5281/zenodo.5665890]
 
 .. raw:: html
 
@@ -23,8 +23,8 @@ If you decide to use this code, or if you want to add a reference to it, please 
     year         = {2021},
     publisher    = {Zenodo},
     version      = {v1.0.0},
-    doi          = {DOI:10.5281/zenodo.5607961},
-    url          = {https://doi.org/10.5281/zenodo.5607961},
+    doi          = {DOI:10.5281/zenodo.5665890},
+    url          = {https://doi.org/10.5281/zenodo.5665890},
     howpublished={The code can be found under \url{https://github.com/temken/obscura}.}
     }
 
