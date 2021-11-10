@@ -22,7 +22,7 @@ copyright = '2021, Timon Emken'
 author = 'Timon Emken'
 
 # The full version, including alpha/beta/rc tags
-release = '0.2.0'
+release = 'v1.0.0'
 
 
 # -- General configuration ---------------------------------------------------

@@ -18,7 +18,7 @@ You can find more detailed documentation of *obscura* [here](https://obscura.rea
 
 If you decide to use this code, or if you want to add a reference to it, please cite the latest archived version,
 
-> Emken, T., 2021, obscura - A C++ library for dark matter detection computations [Code, v0.2.0] [[DOI:10.5281/zenodo.5607961]](https://zenodo.org/record/5607961).
+> Emken, T., 2021, obscura - A C++ library for dark matter detection computations [Code, v1.0.0] [[DOI:10.5281/zenodo.5607961]](https://zenodo.org/record/5607961).
 
 <details><summary>Bibtex entry</summary>
 <p>
@@ -26,10 +26,10 @@ If you decide to use this code, or if you want to add a reference to it, please 
 ```
 @software{obscura,
   author = {Emken, Timon},
-  title = {{obscura - A C++ library for dark matter detection computations [Code, v0.2.0]}},
+  title = {{obscura - A C++ library for dark matter detection computations [Code, v1.0.0]}},
   year         = {2021},
   publisher    = {Zenodo},
-  version      = {v0.2.0},
+  version      = {v1.0.0},
   doi          = {DOI:10.5281/zenodo.5607961},
   url          = {https://doi.org/10.5281/zenodo.5607961},
   howpublished={The code can be found under \url{https://github.com/temken/obscura}.}
@@ -41,7 +41,7 @@ If you decide to use this code, or if you want to add a reference to it, please 
 
 ## VERSION HISTORY
 
-- 28.10.2021: Release of version 0.2.0
+- 10.11.2021: Release of version 1.0.0
 - 23.02.2021: Release of version 0.1.0
 
 ## AUTHORS & CONTACT

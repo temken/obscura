@@ -86,6 +86,6 @@ In such a dynamic field, `obscura` can be an invaluable tool due to its high lev
 
 # Acknowledgements
 The author thanks Radovan Bast for  valuable  discussions and support regarding research software engineering.
-The author was supported by the Knut & Alice Wallenberg Foundation.
+The author was supported by the Knut & Alice Wallenberg Foundation (PI, Jan Conrad).
 
 # References
