@@ -25,18 +25,18 @@ One of the leading hypothesis is that DM is made up of one or more new particles
 Our planet would at any moment be penetrated by a stream of these particles without much of an effect.
 If these dark particles interact with nuclei and/or electrons via some new force besides gravity, they would on occasion collide with a terrestrial particle.
 *Direct detection experiments* search for these kind of interactions and aim to observe DM events within a detector caused by an interaction with target nuclei [@Goodman:1984dc;@Drukier:1986tm;@Wasserman:1986hh] or electrons [@Kopp:2009et;@Essig:2011nj].
-These experiments are typically placed deep underground to shield them from possible backgrounds e.g. due to cosmic rays.
+These experiments are typically placed deep underground to shield them from possible backgrounds, e.g., due to cosmic rays.
 
 In order to interpret the outcome of direct detection experiments, we need to make predictions for the expected events caused by the incoming DM particles.
-In all cases, this requires making a number of assumptions about the possible particle attributes of DM (e.g. mass and interaction strength) and the properties of the galactic DM halo (e.g. the local DM density and their energy distribution) [@Lewin:1995rx;@DelNobile:2021icc].
+In all cases, this requires making a number of assumptions about the possible particle attributes of DM (e.g., mass and interaction strength) and the properties of the galactic DM halo (e.g. the local DM density and their energy distribution) [@Lewin:1995rx;@DelNobile:2021icc].
 
-`obscura` is a tool to make quantitative predictions for direct DM searches, analyse experimental data, and derive e.g. exclusion limits as seen in \autoref{fig:constraints}.
+`obscura` is a tool to make quantitative predictions for direct DM searches, analyse experimental data, and derive, e.g., exclusion limits as seen in \autoref{fig:constraints}.
 `obscura` can e.g. be used to compute the expected event rates in terrestrial detectors looking for rare interactions between the DM and nuclei or electrons.
 There are many different experimental techniques and targets proposed and applied for direct detection experiments [@Griffin:2019mvc].
 Additionally, due to our ignorance about the particle physics of DM there exists a plethora of viable assumptions and models.
 The vast variety of viable assumptions is reflected by the modular, polymorphic structure of all modules of the `obscura` library which allows to easily extend `obscura`'s functionality to the users' new idea on the fundamental nature of DM particles, or on a new detection technology.
 For example, the library can handle any kind of DM particles of any mass, provided that the scattering is well-described by non-relativistic dynamics, and that the differential (nucleus and/or electron) scattering cross sections depend only on the momentum transfer, the relative speed between DM and target, and at most one additional dynamic parameter such as the center-of-mass energy or the local temperature of the target.
-Furthermore, a generic structure also allows applications of (a subset of) the `obscura` classes in a variety of DM research projects even beyond an the context of direct detection, e.g. to compute DM capture rates in the Sun [@Emken:2021lgc].
+Furthermore, a generic structure also allows applications of (a subset of) the `obscura` classes in a variety of DM research projects even beyond the context of direct detection, e.g., to compute DM capture rates in the Sun [@Emken:2021lgc].
 
 For more details on `obscura` and its implementation in C++, we refer to the [documentation](https://obscura.readthedocs.io)[^1].
 
@@ -51,7 +51,7 @@ For more details on `obscura` and its implementation in C++, we refer to the [do
 Making predictions and performing analyses for direct detection experiments involves methods and results from statistics, astrophysics, particle physics, nuclear and atomic physics, and condensed matter physics.
 For each of these fields, we need to make choices and assumptions which will affect our interpretation of DM searches.
 
-As an example, let us look at the energy spectrum of DM induced ionization events, as derived in [@Essig:2015cda].
+As an example, let us look at the energy spectrum of DM induced ionization events as derived by @Essig:2015cda.
 \begin{equation}
  \frac{\mathrm{d} R_\mathrm{ion}}{\mathrm{d} E_e} = N_T \frac{\rho_\chi}{m_\mathrm{DM}}\sum_{n,\ell} \int \mathrm{d}q^2\int \mathrm{d}v\; v f_\chi(v) \frac{1}{4E_e}\frac{\mathrm{d}\sigma_e}{\mathrm{d}q^2} \left|f_\mathrm{ion}^{n\ell}(q,E_e)\right|^2\, .
 \end{equation}
@@ -78,8 +78,8 @@ As an example, the `DaMaSCUS-SUN` code uses `obscura` in the context of Monte Ca
 
 For the interpretation of past and future direct searches for DM particles, it is important to be able to provide accurate predictions for event rates and spectra under a variety of possible and viable assumptions in a computationally efficient way.
 While there exists a few tools to compute DM induced nuclear recoil spectra, such as DDCalc [@GAMBITDarkMatterWorkgroup:2017fax;@GAMBIT:2018eea] or WimPyDD [@Jeong:2021bpl], `obscura` is not limited to nuclear targets.
-Instead its main focus lies on sub-GeV DM searches probing electron recoils which typically requires methods from atomic and condensed matter physics, see e.g. [@Essig:2015cda;@Catena:2019gfa;@Catena:2021qsr].
-In the context of sub-GeV DM searches, new ideas such as target materials or detection techniques are being proposed regularly, and the theoretical modelling of these are getting improved continuosly, see e.g [@Griffin:2021znd].
+Instead its main focus lies on sub-GeV DM searches probing electron recoils which typically requires methods from atomic and condensed matter physics [@Essig:2015cda;@Catena:2019gfa;@Catena:2021qsr].
+In the context of sub-GeV DM searches, new ideas such as target materials or detection techniques are being proposed regularly, and the theoretical modelling of these are getting improved continuously [@Griffin:2021znd].
 At the same time, currently running experiments continue to publish their results and analyses, setting increasingly strict bounds on the DM parameter space.
 In such a dynamic field, `obscura` can be an invaluable tool due to its high level of adaptability and facilitate and accelerate the development of new, reliable research software for the preparation of a DM discovery in the hopefully near future.
 
