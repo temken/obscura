@@ -24,7 +24,7 @@ If you decide to use this code, or if you want to add a reference to it, please 
 <p>
 
 ```
-@software{obscura,
+@software{libphysica,
   author = {Emken, Timon},
   title = {{obscura - A C++ library for dark matter detection computations [Code, v1.0.0]}},
   year         = {2021},
