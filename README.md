@@ -6,7 +6,7 @@
 # obscura - Direct detection of dark matter with nucleus and electron recoil experiments
 
 [![status](https://joss.theoj.org/papers/fd8076268036956d3bf08193c4fc2db9/status.svg)](https://joss.theoj.org/papers/fd8076268036956d3bf08193c4fc2db9)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5665890.svg)](https://doi.org/10.5281/zenodo.5665890)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4557187.svg)](https://doi.org/10.5281/zenodo.4557187)
 
 A modular C++ tool and library for dark matter direct detection computations for both nuclear and electron recoil experiments.
 
@@ -18,20 +18,20 @@ You can find more detailed documentation of *obscura* [here](https://obscura.rea
 
 If you decide to use this code, or if you want to add a reference to it, please cite the latest archived version,
 
-> Emken, T., 2021, obscura - A C++ library for dark matter detection computations [Code, v1.0.0] [[DOI:10.5281/zenodo.5665890]](https://zenodo.org/record/5665890).
+> Emken, T., 2021, obscura - A C++ library for dark matter detection computations [Code, v1.0.1] [[DOI:10.5281/zenodo.5956877]](https://zenodo.org/record/5956877).
 
 <details><summary>Bibtex entry</summary>
 <p>
 
 ```
-@software{libphysica,
+@software{obscura,
   author = {Emken, Timon},
-  title = {{obscura - A C++ library for dark matter detection computations [Code, v1.0.0]}},
+  title = {{obscura - A C++ library for dark matter detection computations [Code, v1.0.1]}},
   year         = {2021},
   publisher    = {Zenodo},
-  version      = {v1.0.0},
-  doi          = {DOI:10.5281/zenodo.5665890},
-  url          = {https://doi.org/10.5281/zenodo.5665890},
+  version      = {v1.0.1},
+  doi          = {DOI:10.5281/zenodo.5956877},
+  url          = {https://doi.org/10.5281/zenodo.5956877},
   howpublished={The code can be found under \url{https://github.com/temken/obscura}.}
 }
 ```
