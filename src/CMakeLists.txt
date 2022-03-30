@@ -2,6 +2,9 @@
 add_executable(obscura
     main.cpp )
 
+set_target_properties(obscura PROPERTIES
+    INSTALL_RPATH "${LIB_DIR}") # required if libobscura is built as shared library
+
 target_compile_options(obscura PUBLIC -Wall -pedantic)
 
 target_link_libraries(obscura
@@ -15,8 +18,20 @@ target_include_directories(obscura
 
 install(TARGETS obscura DESTINATION ${BIN_DIR})
 
-# Static library
-add_library(libobscura STATIC
+# Find and include libconfig
+find_path(LIBCONFIG_INCLUDE_DIRs libconfig.h++
+    /usr/local/include
+    /usr/include
+    ~/libs/include
+    ~/include )
+find_library(LIBCONFIGPP_LIBRARY config++
+    /usr/local/lib
+    /usr/lib
+    ~/libs/lib
+    ~/lib )
+
+# Library (default is static, but can be build as shared using -DBUILD_SHARED_LIBS=ON in the configuration step)
+add_library(libobscura
     Astronomy.cpp
     Configuration.cpp
     Direct_Detection.cpp
@@ -39,18 +54,6 @@ set_target_properties(libobscura PROPERTIES PREFIX "")
 
 target_compile_options(libobscura PUBLIC -Wall -pedantic)
 
-# Find and include libconfig
-find_path(LIBCONFIG_INCLUDE_DIRs libconfig.h++
-    /usr/local/include
-    /usr/include
-    ~/libs/include
-    ~/include )
-find_library(LIBCONFIGPP_LIBRARY config++
-    /usr/local/lib
-    /usr/lib
-    ~/libs/lib
-    ~/lib )
-
 target_include_directories(libobscura 
     PRIVATE
         ${GENERATED_DIR}
@@ -66,4 +69,3 @@ target_link_libraries(libobscura
         ${LIBCONFIGPP_LIBRARY} )
 
 install(TARGETS libobscura DESTINATION ${LIB_DIR})
-

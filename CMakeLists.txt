@@ -9,6 +9,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Don't use e.g. GNU extension (like -std=gnu++11) for portability
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Build library as shared or static (default is static)
+option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
+
 set(BIN_DIR       ${PROJECT_SOURCE_DIR}/bin)
 set(GENERATED_DIR ${PROJECT_BINARY_DIR}/generated)
 set(INCLUDE_DIR   ${PROJECT_SOURCE_DIR}/include)

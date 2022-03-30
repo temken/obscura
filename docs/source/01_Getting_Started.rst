@@ -71,6 +71,17 @@ If everything worked well, the executable and library file are created as::
 	bin/obscura
 	lib/libobscura.a
 
+By default, `obscura` will be built as a static library. It is also possible to build it as shared library by adding the following option to the configuration step.::
+
+	cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCODE_COVERAGE=OFF ..
+
+In that case, the library file after installation is::
+
+	lib/libobscura.dylib
+
+or::
+
+	lib/libobscura.so
 
 -------------------------
 Using *obscura* as a tool
