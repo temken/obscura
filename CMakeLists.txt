@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(obscura VERSION "1.0.1")
+project(obscura VERSION "1.0.2")
 
 # Use C++-11
 set(CMAKE_CXX_STANDARD 11)
@@ -27,7 +27,7 @@ include(FetchContent)
 set(LIBPHYSICA_DIR   ${EXTERNAL_DIR}/libphysica)
 FetchContent_Declare(libphysica
   GIT_REPOSITORY  https://github.com/temken/libphysica.git
-  GIT_TAG         origin/dev
+  GIT_TAG         v0.1.4
   SOURCE_DIR     "${LIBPHYSICA_DIR}"
   CMAKE_ARGS     "-DCMAKE_BUILD_TYPE=Release -DCODE_COVERAGE=OFF" )
 FetchContent_GetProperties(libphysica)
