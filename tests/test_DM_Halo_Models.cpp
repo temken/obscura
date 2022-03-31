@@ -363,7 +363,7 @@ TEST(TestSHMplusplus, TestGalacticRestFrame)
 	EXPECT_DOUBLE_EQ(shmpp.Maximum_DM_Speed(), 544 * km / sec);
 	EXPECT_NEAR(shmpp.CDF_Speed(vMin), 0.72152699650337748, 1.0e-6);
 	EXPECT_NEAR(shmpp.Average_Speed(), 0.00080395484422832609, tol);
-	EXPECT_DOUBLE_EQ(shmpp.Eta_Function(vMin), 227.69351987958018);
+	EXPECT_NEAR(shmpp.Eta_Function(vMin), 227.69351984641358, 1.0e-6);
 }
 
 TEST(TestSHMplusplus, TestEtaFunction)
@@ -376,8 +376,8 @@ TEST(TestSHMplusplus, TestEtaFunction)
 	SHM_Plus_Plus shmpp(rhoDM, v0, vobs, vesc);
 	double vMin = 300 * km / sec;
 	// ACT & ASSERT
-	EXPECT_DOUBLE_EQ(shmpp.Eta_Function(shmpp.Minimum_DM_Speed()), 1055.2029097888699);
-	EXPECT_DOUBLE_EQ(shmpp.Eta_Function(vMin), 455.21126825811115);
+	EXPECT_NEAR(shmpp.Eta_Function(shmpp.Minimum_DM_Speed()), 1055.2029097888699, 1.0e-6);
+	EXPECT_NEAR(shmpp.Eta_Function(vMin), 455.21126817245852, 1.0e-6);
 	EXPECT_NEAR(shmpp.Eta_Function(shmpp.Maximum_DM_Speed()), 0.0, 1e-10);
 	EXPECT_DOUBLE_EQ(shmpp.Eta_Function(1.0), 0.0);
 }

@@ -13,8 +13,8 @@ namespace obscura
 {
 using namespace libphysica::natural_units;
 
-//2. Standard halo model (SHM)
-//Constructors:
+// 2. Standard halo model (SHM)
+// Constructors:
 Standard_Halo_Model::Standard_Halo_Model()
 : DM_Distribution("Standard halo model (SHM)", 0.4 * GeV / cm / cm / cm, 0.0, (544.0 + 232.58) * km / sec), v_0(220.0 * km / sec), v_esc(544.0 * km / sec)
 {
@@ -40,7 +40,7 @@ Standard_Halo_Model::Standard_Halo_Model(double rho, double v0, libphysica::Vect
 	DD_use_eta_function = true;
 }
 
-//Set SHM parameters
+// Set SHM parameters
 void Standard_Halo_Model::Set_Speed_Dispersion(double v0)
 {
 	v_0 = v0;
@@ -74,13 +74,13 @@ libphysica::Vector Standard_Halo_Model::Get_Observer_Velocity() const
 	return vel_observer;
 }
 
-//Compute N_esc
+// Compute N_esc
 void Standard_Halo_Model::Normalize_PDF()
 {
 	N_esc = erf(v_esc / v_0) - 2 * v_esc / v_0 / sqrt(M_PI) * exp(-v_esc * v_esc / v_0 / v_0);
 }
 
-//Distribution functions
+// Distribution functions
 double Standard_Halo_Model::PDF_Velocity_SHM(libphysica::Vector vel)
 {
 	double v = vel.Norm();
@@ -130,7 +130,7 @@ double Standard_Halo_Model::CDF_Speed(double v)
 	return CDF_Speed_SHM(v);
 }
 
-//Eta-function for direct detection
+// Eta-function for direct detection
 double Standard_Halo_Model::Eta_Function_SHM(double vMin)
 {
 	double xMin = vMin / v_0;
@@ -173,7 +173,7 @@ void Standard_Halo_Model::Print_Summary(int mpi_rank)
 	}
 }
 
-//3. Standard halo model++ (SHM++) as proposed by Evans, O'Hare and McCabe [arXiv:1810.11468]
+// 3. Standard halo model++ (SHM++) as proposed by Evans, O'Hare and McCabe [arXiv:1810.11468]
 void SHM_Plus_Plus::Compute_Sigmas(double beta)
 {
 	sigma_r		= sqrt(3.0 * v_0 * v_0 / 2.0 / (3.0 - 2.0 * beta));
