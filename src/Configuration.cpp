@@ -242,6 +242,12 @@ void Configuration::Construct_DM_Particle_Standard(std::string DM_interaction)
 			{
 				DM_mediator_mass = config.lookup("DM_mediator_mass");
 				DM_mediator_mass *= MeV;
+				if(DM_mediator_mass < 1e-60)
+				{
+					std::cout << "Error in Configuration::Construct_DM_Particle_Standard:\tMediator mass for \"General\" form factor needs to be positive. (DM_mediator_mass = " << DM_mediator_mass / MeV << " MeV)\n"
+							  << std::endl;
+					std::exit(EXIT_FAILURE);
+				}
 			}
 			catch(const SettingNotFoundException& nfex)
 			{
