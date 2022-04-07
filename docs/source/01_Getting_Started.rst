@@ -77,10 +77,6 @@ By default, `obscura` will be built as a static library. It is also possible to 
 
 In that case, the library file after installation is::
 
-	lib/libobscura.dylib
-
-or::
-
 	lib/libobscura.so
 
 -------------------------

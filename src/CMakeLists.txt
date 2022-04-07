@@ -1,9 +1,11 @@
 # Executable
 add_executable(obscura
     main.cpp )
-
-set_target_properties(obscura PROPERTIES
-    INSTALL_RPATH "${LIB_DIR}") # required if libobscura is built as shared library
+     
+if(BUILD_SHARED_LIBS)
+    set_target_properties(obscura PROPERTIES
+        INSTALL_RPATH "${LIB_DIR}") # required if libobscura is built as shared library
+endif()
 
 target_compile_options(obscura PUBLIC -Wall -pedantic)
 
@@ -51,6 +53,9 @@ add_library(libobscura
 )
 
 set_target_properties(libobscura PROPERTIES PREFIX "")
+if(BUILD_SHARED_LIBS)
+    set_target_properties(libobscura PROPERTIES SUFFIX ".so")
+endif()
 
 target_compile_options(libobscura PUBLIC -Wall -pedantic)
 
