@@ -33,24 +33,10 @@ find_library(LIBCONFIGPP_LIBRARY config++
     ~/lib )
 
 # Library (default is static, but can be build as shared using -DBUILD_SHARED_LIBS=ON in the configuration step)
+file(GLOB FILES "*.cpp")
+list(REMOVE_ITEM FILES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 add_library(libobscura
-    Astronomy.cpp
-    Configuration.cpp
-    Direct_Detection.cpp
-    Direct_Detection_ER.cpp
-    Direct_Detection_Ionization.cpp
-    Direct_Detection_Migdal.cpp
-    Direct_Detection_Nucleus.cpp
-    Direct_Detection_Crystal.cpp
-    DM_Distribution.cpp
-    DM_Halo_Models.cpp
-    DM_Particle.cpp
-    DM_Particle_Standard.cpp
-    Experiments.cpp
-    Target_Atom.cpp
-    Target_Crystal.cpp
-    Target_Nucleus.cpp
-)
+    ${FILES})
 
 set_target_properties(libobscura PROPERTIES PREFIX "")
 if(BUILD_SHARED_LIBS)
