@@ -87,7 +87,7 @@ Using *obscura* as a tool
 
 ./obscura config.cfg
 
-As can be seen in the `/src/main.cpp <https://github.com/temken/obscura/blob/master/src/main.cpp>`_ file, this script computes direct detection limits and saves them in the */results/* folder.
+As can be seen in the `/src/main.cpp <https://github.com/temken/obscura/blob/main/src/main.cpp>`_ file, this script computes direct detection limits and saves them in the */results/* folder.
 The specifications of the exclusion limits (DM physics and halo model, statistics, experiment, mass range,...) are defined in a configuration file, in this case *config.cfg*.
 For the handling of configuration files, *obscura* relies on `libconfig <https://hyperrealm.github.io/libconfig/>`_. 
 

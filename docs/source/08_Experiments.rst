@@ -2,10 +2,10 @@
 8. Included experimental analyses
 =================================
 
-.. image:: https://raw.githubusercontent.com/temken/obscura/master/paper/obscura_DD_Constraints.png
+.. image:: https://raw.githubusercontent.com/temken/obscura/main/paper/obscura_DD_Constraints.png
     :width: 500
 
-The module `Experiments.hpp <https://github.com/temken/obscura/blob/master/include/obscura/Experiments.hpp>`_ contains a series of functions that build a number of experimental analysis as instances of the ``DM_Detector`` class and its derivatives.
+The module `Experiments.hpp <https://github.com/temken/obscura/blob/main/include/obscura/Experiments.hpp>`_ contains a series of functions that build a number of experimental analysis as instances of the ``DM_Detector`` class and its derivatives.
 
 
 For example, for an analysis based on the CRESST-II experiment, we can construct the class instance via

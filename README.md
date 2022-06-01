@@ -1,5 +1,5 @@
 [![Build Status](https://github.com/temken/obscura/workflows/Build%20Status/badge.svg)](https://github.com/temken/obscura/actions)
-[![codecov](https://codecov.io/gh/temken/obscura/branch/master/graph/badge.svg)](https://codecov.io/gh/temken/obscura)
+[![codecov](https://codecov.io/gh/temken/obscura/branch/main/graph/badge.svg)](https://codecov.io/gh/temken/obscura)
 [![Documentation Status](https://readthedocs.org/projects/obscura/badge/?version=latest)](https://obscura.readthedocs.io/en/latest/?badge=latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 

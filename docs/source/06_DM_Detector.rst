@@ -2,7 +2,7 @@
 6. The ``DM_Detector`` classes
 ==============================
 
-The details of a direct detection experiment are summarized in the ``DM_Detector`` class declared in `/include/obscura/Direct_Detection.hpp <https://github.com/temken/obscura/blob/master/include/obscura/Direct_Detection.hpp>`_.
+The details of a direct detection experiment are summarized in the ``DM_Detector`` class declared in `/include/obscura/Direct_Detection.hpp <https://github.com/temken/obscura/blob/main/include/obscura/Direct_Detection.hpp>`_.
 In particular, it responsible for:
 
 1. The statistical methods to compute likelihoods and exclusion limits. Since these are independent of the type of experiment, this functionality is part of the base class ``DM_Detector``. As of now, *obscura* implements the following statistical analyses.
@@ -18,7 +18,7 @@ We provide a number of examples of how to construct different instances of deriv
 Nuclear recoil experiments
 --------------------------
 
-For experiments looking for DM induced nuclear recoils, *obscura* contains the ``DM_Detector_Nucleus`` class that is declared in `/include/obscura/Direct_Detection_Nucleus.hpp <https://github.com/temken/obscura/blob/master/include/obscura/Direct_Detection_Nucleus.hpp>`_.
+For experiments looking for DM induced nuclear recoils, *obscura* contains the ``DM_Detector_Nucleus`` class that is declared in `/include/obscura/Direct_Detection_Nucleus.hpp <https://github.com/temken/obscura/blob/main/include/obscura/Direct_Detection_Nucleus.hpp>`_.
 
 For example, assume we have a nuclear recoil experiment with :math:`\mathrm{CaWO}_4` crystals, an energy threshold of 500 eV, and an exposure of 100 kg days.
 This information suffices to define a toy experiment.
@@ -44,7 +44,7 @@ This information suffices to define a toy experiment.
 Electron recoil experiments
 ---------------------------
 
-For electron recoil experiments with atomic targets, we have to use the ``DM_Detector_Ionization_ER`` class that can be found in `/include/obscura/Direct_Detection_ER.hpp <https://github.com/temken/obscura/blob/master/include/obscura/Direct_Detection_ER.hpp>`_
+For electron recoil experiments with atomic targets, we have to use the ``DM_Detector_Ionization_ER`` class that can be found in `/include/obscura/Direct_Detection_ER.hpp <https://github.com/temken/obscura/blob/main/include/obscura/Direct_Detection_ER.hpp>`_
 
 Here is an example of a xenon target experiment probing DM-electron interactions and DM induced ionizations. As exposure we choose 100 kg days, and we furthermore assume that only events with at least 4 ionized electrons can be detectred.
 
