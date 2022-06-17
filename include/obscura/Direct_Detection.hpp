@@ -17,10 +17,7 @@ class DM_Detector
 	std::string targets;
 	double exposure, flat_efficiency;
 
-	//DM functions
-	virtual double Maximum_Energy_Deposit(DM_Particle& DM, const DM_Distribution& DM_distr) const { return 0.0; };
-
-	//Statistics
+	// Statistics
 	std::string statistical_analysis;
 
 	// (a) Poisson statistics
@@ -46,7 +43,7 @@ class DM_Detector
 	std::vector<double> maximum_gap_energy_data;
 	double P_Value_Maximum_Gap(DM_Particle& DM, DM_Distribution& DM_distr);
 
-	//Energy spectrum
+	// Energy spectrum
 	double energy_threshold, energy_max;
 
 	// (a) Poisson: Energy threshold
@@ -70,7 +67,8 @@ class DM_Detector
 
 	void Set_Flat_Efficiency(double eff);
 
-	//DM functions
+	// DM functions
+	virtual double Maximum_Energy_Deposit(DM_Particle& DM, const DM_Distribution& DM_distr) const { return 0.0; };
 	virtual double Minimum_DM_Speed(DM_Particle& DM) const { return 0.0; };
 	virtual double Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const { return 0.0; };
 	virtual double dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr) { return 0.0; };
@@ -78,7 +76,7 @@ class DM_Detector
 	double DM_Signal_Rate_Total(const DM_Particle& DM, DM_Distribution& DM_distr);
 	virtual std::vector<double> DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr);
 
-	//Statistics
+	// Statistics
 	double Log_Likelihood(DM_Particle& DM, DM_Distribution& DM_distr);
 	double Likelihood(DM_Particle& DM, DM_Distribution& DM_distr);
 	std::vector<std::vector<double>> Log_Likelihood_Scan(DM_Particle& DM, DM_Distribution& DM_distr, const std::vector<double>& masses, const std::vector<double>& couplings);
@@ -96,13 +94,13 @@ class DM_Detector
 	// (c) Maximum gap
 	void Use_Maximum_Gap(std::vector<double> energies);
 
-	//Energy spectrum
-	// (a) Poisson
+	// Energy spectrum
+	//  (a) Poisson
 	void Use_Energy_Threshold(double Ethr, double Emax);
 	// (b) Binned Poisson
 	void Use_Energy_Bins(double Emin, double Emax, int bins);
 
-	//Limits/Constraints
+	// Limits/Constraints
 	double Upper_Limit(DM_Particle& DM, DM_Distribution& DM_distr, double certainty = 0.95);
 	std::vector<std::vector<double>> Upper_Limit_Curve(DM_Particle& DM, DM_Distribution& DM_distr, std::vector<double> masses, double certainty = 0.95);
 

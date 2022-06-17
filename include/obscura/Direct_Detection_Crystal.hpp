@@ -12,21 +12,18 @@
 namespace obscura
 {
 
-//1. Event spectra and rates
+// 1. Event spectra and rates
 extern double dRdEe_Crystal(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Crystal& target_crystal);
 extern double R_Q_Crystal(int Q, const DM_Particle& DM, DM_Distribution& DM_distr, Crystal& target_crystal);
 extern double R_total_Crystal(int Qthreshold, const DM_Particle& DM, DM_Distribution& DM_distr, Crystal& target_crystal);
 
-//2. Electron recoil direct detection experiment with semiconductor target
+// 2. Electron recoil direct detection experiment with semiconductor target
 class DM_Detector_Crystal : public DM_Detector
 {
   private:
 	Crystal target_crystal;
 
-	//DM functions
-	virtual double Maximum_Energy_Deposit(DM_Particle& DM, const DM_Distribution& DM_distr) const override;
-
-	//Q spectrum
+	// Q spectrum
 	unsigned int Q_threshold;
 
 	// (a) Poisson: Energy threshold
@@ -40,15 +37,16 @@ class DM_Detector_Crystal : public DM_Detector
 	DM_Detector_Crystal();
 	DM_Detector_Crystal(std::string label, double expo, std::string crys);
 
-	//DM functions
+	// DM functions
+	virtual double Maximum_Energy_Deposit(DM_Particle& DM, const DM_Distribution& DM_distr) const override;
 	virtual double Minimum_DM_Speed(DM_Particle& DM) const override;
 	virtual double Minimum_DM_Mass(DM_Particle& DM, const DM_Distribution& DM_distr) const override;
 	virtual double dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr) override;
 	virtual double DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr) override;
 	virtual std::vector<double> DM_Signals_Binned(const DM_Particle& DM, DM_Distribution& DM_distr) override;
 
-	//Q spectrum
-	// (a) Poisson
+	// Q spectrum
+	//  (a) Poisson
 	void Use_Q_Threshold(unsigned int Q_thr);
 	// (b) Binned Poisson
 	void Use_Q_Bins(unsigned int Q_thr, unsigned int N_bins = 0);
