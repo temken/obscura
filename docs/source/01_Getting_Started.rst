@@ -29,7 +29,7 @@ On Linux machines, run::
 2. `libconfig <https://hyperrealm.github.io/libconfig/>`_
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-To install *boost* on a Mac, we can use `homebrew <https://brew.sh/>`_ ::
+To install *libconfig* on a Mac, we can use `homebrew <https://brew.sh/>`_ ::
 
 	brew install libconfig
 
@@ -42,6 +42,8 @@ On Linux machines, you can build `libconfig` via::
 	make
 	sudo make install
 	popd
+
+NOTE: Due to an update of libphysica, it is not necessary to install libconfig on your machine. If CMake cannot find an installation, it will download and build the library locally in libphysica/external/libconfig.
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 3. `libphysica <https://github.com/temken/libphysica>`_
