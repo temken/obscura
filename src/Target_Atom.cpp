@@ -10,45 +10,76 @@ namespace obscura
 {
 using namespace libphysica::natural_units;
 
-//1. Kinematic functions
+// 1. Kinematic functions
 double vMinimal_Electrons(double q, double Delta_E, double mDM)
 {
 	return (Delta_E / q + q / 2.0 / mDM);
 }
 
-//3. Bound electrons in isolated atoms
+// 3. Bound electrons in isolated atoms
 std::string s_names[5] = {"s", "p", "d", "f", "g"};
 
 Atomic_Electron::Atomic_Electron(std::string element, int N, int L, double Ebinding, double kMin, double kMax, double qMin, double qMax, unsigned int neSecondary)
 : k_min(kMin), k_max(kMax), q_min(qMin), q_max(qMax), n(N), l(L), binding_energy(Ebinding), number_of_secondary_electrons(neSecondary)
 {
 	name = element + "_" + std::to_string(n) + s_names[l];
-	//Import the table.
-	std::string path									= PROJECT_DIR "data/Form_Factors_Ionization/" + name + ".txt";
-	std::vector<std::vector<double>> form_factor_tables = libphysica::Import_Table(path);
+	// Import the tables.
+	for(int response = 1; response <= 4; response++)
+	{
+		std::string path									= PROJECT_DIR "data/Atomic_Response_Functions/" + name + "_" + std::to_string(response) + ".txt";
+		std::vector<std::vector<double>> form_factor_tables = libphysica::Import_Table(path, {}, 3);
+		Nk													= form_factor_tables.size();
+		Nq													= form_factor_tables[0].size();
+		k_Grid												= libphysica::Log_Space(k_min, k_max, Nk);
+		q_Grid												= libphysica::Log_Space(q_min, q_max, Nq);
+		atomic_response_interpolations.push_back(libphysica::Interpolation_2D(k_Grid, q_Grid, form_factor_tables));
+		dlogk = log10(k_max / k_min) / (Nk - 1.0);
+		dlogq = log10(q_max / q_min) / (Nq - 1.0);
+	}
+}
 
-	Nk						  = form_factor_tables.size();
-	Nq						  = form_factor_tables[0].size();
-	k_Grid					  = libphysica::Log_Space(k_min, k_max, Nk);
-	q_Grid					  = libphysica::Log_Space(q_min, q_max, Nq);
-	form_factor_interpolation = libphysica::Interpolation_2D(k_Grid, q_Grid, form_factor_tables);
-	dlogk					  = log10(k_max / k_min) / (Nk - 1.0);
-	dlogq					  = log10(q_max / q_min) / (Nq - 1.0);
+double Atomic_Electron::Atomic_Response_Function(int response, double q, double E)
+{
+	double k = sqrt(2.0 * mElectron * E);
+	// if(q > q_max || k > k_max || k < k_min)
+	// {
+	// 	std::cerr << "Warning in Atomic_Response_Function() : q = " << q / keV << " keV or k = " << k / keV << "keV out of range for " << name << ". Returning 0." << std::endl;
+	// 	return 0.0;
+	// }
+	// else if(response == 1)
+	if(response == 1)
+	{
+		if(q > q_min)
+			return atomic_response_interpolations[0](k, q);
+		else
+		{
+			// Dipole approximation for low q
+			// See eq. 6 of arXiv:1908.10881
+			double q_0	= q_min;
+			double FF_0 = atomic_response_interpolations[0](k, q_0);
+			return q * q / q_0 / q_0 * FF_0;
+		}
+	}
+	else if(response == 2 || response == 3 || response == 4)
+	{
+		if(q > q_min)
+			return atomic_response_interpolations[response - 1](k, q);
+		else
+		{
+			std::cerr << "Warning in Atomic_Response_Function " << response << ": q = " << q / keV << " is below q_min. Returning 0." << std::endl;
+			return 0.0;
+		}
+	}
+	else
+	{
+		std::cerr << "Error in Atomic_Response_Function(): Invalid response function " << response << " of " << name << "." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
 }
 
 double Atomic_Electron::Ionization_Form_Factor(double q, double E)
 {
-	double k = sqrt(2.0 * mElectron * E);
-	if(q > q_min)
-		return form_factor_interpolation(k, q);
-	else
-	{
-		// Dipole approximation for low q
-		// See eq. 6 of arXiv:1908.10881
-		double q_0	= q_min;
-		double FF_0 = form_factor_interpolation(k, q_0);
-		return q * q / q_0 / q_0 * FF_0;
-	}
+	return Atomic_Response_Function(1, q, E);
 }
 
 void Atomic_Electron::Print_Summary(unsigned int MPI_rank) const

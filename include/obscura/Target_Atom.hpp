@@ -12,10 +12,10 @@
 namespace obscura
 {
 
-//1. Kinematic functions
+// 1. Kinematic functions
 extern double vMinimal_Electrons(double q, double Delta_E, double mDM);
 
-//2. Bound electrons in isolated atoms
+// 2. Bound electrons in isolated atoms
 struct Atomic_Electron
 {
 	// Ionization form factor tables
@@ -24,7 +24,7 @@ struct Atomic_Electron
 	unsigned int Nk, Nq;
 	std::vector<double> k_Grid = {};
 	std::vector<double> q_Grid = {};
-	libphysica::Interpolation_2D form_factor_interpolation;
+	std::vector<libphysica::Interpolation_2D> atomic_response_interpolations;
 
 	unsigned int n, l;
 	std::string name;
@@ -33,7 +33,8 @@ struct Atomic_Electron
 
 	Atomic_Electron(std::string element, int N, int L, double Ebinding, double kMin, double kMax, double qMin, double qMax, unsigned int neSecondary = 0);
 
-	//Squared ionization form factor.
+	double Atomic_Response_Function(int response, double q, double E);
+	// Squared ionization form factor.
 	double Ionization_Form_Factor(double q, double E);
 
 	void Print_Summary(unsigned int MPI_rank = 0) const;
@@ -45,7 +46,7 @@ struct Atom
 	std::vector<Atomic_Electron> electrons;
 	double W;
 
-	//Constructor
+	// Constructor
 	Atom(int z, double w, std::vector<Atomic_Electron> shells = {});
 	Atom(const std::string& element_name);
 
