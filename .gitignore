@@ -1,3 +1,7 @@
+*
+!*/
+!*.*
+
 .depend
 coverage.info
 
@@ -5,9 +9,14 @@ build/
 external/
 lib/
 results/
+tests/*.txt
 
 # Ignore build files
 *.o
+
+*DS_Store
+*.code-workspace
+.vscode/*
 
 # Ignore codecove files
 *.gcov
