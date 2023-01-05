@@ -41,13 +41,12 @@ Atomic_Electron::Atomic_Electron(std::string element, int N, int L, double Ebind
 double Atomic_Electron::Atomic_Response_Function(int response, double q, double E)
 {
 	double k = sqrt(2.0 * mElectron * E);
-	// if(q > q_max || k > k_max || k < k_min)
-	// {
-	// 	std::cerr << "Warning in Atomic_Response_Function() : q = " << q / keV << " keV or k = " << k / keV << "keV out of range for " << name << ". Returning 0." << std::endl;
-	// 	return 0.0;
-	// }
-	// else if(response == 1)
-	if(response == 1)
+	if(q > q_max || k > k_max || k < k_min)
+	{
+		std::cerr << "Warning in Atomic_Response_Function() : q = " << q / keV << " keV or k = " << k / keV << "keV out of range for " << name << ". Returning 0." << std::endl;
+		return 0.0;
+	}
+	else if(response == 1)
 	{
 		if(q > q_min)
 			return atomic_response_interpolations[0](k, q);
