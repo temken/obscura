@@ -41,14 +41,16 @@ Atomic_Electron::Atomic_Electron(std::string element, int N, int L, double Ebind
 double Atomic_Electron::Atomic_Response_Function(int response, double q, double E)
 {
 	double k = sqrt(2.0 * mElectron * E);
-	if(q > q_max || k > k_max || k < k_min)
+	if(q > q_max || k > 1.000001 * k_max || k < 0.999999 * k_min)
 	{
 		if(!have_warned)
 		{
-			std::cerr << "Warning in Atomic_Response_Function(): Arguments of response " << response << " of " << name << " are out of bound." << std::endl
-					  << "\tq = " << q / keV << " keV\ttabulated q domain: [" << q_min / keV << ", " << q_max / keV << "] keV" << std::endl
-					  << "\tk = " << k / keV << " keV\ttabulated k domain: [" << k_min / keV << ", " << k_max / keV << "] keV" << std::endl
-					  << "\tReturning 0. (This warning will not be repeated for " << name << ".)" << std::endl;
+			std::cerr << "Warning in Atomic_Response_Function(): Arguments of response " << response << " of " << name << " are out of bound." << std::endl;
+			if(q > q_max)
+				std::cerr << "\tq = " << q / keV << " keV\ttabulated q domain: [" << q_min / keV << ", " << q_max / keV << "] keV" << std::endl;
+			if(k > k_max || k < k_min)
+				std::cerr << "\tk = " << k / keV << " keV\ttabulated k domain: [" << k_min / keV << ", " << k_max / keV << "] keV" << std::endl;
+			std::cerr << "\tReturning 0. (This warning will not be repeated for " << name << ".)" << std::endl;
 			have_warned = true;
 		}
 		return 0.0;
@@ -76,7 +78,6 @@ double Atomic_Electron::Atomic_Response_Function(int response, double q, double 
 			{
 				std::cerr << "Warning in Atomic_Response_Function(): Arguments of response " << response << " of " << name << " are out of bound." << std::endl
 						  << "\tq = " << q / keV << " keV\ttabulated q domain: [" << q_min / keV << ", " << q_max / keV << "] keV" << std::endl
-						  << "\tk = " << k / keV << " keV\ttabulated k domain: [" << k_min / keV << ", " << k_max / keV << "] keV" << std::endl
 						  << "\tReturning 0. (This warning will not be repeated for " << name << ".)" << std::endl;
 				have_warned = true;
 			}
