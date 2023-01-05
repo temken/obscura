@@ -31,6 +31,8 @@ struct Atomic_Electron
 	double binding_energy;
 	unsigned int number_of_secondary_electrons;
 
+	bool have_warned = false;
+
 	Atomic_Electron(std::string element, int N, int L, double Ebinding, double kMin, double kMax, double qMin, double qMax, unsigned int neSecondary = 0);
 
 	double Atomic_Response_Function(int response, double q, double E);
