@@ -13,7 +13,7 @@ Furthermore, it contains a number of functions regarding scattering angles, thei
 The interface / base class
 --------------------------
 
-The abstract base class is defined in `/include/obscura/DM_Particle.hpp <https://github.com/temken/obscura/blob/master/include/obscura/DM_Particle.hpp>`_ and all the member functions and parameters can be seen there.
+The abstract base class is defined in `/include/obscura/DM_Particle.hpp <https://github.com/temken/obscura/blob/main/include/obscura/DM_Particle.hpp>`_ and all the member functions and parameters can be seen there.
 
 The most important (virtual) functions for direct detection specific calculations are the differential cross sections.
 
@@ -32,7 +32,7 @@ The most important (virtual) functions for direct detection specific calculation
 We point out that here we have to pass instances of the target classes discussed in the previous section (i.e. nuclear isotopes, atomic electrons, and electrons in crystals).
 Also included is a simple implementation of Migdal scatterings with atomic targets based on [Essig2020]_.
 
-The most standard DM candidate considered in the direct detection literature is a WIMP with SI or SD interactions. *obscura* contains derived classes for each of these scenarios, which are declared in `/include/obscura/DM_Particle_Standard.hpp <https://github.com/temken/obscura/blob/master/include/obscura/DM_Particle_Standard.hpp>`_.
+The most standard DM candidate considered in the direct detection literature is a WIMP with SI or SD interactions. *obscura* contains derived classes for each of these scenarios, which are declared in `/include/obscura/DM_Particle_Standard.hpp <https://github.com/temken/obscura/blob/main/include/obscura/DM_Particle_Standard.hpp>`_.
 
 ----------------------------------
 Spin-Independent (SI) interactions

@@ -12,8 +12,9 @@ class Crystal
 	libphysica::Interpolation_2D form_factor_interpolation;
 
   public:
+	int N_E, N_q;
 	std::string name;
-	double dE, dq;
+	double dE, dq, E_max, q_max;
 	double M_cell;
 	double energy_gap, epsilon;
 	unsigned int Q_max;

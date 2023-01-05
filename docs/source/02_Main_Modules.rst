@@ -9,7 +9,7 @@ For the description of the target particles, and how they react to a kick from a
 In order to make predictions, we furthermore need to define the *detection* experiments specifications.
 Finally, the result of such an experiment needs to be interpreted using *statistics*.
 
-.. image:: https://raw.githubusercontent.com/temken/obscura/master/paper/FlowChart.png
+.. image:: https://raw.githubusercontent.com/temken/obscura/main/paper/FlowChart.png
    :width: 500
 
 This high level of modularity in this type of calculation needs to be reflected in the code's polymorphic structure.

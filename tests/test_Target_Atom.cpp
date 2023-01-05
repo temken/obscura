@@ -8,7 +8,7 @@
 using namespace obscura;
 using namespace libphysica::natural_units;
 
-//1. Kinematic functions
+// 1. Kinematic functions
 TEST(TestTargetElectron, TestvMinimalElectrons)
 {
 	// ARRANGE
@@ -45,6 +45,22 @@ TEST(TestAtomicElectron, TestConstructor)
 	EXPECT_EQ(Xe_5p.number_of_secondary_electrons, 0);
 }
 
+TEST(TestAtomicElectron, TestResponseFunction)
+{
+	// ARRANGE
+	double q_min = 1.0 * keV;
+	double q_max = 1000.0 * keV;
+	double k_min = 0.1 * keV;
+	double k_max = 100.0 * keV;
+	Atomic_Electron Xe_5p("Xe", 5, 1, 12.4433 * eV, k_min, k_max, q_min, q_max, 0);
+	double q = 2.0 * keV;
+	double E = 10.0 * eV;
+	// ACT & ASSERT
+	EXPECT_FLOAT_EQ(Xe_5p.Atomic_Response_Function(1, q, E), Xe_5p.Ionization_Form_Factor(q, E));
+	for(int response = 1; response < 4; response++)
+		EXPECT_NE(Xe_5p.Atomic_Response_Function(response, q, E), 0.0);
+}
+
 TEST(TestAtomicElectron, TestIonizationFormFactor)
 {
 	// ARRANGE
@@ -72,7 +88,8 @@ TEST(TestAtomicElectron, TestDipoleApproximation)
 	double F0 = Xe_5p.Ionization_Form_Factor(q0, E);
 	double q  = 0.01 * keV;
 	// ACT & ASSERT
-	ASSERT_DOUBLE_EQ(Xe_5p.Ionization_Form_Factor(q, E), q * q / q0 / q0 * F0);
+	EXPECT_DOUBLE_EQ(Xe_5p.Ionization_Form_Factor(q, E), q * q / q0 / q0 * F0);
+	EXPECT_DOUBLE_EQ(Xe_5p.Atomic_Response_Function(1, q, E), q * q / q0 / q0 * F0);
 }
 
 TEST(TestAtomicElectron, TestPrintSummary)

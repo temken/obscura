@@ -9,7 +9,7 @@ namespace obscura
 {
 using namespace libphysica::natural_units;
 
-//1. Abstract parent class for SI and SD interactions
+// 1. Abstract parent class for SI and SD interactions
 DM_Particle_Standard::DM_Particle_Standard()
 : DM_Particle(), prefactor(1.0), fixed_coupling_relation(true), fp_relative(0.5), fn_relative(0.5), sigma_electron(1.0e-40 * cm * cm)
 {
@@ -56,15 +56,11 @@ void DM_Particle_Standard::Set_Sigma_Proton(double sigma)
 	fp = sqrt(M_PI * sigma / prefactor) / libphysica::Reduced_Mass(mass, mProton);
 	if(fixed_coupling_relation)
 	{
-		if(sigma == 0.0 && fp_relative != 0.0)
+		if(fp_relative == 0.0)
 		{
-			std::cerr << "Error in obscura::DM_Particle_Standard::Set_Sigma_Proton(): fp is set to zero while fixed fn/fp." << std::endl;
-			std::exit(EXIT_FAILURE);
-		}
-		else if(sigma != 0.0 && fp_relative == 0.0)
-		{
-			std::cerr << "Error in obscura::DM_Particle_Standard::Set_Sigma_Proton(): fp is set while fp/fn is fixed to zero." << std::endl;
-			std::exit(EXIT_FAILURE);
+			if(sigma != 0.0)
+				std::cerr << "Warning in DM_Particle_Standard::Set_Sigma_Proton: fp_relative is zero. fp is kept at zero." << std::endl;
+			fp = 0.0;
 		}
 		else
 			fn = fn_relative / fp_relative * fp;
@@ -76,15 +72,11 @@ void DM_Particle_Standard::Set_Sigma_Neutron(double sigma)
 	fn = sqrt(M_PI * sigma / prefactor) / libphysica::Reduced_Mass(mass, mProton);
 	if(fixed_coupling_relation)
 	{
-		if(sigma == 0.0 && fn_relative != 0.0)
+		if(fn_relative == 0.0)
 		{
-			std::cerr << "Error in obscura::DM_Particle_Standard::Set_Sigma_Neutron(): fn is set to zero while fixed fn/fp." << std::endl;
-			std::exit(EXIT_FAILURE);
-		}
-		else if(sigma != 0.0 && fn_relative == 0.0)
-		{
-			std::cerr << "Error in obscura::DM_Particle_Standard::Set_Sigma_Neutron(): fn is set while fn/fp is fixed to zero." << std::endl;
-			std::exit(EXIT_FAILURE);
+			if(sigma != 0.0)
+				std::cerr << "Warning in DM_Particle_Standard::Set_Sigma_Neutron: fn_relative is zero. fn is kept at zero." << std::endl;
+			fn = 0.0;
 		}
 		else
 			fp = fp_relative / fn_relative * fn;
@@ -96,7 +88,7 @@ void DM_Particle_Standard::Set_Sigma_Electron(double sigma)
 	sigma_electron = sigma;
 }
 
-//Primary interaction parameter, in this case the proton or neutron cross section
+// Primary interaction parameter, in this case the proton or neutron cross section
 double DM_Particle_Standard::Get_Interaction_Parameter(std::string target) const
 {
 	if(target == "Nuclei")
@@ -202,7 +194,7 @@ void DM_Particle_Standard::Unfix_Coupling_Ratios()
 	fixed_coupling_relation = false;
 }
 
-//Reference cross sections
+// Reference cross sections
 double DM_Particle_Standard::Sigma_Proton() const
 {
 	return prefactor * fp * fp * libphysica::Reduced_Mass(mass, mProton) * libphysica::Reduced_Mass(mass, mProton) / M_PI;
@@ -236,8 +228,8 @@ void DM_Particle_Standard::Print_Summary_Standard(int MPI_rank) const
 	}
 }
 
-//2. Spin-independent (SI) interactions
-//Constructors:
+// 2. Spin-independent (SI) interactions
+// Constructors:
 DM_Particle_SI::DM_Particle_SI()
 : DM_Particle_Standard(), FF_DM("Contact"), mMediator(0.0)
 {
@@ -277,7 +269,7 @@ void DM_Particle_SI::Set_Mediator_Mass(double m)
 	mMediator = m;
 }
 
-//DM form factir
+// DM form factir
 double DM_Particle_SI::FormFactor2_DM(double q) const
 {
 	double FF;
@@ -297,7 +289,7 @@ double DM_Particle_SI::FormFactor2_DM(double q) const
 	return FF * FF;
 }
 
-//Differential Cross Sections
+// Differential Cross Sections
 double DM_Particle_SI::dSigma_dq2_Nucleus(double q, const Isotope& target, double vDM, double param) const
 {
 	double nuclear_form_factor = (low_mass) ? 1.0 : target.Helm_Form_Factor(q);
@@ -319,7 +311,7 @@ double DM_Particle_SI::d2Sigma_dq2_dEe_Crystal(double q, double Ee, double vDM, 
 	return 2.0 * aEM * mElectron * mElectron / q / q / q * dSigma_dq2_Electron(q, vDM) * crystal.Crystal_Form_Factor(q, Ee);
 }
 
-//Total cross sections
+// Total cross sections
 
 bool DM_Particle_SI::Is_Sigma_Total_V_Dependent() const
 {
@@ -505,8 +497,8 @@ void DM_Particle_SI::Print_Summary(int MPI_rank) const
 	}
 }
 
-//3. Spin-dependent (SD) interactions
-//Constructors:
+// 3. Spin-dependent (SD) interactions
+// Constructors:
 DM_Particle_SD::DM_Particle_SD()
 : DM_Particle_Standard(10.0 * GeV, 3.0)
 {
@@ -525,7 +517,7 @@ DM_Particle_SD::DM_Particle_SD(double mDM, double sigmaP)
 	Set_Sigma_Proton(sigmaP);
 }
 
-//Differential Cross Sections
+// Differential Cross Sections
 double DM_Particle_SD::dSigma_dq2_Nucleus(double q, const Isotope& target, double vDM, double param) const
 {
 	return (target.spin == 0) ? 0.0 : 1.0 / M_PI / vDM / vDM * (target.spin + 1) / target.spin * pow((fp * target.sp + fn * target.sn), 2);
@@ -536,7 +528,7 @@ double DM_Particle_SD::dSigma_dq2_Electron(double q, double vDM, double param) c
 	return sigma_electron / pow(2.0 * libphysica::Reduced_Mass(mass, mElectron) * vDM, 2.0);
 }
 
-//Total cross sections with nuclear isotopes, elements, and electrons
+// Total cross sections with nuclear isotopes, elements, and electrons
 bool DM_Particle_SD::Is_Sigma_Total_V_Dependent() const
 {
 	return false;

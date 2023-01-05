@@ -1,7 +1,7 @@
-.. image:: https://github.com/temken/obscura/actions/workflows/main.yml/badge.svg?branch=master
+.. image:: https://github.com/temken/obscura/actions/workflows/main.yml/badge.svg?branch=main
    :target: https://github.com/temken/obscura/actions/workflows/main.yml
    :alt: Build Status
-.. image:: https://codecov.io/gh/temken/obscura/branch/master/graph/badge.svg?token=1Pe1QMcngr
+.. image:: https://codecov.io/gh/temken/obscura/branch/main/graph/badge.svg?token=1Pe1QMcngr
    :target: https://codecov.io/gh/temken/obscura
    :alt: Code Coverage 
 .. image:: https://readthedocs.org/projects/obscura/badge/?version=latest
@@ -30,9 +30,9 @@ It should also serve as a guide and describe the usage of *obscura* via code exa
 The documentation does not contain a review of the physics implemented in the library.
 For more physics details, we refer to e.g. chapter 3 of [Emken2019]_ or [Nobile2021]_.
 
-If you want to contribute to `obscura`, please check out the `contribution guidelines <https://github.com/temken/obscura/blob/master/docs/CONTRIBUTING.md>`_.
+If you want to contribute to `obscura`, please check out the `contribution guidelines <https://github.com/temken/obscura/blob/main/docs/CONTRIBUTING.md>`_.
 
-.. image:: https://raw.githubusercontent.com/temken/obscura/master/paper/FlowChart.png
+.. image:: https://raw.githubusercontent.com/temken/obscura/main/paper/FlowChart.png
    :width: 500
 
 .. toctree::

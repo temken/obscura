@@ -12,7 +12,7 @@ In *obscura* each target type is represented by a class, that can e.g. be passed
 Nuclear targets
 ---------------
 
-For nuclear recoil experiments, we define two target classes, ``Isotope`` and ``Nucleus`` that are declared in `/include/obscura/Target_Nucleus.hpp <https://github.com/temken/obscura/blob/master/include/obscura/Target_Nucleus.hpp>`_.
+For nuclear recoil experiments, we define two target classes, ``Isotope`` and ``Nucleus`` that are declared in `/include/obscura/Target_Nucleus.hpp <https://github.com/temken/obscura/blob/main/include/obscura/Target_Nucleus.hpp>`_.
 
 ^^^^^^^^^^^^^^^^^^^^^
 The ``Isotope`` class
@@ -46,7 +46,7 @@ There are different ways to construct instances of ``Isotope`` and ``Nucleus``.
 
 This instance of an oxygen isotope however has no knowledge of e.g. its spin or relative abundance in nature.
 
-For this purpose, *obscura* contains a nuclear data set, see `/data/Nuclear_Data.txt <https://github.com/temken/obscura/blob/master/data/Nuclear_Data.txt>`_ ([Bednyakov2005]_ [Klos2013]_), which can be accessed through the following function defined in *Target_Nucleus.hpp*.
+For this purpose, *obscura* contains a nuclear data set, see `/data/Nuclear_Data.txt <https://github.com/temken/obscura/blob/main/data/Nuclear_Data.txt>`_ ([Bednyakov2005]_ [Klos2013]_), which can be accessed through the following function defined in *Target_Nucleus.hpp*.
 
 .. code-block:: c++
 
@@ -76,7 +76,7 @@ Electron targets in atoms
 For sub-GeV DM searches, an important target are electrons bound in atoms [Essig2012]_.
 To take into account the fact that electrons are bound states, we need to evaluate the *ionization form factor* or *atomic response function* for each electronic orbital [Catena2019]_.
 
-The target classes for atomic electrons are declared in `/include/obscura/Target_Atom.hpp <https://github.com/temken/obscura/blob/master/include/obscura/Target_Atom.hpp>`_.
+The target classes for atomic electrons are declared in `/include/obscura/Target_Atom.hpp <https://github.com/temken/obscura/blob/main/include/obscura/Target_Atom.hpp>`_.
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The ``Atomic_Electron`` class
@@ -84,7 +84,7 @@ The ``Atomic_Electron`` class
 
 The first target class in this context is ``Atomic_Electron``.
 
-By constructing an instance of this class, the tabulated ionization form factor is imported from `/data/Form_Factors_Ionization/ <https://github.com/temken/obscura/tree/master/data/Form_Factors_Ionization>`_.
+By constructing an instance of this class, the tabulated ionization form factor is imported from `/data/Form_Factors_Ionization/ <https://github.com/temken/obscura/tree/main/data/Form_Factors_Ionization>`_.
 
 
 ^^^^^^^^^^^^^^^^^^
@@ -101,7 +101,7 @@ At this point, *obscura* comes with the ionization form factors of
 * Xenon (5p, 5s, 4d, 4p, 4s)
 * Argon (3p, 3s, 2p, 2s, 1s)
 
-The tables can be found under `/data/Form_Factors_Ionization/ <https://github.com/temken/obscura/tree/master/data/Form_Factors_Ionization>`_.
+The tables can be found under `/data/Form_Factors_Ionization/ <https://github.com/temken/obscura/tree/main/data/Form_Factors_Ionization>`_.
 They have been tabulated using the `DarkARC <https://github.com/temken/DarkARC>`_ code as described in detail in [Catena2019]_.
 
 The easiest way to access the ionization form factors is by constructing an instance of ``Atom``, as seen in this example.
@@ -131,7 +131,7 @@ Electron targets in crystals
 ----------------------------
 
 One of the most important targets for sub-GeV DM detectors are crystals, such as e.g. semiconductors [Essig2016]_.
-The electronic properties of the target material is encapsulated in the crystal form factor which is tabulated and can be found in `/data/Semiconductors/ <https://github.com/temken/obscura/tree/master/data/Form_Factors_Ionization>`_.
+The electronic properties of the target material is encapsulated in the crystal form factor which is tabulated and can be found in `/data/Semiconductors/ <https://github.com/temken/obscura/tree/main/data/Form_Factors_Ionization>`_.
 The included crystals are
 
 * Silicon semiconductors
@@ -139,7 +139,7 @@ The included crystals are
 
 The tables have been generated using `QEdark <http://ddldm.physics.sunysb.edu/ddlDM/>`_, a module of `Quantum ESPRESSO <https://www.quantum-espresso.org/>`_.
 
-Also for crystals, *obscura* contains a target class ``Crystal`` declared in `/include/obscura/Target_Crystal.hpp <https://github.com/temken/obscura/blob/master/include/obscura/Target_Crystal.hpp>`_.
+Also for crystals, *obscura* contains a target class ``Crystal`` declared in `/include/obscura/Target_Crystal.hpp <https://github.com/temken/obscura/blob/main/include/obscura/Target_Crystal.hpp>`_.
 
 The crystal form factor, similarly to the ionization form factors, are imported by the class constructor. Here is an example of how to access the crystal form factor.
 

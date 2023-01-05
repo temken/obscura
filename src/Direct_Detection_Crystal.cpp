@@ -5,6 +5,7 @@
 
 #include "libphysica/Integration.hpp"
 #include "libphysica/Natural_Units.hpp"
+#include "libphysica/Special_Functions.hpp"
 
 #include "obscura/Target_Atom.hpp"
 
@@ -12,7 +13,7 @@ namespace obscura
 {
 using namespace libphysica::natural_units;
 
-//1. Event spectra and rates
+// 1. Event spectra and rates
 
 double Minimum_Electron_Energy(int Q, const Crystal& target)
 {
@@ -24,11 +25,23 @@ unsigned int Electron_Hole_Pairs(double Ee, const Crystal& target)
 	return std::floor((Ee - target.energy_gap) / target.epsilon + 1);
 }
 
+bool dRdE_Crystal_warned = false;
 double dRdEe_Crystal(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Crystal& target_crystal)
 {
+	if(Ee > target_crystal.E_max)
+	{
+		if(!dRdE_Crystal_warned)
+		{
+			std::cerr << "Warning in dRdEe_Crystal: Ee lies beyond the tabulated crystal form factor. Return 0." << std::endl
+					  << "\tEe = " << libphysica::Round(Ee / eV) << " eV > E_max = " << libphysica::Round(target_crystal.E_max / eV) << " eV" << std::endl
+					  << "\t(Warning will not be repeated.)" << std::endl;
+			dRdE_Crystal_warned = true;
+		}
+		return 0;
+	}
 	double N_T		= 1.0 / target_crystal.M_cell;
 	double integral = 0.0;
-	for(int qi = 0; qi < 900; qi++)
+	for(int qi = 0; qi < target_crystal.N_q; qi++)
 	{
 		double q	= (qi + 1) * target_crystal.dq;
 		double vMin = vMinimal_Electrons(q, Ee, DM.mass);
@@ -37,7 +50,7 @@ double dRdEe_Crystal(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr
 			continue;
 		else if(DM.DD_use_eta_function && DM_distr.DD_use_eta_function)
 		{
-			double vDM = 1e-3;	 //cancels in v^2 * dSigma/dq^2
+			double vDM = 1e-3;	 // cancels in v^2 * dSigma/dq^2
 			integral += 2.0 * q * target_crystal.dq * DM_distr.DM_density / DM.mass * DM_distr.Eta_Function(vMin) * vDM * vDM * DM.d2Sigma_dq2_dEe_Crystal(q, Ee, vDM, target_crystal);
 		}
 		else
@@ -53,12 +66,12 @@ double dRdEe_Crystal(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr
 
 double R_Q_Crystal(int Q, const DM_Particle& DM, DM_Distribution& DM_distr, Crystal& target_crystal)
 {
-	//Energy threshold
+	// Energy threshold
 	double Emin = Minimum_Electron_Energy(Q, target_crystal);
 	double Emax = Minimum_Electron_Energy(Q + 1, target_crystal);
-	//Integrate over energies
+	// Integrate over energies
 	double sum = 0.0;
-	for(int Ei = (Emin / target_crystal.dE); Ei < 500; Ei++)
+	for(int Ei = (Emin / target_crystal.dE); Ei < target_crystal.N_E; Ei++)
 	{
 		double E = (Ei + 1) * target_crystal.dE;
 		if(E > Emax)
@@ -70,11 +83,11 @@ double R_Q_Crystal(int Q, const DM_Particle& DM, DM_Distribution& DM_distr, Crys
 
 double R_total_Crystal(int Qthreshold, const DM_Particle& DM, DM_Distribution& DM_distr, Crystal& target_crystal)
 {
-	//Energy threshold
+	// Energy threshold
 	double E_min = Minimum_Electron_Energy(Qthreshold, target_crystal);
-	//Integrate over energies
+	// Integrate over energies
 	double sum = 0.0;
-	for(int Ei = (E_min / target_crystal.dE); Ei < 500; Ei++)
+	for(int Ei = (E_min / target_crystal.dE); Ei < target_crystal.N_E; Ei++)
 	{
 		double E = (Ei + 1) * target_crystal.dE;
 		sum += target_crystal.dE * dRdEe_Crystal(E, DM, DM_distr, target_crystal);
@@ -82,7 +95,7 @@ double R_total_Crystal(int Qthreshold, const DM_Particle& DM, DM_Distribution& D
 	return sum;
 }
 
-//2. Electron recoil direct detection experiment with semiconductor target
+// 2. Electron recoil direct detection experiment with semiconductor target
 DM_Detector_Crystal::DM_Detector_Crystal()
 : DM_Detector("Crystal experiment", gram * year, "Electrons"), target_crystal(Crystal("Si"))
 {
@@ -93,7 +106,7 @@ DM_Detector_Crystal::DM_Detector_Crystal(std::string label, double expo, std::st
 {
 }
 
-//DM functions
+// DM functions
 double DM_Detector_Crystal::Maximum_Energy_Deposit(DM_Particle& DM, const DM_Distribution& DM_distr) const
 {
 	return DM.mass / 2.0 * pow(DM_distr.Maximum_DM_Speed(), 2.0);
@@ -158,7 +171,7 @@ std::vector<double> DM_Detector_Crystal::DM_Signals_Binned(const DM_Particle& DM
 	}
 }
 
-//Q spectrum
+// Q spectrum
 void DM_Detector_Crystal::Use_Q_Threshold(unsigned int Q_thr)
 {
 	Initialize_Poisson();
