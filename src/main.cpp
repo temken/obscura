@@ -43,34 +43,64 @@ int main(int argc, char* argv[])
 
 	std::vector<std::vector<double>> energy_bins = libphysica::Import_Table(TOP_LEVEL_DIR "data/XENON1Te/s2_response_er_energybins.dat", {keV, keV, keV});
 	std::cout << energy_bins.size() << std::endl;
+	std::vector<std::vector<double>> s2_bin_info = libphysica::Import_Table(TOP_LEVEL_DIR "data/XENON1Te/s2_binning_info.dat", {}, 1);
 
 	// Compute energy spectrum vector
 	Atom Xe("Xe");
-	std::vector<double> dRdE_list_1, dRdE_list_2;
+	std::vector<double> dRdE_list(energy_bins.size(), 0.0);
+
+	std::function<double(double)> drde = [&cfg, &Xe](double e) {
+		return dRdEe_Ionization_ER(e, *(cfg.DM), *(cfg.DM_distr), Xe);
+	};
+
+	std::vector<double> E_list = libphysica::Log_Space(0.01 * eV, energy_bins[energy_bins.size() - 1][2], 500);
+	libphysica::Export_Function("dRdE.dat", drde, E_list, {keV, 1.0 / keV / kg / year}, "# E [keV]\tdR/dE [keV^-1 kg^-1 yr^-1]");
+
 	for(unsigned int i = 0; i < energy_bins.size(); i++)
 	{
-		double E  = energy_bins[i][0];
-		double dE = energy_bins[i][2] - energy_bins[i][1];
-		std::cout << "dE " << dE << std::endl;
-		dRdE_list_1.push_back(dE * dRdEe_Ionization_ER(E, *(cfg.DM), *(cfg.DM_distr), Xe));
-
-		double E1						   = energy_bins[i][1];
-		double E2						   = energy_bins[i][2];
-		std::function<double(double)> drde = [&cfg, &Xe](double e) {
-			return dRdEe_Ionization_ER(e, *(cfg.DM), *(cfg.DM_distr), Xe);
-		};
-		dRdE_list_2.push_back(libphysica::Integrate(drde, E1, E2));
+		double E_min = energy_bins[i][1];
+		double E_max = energy_bins[i][2];
+		double dR	 = libphysica::Integrate(drde, E_min, E_max);
+		if(dR > 0.0)
+			dRdE_list[i] = dR;
+		else
+			break;
 	}
-	for(unsigned int i = 0; i < dRdE_list_1.size(); i++)
-		std::cout << i << "\t" << dRdE_list_1[i] << "\t" << dRdE_list_2[i] << "\tratio = " << dRdE_list_1[i] / dRdE_list_2[i] << std::endl;
+	for(unsigned int i = 0; i < dRdE_list.size(); i++)
+		std::cout << i << "\t" << dRdE_list[i] << std::endl;
 
-	libphysica::Vector dRdE(dRdE_list_2);
-	std::cout << dRdE.Size() << std::endl;
+	libphysica::Vector dRdE(dRdE_list);
 
 	libphysica::Vector RS2 = matrix * dRdE;
 	std::cout << RS2.Size() << std::endl;
+
+	std::vector<double> s2_bins = {150., 200., 250., 300., 350., 400., 450., 500., 550., 600., 650., 700., 750., 800., 850., 900., 950., 1000., 1050., 1100., 1150., 1200., 1250., 1300., 1350., 1400., 1450., 1500., 1550., 1600., 1650., 1700., 1750., 1800., 1850., 1900., 1950., 2000., 2050., 2100., 2150., 2200., 2250., 2300., 2350., 2400., 2450., 2500., 2550., 2600., 2650., 2700., 2750., 2800., 2850., 2900., 2950., 3000.};
+	unsigned int n_bins			= s2_bins.size() - 1;
+	std::vector<double> R_S2_binned(n_bins, 0.0);
+	for(unsigned int i = 0; i < n_bins; i++)
+	{
+		double s2_min = s2_bins[i];
+		double s2_max = s2_bins[i + 1];
+		for(unsigned int j = 0; j < s2_bin_info.size(); j++)
+			if(s2_bin_info[j][1] >= s2_min && s2_bin_info[j][2] < s2_max)
+			{
+				R_S2_binned[i] += RS2[j];
+				continue;
+			}
+	}
+	std::cout << "\nS2 bins of width 50 PE" << std::endl;
+	for(unsigned int i = 0; i < n_bins; i++)
+		std::cout << s2_bins[i] << "\t" << s2_bins[i + 1] << "\t" << R_S2_binned[i] << std::endl;
+
+	std::ofstream f;
+	f.open("R_S2_unbinned.dat");
 	for(unsigned int i = 0; i < RS2.Size(); i++)
-		std::cout << i << "\t" << RS2[i] * kg * year << std::endl;
+		f << s2_bin_info[i][1] << "\t" << RS2[i] * kg * year << std::endl;
+	f.close();
+	f.open("R_S2_binned.dat");
+	for(unsigned int i = 0; i < n_bins; i++)
+		f << s2_bins[i] << "\t" << R_S2_binned[i] * kg * year << std::endl;
+	f.close();
 	////////////////////////////////////////////////////////////////////////
 	// Atom Xe("Xe");
 	// double q = 23.0 * keV;
