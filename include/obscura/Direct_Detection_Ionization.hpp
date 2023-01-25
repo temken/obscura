@@ -28,16 +28,27 @@ class DM_Detector_Ionization : public DM_Detector
 
 	// PE (or S2) spectrum
 	unsigned int PE_threshold, PE_max;
-	double S2_mu, S2_sigma;
-	std::vector<double> Trigger_Efficiency_PE;
-	std::vector<double> Acceptance_Efficiency_PE;
 	// (a) Poisson: PE threshold (S2)
 	bool using_S2_threshold;
 	// (b) Binned Poisson: PE bins (S2)
 	bool using_S2_bins;
 	std::vector<unsigned int> S2_bin_ranges;
-	double R_S2_Bin(unsigned int S2_1, unsigned int S2_2, const DM_Particle& DM, DM_Distribution& DM_distr, std::vector<double> electron_spectrum = {});
 	std::vector<double> DM_Signals_PE_Bins(const DM_Particle& DM, DM_Distribution& DM_distr);
+
+	// Computation of the S2 spectrum
+	std::string S2_spectrum_method;
+
+	// (1) "Poisson+Gauss": Use Poission and normal distribution to calculate the probability of observing a given number of PE (S2) following Essig et al.
+	// And use tabulated trigger and acceptance efficiencies
+	double S2_mu, S2_sigma;
+	std::vector<double> Trigger_Efficiency_PE;
+	std::vector<double> Acceptance_Efficiency_PE;
+	double R_S2_Bin(unsigned int S2_1, unsigned int S2_2, const DM_Particle& DM, DM_Distribution& DM_distr, std::vector<double> electron_spectrum = {});
+
+	// (2) "Response matrix": Use a response matrix to calculate the probability of observing a given number of PE (S2) following the method of the response matrix
+	libphysica::Matrix response_matrix;
+	std::vector<std::vector<double>> energy_ranges, s2_bin_info;
+	std::vector<double> Compute_S2_Spectrum(const DM_Particle& DM, DM_Distribution& DM_distr);
 
   public:
 	DM_Detector_Ionization(std::string label, double expo, std::string target_particles, std::string atom);
@@ -66,16 +77,18 @@ class DM_Detector_Ionization : public DM_Detector
 	void Use_Electron_Bins(unsigned int ne_thr, unsigned int N_bins);
 
 	// PE (or S2) spectrum
+	void Initialize_S2_Spectrum(std::string method, double S2mu = 0.0, double S2sigma = 0.0);
+
 	double R_S2(unsigned int S2, const DM_Particle& DM, DM_Distribution& DM_distr, double W, const Nucleus& nucleus, Atomic_Electron& shell, std::vector<double> electron_spectrum = {});
 	double R_S2(unsigned int S2, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom, std::vector<double> electron_spectrum = {});
 	double R_S2(unsigned int S2, const DM_Particle& DM, DM_Distribution& DM_distr, std::vector<double> electron_spectrum = {});
 
 	// (a) Poisson: PE threshold (S2)
-	void Use_PE_Threshold(double S2mu, double S2sigma, unsigned int nPE_thr, unsigned int nPE_max);
+	void Use_PE_Threshold(unsigned int nPE_thr, unsigned int nPE_max);
 	void Import_Trigger_Efficiency_PE(std::string filename);
 	void Import_Acceptance_Efficiency_PE(std::string filename);
 	// (b) Binned Poisson: PE bins (S2)
-	void Use_PE_Bins(double S2mu, double S2sigma, const std::vector<unsigned int>& bin_ranges);
+	void Use_PE_Bins(const std::vector<unsigned int>& bin_ranges);
 
 	virtual void Print_Summary(int MPI_rank = 0) const override;
 };

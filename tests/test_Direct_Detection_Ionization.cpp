@@ -163,7 +163,8 @@ TEST(TestDirectDetectionIonization, TestS2Threshold)
 {
 	// ARRANGE
 	DM_Detector_Ionization_ER detector;
-	detector.Use_PE_Threshold(30.0, 5., 30, 100);
+	detector.Initialize_S2_Spectrum("Poisson+Gauss", 30.0, 5.);
+	detector.Use_PE_Threshold(30, 100);
 	DM_Particle_SI dm(0.9);
 	dm.Set_Interaction_Parameter(pb, "Electrons");
 	Standard_Halo_Model shm;
@@ -180,7 +181,8 @@ TEST(TestDirectDetectionIonization, TestPrintSummary)
 {
 	// ARRANGE
 	DM_Detector_Ionization_ER detector;
-	detector.Use_PE_Threshold(30.0, 5., 30, 100);
+	detector.Initialize_S2_Spectrum("Poisson+Gauss", 30.0, 5.);
+	detector.Use_PE_Threshold(30, 100);
 	// ACT & ASSERT
 	detector.Print_Summary();
 }

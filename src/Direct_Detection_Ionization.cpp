@@ -35,8 +35,7 @@ double DM_Detector_Ionization::Maximum_Energy_Deposit(DM_Particle& DM, const DM_
 	double vMax = DM_distr.Maximum_DM_Speed();
 	return DM.mass / 2.0 * vMax * vMax;
 }
-
-//Electron spectrum
+// Electron spectrum
 std::vector<double> DM_Detector_Ionization::DM_Signals_Electron_Bins(const DM_Particle& DM, DM_Distribution& DM_distr)
 {
 	if(!using_electron_bins)
@@ -57,24 +56,76 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_Electron_Bins(const DM_Pa
 	}
 }
 
-//PE (or S2) spectrum
+// PE (or S2) spectrum
 double DM_Detector_Ionization::R_S2_Bin(unsigned int S2_1, unsigned int S2_2, const DM_Particle& DM, DM_Distribution& DM_distr, std::vector<double> electron_spectrum)
 {
-	double R = 0.0;
-	// Precompute the electron spectrum to speep up the computation of the S2 spectrum
-	if(electron_spectrum.empty())
-		for(unsigned int ne = 1; ne < 16; ne++)
-			electron_spectrum.push_back(R_ne(ne, DM, DM_distr));
-	for(unsigned int PE = S2_1; PE <= S2_2; PE++)
+	if(S2_spectrum_method == "Poisson+Gauss")
 	{
-		double PE_eff = 1.0;
-		if(Trigger_Efficiency_PE.empty() == false)
-			PE_eff *= Trigger_Efficiency_PE[PE - 1];
-		if(Acceptance_Efficiency_PE.empty() == false)
-			PE_eff *= Acceptance_Efficiency_PE[PE - 1];
-		R += PE_eff * R_S2(PE, DM, DM_distr, electron_spectrum);
+		double R = 0.0;
+		// Precompute the electron spectrum to speep up the computation of the S2 spectrum
+		if(electron_spectrum.empty())
+			for(unsigned int ne = 1; ne < 16; ne++)
+				electron_spectrum.push_back(R_ne(ne, DM, DM_distr));
+		for(unsigned int PE = S2_1; PE <= S2_2; PE++)
+		{
+			double PE_eff = 1.0;
+			if(Trigger_Efficiency_PE.empty() == false)
+				PE_eff *= Trigger_Efficiency_PE[PE - 1];
+			if(Acceptance_Efficiency_PE.empty() == false)
+				PE_eff *= Acceptance_Efficiency_PE[PE - 1];
+			R += PE_eff * R_S2(PE, DM, DM_distr, electron_spectrum);
+		}
+		return R;
 	}
-	return R;
+	else if(S2_spectrum_method == "Response matrix")
+	{
+		std::vector<double> RS2_list = Compute_S2_Spectrum(DM, DM_distr);
+		double R					 = 0;
+		for(unsigned int i = 0; i < s2_bin_info.size(); i++)
+		{
+			unsigned int S2_min = s2_bin_info[i][0];
+			unsigned int S2_max = s2_bin_info[i][1];
+			if((S2_min > S2_1 && S2_min < S2_2) || (S2_max > S2_1 && S2_max < S2_2))
+				R += RS2_list[i];
+		}
+		return R;
+	}
+	else
+	{
+		std::cerr << "Error in obscura::DM_Detector_Ionization::R_S2_Bin(unsigned int, unsigned int, const DM_Particle&, DM_Distribution&, std::vector<double>): Unknown S2 spectrum method: " << S2_spectrum_method << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+}
+
+std::vector<double> DM_Detector_Ionization::Compute_S2_Spectrum(const DM_Particle& DM, DM_Distribution& DM_distr)
+{
+	// Define the integrand, given by the energy spectrum.
+	std::vector<double> dRdE_list(energy_ranges.size(), 0.0);
+	std::function<double(double)> drde = [this, &DM, &DM_distr](double e) {
+		return dRdE(e, DM, DM_distr);
+	};
+
+	// Integrate over the energy ranges of the response matrix
+	for(unsigned int i = 0; i < energy_ranges.size(); i++)
+	{
+		double E_min = energy_ranges[i][1];
+		double E_max = energy_ranges[i][2];
+		double dR	 = libphysica::Integrate(drde, E_min, E_max);
+		if(dR > 0.0)
+			dRdE_list[i] = dR;
+		else
+			break;
+	}
+
+	// Multiply the response matrix with the energy spectrum
+	libphysica::Vector dRdE_vector(dRdE_list);
+	libphysica::Vector RS2_vector = response_matrix * dRdE_vector;
+	std::vector<double> RS2_list(RS2_vector.Size());
+
+	// Convert the vector to a list
+	for(unsigned int i = 0; i < RS2_vector.Size(); i++)
+		RS2_list[i] = RS2_vector[i];
+	return RS2_list;
 }
 
 std::vector<double> DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle& DM, DM_Distribution& DM_distr)
@@ -84,7 +135,7 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle
 		std::cerr << "Error in obscura::DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle&,DM_Distribution&): Not using PE bins." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
-	else
+	else if(S2_spectrum_method == "Poisson+Gauss")
 	{
 		// Precompute the electron spectrum to speep up the computation of the S2 spectrum
 		std::vector<double> electron_spectrum;
@@ -99,15 +150,37 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle
 		}
 		return signals;
 	}
+	else if(S2_spectrum_method == "Response matrix")
+	{
+		std::vector<double> RS2_list = Compute_S2_Spectrum(DM, DM_distr);
+		std::vector<double> signals(number_of_bins, 0.0);
+		for(unsigned int i = 0; i < number_of_bins; i++)
+		{
+			double s2_min = S2_bin_ranges[i];
+			double s2_max = S2_bin_ranges[i + 1];
+			for(unsigned int j = 0; j < s2_bin_info.size(); j++)
+				if(s2_bin_info[j][1] >= s2_min && s2_bin_info[j][2] < s2_max)
+				{
+					signals[i] += exposure * RS2_list[j];
+					continue;
+				}
+		}
+		return signals;
+	}
+	else
+	{
+		std::cerr << "Error in obscura::DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle&,DM_Distribution&): Unknown S2 spectrum method: " << S2_spectrum_method << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
 }
 
 DM_Detector_Ionization::DM_Detector_Ionization(std::string label, double expo, std::string target_particle, std::string atom)
-: DM_Detector(label, expo, target_particle), atomic_targets({atom}), relative_mass_fractions({1.0}), ne_threshold(3), ne_max(15), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
+: DM_Detector(label, expo, target_particle), atomic_targets({atom}), relative_mass_fractions({1.0}), ne_threshold(3), ne_max(15), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), using_S2_threshold(false), using_S2_bins(false), S2_spectrum_method("default"), S2_mu(0.0), S2_sigma(0.0)
 {
 }
 
 DM_Detector_Ionization::DM_Detector_Ionization(std::string label, double expo, std::string target_particle, std::vector<std::string> atoms, std::vector<double> mass_fractions)
-: DM_Detector(label, expo, target_particle), relative_mass_fractions(mass_fractions), ne_threshold(3), ne_max(15), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
+: DM_Detector(label, expo, target_particle), relative_mass_fractions(mass_fractions), ne_threshold(3), ne_max(15), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), using_S2_threshold(false), using_S2_bins(false), S2_spectrum_method("default"), S2_mu(0.0), S2_sigma(0.0)
 
 {
 	for(auto& atom_name : atoms)
@@ -212,7 +285,7 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_Binned(const DM_Particle&
 	}
 }
 
-//Energy spectrum
+// Energy spectrum
 double DM_Detector_Ionization::dRdE_Ionization(double E, const DM_Particle& DM, DM_Distribution& DM_distr, const Nucleus& nucleus, Atomic_Electron& shell)
 {
 	return 0.0;
@@ -260,7 +333,6 @@ double DM_Detector_Ionization::R_ne(unsigned int ne, const DM_Particle& DM, DM_D
 {
 	double R = 0.0;
 	for(auto i = 0; i < atomic_targets.size(); i++)
-
 		R += relative_mass_fractions[i] * R_ne(ne, DM, DM_distr, atomic_targets[i]);
 	return R;
 }
@@ -295,7 +367,32 @@ void DM_Detector_Ionization::Use_Electron_Bins(unsigned int ne_thr, unsigned int
 	}
 }
 
-//PE (or S2) spectrum
+// PE (or S2) spectrum
+void DM_Detector_Ionization::Initialize_S2_Spectrum(std::string method, double S2mu, double S2sigma)
+{
+	S2_spectrum_method = method;
+	if(S2_spectrum_method == "Poisson+Gauss")
+	{
+		S2_mu	 = S2mu;
+		S2_sigma = S2sigma;
+	}
+	else if(S2_spectrum_method == "Response matrix")
+	{
+		// Import response matrix
+		std::vector<std::vector<double>> data = libphysica::Import_Table(TOP_LEVEL_DIR "data/" + name + "/s2_response_er.dat");
+		response_matrix						  = libphysica::Matrix(data);
+		response_matrix						  = response_matrix.Transpose();
+		// Import energy and S2 ranges of response matrix
+		energy_ranges = libphysica::Import_Table(TOP_LEVEL_DIR "data/" + name + "/s2_response_er_energybins.dat", {keV, keV, keV});
+		s2_bin_info	  = libphysica::Import_Table(TOP_LEVEL_DIR "data/" + name + "/s2_binning_info.dat", {}, 1);
+	}
+	else
+	{
+		std::cerr << "Error in obscura::DM_Detector_Ionization::Initialize_S2_Spectrum(): Unknown method '" << S2_spectrum_method << "'." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+}
+
 double R_S2_aux(unsigned int nPE, double mu_PE, double sigma_PE, std::vector<double> R_ne_spectrum)
 {
 	double sum = 0.0;
@@ -328,15 +425,17 @@ double DM_Detector_Ionization::R_S2(unsigned int S2, const DM_Particle& DM, DM_D
 	return R_S2_aux(S2, S2_mu, S2_sigma, electron_spectrum);
 }
 
-void DM_Detector_Ionization::Use_PE_Threshold(double S2mu, double S2sigma, unsigned int nPE_thr, unsigned int nPE_max)
+void DM_Detector_Ionization::Use_PE_Threshold(unsigned int nPE_thr, unsigned int nPE_max)
 {
+	if(S2_spectrum_method == "default")
+	{
+		std::cerr << "Error in obscura::DM_Detector_Ionization::Use_PE_Threshold(): No S2 spectrum defined." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
 	Initialize_Poisson();
 	using_S2_threshold		 = true;
 	using_electron_threshold = false;
 	using_energy_threshold	 = false;
-
-	S2_mu	 = S2mu;
-	S2_sigma = S2sigma;
 
 	PE_threshold = nPE_thr;
 	PE_max		 = nPE_max;
@@ -354,10 +453,13 @@ void DM_Detector_Ionization::Import_Trigger_Efficiency_PE(std::string filename)
 		std::cerr << "Error in obscura::DM_Detector_Ionization::Import_Trigger_Efficiency_PE(): No PE spectrum has been initialized." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
-	else
+	else if(S2_spectrum_method != "Poisson+Gauss")
 	{
-		Trigger_Efficiency_PE = libphysica::Import_List(filename);
+		std::cerr << "Error in obscura::DM_Detector_Ionization::Import_Trigger_Efficiency_PE(): Not supported for " << S2_spectrum_method << std::endl;
+		std::exit(EXIT_FAILURE);
 	}
+	else
+		Trigger_Efficiency_PE = libphysica::Import_List(filename);
 }
 
 void DM_Detector_Ionization::Import_Acceptance_Efficiency_PE(std::string filename)
@@ -367,21 +469,30 @@ void DM_Detector_Ionization::Import_Acceptance_Efficiency_PE(std::string filenam
 		std::cerr << "Error in obscura::DM_Detector_Ionization::Import_Acceptance_Efficiency_PE(): No PE spectrum has been initialized." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
-	else
+	else if(S2_spectrum_method != "Poisson+Gauss")
 	{
-		Acceptance_Efficiency_PE = libphysica::Import_List(filename);
+		std::cerr << "Error in obscura::DM_Detector_Ionization::Import_Acceptance_Efficiency_PE(): Not supported for " << S2_spectrum_method << std::endl;
+		std::exit(EXIT_FAILURE);
 	}
+	else
+		Acceptance_Efficiency_PE = libphysica::Import_List(filename);
 }
 
-//Binned Poisson:  PE bins (S2)
-void DM_Detector_Ionization::Use_PE_Bins(double S2mu, double S2sigma, const std::vector<unsigned int>& bin_ranges)
+// Binned Poisson:  PE bins (S2)
+void DM_Detector_Ionization::Use_PE_Bins(const std::vector<unsigned int>& bin_ranges)
 {
+	if(S2_spectrum_method == "default")
+	{
+		std::cerr << "Error in obscura::DM_Detector_Ionization::Use_PE_Threshold(): No S2 spectrum defined." << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+
 	Initialize_Binned_Poisson(bin_ranges.size() - 1);
 	using_S2_bins = true;
 
-	S2_mu		  = S2mu;
-	S2_sigma	  = S2sigma;
 	S2_bin_ranges = bin_ranges;
+	PE_threshold  = bin_ranges[0];
+	PE_max		  = bin_ranges[bin_ranges.size() - 1];
 }
 
 void DM_Detector_Ionization::Print_Summary(int MPI_rank) const
@@ -396,10 +507,15 @@ void DM_Detector_Ionization::Print_Summary(int MPI_rank) const
 			  << "\tPE (S2) bins:\t\t" << (using_S2_bins ? "[x]" : "[ ]") << std::endl;
 	if(using_S2_bins || using_S2_threshold)
 	{
-		std::cout << "\tmu_PE:\t\t" << S2_mu << std::endl
-				  << "\tsigma_PE:\t" << S2_sigma << std::endl
-				  << "\tImported trigger efficiencies:\t" << (Trigger_Efficiency_PE.empty() ? "[ ]" : "[x]") << std::endl
-				  << "\tImported acc. efficiencies:\t" << (Acceptance_Efficiency_PE.empty() ? "[ ]" : "[x]") << std::endl;
+		std::cout << "S2 spectrum:\t\t\t" << S2_spectrum_method << std::endl;
+		if(S2_spectrum_method == "Poisson+Gauss")
+			std::cout << "\tmu_PE:\t\t" << S2_mu << std::endl
+					  << "\tsigma_PE:\t" << S2_sigma << std::endl
+					  << "\tImported trigger efficiencies:\t" << (Trigger_Efficiency_PE.empty() ? "[ ]" : "[x]") << std::endl
+					  << "\tImported acc. efficiencies:\t" << (Acceptance_Efficiency_PE.empty() ? "[ ]" : "[x]") << std::endl;
+		else if(S2_spectrum_method == "Response matrix")
+		{
+		}
 		if(using_S2_bins)
 		{
 			std::cout << "\n\t\tBin\tBin range [S2]" << std::endl;
