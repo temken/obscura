@@ -139,7 +139,7 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle
 	{
 		// Precompute the electron spectrum to speep up the computation of the S2 spectrum
 		std::vector<double> electron_spectrum;
-		for(unsigned int ne = 1; ne < 16; ne++)
+		for(unsigned int ne = 1; ne < 150; ne++)
 			electron_spectrum.push_back(R_ne(ne, DM, DM_distr));
 
 		std::vector<double> signals;

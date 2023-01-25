@@ -41,7 +41,7 @@ Atomic_Electron::Atomic_Electron(std::string element, int N, int L, double Ebind
 double Atomic_Electron::Atomic_Response_Function(int response, double q, double E)
 {
 	double k = sqrt(2.0 * mElectron * E);
-	if(q > q_max || k > 1.000001 * k_max || k < 0.999999 * k_min)
+	if(q > 1.000001 * q_max || k > 1.000001 * k_max || k < 0.999999 * k_min)
 	{
 		if(!have_warned)
 		{
