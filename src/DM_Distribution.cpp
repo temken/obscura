@@ -13,7 +13,7 @@ namespace obscura
 using namespace libphysica::natural_units;
 
 // 1. Abstract base class for DM distributions that can be used to compute direct detection recoil spectra.
-//Constructors:
+// Constructors:
 DM_Distribution::DM_Distribution()
 : name("DM base distribution"), v_domain(std::vector<double> {0.0, 1.0}), DM_density(0.0), DD_use_eta_function(false)
 {
@@ -204,6 +204,15 @@ Imported_DM_Distribution::Imported_DM_Distribution(double rho, const std::string
 	auto pdf_table		= libphysica::Import_Table(file_path, {km / sec, sec / km});
 	pdf_speed			= libphysica::Interpolation(pdf_table);
 	v_domain			= pdf_speed.domain;
+	Check_Normalization();
+	Interpolate_Eta();
+}
+
+Imported_DM_Distribution::Imported_DM_Distribution(std::vector<std::vector<double>>& pdf_table, double rho)
+: DM_Distribution("Tabulated DM distribution", rho, 0.0, 1.0), file_path("-")
+{
+	pdf_speed = libphysica::Interpolation(pdf_table);
+	v_domain  = pdf_speed.domain;
 	Check_Normalization();
 	Interpolate_Eta();
 }
