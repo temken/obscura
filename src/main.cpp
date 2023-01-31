@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
 				  << "\tUpper Bound:\t" << libphysica::Round(In_Units(exclusion_limits[i][1], cm * cm)) << std::endl;
 
 	int CL = std::round(100.0 * cfg.constraints_certainty);
-	libphysica::Export_Table(TOP_LEVEL_DIR "results/" + cfg.ID + "/DD_Constraints_" + std::to_string(CL) + "_Response_Matrix.txt", exclusion_limits, {GeV, cm * cm});
+	libphysica::Export_Table(TOP_LEVEL_DIR "results/" + cfg.ID + "/DD_Constraints_" + std::to_string(CL) + "_Response_Matrix_4bins+background.txt", exclusion_limits, {GeV, cm * cm});
 
 	// // Import response matrix
 	// std::vector<std::vector<double>> data = libphysica::Import_Table(TOP_LEVEL_DIR "data/XENON1T_S2/s2_response_er.dat");
@@ -121,31 +121,31 @@ int main(int argc, char* argv[])
 	// for(int i = 0; i < spectrum.size(); i++)
 	// 	std::cout << spectrum[i] << "\t" << R_S2_binned[i] << std::endl;
 
-	////////////////////////////////////////////////////////////////////////
+	// ////////////////////////////////////////////////////////////////////////
 	// Atom Xe("Xe");
-	// double q = 23.0 * keV;
-	// double E = 19.0 * eV;
-	// std::cout << Xe.Electron(5, 1).Atomic_Response_Function(1, q, E) << std::endl;
-	// std::cout << Xe.Electron(5, 1).Ionization_Form_Factor(q, E) << std::endl;
-	// std::vector<double> DM_masses = libphysica::Log_Space(cfg.constraints_mass_min, cfg.constraints_mass_max, cfg.constraints_masses);
+	// // double q = 23.0 * keV;
+	// // double E = 19.0 * eV;
+	// // std::cout << Xe.Electron(5, 1).Atomic_Response_Function(1, q, E) << std::endl;
+	// // std::cout << Xe.Electron(5, 1).Ionization_Form_Factor(q, E) << std::endl;
+	// // std::vector<double> DM_masses = libphysica::Log_Space(cfg.constraints_mass_min, cfg.constraints_mass_max, cfg.constraints_masses);
 
-	// std::vector<std::vector<double>> exclusion_limits = cfg.DM_detector->Upper_Limit_Curve(*(cfg.DM), *(cfg.DM_distr), DM_masses, cfg.constraints_certainty);
-	// for(unsigned int i = 0; i < exclusion_limits.size(); i++)
-	// 	std::cout << i + 1 << "/" << exclusion_limits.size()
-	// 			  << "\tmDM = " << libphysica::Round(In_Units(exclusion_limits[i][0], (exclusion_limits[i][0] < GeV) ? MeV : GeV)) << ((exclusion_limits[i][0] < GeV) ? " MeV" : " GeV")
-	// 			  << "\tUpper Bound:\t" << libphysica::Round(In_Units(exclusion_limits[i][1], cm * cm)) << std::endl;
+	// // std::vector<std::vector<double>> exclusion_limits = cfg.DM_detector->Upper_Limit_Curve(*(cfg.DM), *(cfg.DM_distr), DM_masses, cfg.constraints_certainty);
+	// // for(unsigned int i = 0; i < exclusion_limits.size(); i++)
+	// // 	std::cout << i + 1 << "/" << exclusion_limits.size()
+	// // 			  << "\tmDM = " << libphysica::Round(In_Units(exclusion_limits[i][0], (exclusion_limits[i][0] < GeV) ? MeV : GeV)) << ((exclusion_limits[i][0] < GeV) ? " MeV" : " GeV")
+	// // 			  << "\tUpper Bound:\t" << libphysica::Round(In_Units(exclusion_limits[i][1], cm * cm)) << std::endl;
 
-	// int CL = std::round(100.0 * cfg.constraints_certainty);
-	// libphysica::Export_Table(TOP_LEVEL_DIR "results/" + cfg.ID + "/DD_Constraints_" + std::to_string(CL) + ".txt", exclusion_limits, {GeV, cm * cm});
+	// // int CL = std::round(100.0 * cfg.constraints_certainty);
+	// // libphysica::Export_Table(TOP_LEVEL_DIR "results/" + cfg.ID + "/DD_Constraints_" + std::to_string(CL) + ".txt", exclusion_limits, {GeV, cm * cm});
 
-	// DM_Particle_SI DM(100.0 * MeV);
+	// DM_Particle_SI DM(35.0 * MeV);
 	// DM.Set_Sigma_Electron(pb);
-	// auto energies = libphysica::Log_Space(0.1 * eV, 400 * eV, 50);
+	// auto energies = libphysica::Log_Space(0.1 * eV, 200 * eV, 100);
 	// std::vector<std::vector<double>> spectrum;
 	// for(auto E : energies)
-	// 	spectrum.push_back({E, E * dRdEe_Ionization_ER(E, DM, *cfg.DM_distr, Xe)});
-	// libphysica::Export_Table("dRdlnEe_mX_100MeV_sigma_1pb.dat", spectrum, {eV, 1.0 / kg / year}, "# E [eV]\tdR/dln(Ee) [1/kg/year]");
-	// extern double dRdEe_Ionization_ER(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom);
+	// 	spectrum.push_back({E, dRdEe_Ionization_ER(E, DM, *cfg.DM_distr, Xe)});
+	// libphysica::Export_Table("dRdEe_mX_35MeV_sigma_1pb.dat", spectrum, {eV, 1.0 / keV / kg / year}, "# E [eV]\tdR/dEe [1/keV/kg/year]");
+	// // extern double dRdEe_Ionization_ER(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom);
 
 	////////////////////////////////////////////////////////////////////////
 	// Final terminal output
