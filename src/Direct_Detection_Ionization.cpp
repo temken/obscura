@@ -36,7 +36,7 @@ double DM_Detector_Ionization::Maximum_Energy_Deposit(DM_Particle& DM, const DM_
 	return DM.mass / 2.0 * vMax * vMax;
 }
 
-//Electron spectrum
+// Electron spectrum
 std::vector<double> DM_Detector_Ionization::DM_Signals_Electron_Bins(const DM_Particle& DM, DM_Distribution& DM_distr)
 {
 	if(!using_electron_bins)
@@ -57,13 +57,13 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_Electron_Bins(const DM_Pa
 	}
 }
 
-//PE (or S2) spectrum
+// PE (or S2) spectrum
 double DM_Detector_Ionization::R_S2_Bin(unsigned int S2_1, unsigned int S2_2, const DM_Particle& DM, DM_Distribution& DM_distr, std::vector<double> electron_spectrum)
 {
 	double R = 0.0;
 	// Precompute the electron spectrum to speep up the computation of the S2 spectrum
 	if(electron_spectrum.empty())
-		for(unsigned int ne = 1; ne < 16; ne++)
+		for(unsigned int ne = 1; ne < 100; ne++)
 			electron_spectrum.push_back(R_ne(ne, DM, DM_distr));
 	for(unsigned int PE = S2_1; PE <= S2_2; PE++)
 	{
@@ -88,7 +88,7 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle
 	{
 		// Precompute the electron spectrum to speep up the computation of the S2 spectrum
 		std::vector<double> electron_spectrum;
-		for(unsigned int ne = 1; ne < 16; ne++)
+		for(unsigned int ne = 1; ne < 100; ne++)
 			electron_spectrum.push_back(R_ne(ne, DM, DM_distr));
 
 		std::vector<double> signals;
@@ -102,12 +102,12 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle
 }
 
 DM_Detector_Ionization::DM_Detector_Ionization(std::string label, double expo, std::string target_particle, std::string atom)
-: DM_Detector(label, expo, target_particle), atomic_targets({atom}), relative_mass_fractions({1.0}), ne_threshold(3), ne_max(15), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
+: DM_Detector(label, expo, target_particle), atomic_targets({atom}), relative_mass_fractions({1.0}), ne_threshold(3), ne_max(100), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
 {
 }
 
 DM_Detector_Ionization::DM_Detector_Ionization(std::string label, double expo, std::string target_particle, std::vector<std::string> atoms, std::vector<double> mass_fractions)
-: DM_Detector(label, expo, target_particle), relative_mass_fractions(mass_fractions), ne_threshold(3), ne_max(15), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
+: DM_Detector(label, expo, target_particle), relative_mass_fractions(mass_fractions), ne_threshold(3), ne_max(100), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
 
 {
 	for(auto& atom_name : atoms)
@@ -212,7 +212,7 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_Binned(const DM_Particle&
 	}
 }
 
-//Energy spectrum
+// Energy spectrum
 double DM_Detector_Ionization::dRdE_Ionization(double E, const DM_Particle& DM, DM_Distribution& DM_distr, const Nucleus& nucleus, Atomic_Electron& shell)
 {
 	return 0.0;
@@ -273,7 +273,7 @@ void DM_Detector_Ionization::Use_Electron_Threshold(unsigned int ne_thr, unsigne
 	using_energy_threshold	 = false;
 
 	ne_threshold = ne_thr;
-	ne_max		 = (nemax > 0 && nemax > ne_thr) ? nemax : 15;
+	ne_max		 = (nemax > 0 && nemax > ne_thr) ? nemax : 100;
 	if(ne_max < ne_threshold)
 	{
 		std::cerr << "Error in obscura::DM_Detector::Use_Electron_Threshold(): ne threshold (" << ne_threshold << ") is higher than maximum (" << ne_max << ")." << std::endl;
@@ -295,11 +295,11 @@ void DM_Detector_Ionization::Use_Electron_Bins(unsigned int ne_thr, unsigned int
 	}
 }
 
-//PE (or S2) spectrum
+// PE (or S2) spectrum
 double R_S2_aux(unsigned int nPE, double mu_PE, double sigma_PE, std::vector<double> R_ne_spectrum)
 {
 	double sum = 0.0;
-	for(int ne = 1; ne < 16; ne++)
+	for(int ne = 1; ne <= 100; ne++)
 		sum += libphysica::PDF_Gauss(nPE, mu_PE * ne, sqrt(ne) * sigma_PE) * R_ne_spectrum[ne - 1];
 	return sum;
 }
@@ -307,7 +307,7 @@ double R_S2_aux(unsigned int nPE, double mu_PE, double sigma_PE, std::vector<dou
 double DM_Detector_Ionization::R_S2(unsigned int S2, const DM_Particle& DM, DM_Distribution& DM_distr, double W, const Nucleus& nucleus, Atomic_Electron& shell, std::vector<double> electron_spectrum)
 {
 	if(electron_spectrum.empty())
-		for(unsigned ne = 1; ne < 16; ne++)
+		for(unsigned ne = 1; ne <= 100; ne++)
 			electron_spectrum.push_back(R_ne(ne, DM, DM_distr, W, nucleus, shell));
 	return R_S2_aux(S2, S2_mu, S2_sigma, electron_spectrum);
 }
@@ -315,7 +315,7 @@ double DM_Detector_Ionization::R_S2(unsigned int S2, const DM_Particle& DM, DM_D
 double DM_Detector_Ionization::R_S2(unsigned int S2, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom, std::vector<double> electron_spectrum)
 {
 	if(electron_spectrum.empty())
-		for(unsigned ne = 1; ne < 16; ne++)
+		for(unsigned ne = 1; ne <= 100; ne++)
 			electron_spectrum.push_back(R_ne(ne, DM, DM_distr, atom));
 	return R_S2_aux(S2, S2_mu, S2_sigma, electron_spectrum);
 }
@@ -323,7 +323,7 @@ double DM_Detector_Ionization::R_S2(unsigned int S2, const DM_Particle& DM, DM_D
 double DM_Detector_Ionization::R_S2(unsigned int S2, const DM_Particle& DM, DM_Distribution& DM_distr, std::vector<double> electron_spectrum)
 {
 	if(electron_spectrum.empty())
-		for(unsigned ne = 1; ne < 16; ne++)
+		for(unsigned ne = 1; ne <= 100; ne++)
 			electron_spectrum.push_back(R_ne(ne, DM, DM_distr));
 	return R_S2_aux(S2, S2_mu, S2_sigma, electron_spectrum);
 }
@@ -373,7 +373,7 @@ void DM_Detector_Ionization::Import_Acceptance_Efficiency_PE(std::string filenam
 	}
 }
 
-//Binned Poisson:  PE bins (S2)
+// Binned Poisson:  PE bins (S2)
 void DM_Detector_Ionization::Use_PE_Bins(double S2mu, double S2sigma, const std::vector<unsigned int>& bin_ranges)
 {
 	Initialize_Binned_Poisson(bin_ranges.size() - 1);
