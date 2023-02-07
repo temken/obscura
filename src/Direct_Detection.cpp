@@ -16,8 +16,8 @@ namespace obscura
 using namespace libphysica::natural_units;
 
 // DM Detector base class, which provides the statistical methods and energy bins.
-//Statistics
-//Likelihoods
+// Statistics
+// Likelihoods
 double DM_Detector::Log_Likelihood(DM_Particle& DM, DM_Distribution& DM_distr)
 {
 	if(statistical_analysis == "Poisson")
@@ -90,7 +90,12 @@ double DM_Detector::P_Value(DM_Particle& DM, DM_Distribution& DM_distr)
 		}
 		else
 			DM_expectation_value = DM_Signals_Total(DM, DM_distr);
-		p_value = libphysica::CDF_Poisson(DM_expectation_value + expected_background, observed_events);
+		double N;
+		if(observed_events < expected_background)
+			N = expected_background;
+		else
+			N = observed_events;
+		p_value = libphysica::CDF_Poisson(DM_expectation_value + expected_background, N);
 	}
 	else if(statistical_analysis == "Binned Poisson")
 	{
@@ -110,7 +115,12 @@ double DM_Detector::P_Value(DM_Particle& DM, DM_Distribution& DM_distr)
 		for(unsigned int i = 0; i < number_of_bins; i++)
 		{
 			double expectation_value = expectation_values[i] + bin_expected_background[i];
-			p_values[i]				 = libphysica::CDF_Poisson(expectation_value, bin_observed_events[i]);
+			double N;
+			if(bin_observed_events[i] < bin_expected_background[i])
+				N = bin_expected_background[i];
+			else
+				N = bin_observed_events[i];
+			p_values[i] = libphysica::CDF_Poisson(expectation_value, N);
 		}
 		p_value = *std::min_element(p_values.begin(), p_values.end());
 	}
@@ -283,7 +293,7 @@ double DM_Detector::P_Value_Maximum_Gap(DM_Particle& DM, DM_Distribution& DM_dis
 		spectrum_values.push_back(exposure * dRdE(energy, DM, DM_distr));
 	libphysica::Interpolation spectrum(energies, spectrum_values);
 
-	//Determine all gaps and find the maximum.
+	// Determine all gaps and find the maximum.
 	std::vector<double> gaps;
 	for(unsigned int i = 0; i < (maximum_gap_energy_data.size() - 1); i++)
 	{
@@ -310,7 +320,7 @@ std::string DM_Detector::Target_Particles()
 	return targets;
 }
 
-//DM functions
+// DM functions
 double DM_Detector::DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr)
 {
 	double N = 0;
@@ -354,7 +364,7 @@ std::vector<double> DM_Detector::DM_Signals_Binned(const DM_Particle& DM, DM_Dis
 	}
 }
 
-//Limits/Constraints
+// Limits/Constraints
 double DM_Detector::Upper_Limit(DM_Particle& DM, DM_Distribution& DM_distr, double certainty)
 {
 	bool found_limit = true;
@@ -415,7 +425,7 @@ std::vector<std::vector<double>> DM_Detector::Upper_Limit_Curve(DM_Particle& DM,
 	return limit;
 }
 
-//Energy spectrum
+// Energy spectrum
 void DM_Detector::Use_Energy_Threshold(double Ethr, double Emax)
 {
 	Initialize_Poisson();

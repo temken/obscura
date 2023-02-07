@@ -42,9 +42,9 @@ int main(int argc, char* argv[])
 		std::cout << i + 1 << "/" << exclusion_limits.size()
 				  << "\tmDM = " << libphysica::Round(In_Units(exclusion_limits[i][0], (exclusion_limits[i][0] < GeV) ? MeV : GeV)) << ((exclusion_limits[i][0] < GeV) ? " MeV" : " GeV")
 				  << "\tUpper Bound:\t" << libphysica::Round(In_Units(exclusion_limits[i][1], cm * cm)) << std::endl;
-
+	std::cout << exclusion_limits.size() << std::endl;
 	int CL = std::round(100.0 * cfg.constraints_certainty);
-	libphysica::Export_Table(TOP_LEVEL_DIR "results/" + cfg.ID + "/DD_Constraints_" + std::to_string(CL) + "_Response_Matrix_4bins+background.txt", exclusion_limits, {GeV, cm * cm});
+	libphysica::Export_Table(TOP_LEVEL_DIR "results/" + cfg.ID + "/DD_Constraints_" + std::to_string(CL) + "_Response_Matrix_4bins+background25.txt", exclusion_limits, {GeV, cm * cm});
 
 	// // Import response matrix
 	// std::vector<std::vector<double>> data = libphysica::Import_Table(TOP_LEVEL_DIR "data/XENON1T_S2/s2_response_er.dat");

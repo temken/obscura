@@ -165,8 +165,9 @@ DM_Detector_Ionization_ER XENON1T_S2_ER()
 	// std::vector<unsigned int> S2_bin_ranges = {150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200, 1250, 1300, 1350, 1400, 1450, 1500, 1550, 1600, 1650, 1700, 1750, 1800, 1850, 1900, 1950, 2000, 2050, 2100, 2150, 2200, 2250, 2300, 2350, 2400, 2450, 2500, 2550, 2600, 2650, 2700, 2750, 2800, 2850, 2900, 2950, 3000};
 	std::vector<unsigned long int> observed_event_bins = {21, 1, 11, 12};
 	std::vector<unsigned int> S2_bin_ranges			   = {150, 863, 1575, 2288, 3000};
-	std::vector<double> binned_background_expectation  = {4.74353, 2.01263, 3.36622, 4.01199};
-	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON1T_S2/XENON1T_TotalEfficiency.txt";
+	std::vector<double> binned_background_expectation  = {25.0, 25.0, 25.0, 25.0};
+	// std::vector<double> binned_background_expectation  = {4.74353, 2.01263, 3.36622, 4.01199};
+	std::string trigger_efficiency = PROJECT_DIR "data/XENON1T_S2/XENON1T_TotalEfficiency.txt";
 
 	DM_Detector_Ionization_ER detector("XENON1T_S2", exposure, target_name);
 	// detector.Initialize_S2_Spectrum("Poisson+Gauss", muPE, sigPE);
