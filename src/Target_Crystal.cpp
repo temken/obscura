@@ -59,7 +59,7 @@ double Crystal::Crystal_Form_Factor(double q, double E)
 {
 	if(q < dq || q > q_max || E < dE || E > E_max)
 	{
-		if(!have_warned)
+		if(!have_warned && (q < 0.999999 * dq || q > 1.000001 * q_max || E < 0.999999 * dE || E > 1.000001 * E_max))
 		{
 			std::cerr << "Warning in obscura::Crystal::Crystal_Form_Factor(): q or E out of range." << std::endl
 					  << "\tq = " << libphysica::Round(q / keV) << " keV\tq_min = " << libphysica::Round(dq / keV) << " keV\tq_max = " << libphysica::Round(q_max / keV) << " keV" << std::endl
