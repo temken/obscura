@@ -57,7 +57,7 @@ void Configuration::Initialize_Result_Folder(int MPI_rank)
 	}
 	catch(const SettingNotFoundException& nfex)
 	{
-		std::cerr << "Error in obscura::Configuration::Initialize_Result_Folder(): No 'ID' setting in configuration file." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::Configuration::Initialize_Result_Folder(): No 'ID' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	results_path = TOP_LEVEL_DIR "results/" + ID + "/";
@@ -137,12 +137,12 @@ void Configuration::Read_Config_File()
 	}
 	catch(const FileIOException& fioex)
 	{
-		std::cerr << "Error in obscura::Configuration::Read_Config_File(): I/O error while reading configuration file." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::Configuration::Read_Config_File(): I/O error while reading configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	catch(const ParseException& pex)
 	{
-		std::cerr << "Error in obscura::Configuration::Read_Config_File(): Configurate file parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::Configuration::Read_Config_File(): Configurate file parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -207,7 +207,7 @@ void Configuration::Construct_DM_Particle()
 		Configuration::Construct_DM_Particle_Standard(DM_interaction);
 	else
 	{
-		std::cerr << "Error in obscura::Configuration::Construct_DM_Particle(): 'DM_interaction' setting " << DM_interaction << " in configuration file not recognized." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::Configuration::Construct_DM_Particle(): 'DM_interaction' setting " << DM_interaction << " in configuration file not recognized." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -233,7 +233,7 @@ void Configuration::Construct_DM_Particle_Standard(std::string DM_interaction)
 		}
 		catch(const SettingNotFoundException& nfex)
 		{
-			std::cerr << "Error in Configuration::Construct_DM_Particle_Standard(): No 'DM_form_factor' setting in configuration file." << std::endl;
+			std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Configuration::Construct_DM_Particle_Standard(): No 'DM_form_factor' setting in configuration file." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		if(DM_form_factor == "General")
@@ -244,14 +244,14 @@ void Configuration::Construct_DM_Particle_Standard(std::string DM_interaction)
 				DM_mediator_mass *= MeV;
 				if(DM_mediator_mass < 1e-60)
 				{
-					std::cout << "Error in Configuration::Construct_DM_Particle_Standard:\tMediator mass for \"General\" form factor needs to be positive. (DM_mediator_mass = " << DM_mediator_mass / MeV << " MeV)\n"
+					std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Configuration::Construct_DM_Particle_Standard:\tMediator mass for \"General\" form factor needs to be positive. (DM_mediator_mass = " << DM_mediator_mass / MeV << " MeV)\n"
 							  << std::endl;
 					std::exit(EXIT_FAILURE);
 				}
 			}
 			catch(const SettingNotFoundException& nfex)
 			{
-				std::cerr << "Error in Configuration::Construct_DM_Particle_Standard(): No 'DM_mediator_mass' setting in configuration file." << std::endl;
+				std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Configuration::Construct_DM_Particle_Standard(): No 'DM_mediator_mass' setting in configuration file." << std::endl;
 				std::exit(EXIT_FAILURE);
 			}
 		}
@@ -272,7 +272,7 @@ void Configuration::Construct_DM_Particle_Standard(std::string DM_interaction)
 	}
 	catch(const SettingNotFoundException& nfex)
 	{
-		std::cerr << "Error in Configuration::Construct_DM_Particle_Standard(): No 'DM_isospin_conserved' setting in configuration file." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Configuration::Construct_DM_Particle_Standard(): No 'DM_isospin_conserved' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	double fp_rel, fn_rel;
@@ -290,7 +290,7 @@ void Configuration::Construct_DM_Particle_Standard(std::string DM_interaction)
 		}
 		catch(const SettingNotFoundException& nfex)
 		{
-			std::cerr << "Error in Configuration::Construct_DM_Particle_Standard(): No 'DM_relative_couplings' setting in configuration file." << std::endl;
+			std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Configuration::Construct_DM_Particle_Standard(): No 'DM_relative_couplings' setting in configuration file." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 	}
@@ -304,7 +304,7 @@ void Configuration::Construct_DM_Particle_Standard(std::string DM_interaction)
 	}
 	catch(const SettingNotFoundException& nfex)
 	{
-		std::cerr << "Error in Configuration::Construct_DM_Particle_Standard(): No 'DM_cross_section_nucleon' setting in configuration file." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Configuration::Construct_DM_Particle_Standard(): No 'DM_cross_section_nucleon' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	DM->Set_Interaction_Parameter(DM_cross_section_nucleon, "Nuclei");
@@ -317,7 +317,7 @@ void Configuration::Construct_DM_Particle_Standard(std::string DM_interaction)
 	}
 	catch(const SettingNotFoundException& nfex)
 	{
-		std::cerr << "Error in Configuration::Construct_DM_Particle_Standard(): No 'DM_cross_section_electron' setting in configuration file." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Configuration::Construct_DM_Particle_Standard(): No 'DM_cross_section_electron' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	DM->Set_Sigma_Electron(DM_cross_section_electron);
@@ -342,7 +342,7 @@ void Configuration::Construct_DM_Distribution()
 		Construct_Imported_Distribution();
 	else
 	{
-		std::cerr << "Error in obscura::Configuration::Construct_DM_Distribution(): 'DM_distribution' setting " << DM_distribution << " in configuration file not recognized." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::Configuration::Construct_DM_Distribution(): 'DM_distribution' setting " << DM_distribution << " in configuration file not recognized." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -358,7 +358,7 @@ void Configuration::Construct_DM_Halo_Model(std::string model_label)
 	}
 	catch(const SettingNotFoundException& nfex)
 	{
-		std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'DM_local_density' setting in configuration file." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Construct_DM_Distribution_SHM(): No 'DM_local_density' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	try
@@ -368,7 +368,7 @@ void Configuration::Construct_DM_Halo_Model(std::string model_label)
 	}
 	catch(const SettingNotFoundException& nfex)
 	{
-		std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'SHM_v0' setting in configuration file." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Construct_DM_Distribution_SHM(): No 'SHM_v0' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	try
@@ -376,7 +376,7 @@ void Configuration::Construct_DM_Halo_Model(std::string model_label)
 		int entries = config.lookup("SHM_vObserver").getLength();
 		if(entries != 3)
 		{
-			std::cerr << "Error in Construct_DM_Distribution_SHM(): 'SHM_vObserver' is a " << entries << "-dimensional vector, not 3." << std::endl;
+			std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Construct_DM_Distribution_SHM(): 'SHM_vObserver' is a " << entries << "-dimensional vector, not 3." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		for(int i = 0; i < 3; i++)
@@ -385,7 +385,7 @@ void Configuration::Construct_DM_Halo_Model(std::string model_label)
 	}
 	catch(const SettingNotFoundException& nfex)
 	{
-		std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'SHM_vObserver' setting in configuration file." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Construct_DM_Distribution_SHM(): No 'SHM_vObserver' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	try
@@ -395,7 +395,7 @@ void Configuration::Construct_DM_Halo_Model(std::string model_label)
 	}
 	catch(const SettingNotFoundException& nfex)
 	{
-		std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'SHM_vEscape' setting in configuration file." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Construct_DM_Distribution_SHM(): No 'SHM_vEscape' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	if(model_label == "SHM")
@@ -409,7 +409,7 @@ void Configuration::Construct_DM_Halo_Model(std::string model_label)
 		}
 		catch(const SettingNotFoundException& nfex)
 		{
-			std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'SHMpp_eta' setting in configuration file." << std::endl;
+			std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Construct_DM_Distribution_SHM(): No 'SHMpp_eta' setting in configuration file." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		try
@@ -418,7 +418,7 @@ void Configuration::Construct_DM_Halo_Model(std::string model_label)
 		}
 		catch(const SettingNotFoundException& nfex)
 		{
-			std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'SHMpp_beta' setting in configuration file." << std::endl;
+			std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Construct_DM_Distribution_SHM(): No 'SHMpp_beta' setting in configuration file." << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		DM_distr = new SHM_Plus_Plus(DM_local_density, SHM_v0, vel_observer, SHM_vEscape, eta, beta);
@@ -435,7 +435,7 @@ void Configuration::Construct_Imported_Distribution()
 	}
 	catch(const SettingNotFoundException& nfex)
 	{
-		std::cerr << "Error in Construct_DM_Distribution_SHM(): No 'DM_local_density' setting in configuration file." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Construct_DM_Distribution_SHM(): No 'DM_local_density' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	std::string file_path;
@@ -515,7 +515,7 @@ void Configuration::Construct_DM_Detector()
 
 	else
 	{
-		std::cerr << "Error in obscura::Configuration::Construct_DM_Detector(): Experiment " << DD_experiment << " not recognized." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::Configuration::Construct_DM_Detector(): Experiment " << DD_experiment << " not recognized." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -766,7 +766,7 @@ void Configuration::Initialize_Parameters()
 	}
 	catch(const SettingNotFoundException& nfex)
 	{
-		std::cerr << "Error in Configuration::Initialize_Parameters(): No 'constraints_certainty' setting in configuration file." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Configuration::Initialize_Parameters(): No 'constraints_certainty' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -776,7 +776,7 @@ void Configuration::Initialize_Parameters()
 	}
 	catch(const SettingNotFoundException& nfex)
 	{
-		std::cerr << "Error in Configuration::Initialize_Parameters(): No 'constraints_mass_min' setting in configuration file." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Configuration::Initialize_Parameters(): No 'constraints_mass_min' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -786,7 +786,7 @@ void Configuration::Initialize_Parameters()
 	}
 	catch(const SettingNotFoundException& nfex)
 	{
-		std::cerr << "Error in Configuration::Initialize_Parameters(): No 'constraints_mass_max' setting in configuration file." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Configuration::Initialize_Parameters(): No 'constraints_mass_max' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -796,7 +796,7 @@ void Configuration::Initialize_Parameters()
 	}
 	catch(const SettingNotFoundException& nfex)
 	{
-		std::cerr << "Error in Configuration::Initialize_Parameters(): No 'constraints_masses' setting in configuration file." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Configuration::Initialize_Parameters(): No 'constraints_masses' setting in configuration file." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }

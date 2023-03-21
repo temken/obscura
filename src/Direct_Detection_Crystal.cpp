@@ -6,6 +6,7 @@
 #include "libphysica/Integration.hpp"
 #include "libphysica/Natural_Units.hpp"
 #include "libphysica/Special_Functions.hpp"
+#include "libphysica/Utilities.hpp"
 
 #include "obscura/Target_Atom.hpp"
 
@@ -32,7 +33,7 @@ double dRdEe_Crystal(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr
 	{
 		if(!dRdE_Crystal_warned)
 		{
-			std::cerr << "Warning in dRdEe_Crystal: Ee lies beyond the tabulated crystal form factor. Return 0." << std::endl
+			std::cerr << libphysica::Formatted_String("Warning", "Yellow", true) << " in dRdEe_Crystal: Ee lies beyond the tabulated crystal form factor. Return 0." << std::endl
 					  << "\tEe = " << libphysica::Round(Ee / eV) << " eV > E_max = " << libphysica::Round(target_crystal.E_max / eV) << " eV" << std::endl
 					  << "\t(Warning will not be repeated.)" << std::endl;
 			dRdE_Crystal_warned = true;
@@ -153,7 +154,7 @@ std::vector<double> DM_Detector_Crystal::DM_Signals_Binned(const DM_Particle& DM
 {
 	if(statistical_analysis != "Binned Poisson")
 	{
-		std::cerr << "Error in obscura::DM_Detector_Crystal::DM_Signals_Binned(const DM_Particle&, DM_Distribution&): The statistical analysis is " << statistical_analysis << ", not 'Binned Poisson'." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector_Crystal::DM_Signals_Binned(const DM_Particle&, DM_Distribution&): The statistical analysis is " << statistical_analysis << ", not 'Binned Poisson'." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else if(using_energy_bins)
@@ -166,7 +167,7 @@ std::vector<double> DM_Detector_Crystal::DM_Signals_Binned(const DM_Particle& DM
 	}
 	else
 	{
-		std::cerr << "Error in obscura::DM_Detector_Crystal::DM_Signals_Binned(): Statistical analysis is 'Binned Poisson' but no bins have been defined. This should not happen ever." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector_Crystal::DM_Signals_Binned(): Statistical analysis is 'Binned Poisson' but no bins have been defined. This should not happen ever." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -197,7 +198,7 @@ std::vector<double> DM_Detector_Crystal::DM_Signals_Q_Bins(const DM_Particle& DM
 {
 	if(!using_Q_bins)
 	{
-		std::cerr << "Error in obscura::DM_Detector_Crystal::DM_Signals_Q_Bins(const DM_Particle&,DM_Distribution&): Not using Q bins." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector_Crystal::DM_Signals_Q_Bins(const DM_Particle&,DM_Distribution&): Not using Q bins." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else

@@ -45,7 +45,7 @@ double Atomic_Electron::Atomic_Response_Function(int response, double q, double 
 	{
 		if(!have_warned)
 		{
-			std::cerr << "Warning in Atomic_Response_Function(): Arguments of response " << response << " of " << name << " are out of bound." << std::endl;
+			std::cerr << libphysica::Formatted_String("Warning", "Yellow", true) << " in Atomic_Response_Function(): Arguments of response " << response << " of " << name << " are out of bound." << std::endl;
 			if(q > 1.000001 * q_max)
 				std::cerr << "\tq = " << q / keV << " keV\ttabulated q domain: [" << q_min / keV << ", " << q_max / keV << "] keV" << std::endl;
 			if(k > 1.000001 * k_max || k < 0.999999 * k_min)
@@ -76,7 +76,7 @@ double Atomic_Electron::Atomic_Response_Function(int response, double q, double 
 		{
 			if(!have_warned)
 			{
-				std::cerr << "Warning in Atomic_Response_Function(): Arguments of response " << response << " of " << name << " are out of bound." << std::endl
+				std::cerr << libphysica::Formatted_String("Warning", "Yellow", true) << " in Atomic_Response_Function(): Arguments of response " << response << " of " << name << " are out of bound." << std::endl
 						  << "\tq = " << q / keV << " keV\ttabulated q domain: [" << q_min / keV << ", " << q_max / keV << "] keV" << std::endl
 						  << "\tReturning 0. (This warning will not be repeated for " << name << ".)" << std::endl;
 				have_warned = true;
@@ -86,7 +86,7 @@ double Atomic_Electron::Atomic_Response_Function(int response, double q, double 
 	}
 	else
 	{
-		std::cerr << "Error in Atomic_Response_Function(): Invalid response function " << response << " of " << name << "." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Atomic_Response_Function(): Invalid response function " << response << " of " << name << "." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -148,7 +148,7 @@ Atom::Atom(const std::string& element_name)
 	}
 	else
 	{
-		std::cerr << "Error in obscura::Atom::Atom(std::string): Element " << element_name << " not recognized." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::Atom::Atom(std::string): Element " << element_name << " not recognized." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -171,7 +171,7 @@ Atomic_Electron Atom::Electron(unsigned int n, unsigned int l)
 		if(electrons[i].n == n && electrons[i].l == l)
 			return electrons[i];
 	}
-	std::cerr << "Error in obscura::Atom::Electron(): (n,l) = (" << n << "," << l << ") of " << nucleus.name << " does not exist." << std::endl;
+	std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::Atom::Electron(): (n,l) = (" << n << "," << l << ") of " << nucleus.name << " does not exist." << std::endl;
 	std::exit(EXIT_FAILURE);
 }
 

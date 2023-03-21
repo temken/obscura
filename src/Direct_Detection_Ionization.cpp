@@ -41,7 +41,7 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_Electron_Bins(const DM_Pa
 {
 	if(!using_electron_bins)
 	{
-		std::cerr << "Error in obscura::DM_Detector_Ionization::DM_Signals_Electron_Bins(const DM_Particle&,DM_Distribution&): Not using electron bins." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector_Ionization::DM_Signals_Electron_Bins(const DM_Particle&,DM_Distribution&): Not using electron bins." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else
@@ -81,7 +81,7 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle
 {
 	if(!using_S2_bins)
 	{
-		std::cerr << "Error in obscura::DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle&,DM_Distribution&): Not using PE bins." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle&,DM_Distribution&): Not using PE bins." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else
@@ -116,7 +116,7 @@ DM_Detector_Ionization::DM_Detector_Ionization(std::string label, double expo, s
 		relative_mass_fractions = std::vector<double>(atoms.size(), 1.0 / atoms.size());
 	else if(relative_mass_fractions.size() != atomic_targets.size())
 	{
-		std::cerr << "Error in DM_Detector_Ionization::DM_Detector_Ionization(): Length of atomic_targets (" << atomic_targets.size() << ") and relative_mass_fractions (" << relative_mass_fractions.size() << ") does not match." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in DM_Detector_Ionization::DM_Detector_Ionization(): Length of atomic_targets (" << atomic_targets.size() << ") and relative_mass_fractions (" << relative_mass_fractions.size() << ") does not match." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else
@@ -190,7 +190,7 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_Binned(const DM_Particle&
 {
 	if(statistical_analysis != "Binned Poisson")
 	{
-		std::cerr << "Error in obscura::DM_Detector_Ionization::DM_Signals_Binned(): Statistical analysis is " << statistical_analysis << ", not 'Binned Poisson'" << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector_Ionization::DM_Signals_Binned(): Statistical analysis is " << statistical_analysis << ", not 'Binned Poisson'" << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else if(using_energy_bins)
@@ -207,7 +207,7 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_Binned(const DM_Particle&
 	}
 	else
 	{
-		std::cerr << "Error in obscura::DM_Detector_Ionization::DM_Signals_Binned(): Statistical analysis is 'Binned Poisson' but no bins have been defined. This should not happen ever." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector_Ionization::DM_Signals_Binned(): Statistical analysis is 'Binned Poisson' but no bins have been defined. This should not happen ever." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -276,7 +276,7 @@ void DM_Detector_Ionization::Use_Electron_Threshold(unsigned int ne_thr, unsigne
 	ne_max		 = (nemax > 0 && nemax > ne_thr) ? nemax : 100;
 	if(ne_max < ne_threshold)
 	{
-		std::cerr << "Error in obscura::DM_Detector::Use_Electron_Threshold(): ne threshold (" << ne_threshold << ") is higher than maximum (" << ne_max << ")." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::Use_Electron_Threshold(): ne threshold (" << ne_threshold << ") is higher than maximum (" << ne_max << ")." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -290,7 +290,7 @@ void DM_Detector_Ionization::Use_Electron_Bins(unsigned int ne_thr, unsigned int
 	ne_max		 = ne_threshold + N_bins - 1;
 	if(ne_max < ne_threshold)
 	{
-		std::cerr << "Error in obscura::DM_Detector::Use_Electron_Bins(): ne threshold (" << ne_threshold << ") is higher than maximum (" << ne_max << ")." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::Use_Electron_Bins(): ne threshold (" << ne_threshold << ") is higher than maximum (" << ne_max << ")." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -342,7 +342,7 @@ void DM_Detector_Ionization::Use_PE_Threshold(double S2mu, double S2sigma, unsig
 	PE_max		 = nPE_max;
 	if(PE_max < PE_threshold)
 	{
-		std::cerr << "Error in obscura::DM_Detector::Use_PE_Threshold(): PE threshold (" << PE_threshold << ") is higher than maximum (" << PE_max << ")." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::Use_PE_Threshold(): PE threshold (" << PE_threshold << ") is higher than maximum (" << PE_max << ")." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -351,7 +351,7 @@ void DM_Detector_Ionization::Import_Trigger_Efficiency_PE(std::string filename)
 {
 	if(!using_S2_bins && !using_S2_threshold)
 	{
-		std::cerr << "Error in obscura::DM_Detector_Ionization::Import_Trigger_Efficiency_PE(): No PE spectrum has been initialized." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector_Ionization::Import_Trigger_Efficiency_PE(): No PE spectrum has been initialized." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else
@@ -364,7 +364,7 @@ void DM_Detector_Ionization::Import_Acceptance_Efficiency_PE(std::string filenam
 {
 	if(!using_S2_bins && !using_S2_threshold)
 	{
-		std::cerr << "Error in obscura::DM_Detector_Ionization::Import_Acceptance_Efficiency_PE(): No PE spectrum has been initialized." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector_Ionization::Import_Acceptance_Efficiency_PE(): No PE spectrum has been initialized." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else
