@@ -24,7 +24,7 @@ Atomic_Electron::Atomic_Electron(std::string element, int N, int L, double Ebind
 {
 	name = element + "_" + std::to_string(n) + s_names[l];
 	// Import the tables.
-	for(int response = 1; response <= 4; response++)
+	for(int response = 1; response <= 1; response++)   // NEEDS TO BE PUT BACK TO 4 AFTER THE RESPONSE TABLES 2-4 ARE ADDED
 	{
 		std::string path									= PROJECT_DIR "data/Atomic_Response_Functions/" + name + "_" + std::to_string(response) + ".txt";
 		std::vector<std::vector<double>> form_factor_tables = libphysica::Import_Table(path, {}, 3);
@@ -115,13 +115,13 @@ Atom::Atom(const std::string& element_name)
 		double q_min = 1.0 * keV;
 		double q_max = 1000.0 * keV;
 		double k_min = 0.1 * keV;
-		double k_max = 100.0 * keV;
-		// Atomic_Electron Xe_1s("Xe", A, 1, 0, 33317.6*eV, k_min, k_max, q_min, q_max);
-		// Atomic_Electron Xe_2s("Xe", A, 2, 0, 5149.21*eV, k_min, k_max, q_min, q_max);
-		// Atomic_Electron Xe_2p("Xe", A, 2, 1, 4837.71*eV, k_min, k_max, q_min, q_max);
-		// Atomic_Electron Xe_3s("Xe", A, 3, 0, 1093.24*eV, k_min, k_max, q_min, q_max);
-		// Atomic_Electron Xe_3p("Xe", A, 3, 1, 958.43*eV, k_min, k_max, q_min, q_max);
-		// Atomic_Electron Xe_3d("Xe", A, 3, 2, 710.73*eV, k_min, k_max, q_min, q_max);
+		double k_max = 500.0 * keV;
+		Atomic_Electron Xe_1s("Xe", 1, 0, 33317.6 * eV, k_min, k_max, q_min, q_max, 0);
+		Atomic_Electron Xe_2s("Xe", 2, 0, 5149.21 * eV, k_min, k_max, q_min, q_max, 0);
+		Atomic_Electron Xe_2p("Xe", 2, 1, 4837.71 * eV, k_min, k_max, q_min, q_max, 0);
+		Atomic_Electron Xe_3s("Xe", 3, 0, 1093.24 * eV, k_min, k_max, q_min, q_max, 0);
+		Atomic_Electron Xe_3p("Xe", 3, 1, 958.43 * eV, k_min, k_max, q_min, q_max, 0);
+		Atomic_Electron Xe_3d("Xe", 3, 2, 710.73 * eV, k_min, k_max, q_min, q_max, 0);
 		Atomic_Electron Xe_4s("Xe", 4, 0, 213.781 * eV, k_min, k_max, q_min, q_max, 3);
 		Atomic_Electron Xe_4p("Xe", 4, 1, 163.495 * eV, k_min, k_max, q_min, q_max, 6);
 		Atomic_Electron Xe_4d("Xe", 4, 2, 75.5897 * eV, k_min, k_max, q_min, q_max, 4);
@@ -129,7 +129,7 @@ Atom::Atom(const std::string& element_name)
 		Atomic_Electron Xe_5p("Xe", 5, 1, 12.4433 * eV, k_min, k_max, q_min, q_max, 0);
 
 		W		  = 13.8 * eV;
-		electrons = {Xe_5p, Xe_5s, Xe_4d, Xe_4p, Xe_4s};
+		electrons = {Xe_5p, Xe_5s, Xe_4d, Xe_4p, Xe_4s, Xe_3d, Xe_3p, Xe_3s, Xe_2p, Xe_2s, Xe_1s};
 	}
 	else if(element_name == "Ar" || element_name == "Argon")
 	{
