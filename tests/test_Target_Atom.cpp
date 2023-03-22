@@ -57,7 +57,7 @@ TEST(TestAtomicElectron, TestResponseFunction)
 	double E = 10.0 * eV;
 	// ACT & ASSERT
 	EXPECT_FLOAT_EQ(Xe_5p.Atomic_Response_Function(1, q, E), Xe_5p.Ionization_Form_Factor(q, E));
-	for(int response = 1; response <= 1; response++)   // NEEDS TO BE CHANGED to 4 IF MORE RESPONSE FUNCTIONS ARE ADDED
+	for(int response = 1; response <= 4; response++)
 		EXPECT_NE(Xe_5p.Atomic_Response_Function(response, q, E), 0.0);
 }
 

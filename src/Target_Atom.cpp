@@ -24,7 +24,7 @@ Atomic_Electron::Atomic_Electron(std::string element, int N, int L, double Ebind
 {
 	name = element + "_" + std::to_string(n) + s_names[l];
 	// Import the tables.
-	for(int response = 1; response <= 1; response++)   // NEEDS TO BE PUT BACK TO 4 AFTER THE RESPONSE TABLES 2-4 ARE ADDED
+	for(int response = 1; response <= 4; response++)
 	{
 		std::string path									= PROJECT_DIR "data/Atomic_Response_Functions/" + name + "_" + std::to_string(response) + ".txt";
 		std::vector<std::vector<double>> form_factor_tables = libphysica::Import_Table(path, {}, 3);
