@@ -149,7 +149,7 @@ double DM_Detector_Ionization::Minimum_DM_Speed(DM_Particle& DM) const
 double DM_Detector_Ionization::dRdE(double E, const DM_Particle& DM, DM_Distribution& DM_distr)
 {
 	double dRdE = 0.0;
-	for(auto i = 0; i < atomic_targets.size(); i++)
+	for(unsigned int i = 0; i < atomic_targets.size(); i++)
 		dRdE += relative_mass_fractions[i] * dRdE_Ionization(E, DM, DM_distr, atomic_targets[i]);
 	return dRdE;
 }
@@ -167,7 +167,7 @@ double DM_Detector_Ionization::DM_Signals_Total(const DM_Particle& DM, DM_Distri
 		for(unsigned int ne = ne_threshold; ne <= ne_max; ne++)
 			N += exposure * R_ne(ne, DM, DM_distr);
 	else if(using_energy_threshold)
-		for(auto i = 0; i < atomic_targets.size(); i++)
+		for(unsigned int i = 0; i < atomic_targets.size(); i++)
 			for(auto& electron : atomic_targets[i].electrons)
 			{
 				double kMax = electron.k_max;
@@ -259,7 +259,7 @@ double DM_Detector_Ionization::R_ne(unsigned int ne, const DM_Particle& DM, DM_D
 double DM_Detector_Ionization::R_ne(unsigned int ne, const DM_Particle& DM, DM_Distribution& DM_distr)
 {
 	double R = 0.0;
-	for(auto i = 0; i < atomic_targets.size(); i++)
+	for(unsigned int i = 0; i < atomic_targets.size(); i++)
 
 		R += relative_mass_fractions[i] * R_ne(ne, DM, DM_distr, atomic_targets[i]);
 	return R;
@@ -390,7 +390,7 @@ void DM_Detector_Ionization::Print_Summary(int MPI_rank) const
 	std::cout << std::endl
 			  << "\tElectron recoil experiment (ionization)." << std::endl
 			  << "\tTarget(s):\t\t\t" << std::endl;
-	for(auto i = 0; i < atomic_targets.size(); i++)
+	for(unsigned int i = 0; i < atomic_targets.size(); i++)
 		std::cout << "\t\t\t" << atomic_targets[i].nucleus.name << "\t(" << libphysica::Round(100.0 * relative_mass_fractions[i]) << "%)" << std::endl;
 	std::cout << "\tElectron bins:\t\t" << (using_electron_bins ? "[x]" : "[ ]") << std::endl
 			  << "\tPE (S2) bins:\t\t" << (using_S2_bins ? "[x]" : "[ ]") << std::endl;
