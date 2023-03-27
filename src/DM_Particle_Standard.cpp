@@ -4,6 +4,7 @@
 
 #include "libphysica/Special_Functions.hpp"
 #include "libphysica/Statistics.hpp"
+#include "libphysica/Utilities.hpp"
 
 namespace obscura
 {
@@ -59,7 +60,7 @@ void DM_Particle_Standard::Set_Sigma_Proton(double sigma)
 		if(fp_relative == 0.0)
 		{
 			if(sigma != 0.0)
-				std::cerr << "Warning in DM_Particle_Standard::Set_Sigma_Proton: fp_relative is zero. fp is kept at zero." << std::endl;
+				std::cerr << libphysica::Formatted_String("Warning", "Yellow", true) << " in DM_Particle_Standard::Set_Sigma_Proton: fp_relative is zero. fp is kept at zero." << std::endl;
 			fp = 0.0;
 		}
 		else
@@ -75,7 +76,7 @@ void DM_Particle_Standard::Set_Sigma_Neutron(double sigma)
 		if(fn_relative == 0.0)
 		{
 			if(sigma != 0.0)
-				std::cerr << "Warning in DM_Particle_Standard::Set_Sigma_Neutron: fn_relative is zero. fn is kept at zero." << std::endl;
+				std::cerr << libphysica::Formatted_String("Warning", "Yellow", true) << " in DM_Particle_Standard::Set_Sigma_Neutron: fn_relative is zero. fn is kept at zero." << std::endl;
 			fn = 0.0;
 		}
 		else
@@ -102,7 +103,7 @@ double DM_Particle_Standard::Get_Interaction_Parameter(std::string target) const
 		return Sigma_Electron();
 	else
 	{
-		std::cerr << "Error in obscura::DM_Particle_Standard::Get_Interaction_Parameter(std::string): Target " << target << " not recognized." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Particle_Standard::Get_Interaction_Parameter(std::string): Target " << target << " not recognized." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -120,7 +121,7 @@ void DM_Particle_Standard::Set_Interaction_Parameter(double par, std::string tar
 		Set_Sigma_Electron(par);
 	else
 	{
-		std::cerr << "Error in obscura::DM_Particle_Standard::Get_Interaction_Parameter(std::string): Target " << target << " not recognized." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Particle_Standard::Get_Interaction_Parameter(std::string): Target " << target << " not recognized." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -148,7 +149,7 @@ void DM_Particle_Standard::Fix_Coupling_Ratio(double fp_rel, double fn_rel)
 		fp = fp_relative / fn_relative * fp;
 	else
 	{
-		std::cerr << "Error in obscura::DM_Particle_Standard::Fix_Coupling_Ratio(double, double): Both couplings zero." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Particle_Standard::Fix_Coupling_Ratio(double, double): Both couplings zero." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -165,7 +166,7 @@ void DM_Particle_Standard::Fix_fn_over_fp(double ratio)
 		fp = fp_relative / fn_relative * fp;
 	else
 	{
-		std::cerr << "Error in obscura::DM_Particle_Standard::Fix_fn_over_fp(double): Both couplings zero." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Particle_Standard::Fix_fn_over_fp(double): Both couplings zero." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -184,7 +185,7 @@ void DM_Particle_Standard::Fix_fp_over_fn(double ratio)
 		fp = fp_relative / fn_relative * fp;
 	else
 	{
-		std::cerr << "Error in obscura::DM_Particle_Standard::Fix_fp_over_fn(double): Both couplings zero." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Particle_Standard::Fix_fp_over_fn(double): Both couplings zero." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -257,7 +258,7 @@ void DM_Particle_SI::Set_FormFactor_DM(std::string ff, double mMed)
 		FF_DM = ff;
 	else
 	{
-		std::cerr << "Error in obscura::DM_Particle_SI::Set_FormFactor_DM(): Form factor " << ff << " not recognized." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Particle_SI::Set_FormFactor_DM(): Form factor " << ff << " not recognized." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	if(FF_DM == "General" && mMed > 0.0)
@@ -283,7 +284,7 @@ double DM_Particle_SI::FormFactor2_DM(double q) const
 		FF = qRef / q;
 	else
 	{
-		std::cerr << "Error in obscura::DM_Particle_SI::FormFactor2_DM(): Form factor " << FF_DM << "not recognized." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Particle_SI::FormFactor2_DM(): Form factor " << FF_DM << "not recognized." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	return FF * FF;
@@ -326,7 +327,7 @@ double DM_Particle_SI::Sigma_Total_Nucleus(const Isotope& isotope, double vDM, d
 	double sigmatot = 0.0;
 	if(FF_DM != "Contact" && FF_DM != "General")
 	{
-		std::cerr << "Error in obscura::DM_Particle_SI::Sigma_Nucleus(): Divergence in the IR." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Particle_SI::Sigma_Nucleus(): Divergence in the IR." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else if(!low_mass)
@@ -348,7 +349,7 @@ double DM_Particle_SI::Sigma_Total_Electron(double vDM, double param)
 	double sigmatot = 0.0;
 	if(FF_DM != "Contact" && FF_DM != "General")
 	{
-		std::cerr << "Error in obscura::DM_Particle_SI::Sigma_Total_Electron(): Divergence in the IR." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Particle_SI::Sigma_Total_Electron(): Divergence in the IR." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else
@@ -368,7 +369,7 @@ double DM_Particle_SI::PDF_Scattering_Angle_Nucleus(double cos_alpha, const Isot
 {
 	if(FF_DM != "Contact" && FF_DM != "General")
 	{
-		std::cerr << "Error in obscura::DM_Particle_SI::PDF_Scattering_Angle_Nucleus(): Divergence in the IR." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Particle_SI::PDF_Scattering_Angle_Nucleus(): Divergence in the IR." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else if(!low_mass)
@@ -387,7 +388,7 @@ double DM_Particle_SI::PDF_Scattering_Angle_Electron(double cos_alpha, double vD
 {
 	if(FF_DM != "Contact" && FF_DM != "General")
 	{
-		std::cerr << "Error in obscura::DM_Particle_SI::PDF_Scattering_Angle_Electron(): Divergence in the IR." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Particle_SI::PDF_Scattering_Angle_Electron(): Divergence in the IR." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else if(FF_DM == "Contact")
@@ -404,7 +405,7 @@ double DM_Particle_SI::CDF_Scattering_Angle_Nucleus(double cos_alpha, const Isot
 {
 	if(FF_DM != "Contact" && FF_DM != "General")
 	{
-		std::cerr << "Error in obscura::DM_Particle_SI::CDF_Scattering_Angle_Nucleus(): Divergence in the IR." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Particle_SI::CDF_Scattering_Angle_Nucleus(): Divergence in the IR." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else if(!low_mass)
@@ -423,7 +424,7 @@ double DM_Particle_SI::CDF_Scattering_Angle_Electron(double cos_alpha, double vD
 {
 	if(FF_DM != "Contact" && FF_DM != "General")
 	{
-		std::cerr << "Error in obscura::DM_Particle_SI::CDF_Scattering_Angle_Electron(): Divergence in the IR." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Particle_SI::CDF_Scattering_Angle_Electron(): Divergence in the IR." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else if(FF_DM == "Contact")
@@ -440,7 +441,7 @@ double DM_Particle_SI::Sample_Scattering_Angle_Nucleus(std::mt19937& PRNG, const
 {
 	if(FF_DM != "Contact" && FF_DM != "General")
 	{
-		std::cerr << "Error in obscura::DM_Particle_SI::Sample_Scattering_Angle_Nucleus(): Divergence in the IR." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Particle_SI::Sample_Scattering_Angle_Nucleus(): Divergence in the IR." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else if(!low_mass)
@@ -464,7 +465,7 @@ double DM_Particle_SI::Sample_Scattering_Angle_Electron(std::mt19937& PRNG, doub
 	double xi = libphysica::Sample_Uniform(PRNG, 0.0, 1.0);
 	if(FF_DM != "Contact" && FF_DM != "General")
 	{
-		std::cerr << "Error in obscura::DM_Particle_SI::Sample_Scattering_Angle_Electron(): Divergence in the IR." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Particle_SI::Sample_Scattering_Angle_Electron(): Divergence in the IR." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else if(FF_DM == "Contact")

@@ -13,7 +13,7 @@ namespace obscura
 using namespace libphysica::natural_units;
 
 // 1. Abstract base class for DM distributions that can be used to compute direct detection recoil spectra.
-//Constructors:
+// Constructors:
 DM_Distribution::DM_Distribution()
 : name("DM base distribution"), v_domain(std::vector<double> {0.0, 1.0}), DM_density(0.0), DD_use_eta_function(false)
 {
@@ -101,7 +101,7 @@ double DM_Distribution::Average_Speed(double vMin)
 	}
 	else if(vMin < v_domain[0] || vMin >= v_domain[1])
 	{
-		std::cerr << "Error in DM_Distribution::Average_Speed(): vMin = " << In_Units(vMin, km / sec) << "lies outside the domain [" << In_Units(v_domain[0], km / sec) << "," << In_Units(v_domain[1], km / sec) << "]" << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in DM_Distribution::Average_Speed(): vMin = " << In_Units(vMin, km / sec) << "lies outside the domain [" << In_Units(v_domain[0], km / sec) << "," << In_Units(v_domain[1], km / sec) << "]" << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -122,7 +122,7 @@ double DM_Distribution::Eta_Function_Base(double vMin)
 {
 	if(vMin < v_domain[0])
 	{
-		std::cerr << "Error in obscura::DM_Distribution::Eta_Function_Base(): vMin = " << In_Units(vMin, km / sec) << "km/sec lies below the domain [" << In_Units(v_domain[0], km / sec) << "km/sec," << In_Units(v_domain[1], km / sec) << "km/sec]." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Distribution::Eta_Function_Base(): vMin = " << In_Units(vMin, km / sec) << "km/sec lies below the domain [" << In_Units(v_domain[0], km / sec) << "km/sec," << In_Units(v_domain[1], km / sec) << "km/sec]." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else if(vMin >= v_domain[1])
@@ -184,7 +184,7 @@ void Imported_DM_Distribution::Check_Normalization()
 {
 	double norm = pdf_speed.Integrate(v_domain[0], v_domain[1]);
 	if(libphysica::Relative_Difference(norm, 1.0) > 1.0e-3)
-		std::cout << "Warning in obscura::Imported_DM_Distribution::Check_Normalization(): Imported pdf is not normalized (norm = " << norm << ")." << std::endl
+		std::cerr << libphysica::Formatted_String("Warning", "Yellow", true) << " in obscura::Imported_DM_Distribution::Check_Normalization(): Imported pdf is not normalized (norm = " << norm << ")." << std::endl
 				  << std::endl;
 }
 
@@ -208,6 +208,15 @@ Imported_DM_Distribution::Imported_DM_Distribution(double rho, const std::string
 	Interpolate_Eta();
 }
 
+Imported_DM_Distribution::Imported_DM_Distribution(std::vector<std::vector<double>>& pdf_table, double rho)
+: DM_Distribution("Tabulated DM distribution", rho, 0.0, 1.0), file_path("-")
+{
+	pdf_speed = libphysica::Interpolation(pdf_table);
+	v_domain  = pdf_speed.domain;
+	Check_Normalization();
+	Interpolate_Eta();
+}
+
 double Imported_DM_Distribution::PDF_Speed(double v)
 {
 	if(v < v_domain[0] || v > v_domain[1])
@@ -220,7 +229,7 @@ double Imported_DM_Distribution::Eta_Function(double vMin)
 {
 	if(vMin < v_domain[0])
 	{
-		std::cerr << "Error in obscura::Imported_DM_Distribution::Eta_Function(): vMin = " << In_Units(vMin, km / sec) << "km/sec lies below the domain [" << In_Units(v_domain[0], km / sec) << "km/sec," << In_Units(v_domain[1], km / sec) << "km/sec]." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::Imported_DM_Distribution::Eta_Function(): vMin = " << In_Units(vMin, km / sec) << "km/sec lies below the domain [" << In_Units(v_domain[0], km / sec) << "km/sec," << In_Units(v_domain[1], km / sec) << "km/sec]." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else if(vMin > v_domain[1])

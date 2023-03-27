@@ -41,14 +41,14 @@ Atomic_Electron::Atomic_Electron(std::string element, int N, int L, double Ebind
 double Atomic_Electron::Atomic_Response_Function(int response, double q, double E)
 {
 	double k = sqrt(2.0 * mElectron * E);
-	if(q > q_max || k > 1.000001 * k_max || k < 0.999999 * k_min)
+	if(q > 1.000001 * q_max || k > 1.000001 * k_max || k < 0.999999 * k_min)
 	{
 		if(!have_warned)
 		{
-			std::cerr << "Warning in Atomic_Response_Function(): Arguments of response " << response << " of " << name << " are out of bound." << std::endl;
-			if(q > q_max)
+			std::cerr << libphysica::Formatted_String("Warning", "Yellow", true) << " in Atomic_Response_Function(): Arguments of response " << response << " of " << name << " are out of bound." << std::endl;
+			if(q > 1.000001 * q_max)
 				std::cerr << "\tq = " << q / keV << " keV\ttabulated q domain: [" << q_min / keV << ", " << q_max / keV << "] keV" << std::endl;
-			if(k > k_max || k < k_min)
+			if(k > 1.000001 * k_max || k < 0.999999 * k_min)
 				std::cerr << "\tk = " << k / keV << " keV\ttabulated k domain: [" << k_min / keV << ", " << k_max / keV << "] keV" << std::endl;
 			std::cerr << "\tReturning 0. (This warning will not be repeated for " << name << ".)" << std::endl;
 			have_warned = true;
@@ -76,7 +76,7 @@ double Atomic_Electron::Atomic_Response_Function(int response, double q, double 
 		{
 			if(!have_warned)
 			{
-				std::cerr << "Warning in Atomic_Response_Function(): Arguments of response " << response << " of " << name << " are out of bound." << std::endl
+				std::cerr << libphysica::Formatted_String("Warning", "Yellow", true) << " in Atomic_Response_Function(): Arguments of response " << response << " of " << name << " are out of bound." << std::endl
 						  << "\tq = " << q / keV << " keV\ttabulated q domain: [" << q_min / keV << ", " << q_max / keV << "] keV" << std::endl
 						  << "\tReturning 0. (This warning will not be repeated for " << name << ".)" << std::endl;
 				have_warned = true;
@@ -86,7 +86,7 @@ double Atomic_Electron::Atomic_Response_Function(int response, double q, double 
 	}
 	else
 	{
-		std::cerr << "Error in Atomic_Response_Function(): Invalid response function " << response << " of " << name << "." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in Atomic_Response_Function(): Invalid response function " << response << " of " << name << "." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -115,13 +115,13 @@ Atom::Atom(const std::string& element_name)
 		double q_min = 1.0 * keV;
 		double q_max = 1000.0 * keV;
 		double k_min = 0.1 * keV;
-		double k_max = 100.0 * keV;
-		// Atomic_Electron Xe_1s("Xe", A, 1, 0, 33317.6*eV, k_min, k_max, q_min, q_max);
-		// Atomic_Electron Xe_2s("Xe", A, 2, 0, 5149.21*eV, k_min, k_max, q_min, q_max);
-		// Atomic_Electron Xe_2p("Xe", A, 2, 1, 4837.71*eV, k_min, k_max, q_min, q_max);
-		// Atomic_Electron Xe_3s("Xe", A, 3, 0, 1093.24*eV, k_min, k_max, q_min, q_max);
-		// Atomic_Electron Xe_3p("Xe", A, 3, 1, 958.43*eV, k_min, k_max, q_min, q_max);
-		// Atomic_Electron Xe_3d("Xe", A, 3, 2, 710.73*eV, k_min, k_max, q_min, q_max);
+		double k_max = 500.0 * keV;
+		Atomic_Electron Xe_1s("Xe", 1, 0, 33317.6 * eV, k_min, k_max, q_min, q_max, 0);
+		Atomic_Electron Xe_2s("Xe", 2, 0, 5149.21 * eV, k_min, k_max, q_min, q_max, 0);
+		Atomic_Electron Xe_2p("Xe", 2, 1, 4837.71 * eV, k_min, k_max, q_min, q_max, 0);
+		Atomic_Electron Xe_3s("Xe", 3, 0, 1093.24 * eV, k_min, k_max, q_min, q_max, 0);
+		Atomic_Electron Xe_3p("Xe", 3, 1, 958.43 * eV, k_min, k_max, q_min, q_max, 0);
+		Atomic_Electron Xe_3d("Xe", 3, 2, 710.73 * eV, k_min, k_max, q_min, q_max, 0);
 		Atomic_Electron Xe_4s("Xe", 4, 0, 213.781 * eV, k_min, k_max, q_min, q_max, 3);
 		Atomic_Electron Xe_4p("Xe", 4, 1, 163.495 * eV, k_min, k_max, q_min, q_max, 6);
 		Atomic_Electron Xe_4d("Xe", 4, 2, 75.5897 * eV, k_min, k_max, q_min, q_max, 4);
@@ -129,7 +129,7 @@ Atom::Atom(const std::string& element_name)
 		Atomic_Electron Xe_5p("Xe", 5, 1, 12.4433 * eV, k_min, k_max, q_min, q_max, 0);
 
 		W		  = 13.8 * eV;
-		electrons = {Xe_5p, Xe_5s, Xe_4d, Xe_4p, Xe_4s};
+		electrons = {Xe_5p, Xe_5s, Xe_4d, Xe_4p, Xe_4s, Xe_3d, Xe_3p, Xe_3s, Xe_2p, Xe_2s, Xe_1s};
 	}
 	else if(element_name == "Ar" || element_name == "Argon")
 	{
@@ -148,7 +148,7 @@ Atom::Atom(const std::string& element_name)
 	}
 	else
 	{
-		std::cerr << "Error in obscura::Atom::Atom(std::string): Element " << element_name << " not recognized." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::Atom::Atom(std::string): Element " << element_name << " not recognized." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -171,7 +171,7 @@ Atomic_Electron Atom::Electron(unsigned int n, unsigned int l)
 		if(electrons[i].n == n && electrons[i].l == l)
 			return electrons[i];
 	}
-	std::cerr << "Error in obscura::Atom::Electron(): (n,l) = (" << n << "," << l << ") of " << nucleus.name << " does not exist." << std::endl;
+	std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::Atom::Electron(): (n,l) = (" << n << "," << l << ") of " << nucleus.name << " does not exist." << std::endl;
 	std::exit(EXIT_FAILURE);
 }
 

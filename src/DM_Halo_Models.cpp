@@ -321,7 +321,7 @@ double SHM_Plus_Plus::Eta_Function(double vMin)
 {
 	if(vMin < v_domain[0])
 	{
-		std::cerr << "Error in obscura::SHM_Plus_Plus::Eta_Function: vMin = " << In_Units(vMin, km / sec) << "km/sec lies below the domain [" << In_Units(v_domain[0], km / sec) << "km/sec," << In_Units(v_domain[1], km / sec) << "km/sec]." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::SHM_Plus_Plus::Eta_Function: vMin = " << In_Units(vMin, km / sec) << "km/sec lies below the domain [" << In_Units(v_domain[0], km / sec) << "km/sec," << In_Units(v_domain[1], km / sec) << "km/sec]." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else if(vMin > v_domain[1])

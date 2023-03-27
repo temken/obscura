@@ -6,13 +6,14 @@
 
 #include "libphysica/Natural_Units.hpp"
 #include "libphysica/Special_Functions.hpp"
+#include "libphysica/Utilities.hpp"
 
 namespace obscura
 {
 
 using namespace libphysica::natural_units;
 
-//1. Kinematic functions
+// 1. Kinematic functions
 double vMinimal_Nucleus(double ER, double mDM, double mNucleus)
 {
 	return sqrt(mNucleus * ER / 2.0 / pow(libphysica::Reduced_Mass(mDM, mNucleus), 2.0));
@@ -22,8 +23,8 @@ double Maximum_Nuclear_Recoil_Energy(double vDM, double mDM, double mNucleus)
 	return 2.0 * vDM * vDM * pow(libphysica::Reduced_Mass(mDM, mNucleus), 2.0) / mNucleus;
 }
 
-//2. Class for nuclear isotopes.
-//Auxiliary list with element names
+// 2. Class for nuclear isotopes.
+// Auxiliary list with element names
 std::vector<std::string> Nucleus_Names = {"H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og"};
 
 Isotope::Isotope()
@@ -63,7 +64,7 @@ void Isotope::Print_Summary(unsigned int MPI_rank) const
 		std::cout << name << "\t" << Z << "\t" << A << "\t" << libphysica::Round(100.0 * abundance) << "\t\t" << spin << "\t" << sp << "\t" << sn << std::endl;
 }
 
-//3. Class for elements containing all isotopes occuring in nature
+// 3. Class for elements containing all isotopes occuring in nature
 Nucleus::Nucleus()
 {
 	isotopes = {};
@@ -123,12 +124,12 @@ Isotope Nucleus::Get_Isotope(unsigned int A) const
 	for(unsigned int i = 0; i < Number_of_Isotopes(); i++)
 		if(isotopes[i].A == A)
 			return isotopes[i];
-	std::cout << "Error in obscura::Nucleus::Get_Isotope(): Isotope A=" << A << " not existent for " << name << "." << std::endl;
+	std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::Nucleus::Get_Isotope(): Isotope A=" << A << " not existent for " << name << "." << std::endl;
 	std::exit(EXIT_FAILURE);
 }
 
-//4. Nuclear data
-//Import the nuclear data from a file
+// 4. Nuclear data
+// Import the nuclear data from a file
 std::vector<Nucleus> all_nuclei;
 std::vector<Nucleus> Import_Nuclear_Data()
 {
@@ -139,7 +140,7 @@ std::vector<Nucleus> Import_Nuclear_Data()
 	f.open(path);
 	if(!f)
 	{
-		std::cerr << "Error in obscura::Import_Nuclear_Data(): Data file " << path << " not found." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::Import_Nuclear_Data(): Data file " << path << " not found." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	std::string name;
@@ -170,7 +171,7 @@ Nucleus Get_Nucleus(unsigned int Z)
 {
 	if(Z < 1 || Z > 92)
 	{
-		std::cerr << "Error in obscura::Get_Nucleus(): Input Z=" << Z << " is not a value between 1 and 92." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::Get_Nucleus(): Input Z=" << Z << " is not a value between 1 and 92." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else if(all_nuclei.size() == 0)
@@ -186,7 +187,7 @@ Nucleus Get_Nucleus(std::string name)
 		if(Get_Nucleus(Z).name == name)
 			return Get_Nucleus(Z);
 	}
-	std::cerr << "Error in obscura::Get_Nucleus(): Nucleus " << name << " not recognized." << std::endl;
+	std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::Get_Nucleus(): Nucleus " << name << " not recognized." << std::endl;
 	std::exit(EXIT_FAILURE);
 }
 

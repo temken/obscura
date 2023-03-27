@@ -26,7 +26,7 @@ TEST(TestAtomicElectron, TestConstructor)
 	double q_min = 1.0 * keV;
 	double q_max = 1000.0 * keV;
 	double k_min = 0.1 * keV;
-	double k_max = 100.0 * keV;
+	double k_max = 500.0 * keV;
 	Atomic_Electron Xe_5p("Xe", 5, 1, 12.4433 * eV, k_min, k_max, q_min, q_max, 0);
 
 	// ACT & ASSERT
@@ -51,13 +51,13 @@ TEST(TestAtomicElectron, TestResponseFunction)
 	double q_min = 1.0 * keV;
 	double q_max = 1000.0 * keV;
 	double k_min = 0.1 * keV;
-	double k_max = 100.0 * keV;
+	double k_max = 500.0 * keV;
 	Atomic_Electron Xe_5p("Xe", 5, 1, 12.4433 * eV, k_min, k_max, q_min, q_max, 0);
 	double q = 2.0 * keV;
 	double E = 10.0 * eV;
 	// ACT & ASSERT
 	EXPECT_FLOAT_EQ(Xe_5p.Atomic_Response_Function(1, q, E), Xe_5p.Ionization_Form_Factor(q, E));
-	for(int response = 1; response < 4; response++)
+	for(int response = 1; response <= 4; response++)
 		EXPECT_NE(Xe_5p.Atomic_Response_Function(response, q, E), 0.0);
 }
 
@@ -67,7 +67,7 @@ TEST(TestAtomicElectron, TestIonizationFormFactor)
 	double q_min = 1.0 * keV;
 	double q_max = 1000.0 * keV;
 	double k_min = 0.1 * keV;
-	double k_max = 100.0 * keV;
+	double k_max = 500.0 * keV;
 	Atomic_Electron Xe_5p("Xe", 5, 1, 12.4433 * eV, k_min, k_max, q_min, q_max, 0);
 	double q = keV;
 	double E = 10.0 * eV;
@@ -81,7 +81,7 @@ TEST(TestAtomicElectron, TestDipoleApproximation)
 	double q_min = 1.0 * keV;
 	double q_max = 1000.0 * keV;
 	double k_min = 0.1 * keV;
-	double k_max = 100.0 * keV;
+	double k_max = 500.0 * keV;
 	Atomic_Electron Xe_5p("Xe", 5, 1, 12.4433 * eV, k_min, k_max, q_min, q_max, 0);
 	double q0 = 0.5 * keV;
 	double E  = 20 * eV;
@@ -98,7 +98,7 @@ TEST(TestAtomicElectron, TestPrintSummary)
 	double q_min = 1.0 * keV;
 	double q_max = 1000.0 * keV;
 	double k_min = 0.1 * keV;
-	double k_max = 100.0 * keV;
+	double k_max = 500.0 * keV;
 	Atomic_Electron Xe_5p("Xe", 5, 1, 12.4433 * eV, k_min, k_max, q_min, q_max, 0);
 
 	// ACT & ASSERT
@@ -111,7 +111,7 @@ TEST(TestAtom, TestConstructor1)
 	double q_min = 1.0 * keV;
 	double q_max = 1000.0 * keV;
 	double k_min = 0.1 * keV;
-	double k_max = 100.0 * keV;
+	double k_max = 500.0 * keV;
 	double Eb	 = 12.4433 * eV;
 	Atomic_Electron Xe_5p("Xe", 5, 1, Eb, k_min, k_max, q_min, q_max, 0);
 	double w = 9 * eV;

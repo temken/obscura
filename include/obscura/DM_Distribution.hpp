@@ -20,17 +20,17 @@ class DM_Distribution
 	void Print_Summary_Base();
 
   public:
-	double DM_density;	 //Local DM density
+	double DM_density;	 // Local DM density
 	bool DD_use_eta_function;
 
-	//Constructors:
+	// Constructors:
 	DM_Distribution();
 	DM_Distribution(std::string label, double rhoDM, double vMin, double vMax);
 
 	double Minimum_DM_Speed() const;
 	double Maximum_DM_Speed() const;
 
-	//Distribution functions
+	// Distribution functions
 	virtual double PDF_Velocity(libphysica::Vector vel) { return 0.0; };
 	virtual double PDF_Speed(double v);
 	virtual double CDF_Speed(double v);
@@ -39,11 +39,11 @@ class DM_Distribution
 	virtual double Differential_DM_Flux(double v, double mDM);
 	virtual double Total_DM_Flux(double mDM);
 
-	//Averages
+	// Averages
 	virtual libphysica::Vector Average_Velocity();
 	virtual double Average_Speed(double vMin = -1.0);
 
-	//Eta-function for direct detection
+	// Eta-function for direct detection
 	virtual double Eta_Function(double vMin);
 
 	virtual void Print_Summary(int mpi_rank = 0);
@@ -65,6 +65,7 @@ class Imported_DM_Distribution : public DM_Distribution
 
   public:
 	Imported_DM_Distribution(double rho, const std::string& filepath);
+	Imported_DM_Distribution(std::vector<std::vector<double>>& pdf_table, double rho = 1.0);
 
 	virtual double PDF_Speed(double v) override;
 

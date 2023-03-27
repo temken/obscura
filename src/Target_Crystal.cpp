@@ -37,7 +37,7 @@ Crystal::Crystal(std::string target)
 	}
 	else
 	{
-		std::cerr << "Error in obscura::Crystal::Crystal(): target " << target << " not recognized." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::Crystal::Crystal(): target " << target << " not recognized." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	// Import the form factor
@@ -59,9 +59,9 @@ double Crystal::Crystal_Form_Factor(double q, double E)
 {
 	if(q < dq || q > q_max || E < dE || E > E_max)
 	{
-		if(!have_warned)
+		if(!have_warned && (q < 0.999999 * dq || q > 1.000001 * q_max || E < 0.999999 * dE || E > 1.000001 * E_max))
 		{
-			std::cerr << "Warning in obscura::Crystal::Crystal_Form_Factor(): q or E out of range." << std::endl
+			std::cerr << libphysica::Formatted_String("Warning", "Yellow", true) << " in obscura::Crystal::Crystal_Form_Factor(): q or E out of range." << std::endl
 					  << "\tq = " << libphysica::Round(q / keV) << " keV\tq_min = " << libphysica::Round(dq / keV) << " keV\tq_max = " << libphysica::Round(q_max / keV) << " keV" << std::endl
 					  << "\tE = " << libphysica::Round(E / eV) << " eV\tE_min = " << libphysica::Round(dE / eV) << " eV\tE_max = " << libphysica::Round(E_max / eV) << " eV" << std::endl
 					  << "\tReturning 0. (This warning will not be repeated.)" << std::endl;

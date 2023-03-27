@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.11)
 
-project(obscura VERSION "1.0.2")
+project(obscura VERSION "1.0.3")
 
 # Use C++-11
 set(CMAKE_CXX_STANDARD 11)
@@ -30,7 +30,7 @@ include(FetchContent)
 set(LIBPHYSICA_DIR ${EXTERNAL_DIR}/libphysica)
 FetchContent_Declare(libphysica
   GIT_REPOSITORY https://github.com/temken/libphysica.git
-  GIT_TAG origin/dev
+  GIT_TAG v0.1.5
   SOURCE_DIR "${LIBPHYSICA_DIR}"
   CMAKE_ARGS "-DCMAKE_BUILD_TYPE=Release -DCODE_COVERAGE=OFF")
 FetchContent_GetProperties(libphysica)
@@ -53,7 +53,7 @@ endif()
 set(GTEST_DIR ${EXTERNAL_DIR}/googletest)
 FetchContent_Declare(googletest
   GIT_REPOSITORY https://github.com/google/googletest.git
-  GIT_TAG release-1.10.0
+  GIT_TAG release-1.12.1
   SOURCE_DIR "${GTEST_DIR}/src"
   BINARY_DIR "${GTEST_DIR}/build"
   CONFIGURE_COMMAND ""

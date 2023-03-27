@@ -16,8 +16,8 @@ namespace obscura
 using namespace libphysica::natural_units;
 
 // DM Detector base class, which provides the statistical methods and energy bins.
-//Statistics
-//Likelihoods
+// Statistics
+// Likelihoods
 double DM_Detector::Log_Likelihood(DM_Particle& DM, DM_Distribution& DM_distr)
 {
 	if(statistical_analysis == "Poisson")
@@ -43,7 +43,7 @@ double DM_Detector::Log_Likelihood(DM_Particle& DM, DM_Distribution& DM_distr)
 	}
 	else
 	{
-		std::cerr << "Error in obscura::DM_Detector_Nucleus::Log_Likelihood(): Analysis " << statistical_analysis << " not recognized." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector_Nucleus::Log_Likelihood(): Analysis " << statistical_analysis << " not recognized." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -120,7 +120,7 @@ double DM_Detector::P_Value(DM_Particle& DM, DM_Distribution& DM_distr)
 	}
 	else
 	{
-		std::cerr << "Error in obscura::DM_Detector_Nucleus::P_Value(): Analysis " << statistical_analysis << " not recognized." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector_Nucleus::P_Value(): Analysis " << statistical_analysis << " not recognized." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 
@@ -139,7 +139,7 @@ void DM_Detector::Set_Observed_Events(unsigned long int n)
 {
 	if(statistical_analysis != "Poisson")
 	{
-		std::cerr << "Error in obscura::DM_Detector::Set_Observed_Events(unsigned long int): Statistical analysis is " << statistical_analysis << " not 'Poisson'." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::Set_Observed_Events(unsigned long int): Statistical analysis is " << statistical_analysis << " not 'Poisson'." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else
@@ -152,7 +152,7 @@ void DM_Detector::Set_Expected_Background(double B)
 {
 	if(statistical_analysis != "Poisson")
 	{
-		std::cerr << "Error in obscura::DM_Detector::Set_Expected_Background(double): Statistical analysis is " << statistical_analysis << " not 'Poisson'." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::Set_Expected_Background(double): Statistical analysis is " << statistical_analysis << " not 'Poisson'." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else
@@ -166,7 +166,7 @@ void DM_Detector::Initialize_Binned_Poisson(unsigned bins)
 {
 	if(statistical_analysis == "Binned Poisson")
 	{
-		std::cerr << "Error in obscura::DM_Detector::Initialize_Binned_Poisson(): Bins have already been defined." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::Initialize_Binned_Poisson(): Bins have already been defined." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else
@@ -183,12 +183,12 @@ void DM_Detector::Set_Observed_Events(std::vector<unsigned long int> Ni)
 {
 	if(statistical_analysis != "Binned Poisson")
 	{
-		std::cerr << "Error in obscura::DM_Detector::Set_Observed_Events(std::vector<unsigned long int>): Statistical analysis is " << statistical_analysis << " not 'Binned Poisson'." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::Set_Observed_Events(std::vector<unsigned long int>): Statistical analysis is " << statistical_analysis << " not 'Binned Poisson'." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else if(Ni.size() != number_of_bins)
 	{
-		std::cerr << "Error in obscura::DM_Detector::Set_Observed_Events(std::vector<unsigned long int>): Length of the input (" << Ni.size() << ") is not equal to the number of bins(" << number_of_bins << ")." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::Set_Observed_Events(std::vector<unsigned long int>): Length of the input (" << Ni.size() << ") is not equal to the number of bins(" << number_of_bins << ")." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else
@@ -202,12 +202,12 @@ void DM_Detector::Set_Bin_Efficiencies(const std::vector<double>& eff)
 {
 	if(statistical_analysis != "Binned Poisson")
 	{
-		std::cerr << "Error in obscura::DM_Detector::Set_Bin_Efficiencies(const std::vector<double>&): Statistical analysis is " << statistical_analysis << " not 'Binned Poisson'." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::Set_Bin_Efficiencies(const std::vector<double>&): Statistical analysis is " << statistical_analysis << " not 'Binned Poisson'." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else if(eff.size() != number_of_bins)
 	{
-		std::cerr << "Error in obscura::DM_Detector::Set_Bin_Efficiencies(const std::vector<double>&): Length of the input (" << eff.size() << ") is not equal to the number of bins(" << number_of_bins << ")." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::Set_Bin_Efficiencies(const std::vector<double>&): Length of the input (" << eff.size() << ") is not equal to the number of bins(" << number_of_bins << ")." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else
@@ -220,12 +220,12 @@ void DM_Detector::Set_Expected_Background(const std::vector<double>& Bi)
 {
 	if(statistical_analysis != "Binned Poisson")
 	{
-		std::cerr << "Error in obscura::DM_Detector::Set_Expected_Background(const std::vector<double>&): Statistical analysis is " << statistical_analysis << " not 'Binned Poisson'." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::Set_Expected_Background(const std::vector<double>&): Statistical analysis is " << statistical_analysis << " not 'Binned Poisson'." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else if(Bi.size() != number_of_bins)
 	{
-		std::cerr << "Error in obscura::DM_Detector::Set_Expected_Background(const std::vector<double>&): Length of the input (" << Bi.size() << ") is not equal to the number of bins(" << number_of_bins << ")." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::Set_Expected_Background(const std::vector<double>&): Length of the input (" << Bi.size() << ") is not equal to the number of bins(" << number_of_bins << ")." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else
@@ -283,7 +283,7 @@ double DM_Detector::P_Value_Maximum_Gap(DM_Particle& DM, DM_Distribution& DM_dis
 		spectrum_values.push_back(exposure * dRdE(energy, DM, DM_distr));
 	libphysica::Interpolation spectrum(energies, spectrum_values);
 
-	//Determine all gaps and find the maximum.
+	// Determine all gaps and find the maximum.
 	std::vector<double> gaps;
 	for(unsigned int i = 0; i < (maximum_gap_energy_data.size() - 1); i++)
 	{
@@ -310,7 +310,7 @@ std::string DM_Detector::Target_Particles()
 	return targets;
 }
 
-//DM functions
+// DM functions
 double DM_Detector::DM_Signals_Total(const DM_Particle& DM, DM_Distribution& DM_distr)
 {
 	double N = 0;
@@ -342,19 +342,19 @@ std::vector<double> DM_Detector::DM_Signals_Binned(const DM_Particle& DM, DM_Dis
 {
 	if(statistical_analysis != "Binned Poisson")
 	{
-		std::cerr << "Error in obscura::DM_Detector::DM_Signals_Binned(const DM_Particle&, DM_Distribution&): The statistical analysis is " << statistical_analysis << ", not 'Binned Poisson'." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::DM_Signals_Binned(const DM_Particle&, DM_Distribution&): The statistical analysis is " << statistical_analysis << ", not 'Binned Poisson'." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else if(using_energy_bins)
 		return DM_Signals_Energy_Bins(DM, DM_distr);
 	else
 	{
-		std::cerr << "Error in obscura::DM_Detector::DM_Signals_Binned(): Statistical analysis is 'Binned Poisson' but no bins have been defined. This should not happen ever." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::DM_Signals_Binned(): Statistical analysis is 'Binned Poisson' but no bins have been defined. This should not happen ever." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
 
-//Limits/Constraints
+// Limits/Constraints
 double DM_Detector::Upper_Limit(DM_Particle& DM, DM_Distribution& DM_distr, double certainty)
 {
 	bool found_limit = true;
@@ -415,7 +415,7 @@ std::vector<std::vector<double>> DM_Detector::Upper_Limit_Curve(DM_Particle& DM,
 	return limit;
 }
 
-//Energy spectrum
+// Energy spectrum
 void DM_Detector::Use_Energy_Threshold(double Ethr, double Emax)
 {
 	Initialize_Poisson();
@@ -424,7 +424,7 @@ void DM_Detector::Use_Energy_Threshold(double Ethr, double Emax)
 	energy_max			   = Emax;
 	if(energy_max < energy_threshold)
 	{
-		std::cerr << "Error in obscura::DM_Detector::Use_Energy_Threshold(): Energy threshold (" << energy_threshold / keV << "keV) is higher than maximum energy (" << energy_max / keV << "keV)." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::Use_Energy_Threshold(): Energy threshold (" << energy_threshold / keV << "keV) is higher than maximum energy (" << energy_max / keV << "keV)." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -438,7 +438,7 @@ void DM_Detector::Use_Energy_Bins(double Emin, double Emax, int bins)
 	bin_energies	  = libphysica::Linear_Space(energy_threshold, energy_max, number_of_bins + 1);
 	if(energy_max < energy_threshold)
 	{
-		std::cerr << "Error in obscura::DM_Detector::Use_Energy_Bins(): Energy threshold (" << energy_threshold / keV << "keV) is higher than maximum energy (" << energy_max / keV << "keV)." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::Use_Energy_Bins(): Energy threshold (" << energy_threshold / keV << "keV) is higher than maximum energy (" << energy_max / keV << "keV)." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 }
@@ -447,7 +447,7 @@ std::vector<double> DM_Detector::DM_Signals_Energy_Bins(const DM_Particle& DM, D
 {
 	if(!using_energy_bins)
 	{
-		std::cerr << "Error in obscura::DM_Detector::DM_Signals_Energy_Bins(const DM_Particle&,DM_Distribution&): Not using energy bins." << std::endl;
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::DM_Signals_Energy_Bins(const DM_Particle&,DM_Distribution&): Not using energy bins." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
 	else

@@ -15,7 +15,7 @@ using namespace obscura;
 
 int main(int argc, char* argv[])
 {
-	//Initial terminal output
+	// Initial terminal output
 	auto time_start	  = std::chrono::system_clock::now();
 	auto time_start_t = std::chrono::system_clock::to_time_t(time_start);
 	auto* ctime_start = ctime(&time_start_t);
@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 			  << std::endl;
 	////////////////////////////////////////////////////////////////////////
 
-	//Import configuration file
+	// Import configuration file
 	obscura::Configuration cfg(argv[1]);
 	cfg.Print_Summary();
 
@@ -43,14 +43,10 @@ int main(int argc, char* argv[])
 	libphysica::Export_Table(TOP_LEVEL_DIR "results/" + cfg.ID + "/DD_Constraints_" + std::to_string(CL) + ".txt", exclusion_limits, {GeV, cm * cm});
 
 	////////////////////////////////////////////////////////////////////////
-	//Final terminal output
-	auto time_end		 = std::chrono::system_clock::now();
-	double durationTotal = 1e-6 * std::chrono::duration_cast<std::chrono::microseconds>(time_end - time_start).count();
-	std::cout << "\n[Finished in " << std::round(1000. * durationTotal) / 1000. << "s";
-	if(durationTotal > 60.0)
-		std::cout << " (" << floor(durationTotal / 3600.0) << ":" << floor(fmod(durationTotal / 60.0, 60.0)) << ":" << floor(fmod(durationTotal, 60.0)) << ")]." << std::endl;
-	else
-		std::cout << "]" << std::endl;
-
+	// Final terminal output
+	auto time_end			 = std::chrono::system_clock::now();
+	double durationTotal	 = 1e-6 * std::chrono::duration_cast<std::chrono::microseconds>(time_end - time_start).count();
+	std::string final_output = "[Finished " + libphysica::Time_Display(durationTotal) + "]";
+	std::cout << libphysica::Formatted_String(final_output, "Green", true) << std::endl;
 	return 0;
 }
