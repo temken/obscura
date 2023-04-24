@@ -88,11 +88,13 @@ double R_total_Crystal(int Qthreshold, const DM_Particle& DM, DM_Distribution& D
 DM_Detector_Crystal::DM_Detector_Crystal()
 : DM_Detector("Crystal experiment", gram * year, "Electrons"), target_crystal(Crystal("Si"))
 {
+	Use_Q_Threshold(2);
 }
 
 DM_Detector_Crystal::DM_Detector_Crystal(std::string label, double expo, std::string crys)
 : DM_Detector(label, expo, "Electrons"), target_crystal(Crystal(crys))
 {
+	Use_Q_Threshold(2);
 }
 
 // DM functions
