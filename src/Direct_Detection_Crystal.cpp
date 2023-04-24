@@ -21,11 +21,6 @@ double Minimum_Electron_Energy(int Q, const Crystal& target)
 	return target.epsilon * (Q - 1) + target.energy_gap;
 }
 
-unsigned int Electron_Hole_Pairs(double Ee, const Crystal& target)
-{
-	return std::floor((Ee - target.energy_gap) / target.epsilon + 1);
-}
-
 bool dRdE_Crystal_warned = false;
 double dRdEe_Crystal(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr, Crystal& target_crystal)
 {
@@ -67,44 +62,46 @@ double dRdEe_Crystal(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr
 
 double R_Q_Crystal(int Q, const DM_Particle& DM, DM_Distribution& DM_distr, Crystal& target_crystal)
 {
-	// Energy threshold
-	double Emin = Minimum_Electron_Energy(Q, target_crystal);
-	double Emax = Minimum_Electron_Energy(Q + 1, target_crystal);
-	// Integrate over energies
-	double sum = 0.0;
-	for(int Ei = (Emin / target_crystal.dE); Ei < target_crystal.N_E; Ei++)
+	double R_Q				= 0.0;
+	bool yield_peak_reached = false;
+	for(int Ei = 0; Ei < target_crystal.N_E; Ei++)
 	{
-		double E = (Ei + 1) * target_crystal.dE;
-		if(E > Emax)
+		double Ee	 = (Ei + 1) * target_crystal.dE;
+		double yield = target_crystal.Ionization_Yield(Ee, Q);
+		R_Q += target_crystal.dE * yield * dRdEe_Crystal(Ee, DM, DM_distr, target_crystal);
+		// Check if we are done
+		if(yield > 0.1)
+			yield_peak_reached = true;
+		else if(yield_peak_reached && yield == 0.0)
 			break;
-		sum += target_crystal.dE * dRdEe_Crystal(E, DM, DM_distr, target_crystal);
 	}
-	return sum;
+	return R_Q;
 }
 
 double R_total_Crystal(int Qthreshold, const DM_Particle& DM, DM_Distribution& DM_distr, Crystal& target_crystal)
 {
-	// Energy threshold
-	double E_min = Minimum_Electron_Energy(Qthreshold, target_crystal);
-	// Integrate over energies
-	double sum = 0.0;
-	for(int Ei = (E_min / target_crystal.dE); Ei < target_crystal.N_E; Ei++)
+	double R_tot = 0.0;
+	for(int Q = Qthreshold; Q < 20; Q++)
 	{
-		double E = (Ei + 1) * target_crystal.dE;
-		sum += target_crystal.dE * dRdEe_Crystal(E, DM, DM_distr, target_crystal);
+		double new_term = R_Q_Crystal(Q, DM, DM_distr, target_crystal);
+		R_tot += new_term;
+		if(new_term == 0.0)
+			break;
 	}
-	return sum;
+	return R_tot;
 }
 
 // 2. Electron recoil direct detection experiment with semiconductor target
 DM_Detector_Crystal::DM_Detector_Crystal()
 : DM_Detector("Crystal experiment", gram * year, "Electrons"), target_crystal(Crystal("Si"))
 {
+	Use_Q_Threshold(2);
 }
 
 DM_Detector_Crystal::DM_Detector_Crystal(std::string label, double expo, std::string crys)
 : DM_Detector(label, expo, "Electrons"), target_crystal(Crystal(crys))
 {
+	Use_Q_Threshold(2);
 }
 
 // DM functions

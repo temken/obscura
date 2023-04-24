@@ -4,6 +4,7 @@
 
 #include "libphysica/Natural_Units.hpp"
 #include "libphysica/Special_Functions.hpp"
+#include "libphysica/Statistics.hpp"
 #include "libphysica/Utilities.hpp"
 
 #include "version.hpp"
@@ -26,6 +27,19 @@ Crystal::Crystal(std::string target)
 		M_cell	   = 2.0 * 28.08 * mNucleon;
 		prefactor  = 2.0 * eV;
 		Q_max	   = std::floor((E_max - energy_gap + epsilon) / epsilon);
+
+		// Import the ionization yield tables
+		auto raw_data = libphysica::Import_Table(PROJECT_DIR "data/Semiconductors/Ionization_yield_Silicon_p100K.dat", {eV, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0});
+		for(int Q = 1; Q <= 20; Q++)
+		{
+			std::vector<double> E_grid, yield_grid;
+			for(int i = 0; i < raw_data.size(); i++)
+			{
+				E_grid.push_back(raw_data[i][0]);
+				yield_grid.push_back(raw_data[i][Q]);
+			}
+			ionization_yield_interpolations.push_back(libphysica::Interpolation(E_grid, yield_grid));
+		}
 	}
 	else if(name == "Ge")
 	{
@@ -52,6 +66,41 @@ Crystal::Crystal(std::string target)
 	std::vector<double> q_grid = libphysica::Linear_Space(dq, q_max, N_q);
 	std::vector<double> E_grid = libphysica::Linear_Space(dE, E_max, N_E);
 	form_factor_interpolation  = libphysica::Interpolation_2D(q_grid, E_grid, form_factor_table);
+}
+
+double Crystal::Ionization_Yield(double Ee, unsigned int Q)
+{
+	if(Ee < energy_gap)
+		return 0.0;
+	else if(name == "Si")
+	{
+		if(Ee >= ionization_yield_interpolations[Q - 1].domain[0] && Ee <= ionization_yield_interpolations[Q - 1].domain[1])
+			return ionization_yield_interpolations[Q - 1](Ee);
+		else
+		{
+			// Above 50 eV use a Gaussian. See Eq. (15) of https://journals.aps.org/prd/pdf/10.1103/PhysRevD.102.063026
+			double epsilon_eh_inf = epsilon;   // mean energy per electron-hole pair
+			double F_inf		  = 0.119;	   // Fano factor from 2004.11499
+
+			double mean	 = Q * epsilon_eh_inf;
+			double sigma = std::sqrt(Q * F_inf) * epsilon_eh_inf;
+			return epsilon_eh_inf * libphysica::PDF_Gauss(Ee, mean, sigma);
+		}
+	}
+	else if(name == "Ge")
+	{
+		double E_1 = epsilon * (Q - 1) + energy_gap;
+		double E_2 = epsilon * Q + energy_gap;
+		if(Ee < E_1 || Ee > E_2)
+			return 0.0;
+		else
+			return 1.0;
+	}
+	else
+	{
+		libphysica::Check_For_Error(true, "obscura::Crystal::Ionization_Yield()", "Target " + name + " not recognized.");
+		std::exit(EXIT_FAILURE);
+	}
 }
 
 bool have_warned = false;
