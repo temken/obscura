@@ -62,11 +62,18 @@ double dRdEe_Crystal(double Ee, const DM_Particle& DM, DM_Distribution& DM_distr
 
 double R_Q_Crystal(int Q, const DM_Particle& DM, DM_Distribution& DM_distr, Crystal& target_crystal)
 {
-	double R_Q = 0.0;
+	double R_Q				= 0.0;
+	bool yield_peak_reached = false;
 	for(int Ei = 0; Ei < target_crystal.N_E; Ei++)
 	{
-		double Ee = (Ei + 1) * target_crystal.dE;
-		R_Q += target_crystal.dE * target_crystal.Ionization_Yield(Ee, Q) * dRdEe_Crystal(Ee, DM, DM_distr, target_crystal);
+		double Ee	 = (Ei + 1) * target_crystal.dE;
+		double yield = target_crystal.Ionization_Yield(Ee, Q);
+		R_Q += target_crystal.dE * yield * dRdEe_Crystal(Ee, DM, DM_distr, target_crystal);
+		// Check if we are done
+		if(yield > 0.1)
+			yield_peak_reached = true;
+		else if(yield_peak_reached && yield == 0.0)
+			break;
 	}
 	return R_Q;
 }
