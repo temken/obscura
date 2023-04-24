@@ -21,6 +21,8 @@ class Crystal
 
 	explicit Crystal(std::string target);
 
+	double Ionization_Yield(double Ee, unsigned int Q);
+
 	double Crystal_Form_Factor(double q, double E);
 };
 }	// namespace obscura

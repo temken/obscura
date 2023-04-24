@@ -54,6 +54,16 @@ Crystal::Crystal(std::string target)
 	form_factor_interpolation  = libphysica::Interpolation_2D(q_grid, E_grid, form_factor_table);
 }
 
+double Crystal::Ionization_Yield(double Ee, unsigned int Q)
+{
+	double E_1 = epsilon * (Q - 1) + energy_gap;
+	double E_2 = epsilon * Q + energy_gap;
+	if(Ee < E_1 || Ee > E_2)
+		return 0.0;
+	else
+		return 1.0;
+}
+
 bool have_warned = false;
 double Crystal::Crystal_Form_Factor(double q, double E)
 {
