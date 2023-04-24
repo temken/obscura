@@ -40,6 +40,11 @@ The crystal form factors in the folder */Semiconductors/* were taken from [this 
 
 >Essig, R. *et al*, **Direct Detection of sub-GeV Dark Matter with Semiconductor Targets**, [JHEP 05 (2016) 046](https://link.springer.com/article/10.1007/JHEP05(2016)046) , [[arXiv:1509.01598]](https://arxiv.org/abs/1509.01598).
 
+## Crystal ionization yield
+The ionization yield tables in the folder */Semiconductors/* were taken from the supplemental materials from this paper. 
+
+> K. Ramanathan and N. Kurinsky, **Ionization yield in silicon for eV-scale electron-recoil processes**, [Phys. Rev. D 102, 063026](https://journals.aps.org/prd/abstract/10.1103/PhysRevD.102.063026)
+
 ## Nuclear Data
 Sources for spin expectation values
 		
