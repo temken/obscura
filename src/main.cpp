@@ -54,20 +54,20 @@ int main(int argc, char* argv[])
 
 	std::ofstream f;
 
-	f.open("RQ_Ge_old.txt");
+	f.open("RQ_Ge_new_1.txt");
 	std::cout << "Germanium" << std::endl
 			  << "Q\tR(Q) [per gram yr]" << std::endl;
-	for(int Q = 1; Q < 10; Q++)
+	for(int Q = 1; Q < 11; Q++)
 	{
 		double RQ = R_Q_Crystal(Q, DM, SHM, germanium);
 		std::cout << Q << "\t" << In_Units(RQ, 1.0 / gram / year) << std::endl;
 		f << Q << "\t" << In_Units(RQ, 1.0 / gram / year) << std::endl;
 	}
 	f.close();
-	f.open("RQ_Si_old.txt");
+	f.open("RQ_Si_new_1.txt");
 	std::cout << "Silicon" << std::endl
 			  << "Q\tR(Q) [per gram yr]" << std::endl;
-	for(int Q = 1; Q < 10; Q++)
+	for(int Q = 1; Q < 11; Q++)
 	{
 		double RQ = R_Q_Crystal(Q, DM, SHM, silicon);
 		std::cout << Q << "\t" << In_Units(RQ, 1.0 / gram / year) << std::endl;
