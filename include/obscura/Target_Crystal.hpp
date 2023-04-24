@@ -10,6 +10,7 @@ class Crystal
 {
   private:
 	libphysica::Interpolation_2D form_factor_interpolation;
+	std::vector<libphysica::Interpolation> ionization_yield_interpolations;
 
   public:
 	int N_E, N_q;
