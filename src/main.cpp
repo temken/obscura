@@ -8,6 +8,10 @@
 #include "libphysica/Utilities.hpp"
 
 #include "obscura/Configuration.hpp"
+#include "obscura/DM_Halo_Models.hpp"
+#include "obscura/DM_Particle_Standard.hpp"
+#include "obscura/Direct_Detection_Crystal.hpp"
+#include "obscura/Target_Crystal.hpp"
 #include "version.hpp"
 
 using namespace libphysica::natural_units;
@@ -27,20 +31,49 @@ int main(int argc, char* argv[])
 			  << std::endl;
 	////////////////////////////////////////////////////////////////////////
 
-	// Import configuration file
-	obscura::Configuration cfg(argv[1]);
-	cfg.Print_Summary();
+	// // Import configuration file
+	// obscura::Configuration cfg(argv[1]);
+	// cfg.Print_Summary();
 
-	std::vector<double> DM_masses = libphysica::Log_Space(cfg.constraints_mass_min, cfg.constraints_mass_max, cfg.constraints_masses);
+	// std::vector<double> DM_masses = libphysica::Log_Space(cfg.constraints_mass_min, cfg.constraints_mass_max, cfg.constraints_masses);
 
-	std::vector<std::vector<double>> exclusion_limits = cfg.DM_detector->Upper_Limit_Curve(*(cfg.DM), *(cfg.DM_distr), DM_masses, cfg.constraints_certainty);
-	for(unsigned int i = 0; i < exclusion_limits.size(); i++)
-		std::cout << i + 1 << "/" << exclusion_limits.size()
-				  << "\tmDM = " << libphysica::Round(In_Units(exclusion_limits[i][0], (exclusion_limits[i][0] < GeV) ? MeV : GeV)) << ((exclusion_limits[i][0] < GeV) ? " MeV" : " GeV")
-				  << "\tUpper Bound:\t" << libphysica::Round(In_Units(exclusion_limits[i][1], cm * cm)) << std::endl;
+	// std::vector<std::vector<double>> exclusion_limits = cfg.DM_detector->Upper_Limit_Curve(*(cfg.DM), *(cfg.DM_distr), DM_masses, cfg.constraints_certainty);
+	// for(unsigned int i = 0; i < exclusion_limits.size(); i++)
+	// 	std::cout << i + 1 << "/" << exclusion_limits.size()
+	// 			  << "\tmDM = " << libphysica::Round(In_Units(exclusion_limits[i][0], (exclusion_limits[i][0] < GeV) ? MeV : GeV)) << ((exclusion_limits[i][0] < GeV) ? " MeV" : " GeV")
+	// 			  << "\tUpper Bound:\t" << libphysica::Round(In_Units(exclusion_limits[i][1], cm * cm)) << std::endl;
 
-	int CL = std::round(100.0 * cfg.constraints_certainty);
-	libphysica::Export_Table(TOP_LEVEL_DIR "results/" + cfg.ID + "/DD_Constraints_" + std::to_string(CL) + ".txt", exclusion_limits, {GeV, cm * cm});
+	// int CL = std::round(100.0 * cfg.constraints_certainty);
+	// libphysica::Export_Table(TOP_LEVEL_DIR "results/" + cfg.ID + "/DD_Constraints_" + std::to_string(CL) + ".txt", exclusion_limits, {GeV, cm * cm});
+
+	DM_Particle_SI DM(100 * MeV);
+	DM.Set_Sigma_Electron(pb);
+	Standard_Halo_Model SHM;
+	Crystal germanium("Ge");
+	Crystal silicon("Si");
+
+	std::ofstream f;
+
+	f.open("RQ_Ge_old.txt");
+	std::cout << "Germanium" << std::endl
+			  << "Q\tR(Q) [per gram yr]" << std::endl;
+	for(int Q = 1; Q < 10; Q++)
+	{
+		double RQ = R_Q_Crystal(Q, DM, SHM, germanium);
+		std::cout << Q << "\t" << In_Units(RQ, 1.0 / gram / year) << std::endl;
+		f << Q << "\t" << In_Units(RQ, 1.0 / gram / year) << std::endl;
+	}
+	f.close();
+	f.open("RQ_Si_old.txt");
+	std::cout << "Silicon" << std::endl
+			  << "Q\tR(Q) [per gram yr]" << std::endl;
+	for(int Q = 1; Q < 10; Q++)
+	{
+		double RQ = R_Q_Crystal(Q, DM, SHM, silicon);
+		std::cout << Q << "\t" << In_Units(RQ, 1.0 / gram / year) << std::endl;
+		f << Q << "\t" << In_Units(RQ, 1.0 / gram / year) << std::endl;
+	}
+	f.close();
 
 	////////////////////////////////////////////////////////////////////////
 	// Final terminal output
