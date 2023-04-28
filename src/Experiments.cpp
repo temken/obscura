@@ -7,7 +7,7 @@ namespace obscura
 {
 using namespace libphysica::natural_units;
 
-//1. Nuclear recoil experiments
+// 1. Nuclear recoil experiments
 DM_Detector_Nucleus DAMIC_N_2011()
 {
 	// Source: arXiv:1105.5191
@@ -44,9 +44,9 @@ DM_Detector_Nucleus XENON1T_N_2017()
 
 DM_Detector_Nucleus CRESST_II()
 {
-	//Source: arXiv:1509.01515 and arXiv:1701.08157
+	// Source: arXiv:1509.01515 and arXiv:1701.08157
 	double CRESST_II_exposure					= 52.15 * kg * day;
-	std::vector<Nucleus> CRESST_II_targets		= {Get_Nucleus(8), Get_Nucleus(20), Get_Nucleus(74)};	//CaOW
+	std::vector<Nucleus> CRESST_II_targets		= {Get_Nucleus(8), Get_Nucleus(20), Get_Nucleus(74)};	// CaOW
 	std::vector<double> CRESST_II_target_ratios = {4, 1, 1};
 	double CRESST_II_threshold					= 307 * eV;
 	double CRESST_II_Emax						= 40.0 * keV;
@@ -68,7 +68,7 @@ DM_Detector_Nucleus CRESST_III()
 {
 	// Source: arXiv:1711.07692 and arXiv:1905.07335
 	double CRESST_III_exposure					 = 5.594 * kg * day;
-	std::vector<Nucleus> CRESST_III_targets		 = {Get_Nucleus(8), Get_Nucleus(20), Get_Nucleus(74)};	 //CaOW
+	std::vector<Nucleus> CRESST_III_targets		 = {Get_Nucleus(8), Get_Nucleus(20), Get_Nucleus(74)};	 // CaOW
 	std::vector<double> CRESST_III_target_ratios = {4, 1, 1};
 	double CRESST_III_threshold					 = 30.1 * eV;
 	double CRESST_III_Emax						 = 16 * keV;
@@ -108,7 +108,7 @@ DM_Detector_Nucleus CRESST_surface()
 	return detector;
 }
 
-//2. Electron recoil experiments - Ionization
+// 2. Electron recoil experiments - Ionization
 DM_Detector_Ionization_ER XENON10_S2_ER()
 {
 	// Source: arXiv:1104.3088, arXiv:1206.2644, and arXiv:1703.00910
@@ -185,7 +185,7 @@ DM_Detector_Ionization_ER DarkSide50_S2_ER()
 	return detector;
 }
 
-//3. Electron recoil experiments - Semiconductor
+// 3. Electron recoil experiments - Semiconductor
 DM_Detector_Crystal protoSENSEI_at_Surface()
 {
 	// Source: arXiv:1804.00088
@@ -225,9 +225,9 @@ DM_Detector_Crystal SENSEI_at_MINOS()
 	// Source: arXiv:2004.11378
 	double SENSEI_exposure								  = 9.1 * gram * day;
 	unsigned int SENSEI_Q_threshold						  = 1;
-	unsigned int SENSEI_N_bins							  = 4;
-	std::vector<double> SENSEI_efficiencies				  = {1.38 / 9.1, 2.09 / 9.1, 9.03 / 9.1, 1.0};
-	std::vector<unsigned long int> SENSEI_observed_events = {578, 5, 0, 0};
+	unsigned int SENSEI_N_bins							  = 6;
+	std::vector<double> SENSEI_efficiencies				  = {1.38 / 9.1, 2.09 / 9.1, 9.03 / 9.1, 1.0, 9.23 / 9.1, 9.39 / 9.1};
+	std::vector<unsigned long int> SENSEI_observed_events = {758, 5, 0, 0, 0, 0};
 
 	DM_Detector_Crystal detector("SENSEI@MINOS", SENSEI_exposure, "Si");
 	detector.Use_Q_Bins(SENSEI_Q_threshold, SENSEI_N_bins);
@@ -271,7 +271,7 @@ DM_Detector_Crystal CDMS_HVeV_2020()
 	return detector;
 }
 
-//4. Migdal experiments - Ionization
+// 4. Migdal experiments - Ionization
 DM_Detector_Ionization_Migdal XENON10_S2_Migdal()
 {
 	// Source: arXiv:1104.3088, arXiv:1206.2644, and arXiv:1703.00910
