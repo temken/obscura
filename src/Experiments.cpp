@@ -185,6 +185,39 @@ DM_Detector_Ionization_ER DarkSide50_S2_ER()
 	return detector;
 }
 
+DM_Detector_Ionization_ER DarkSide50_S2_ER_2023()
+{
+  // Source: arXiv:2207.11968
+  std::string target_name               = "Ar";
+  double exposure                       = 12306 * kg * day;
+  unsigned int ne_threshold             = 4;
+  // Digitised from Figure 1 (x 0.25 x exposure)
+  std::vector<unsigned long int> observed_event_bins = {22.8573, 17.6247, 19.7019, 13.59, 19.2201, 17.8442, 19.4595, \
+                                                        17.4078, 20.7021, 18.7501, 19.7019, 16.9821, 15.9629, 14.2798, \
+                                                        18.5194, 20.96, 18.9836, 15.9629, 20.1958, 17.4078, 16.9821, 24.9264, \
+                                                        25.2369, 18.5194, 20.1958, 25.5512, 26.518, 24.0176, 22.8573, \
+                                                        19.7019, 24.9264, 26.8483, 23.7221, 22.8573, 26.518, 24.9264, \
+                                                        28.2113, 33.5499, 32.7294, 31.1482, 30.3865, 30.765, 31.5362, \
+                                                        30.0126, 34.3909, 30.3865, 29.2787, 37.5041, 41.9243, 35.6922, \
+                                                        36.1368, 35.6922, 34.3909, 39.4079, 30.765, 37.5041, 33.5499, \
+                                                        39.8988, 45.1568, 32.3268, 34.3909, 41.9243, 43.5105, 42.9752, \
+                                                        41.4085};
+  // Digitise bkg from Figure 1 (x 0.25 x exposure)
+  std::vector<unsigned long int> bkg_bins = {15.3809, 16.1617, 16.363, 16.7732, 17.1937, 17.4078, 17.4078, \
+                                             17.6247, 17.8442, 18.0665, 18.7501, 18.9836, 18.9836, 19.2201, \
+                                             19.7019, 19.7019, 20.4474, 20.4474, 20.96, 21.221, 22.024, 22.2983, \
+                                             22.5761, 23.4303, 23.4303, 24.6197, 24.0176, 24.6197, 24.9264, \
+                                             25.5512, 26.8483, 26.518, 27.5214, 27.1828, 27.8642, 28.9185, \
+                                             29.2787, 29.6434, 30.3865, 30.3865, 30.765, 31.1482, 31.929, 32.7294, \
+                                             32.7294, 32.7294, 33.9678, 33.1371, 34.8193, 34.8193, 35.2531, \
+                                             35.6922, 35.2531, 36.1368, 37.0427, 36.5869, 37.9712, 38.4442, \
+                                             38.9231, 38.4442, 39.4079, 39.8988, 40.3958, 40.3958, 41.9243};
+  DM_Detector_Ionization_ER detector("DarSide-50_S2_2023", exposure, target_name);
+  detector.Use_Electron_Bins(ne_threshold, 65, 0.25);
+  detector.Set_Observed_Events(observed_event_bins);
+  detector.Set_Expected_Background(bkg_bins);
+}
+
 //3. Electron recoil experiments - Semiconductor
 DM_Detector_Crystal protoSENSEI_at_Surface()
 {
@@ -270,6 +303,22 @@ DM_Detector_Crystal CDMS_HVeV_2020()
 
 	return detector;
 }
+
+DM_Detector_Crystal DAMIC_M_2023_ER()
+{
+  // Source: arXiv:2302.02372
+  double DAMIC_M_exposure = 85.23 * gram * day;
+  unsigned int DAMIC_M_Q_threshold = 1;
+  unsigned int DAMIC_M_bins = 5;
+  // TODO: DAMIC does not provide this, ask the collaboration
+  std::vector<double> DAMIC_M_observed_events = {};
+
+  DM_Detector_Crystal detector("DAMIC-M_2023", DAMIC_M_exposure, "Si");
+  detector.Set_Observed_Events(DAMIC_M_observed_events);
+
+  return detector;
+}
+
 
 //4. Migdal experiments - Ionization
 DM_Detector_Ionization_Migdal XENON10_S2_Migdal()
