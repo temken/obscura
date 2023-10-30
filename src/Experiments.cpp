@@ -311,7 +311,7 @@ DM_Detector_Crystal DAMIC_M_2023_ER()
   unsigned int DAMIC_M_Q_threshold = 1;
   unsigned int DAMIC_M_bins = 5;
   // TODO: DAMIC does not provide this, ask the collaboration
-  std::vector<double> DAMIC_M_observed_events = {};
+  std::vector<unsigned long int> DAMIC_M_observed_events = {};
 
   DM_Detector_Crystal detector("DAMIC-M_2023", DAMIC_M_exposure, "Si");
   detector.Set_Observed_Events(DAMIC_M_observed_events);
