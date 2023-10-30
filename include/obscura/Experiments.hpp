@@ -20,6 +20,7 @@ extern DM_Detector_Ionization_ER XENON10_S2_ER();
 extern DM_Detector_Ionization_ER XENON100_S2_ER();
 extern DM_Detector_Ionization_ER XENON1T_S2_ER();
 extern DM_Detector_Ionization_ER DarkSide50_S2_ER();
+extern DM_Detector_Ionization_ER DarkSide50_S2_ER_2023();
 
 //3. Electron recoil experiments - Semiconductor/crystals
 extern DM_Detector_Crystal protoSENSEI_at_Surface();
@@ -33,6 +34,7 @@ extern DM_Detector_Ionization_Migdal XENON10_S2_Migdal();
 extern DM_Detector_Ionization_Migdal XENON100_S2_Migdal();
 extern DM_Detector_Ionization_Migdal XENON1T_S2_Migdal();
 extern DM_Detector_Ionization_Migdal DarkSide50_S2_Migdal();
+extern DM_Detector_Ionization_Migdal DarkSide50_S2_Migdal_2023();
 
 }	// namespace obscura
 
