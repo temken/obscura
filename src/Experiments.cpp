@@ -391,4 +391,33 @@ DM_Detector_Ionization_Migdal DarkSide50_S2_Migdal()
 	return detector;
 }
 
+
+DM_Detector_Ionization_Migdal DarkSide50_S2_Migdal_2023()
+{
+	// Source: arXiv:2207.11967
+	std::string target_name                = "Ar";
+	double exposure                        = 6786.0 * kg * day;
+	unsigned int ne_threshold						   = 4;
+  // Digitised from Figure 1 (x 0.25 x exposure)
+  std::vector<unsigned long int> observed_event_bins = {23, 18, 20, 14, 19, 18, 19, 17, 21, 19, 20, 17, 16, 14, 19, 21, 19, \
+                                                        16, 20, 17, 17, 25, 25, 19, 20, 26, 27, 24, 23, 20, 25, 27, 24, 23, \
+                                                        27, 25, 28, 34, 33, 31, 30, 31, 32, 30, 34, 30, 29, 38, 42, 36, 36, \
+                                                        36, 34, 39, 31, 38, 34, 40, 45, 32, 34, 42, 44, 43, 41};
+  // Digitise bkg from Figure 1 (x 0.25 x exposure)
+  std::vector<double> bkg_bins = {15.3809, 16.1617, 16.363, 16.7732, 17.1937, 17.4078, 17.4078, \
+                                  17.6247, 17.8442, 18.0665, 18.7501, 18.9836, 18.9836, 19.2201, \
+                                  19.7019, 19.7019, 20.4474, 20.4474, 20.96, 21.221, 22.024, 22.2983, \
+                                  22.5761, 23.4303, 23.4303, 24.6197, 24.0176, 24.6197, 24.9264, \
+                                  25.5512, 26.8483, 26.518, 27.5214, 27.1828, 27.8642, 28.9185, \
+                                  29.2787, 29.6434, 30.3865, 30.3865, 30.765, 31.1482, 31.929, 32.7294, \
+                                  32.7294, 32.7294, 33.9678, 33.1371, 34.8193, 34.8193, 35.2531, \
+                                  35.6922, 35.2531, 36.1368, 37.0427, 36.5869, 37.9712, 38.4442, \
+                                  38.9231, 38.4442, 39.4079, 39.8988, 40.3958, 40.3958, 41.9243};
+  DM_Detector_Ionization_Migdal detector("DarSide-50_S2_2023", exposure, target_name);
+  detector.Use_Electron_Bins(ne_threshold, 65, 0.25);
+  detector.Set_Observed_Events(observed_event_bins);
+  detector.Set_Expected_Background(bkg_bins);
+
+	return detector;
+}
 }	// namespace obscura
