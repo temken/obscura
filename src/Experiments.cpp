@@ -210,6 +210,8 @@ DM_Detector_Ionization_ER DarkSide50_S2_ER_2023()
   detector.Use_Electron_Bins(ne_threshold, 65, 0.25);
   detector.Set_Observed_Events(observed_event_bins);
   detector.Set_Expected_Background(bkg_bins);
+
+  return detector;
 }
 
 //3. Electron recoil experiments - Semiconductor
