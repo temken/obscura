@@ -192,10 +192,16 @@ DM_Detector_Ionization_ER DarkSide50_S2_ER_2023()
   double exposure                       = 12306 * kg * day;
   unsigned int ne_threshold             = 4;
   // Digitised from Figure 1 (x 0.25 x exposure)
-  std::vector<unsigned long int> observed_event_bins = {23, 18, 20, 14, 19, 18, 19, 17, 21, 19, 20, 17, 16, 14, 19, 21, 19, \
+  //std::vector<unsigned long int> observed_event_bins = {23, 18, 20, 14, 19, 18, 19, 17, 21, 19, 20, 17, 16, 14, 19, 21, 19, \
                                                         16, 20, 17, 17, 25, 25, 19, 20, 26, 27, 24, 23, 20, 25, 27, 24, 23, \
                                                         27, 25, 28, 34, 33, 31, 30, 31, 32, 30, 34, 30, 29, 38, 42, 36, 36, \
                                                         36, 34, 39, 31, 38, 34, 40, 45, 32, 34, 42, 44, 43, 41};
+  std::vector<unsigned long int> observed_event_bins = {92, 76, 90, 65, 96, 95, 108, 101, 124, 117, 128, 114, 111, 104, 139, \
+                                                        162, 155, 131, 171, 152, 152, 233, 242, 180, 201, 262, 278, 261, 254, \
+                                                        224, 294, 319, 288, 280, 331, 321, 367, 450, 448, 428, 425, 438, 463, \
+                                                        443, 516, 469, 459, 599, 672, 580, 604, 606, 585, 640, 559, 666, 612, \
+                                                        729, 837, 614, 654, 819, 861, 872, 830};
+
   // Digitise bkg from Figure 1 (x 0.25 x exposure)
   std::vector<double> bkg_bins = {15.3809, 16.1617, 16.363, 16.7732, 17.1937, 17.4078, 17.4078, \
                                   17.6247, 17.8442, 18.0665, 18.7501, 18.9836, 18.9836, 19.2201, \
@@ -209,7 +215,7 @@ DM_Detector_Ionization_ER DarkSide50_S2_ER_2023()
   DM_Detector_Ionization_ER detector("DarSide-50_S2_2023", exposure, target_name);
   detector.Use_Electron_Bins(ne_threshold, 65, 0.25);
   detector.Set_Observed_Events(observed_event_bins);
-  detector.Set_Expected_Background(bkg_bins);
+  //detector.Set_Expected_Background(bkg_bins);
 
   return detector;
 }
@@ -422,4 +428,25 @@ DM_Detector_Ionization_Migdal DarkSide50_S2_Migdal_2023()
 
 	return detector;
 }
+
+DM_Detector_Ionization_Migdal PandaX4T_S2_Migdal()
+{
+  // Source: arXiv:
+  std::string target_name          = "Xe";
+  double exposure                  = 550 * kg * day;
+  std::vector<unsigned long int> observed_event_bins = {246, 90, 80, 60, 40, 91, 50, 20, 70, 40, 110, 10, 50, 90};
+  double muPE                      = 33.0;
+  double sigPE                     = 7.0;
+  std::vector<unsigned int> S2_bin_ranges            = {70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200};
+//	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON1Te/XENON1T_TotalEfficiency.txt";
+
+  DM_Detector_Ionization_Migdal detector("PandaX4T_S2", exposure, target_name);
+  detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+  detector.Set_Observed_Events(observed_event_bins);
+//  detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
+
+	return detector;
+}
+
+
 }	// namespace obscura
