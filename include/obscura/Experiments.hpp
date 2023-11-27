@@ -35,6 +35,7 @@ extern DM_Detector_Ionization_Migdal XENON100_S2_Migdal();
 extern DM_Detector_Ionization_Migdal XENON1T_S2_Migdal();
 extern DM_Detector_Ionization_Migdal DarkSide50_S2_Migdal();
 extern DM_Detector_Ionization_Migdal DarkSide50_S2_Migdal_2023();
+extern DM_Detector_Ionization_Migdal PandaX4T_S2_Migdal();
 
 }	// namespace obscura
 

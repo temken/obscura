@@ -505,6 +505,8 @@ void Configuration::Construct_DM_Detector()
 		DM_detector = new DM_Detector_Ionization_Migdal(DarkSide50_S2_Migdal());
 	else if(DD_experiment == "DarkSide-50_S2_Migdal_2023")
 		DM_detector = new DM_Detector_Ionization_Migdal(DarkSide50_S2_Migdal_2023());
+  else if(DD_experiment == "PandaX4T_S2_Migdal")
+    DM_detector = new DM_Detector_Ionization_Migdal(PandaX4T_S2_Migdal());
 
 	else if(DD_experiment == "protoSENSEI@surface")
 		DM_detector = new DM_Detector_Crystal(protoSENSEI_at_Surface());
