@@ -419,10 +419,11 @@ DM_Detector_Ionization_Migdal DarkSide50_S2_Migdal_2023()
                                   29.2787, 29.6434, 30.3865, 30.3865, 30.765, 31.1482, 31.929, 32.7294, \
                                   32.7294, 32.7294, 33.9678, 33.1371, 34.8193, 34.8193, 35.2531, \
                                   35.6922, 35.2531, 36.1368, 37.0427, 36.5869, 37.9712, 38.4442, \
+                                  38.9231, 38.4442, 39.4079, 39.8988, 40.3958, 40.3958, 41.9243};
   DM_Detector_Ionization_Migdal detector("DarkSide-50_S2_2023", exposure, target_name);
   detector.Use_Electron_Bins(ne_threshold, 65, 0.25);
   detector.Set_Observed_Events(observed_event_bins);
-  detector.Set_Expected_Background(bkg_bins);
+  //detector.Set_Expected_Background(bkg_bins);
 
 	return detector;
 }
