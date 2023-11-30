@@ -217,6 +217,22 @@ DM_Detector_Ionization_ER DarkSide50_S2_ER_2023()
   return detector;
 }
 
+DM_Detector_Ionization_ER LZ_S2_ER()
+{
+  // Source: 2307.15753
+  // TODO: WIP
+  std::string target_name          = "Xe";
+  double exposure                  = 0 * kg * day;
+  unsigned int ne_threshold        = 0;
+  std::vector<unsigned long int> observed_event_bins = {};
+
+  DM_Detector_Ionization_ER detector("LZ_S2", exposure, target_name);
+  detector.Use_Electron_Bins(ne_threshold, 0);
+  detector.Set_Observed_Events(observed_event_bins);
+
+  return detector;
+}
+
 //3. Electron recoil experiments - Semiconductor
 DM_Detector_Crystal protoSENSEI_at_Surface()
 {
@@ -364,7 +380,7 @@ DM_Detector_Ionization_Migdal XENON100_S2_Migdal()
 
 DM_Detector_Ionization_Migdal XENON1T_S2_Migdal()
 {
-	// Source: arXiv:1907.11485
+	// Source: arXiv:1907.11485, arXiv:1907.12771
 	std::string target_name							   = "Xe";
 	double exposure									   = 80755.2 * kg * day;
 	std::vector<unsigned long int> observed_event_bins = {8, 7, 2, 1};
@@ -428,9 +444,10 @@ DM_Detector_Ionization_Migdal DarkSide50_S2_Migdal_2023()
 	return detector;
 }
 
-DM_Detector_Ionization_Migdal PandaX4T_S2_Migdal()
+DM_Detector_Ionization_Migdal PandaX_4T_S2_Migdal()
 {
-  // Source: arXiv:
+  // Source: arXiv:2308.01540
+  //TODO :WIP
   std::string target_name          = "Xe";
   double exposure                  = 550 * kg * day;
   std::vector<unsigned long int> observed_event_bins = {246, 90, 80, 60, 40, 91, 50, 20, 70, 40, 110, 10, 50, 90};
@@ -439,7 +456,7 @@ DM_Detector_Ionization_Migdal PandaX4T_S2_Migdal()
   std::vector<unsigned int> S2_bin_ranges            = {70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200};
 //	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON1Te/XENON1T_TotalEfficiency.txt";
 
-  DM_Detector_Ionization_Migdal detector("PandaX4T_S2", exposure, target_name);
+  DM_Detector_Ionization_Migdal detector("PandaX-4T_S2", exposure, target_name);
   detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
   detector.Set_Observed_Events(observed_event_bins);
 //  detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
@@ -447,5 +464,24 @@ DM_Detector_Ionization_Migdal PandaX4T_S2_Migdal()
 	return detector;
 }
 
+DM_Detector_Ionization_Migdal LZ_S2_Migdal()
+{
+  // Source: arXiv:
+  //TODO :WIP
+  std::string target_name          = "Ar";
+  double exposure                  = 550 * kg * day;
+  std::vector<unsigned long int> observed_event_bins = {246, 90, 80, 60, 40, 91, 50, 20, 70, 40, 110, 10, 50, 90};
+  double muPE                      = 33.0;
+  double sigPE                     = 7.0;
+  std::vector<unsigned int> S2_bin_ranges            = {70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200};
+//	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON1Te/XENON1T_TotalEfficiency.txt";
+
+  DM_Detector_Ionization_Migdal detector("LZ_S2", exposure, target_name);
+  detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+  detector.Set_Observed_Events(observed_event_bins);
+//  detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
+
+	return detector;
+}
 
 }	// namespace obscura

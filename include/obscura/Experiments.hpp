@@ -21,6 +21,7 @@ extern DM_Detector_Ionization_ER XENON100_S2_ER();
 extern DM_Detector_Ionization_ER XENON1T_S2_ER();
 extern DM_Detector_Ionization_ER DarkSide50_S2_ER();
 extern DM_Detector_Ionization_ER DarkSide50_S2_ER_2023();
+extern DM_Detector_Ionization_ER LZ_S2_ER();
 
 //3. Electron recoil experiments - Semiconductor/crystals
 extern DM_Detector_Crystal protoSENSEI_at_Surface();
@@ -28,6 +29,7 @@ extern DM_Detector_Crystal protoSENSEI_at_MINOS();
 extern DM_Detector_Crystal SENSEI_at_MINOS();
 extern DM_Detector_Crystal CDMS_HVeV_2018();
 extern DM_Detector_Crystal CDMS_HVeV_2020();
+extern DM_Detector_Crystal DAMIC_M_2023();
 
 //4. Migdal experiments - Ionization
 extern DM_Detector_Ionization_Migdal XENON10_S2_Migdal();
@@ -35,7 +37,8 @@ extern DM_Detector_Ionization_Migdal XENON100_S2_Migdal();
 extern DM_Detector_Ionization_Migdal XENON1T_S2_Migdal();
 extern DM_Detector_Ionization_Migdal DarkSide50_S2_Migdal();
 extern DM_Detector_Ionization_Migdal DarkSide50_S2_Migdal_2023();
-extern DM_Detector_Ionization_Migdal PandaX4T_S2_Migdal();
+extern DM_Detector_Ionization_Migdal PandaX_4T_S2_Migdal();
+extern DM_Detector_Ionization_Migdal LZ_S2_Migdal();
 
 }	// namespace obscura
 
