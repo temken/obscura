@@ -421,29 +421,10 @@ DM_Detector_Ionization_Migdal DarkSide50_S2_Migdal_2023()
 	std::string target_name                = "Ar";
 	double exposure                        = 6786.0 * kg * day;
 	unsigned int ne_threshold						   = 4;
-  //std::vector<unsigned long int> observed_event_bins = {92, 76, 90, 65, 96, 95, 108, 101, 124, 117, 128, 114, 111, 104, 139, \
-                                                        162, 155, 131, 171, 152, 152, 233, 242, 180, 201, 262, 278, 261, 254, \
-                                                        224, 294, 319, 288, 280, 331, 321, 367, 450, 448, 428, 425, 438, 463, \
-                                                        443, 516, 469, 459, 599, 672, 580, 604, 606, 585, 640, 559, 666, 612, \
-                                                        729, 837, 614, 654, 819, 861, 872, 830};
-  std::vector<unsigned long int> observed_event_bins = {298, 372, 456, 488, 583, 775, 965, 1053, 1182, 1644, 1723, 1992, \
-                                                        2408, 2397, 2735, 3139, 3366};
-  // Digitise bkg from Figure 1 (x 0.25 x exposure)
-  // TODO: not used because it causes upwards fluctuations
-  std::vector<double> bkg_bins = {15.3809, 16.1617, 16.363, 16.7732, 17.1937, 17.4078, 17.4078, \
-                                  17.6247, 17.8442, 18.0665, 18.7501, 18.9836, 18.9836, 19.2201, \
-                                  19.7019, 19.7019, 20.4474, 20.4474, 20.96, 21.221, 22.024, 22.2983, \
-                                  22.5761, 23.4303, 23.4303, 24.6197, 24.0176, 24.6197, 24.9264, \
-                                  25.5512, 26.8483, 26.518, 27.5214, 27.1828, 27.8642, 28.9185, \
-                                  29.2787, 29.6434, 30.3865, 30.3865, 30.765, 31.1482, 31.929, 32.7294, \
-                                  32.7294, 32.7294, 33.9678, 33.1371, 34.8193, 34.8193, 35.2531, \
-                                  35.6922, 35.2531, 36.1368, 37.0427, 36.5869, 37.9712, 38.4442, \
-                                  38.9231, 38.4442, 39.4079, 39.8988, 40.3958, 40.3958, 41.9243};
+  std::vector<unsigned long int> observed_event_bins = {74, 74, 76, 70, 73, 86, 96, 96, 99, 126, 123, 133, 151, 141, 152, 165, 168};
   DM_Detector_Ionization_Migdal detector("DarkSide-50_S2_2023", exposure, target_name);
-  //detector.Use_Electron_Bins(ne_threshold, 65, 0.25);
   detector.Use_Electron_Bins(ne_threshold, 17);
   detector.Set_Observed_Events(observed_event_bins);
-  //detector.Set_Expected_Background(bkg_bins);
 
 	return detector;
 }
