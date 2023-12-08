@@ -281,13 +281,13 @@ void DM_Detector_Ionization::Use_Electron_Threshold(unsigned int ne_thr, unsigne
 	}
 }
 
-void DM_Detector_Ionization::Use_Electron_Bins(unsigned int ne_thr, unsigned int N_bins, double bin_width)
+void DM_Detector_Ionization::Use_Electron_Bins(unsigned int ne_thr, unsigned int N_bins)
 {
 	Initialize_Binned_Poisson(N_bins);
 	using_electron_bins = true;
 
 	ne_threshold = ne_thr;
-	ne_max		 = ne_threshold + int((N_bins - 1)*bin_width);
+	ne_max		 = ne_threshold + N_bins - 1;
 	if(ne_max < ne_threshold)
 	{
 		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector::Use_Electron_Bins(): ne threshold (" << ne_threshold << ") is higher than maximum (" << ne_max << ")." << std::endl;

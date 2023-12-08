@@ -63,7 +63,7 @@ class DM_Detector_Ionization : public DM_Detector
 	// (a) Poisson: Electron threshold
 	void Use_Electron_Threshold(unsigned int ne_thr, unsigned int nemax = 0);
 	// (b) Binned Poisson: Electron bins
-	void Use_Electron_Bins(unsigned int ne_thr, unsigned int N_bins, double bin_width = 1);
+	void Use_Electron_Bins(unsigned int ne_thr, unsigned int N_bins);
 
 	// PE (or S2) spectrum
 	double R_S2(unsigned int S2, const DM_Particle& DM, DM_Distribution& DM_distr, double W, const Nucleus& nucleus, Atomic_Electron& shell, std::vector<double> electron_spectrum = {});
