@@ -416,7 +416,7 @@ void DM_Detector_Ionization::Use_PE_Bins(const std::string PE_response, const st
   using_S2_bins = true;
   using_energy_response = true;
 
-  Energy_Response_PE = libphysica::Import_Table(PE_response, {100,142}, 1);
+  Energy_Response_PE = libphysica::Import_Table(PE_response, {}, 1);
   S2_bin_ranges = bin_ranges;
 }
 
