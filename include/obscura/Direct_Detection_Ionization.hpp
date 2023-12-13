@@ -35,6 +35,9 @@ class DM_Detector_Ionization : public DM_Detector
 	bool using_S2_threshold;
 	// (b) Binned Poisson: PE bins (S2)
 	bool using_S2_bins;
+  // Using either electron or energy response function
+  bool using_electron_response, using_energy_response;
+  std::vector<std::vector<double>> Energy_Response_PE;
 	std::vector<unsigned int> S2_bin_ranges;
 	double R_S2_Bin(unsigned int S2_1, unsigned int S2_2, const DM_Particle& DM, DM_Distribution& DM_distr, std::vector<double> electron_spectrum = {});
 	std::vector<double> DM_Signals_PE_Bins(const DM_Particle& DM, DM_Distribution& DM_distr);
@@ -76,6 +79,7 @@ class DM_Detector_Ionization : public DM_Detector
 	void Import_Acceptance_Efficiency_PE(std::string filename);
 	// (b) Binned Poisson: PE bins (S2)
 	void Use_PE_Bins(double S2mu, double S2sigma, const std::vector<unsigned int>& bin_ranges);
+  void Use_PE_Bins(const std::string PE_response, const std::vector<unsigned int> & bin_ranges);
 
 	virtual void Print_Summary(int MPI_rank = 0) const override;
 };

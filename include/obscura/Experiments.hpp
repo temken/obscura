@@ -21,6 +21,7 @@ extern DM_Detector_Ionization_ER XENON100_S2_ER();
 extern DM_Detector_Ionization_ER XENON1T_S2_ER();
 extern DM_Detector_Ionization_ER DarkSide50_S2_ER();
 extern DM_Detector_Ionization_ER DarkSide50_S2_ER_2023();
+extern DM_Detector_Ionization_ER PandaX_4T_S2_ER();
 extern DM_Detector_Ionization_ER LZ_S2_ER();
 
 //3. Electron recoil experiments - Semiconductor/crystals

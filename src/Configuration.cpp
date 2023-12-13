@@ -494,6 +494,8 @@ void Configuration::Construct_DM_Detector()
 		DM_detector = new DM_Detector_Ionization_ER(DarkSide50_S2_ER());
 	else if(DD_experiment == "DarkSide-50_S2_2023")
 		DM_detector = new DM_Detector_Ionization_ER(DarkSide50_S2_ER_2023());
+  else if(DD_experiment == "PandaX-4T_S2")
+    DM_detector = new DM_Detector_Ionization_ER(PandaX_4T_S2_ER());
   else if(DD_experiment == "LZ_S2")
     DM_detector = new DM_Detector_Ionization_ER(LZ_S2_ER());
 

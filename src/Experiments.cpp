@@ -219,6 +219,22 @@ DM_Detector_Ionization_ER DarkSide50_S2_ER_2023()
   return detector;
 }
 
+DM_Detector_Ionization_ER PandaX_4T_S2_ER()
+{
+  // Source: arXiv:2308.01540
+  std::string target_name          = "Xe";
+  double exposure                  = 550 * kg * day;
+  std::vector<unsigned long int> observed_event_bins = {680, 280, 260, 140, 220, 240, 280};
+  std::vector<unsigned int> S2_bin_ranges            = {70, 90, 110, 130, 150, 170, 190, 200};
+  std::string PE_response = PROJECT_DIR "data/PandaX4T/s2_response_er.csv";
+
+  DM_Detector_Ionization_ER detector("PandaX-4T_S2", exposure, target_name);
+  detector.Use_PE_Bins(PE_response, S2_bin_ranges);
+  detector.Set_Observed_Events(observed_event_bins);
+
+  return detector;
+}
+
 DM_Detector_Ionization_ER LZ_S2_ER()
 {
   // Source: 2307.15753
@@ -432,19 +448,15 @@ DM_Detector_Ionization_Migdal DarkSide50_S2_Migdal_2023()
 DM_Detector_Ionization_Migdal PandaX_4T_S2_Migdal()
 {
   // Source: arXiv:2308.01540
-  //TODO :WIP
   std::string target_name          = "Xe";
   double exposure                  = 550 * kg * day;
-  std::vector<unsigned long int> observed_event_bins = {246, 90, 80, 60, 40, 91, 50, 20, 70, 40, 110, 10, 50, 90};
-  double muPE                      = 33.0;
-  double sigPE                     = 7.0;
-  std::vector<unsigned int> S2_bin_ranges            = {70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200};
-//	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON1Te/XENON1T_TotalEfficiency.txt";
+  std::vector<unsigned long int> observed_event_bins = {680, 280, 260, 140, 220, 240, 280};
+  std::vector<unsigned int> S2_bin_ranges            = {70, 90, 110, 130, 150, 170, 190, 200};
+  std::string PE_response = PROJECT_DIR "data/PandaX4T/s2_response_er.csv";
 
   DM_Detector_Ionization_Migdal detector("PandaX-4T_S2", exposure, target_name);
-  detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
+  detector.Use_PE_Bins(PE_response, S2_bin_ranges);
   detector.Set_Observed_Events(observed_event_bins);
-//  detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
 
 	return detector;
 }

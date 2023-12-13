@@ -84,7 +84,7 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle
 		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle&,DM_Distribution&): Not using PE bins." << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
-	else
+	else if(using_electron_response)
 	{
 		// Precompute the electron spectrum to speep up the computation of the S2 spectrum
 		std::vector<double> electron_spectrum;
@@ -99,15 +99,35 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle
 		}
 		return signals;
 	}
+  else if(using_energy_response)
+  {
+		std::vector<double> signals;
+    for(unsigned int bin = 0; bin < number_of_bins; bin++)
+    {
+      double R_bin = 0.;
+      for(auto &row : Energy_Response_PE)
+      {
+        double E = row[1] * keV;
+        for(unsigned int s2_bin = 2; s2_bin < row.size(); s2_bin++)
+        {
+          unsigned int s2 = 60 + s2_bin;
+          if(s2 >= S2_bin_ranges[bin] and s2 < S2_bin_ranges[bin + 1])
+            R_bin += row[s2_bin] * dRdE(E, DM, DM_distr);
+        }
+      }
+      signals.push_back(bin_efficiencies[bin] * exposure * R_bin);
+    }
+    return signals;
+  }
 }
 
 DM_Detector_Ionization::DM_Detector_Ionization(std::string label, double expo, std::string target_particle, std::string atom)
-: DM_Detector(label, expo, target_particle), atomic_targets({atom}), relative_mass_fractions({1.0}), ne_threshold(3), ne_max(100), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
+: DM_Detector(label, expo, target_particle), atomic_targets({atom}), relative_mass_fractions({1.0}), ne_threshold(3), ne_max(100), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false), using_electron_response(false), using_energy_response(false)
 {
 }
 
 DM_Detector_Ionization::DM_Detector_Ionization(std::string label, double expo, std::string target_particle, std::vector<std::string> atoms, std::vector<double> mass_fractions)
-: DM_Detector(label, expo, target_particle), relative_mass_fractions(mass_fractions), ne_threshold(3), ne_max(100), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false)
+: DM_Detector(label, expo, target_particle), relative_mass_fractions(mass_fractions), ne_threshold(3), ne_max(100), using_electron_threshold(false), using_electron_bins(false), PE_threshold(0), PE_max(0), S2_mu(0.0), S2_sigma(0.0), using_S2_threshold(false), using_S2_bins(false), using_electron_response(false), using_energy_response(false)
 
 {
 	for(auto& atom_name : atoms)
@@ -378,10 +398,21 @@ void DM_Detector_Ionization::Use_PE_Bins(double S2mu, double S2sigma, const std:
 {
 	Initialize_Binned_Poisson(bin_ranges.size() - 1);
 	using_S2_bins = true;
+  using_electron_response = true;
 
 	S2_mu		  = S2mu;
 	S2_sigma	  = S2sigma;
 	S2_bin_ranges = bin_ranges;
+}
+
+void DM_Detector_Ionization::Use_PE_Bins(const std::string PE_response, const std::vector<unsigned int> & bin_ranges)
+{
+  Initialize_Binned_Poisson(bin_ranges.size() - 1);
+  using_S2_bins = true;
+  using_energy_response = true;
+
+  Energy_Response_PE = libphysica::Import_Table(PE_response, {100,142}, 1);
+  S2_bin_ranges = bin_ranges;
 }
 
 void DM_Detector_Ionization::Print_Summary(int MPI_rank) const
@@ -396,10 +427,19 @@ void DM_Detector_Ionization::Print_Summary(int MPI_rank) const
 			  << "\tPE (S2) bins:\t\t" << (using_S2_bins ? "[x]" : "[ ]") << std::endl;
 	if(using_S2_bins || using_S2_threshold)
 	{
-		std::cout << "\tmu_PE:\t\t" << S2_mu << std::endl
-				  << "\tsigma_PE:\t" << S2_sigma << std::endl
-				  << "\tImported trigger efficiencies:\t" << (Trigger_Efficiency_PE.empty() ? "[ ]" : "[x]") << std::endl
-				  << "\tImported acc. efficiencies:\t" << (Acceptance_Efficiency_PE.empty() ? "[ ]" : "[x]") << std::endl;
+    if(using_electron_response)
+    {
+	    std::cout << "\tmu_PE:\t\t" << S2_mu << std::endl
+			  	  << "\tsigma_PE:\t" << S2_sigma << std::endl
+				    << "\tImported trigger efficiencies:\t" << (Trigger_Efficiency_PE.empty() ? "[ ]" : "[x]") << std::endl
+				    << "\tImported acc. efficiencies:\t" << (Acceptance_Efficiency_PE.empty() ? "[ ]" : "[x]") << std::endl;
+    }
+    if(using_energy_response)
+    {
+	    std::cout << "\tImported energy response PE:\t\t" << (Energy_Response_PE.empty() ? "[ ]" : "[x]") << std::endl
+				    << "\tImported trigger efficiencies:\t" << (Trigger_Efficiency_PE.empty() ? "[ ]" : "[x]") << std::endl
+				    << "\tImported acc. efficiencies:\t" << (Acceptance_Efficiency_PE.empty() ? "[ ]" : "[x]") << std::endl;
+    }
 		if(using_S2_bins)
 		{
 			std::cout << "\n\t\tBin\tBin range [S2]" << std::endl;
