@@ -119,6 +119,11 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle
     }
     return signals;
   }
+  else
+  {
+		std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle&,DM_Distribution&): Not using response function." << std::endl;
+		std::exit(EXIT_FAILURE);
+  }
 }
 
 DM_Detector_Ionization::DM_Detector_Ionization(std::string label, double expo, std::string target_particle, std::string atom)
