@@ -369,6 +369,7 @@ double DM_Detector_Ionization::R_S2(unsigned int S2, const DM_Particle& DM, DM_D
     double E = row[1] * keV;
     R_bin += row[s2_bin]*dRdE(E, DM, DM_distr);
   }
+  return R_bin;
 }
 
 void DM_Detector_Ionization::Use_PE_Threshold(double S2mu, double S2sigma, unsigned int nPE_thr, unsigned int nPE_max)
