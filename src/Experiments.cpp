@@ -225,7 +225,7 @@ DM_Detector_Ionization_ER PandaX_4T_S2_ER()
   std::string target_name          = "Xe";
   double exposure                  = 550 * kg * day;
   std::vector<unsigned long int> observed_event_bins = {680, 280, 260, 140, 220, 240, 280};
-  std::vector<unsigned int> S2_bin_ranges            = {70, 90, 110, 130, 150, 170, 190, 200};
+  std::vector<unsigned int> S2_bin_ranges            = {60, 80, 100, 120, 140, 160, 180, 200};
   std::string PE_response = PROJECT_DIR "data/PandaX4T/s2_response_er.csv";
 
   DM_Detector_Ionization_ER detector("PandaX-4T_S2", exposure, target_name);

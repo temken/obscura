@@ -77,6 +77,22 @@ double DM_Detector_Ionization::R_S2_Bin(unsigned int S2_1, unsigned int S2_2, co
 	return R;
 }
 
+double DM_Detector_Ionization::R_S2_Bin(unsigned int S2_1, unsigned int S2_2, const DM_Particle& DM, DM_Distribution& DM_distr, std::vector<std::vector<double>>& energy_response)
+{
+  double R = 0.0;
+  for(unsigned int PE = S2_1; PE <= S2_2; PE++)
+  {
+    double PE_eff = 1.0;
+    if(Trigger_Efficiency_PE.empty() == false)
+      PE_eff *= Trigger_Efficiency_PE[PE - 1];
+    if(Acceptance_Efficiency_PE.empty() == false)
+      PE_eff *= Acceptance_Efficiency_PE[PE - 1];
+    R += PE_eff * R_S2(PE, DM, DM_distr, energy_response);
+  }
+  return R;
+}
+
+
 std::vector<double> DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle& DM, DM_Distribution& DM_distr)
 {
 	if(!using_S2_bins)
@@ -104,17 +120,7 @@ std::vector<double> DM_Detector_Ionization::DM_Signals_PE_Bins(const DM_Particle
 		std::vector<double> signals;
     for(unsigned int bin = 0; bin < number_of_bins; bin++)
     {
-      double R_bin = 0.;
-      for(auto &row : Energy_Response_PE)
-      {
-        double E = row[1] * keV;
-        for(unsigned int s2_bin = 2; s2_bin < row.size(); s2_bin++)
-        {
-          unsigned int s2 = 60 + s2_bin;
-          if(s2 >= S2_bin_ranges[bin] and s2 < S2_bin_ranges[bin + 1])
-            R_bin += row[s2_bin] * dRdE(E, DM, DM_distr);
-        }
-      }
+      double R_bin = R_S2_Bin(S2_bin_ranges[bin], S2_bin_ranges[bin + 1] - 2, DM, DM_distr, Energy_Response_PE);
       signals.push_back(bin_efficiencies[bin] * exposure * R_bin);
     }
     return signals;
@@ -351,6 +357,18 @@ double DM_Detector_Ionization::R_S2(unsigned int S2, const DM_Particle& DM, DM_D
 		for(unsigned ne = 1; ne <= 100; ne++)
 			electron_spectrum.push_back(R_ne(ne, DM, DM_distr));
 	return R_S2_aux(S2, S2_mu, S2_sigma, electron_spectrum);
+}
+
+double DM_Detector_Ionization::R_S2(unsigned int S2, const DM_Particle& DM, DM_Distribution &DM_distr, std::vector<std::vector<double>>& energy_response)
+{
+  unsigned int s2_bin = 2 + S2 - S2_bin_ranges[0];
+
+  double R_bin = 0;
+  for(auto &row : energy_response)
+  {
+    double E = row[1] * keV;
+    R_bin += row[s2_bin]*dRdE(E, DM, DM_distr);
+  }
 }
 
 void DM_Detector_Ionization::Use_PE_Threshold(double S2mu, double S2sigma, unsigned int nPE_thr, unsigned int nPE_max)
