@@ -459,7 +459,7 @@ DM_Detector_Ionization_Migdal PandaX_4T_S2_Migdal()
   // Here we assume that the PE response matches indentically to number of electrons
   double ne_threshold = 4;
 
-  DM_Detector_Ionization_ER detector("PandaX-4T_S2", exposure, target_name);
+  DM_Detector_Ionization_Migdal detector("PandaX-4T_S2", exposure, target_name);
   detector.Use_Electron_Bins(ne_threshold, 7);
   detector.Set_Observed_Events(observed_event_bins);
   detector.Set_Expected_Background(bkg_event_bins);
