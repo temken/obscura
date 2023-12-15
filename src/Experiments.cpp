@@ -325,7 +325,8 @@ DM_Detector_Crystal CDMS_HVeV_2020()
 DM_Detector_Crystal DAMIC_M_2023()
 {
   // Source: arXiv:2302.02372
-  double DAMIC_M_exposure = 85.23 * gram * day;
+  // Paper only reports 40% of the data, so scale exposure accordingly
+  double DAMIC_M_exposure = 0.4 * 85.23 * gram * day;
   unsigned int DAMIC_M_Q_threshold = 1;
   unsigned int DAMIC_M_N_bins = 3;
   std::vector<unsigned long int> DAMIC_M_observed_events = {4216354, 11345, 19};
