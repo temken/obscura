@@ -76,7 +76,6 @@ class DM_Detector_Ionization : public DM_Detector
 	void Import_Acceptance_Efficiency_PE(std::string filename);
 	// (b) Binned Poisson: PE bins (S2)
 	void Use_PE_Bins(double S2mu, double S2sigma, const std::vector<unsigned int>& bin_ranges);
-  void Use_PE_Bins(const std::string PE_response, const std::vector<unsigned int> & bin_ranges);
 
 	virtual void Print_Summary(int MPI_rank = 0) const override;
 };
