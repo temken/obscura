@@ -240,16 +240,16 @@ DM_Detector_Ionization_ER PandaX_4T_S2_ER()
 
 DM_Detector_Ionization_ER LZ_S2_ER()
 {
-  // Source: 2307.15753
-  // TODO: WIP
-  std::string target_name          = "Xe";
-  double exposure                  = 330000 * kg * day;
-  unsigned int ne_threshold        = 0;
-  std::vector<unsigned long int> observed_event_bins = {};
+  // Source: arXiv:2307.15753
+  std::string target_name          = "Ar";
+  double exposure                  = 550 * kg * day;
 
   DM_Detector_Ionization_ER detector("LZ_S2", exposure, target_name);
-  detector.Use_Electron_Bins(ne_threshold, 0);
-  detector.Set_Observed_Events(observed_event_bins);
+
+  //TODO : There is not enough info in the experiment to reproduce the S1-S2 signal
+
+  std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::LZ_S2_Migdal(): Not implemented." << std::endl;
+  std::exit(EXIT_FAILURE);
 
   return detector;
 }
@@ -469,20 +469,16 @@ DM_Detector_Ionization_Migdal PandaX_4T_S2_Migdal()
 
 DM_Detector_Ionization_Migdal LZ_S2_Migdal()
 {
-  // Source: arXiv:
-  //TODO :WIP
+  // Source: arXiv:2307.15753
   std::string target_name          = "Ar";
   double exposure                  = 550 * kg * day;
-  std::vector<unsigned long int> observed_event_bins = {246, 90, 80, 60, 40, 91, 50, 20, 70, 40, 110, 10, 50, 90};
-  double muPE                      = 33.0;
-  double sigPE                     = 7.0;
-  std::vector<unsigned int> S2_bin_ranges            = {70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200};
-//	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON1Te/XENON1T_TotalEfficiency.txt";
 
   DM_Detector_Ionization_Migdal detector("LZ_S2", exposure, target_name);
-  detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
-  detector.Set_Observed_Events(observed_event_bins);
-//  detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
+
+  //TODO : There is not enough info in the experiment to reproduce the S1-S2 signal
+
+  std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::LZ_S2_Migdal(): Not implemented." << std::endl;
+  std::exit(EXIT_FAILURE);
 
 	return detector;
 }
