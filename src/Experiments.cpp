@@ -224,13 +224,16 @@ DM_Detector_Ionization_ER PandaX_4T_S2_ER()
   // Source: arXiv:2308.01540
   std::string target_name          = "Xe";
   double exposure                  = 550 * kg * day;
-  std::vector<unsigned long int> observed_event_bins = {680, 280, 260, 140, 220, 240, 280};
-  std::vector<unsigned int> S2_bin_ranges            = {60, 80, 100, 120, 140, 160, 180, 200};
-  std::string PE_response = PROJECT_DIR "data/PandaX4T/s2_response_er.csv";
+  std::vector<unsigned long int> observed_event_bins = {34, 14, 13, 7, 11, 12, 14};
+  std::vector<double> bkg_event_bins = {57.5609, 25.1404, 23.1201, 20.1953, 17.5385, 16.9677, 13.702};
+
+  // Here we assume that the PE response matches indentically to number of electrons
+  double ne_threshold = 4;
 
   DM_Detector_Ionization_ER detector("PandaX-4T_S2", exposure, target_name);
-  detector.Use_PE_Bins(PE_response, S2_bin_ranges);
+  detector.Use_Electron_Bins(ne_threshold, 7);
   detector.Set_Observed_Events(observed_event_bins);
+  detector.Set_Expected_Background(bkg_event_bins);
 
   return detector;
 }
@@ -450,15 +453,18 @@ DM_Detector_Ionization_Migdal PandaX_4T_S2_Migdal()
   // Source: arXiv:2308.01540
   std::string target_name          = "Xe";
   double exposure                  = 550 * kg * day;
-  std::vector<unsigned long int> observed_event_bins = {680, 280, 260, 140, 220, 240, 280};
-  std::vector<unsigned int> S2_bin_ranges            = {70, 90, 110, 130, 150, 170, 190, 200};
-  std::string PE_response = PROJECT_DIR "data/PandaX4T/s2_response_er.csv";
+  std::vector<unsigned long int> observed_event_bins = {34, 14, 13, 7, 11, 12, 14};
+  std::vector<double> bkg_event_bins = {57.5609, 25.1404, 23.1201, 20.1953, 17.5385, 16.9677, 13.702};
 
-  DM_Detector_Ionization_Migdal detector("PandaX-4T_S2", exposure, target_name);
-  detector.Use_PE_Bins(PE_response, S2_bin_ranges);
+  // Here we assume that the PE response matches indentically to number of electrons
+  double ne_threshold = 4;
+
+  DM_Detector_Ionization_ER detector("PandaX-4T_S2", exposure, target_name);
+  detector.Use_Electron_Bins(ne_threshold, 7);
   detector.Set_Observed_Events(observed_event_bins);
+  detector.Set_Expected_Background(bkg_event_bins);
 
-	return detector;
+  return detector;
 }
 
 DM_Detector_Ionization_Migdal LZ_S2_Migdal()
