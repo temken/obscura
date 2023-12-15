@@ -35,12 +35,8 @@ class DM_Detector_Ionization : public DM_Detector
 	bool using_S2_threshold;
 	// (b) Binned Poisson: PE bins (S2)
 	bool using_S2_bins;
-  // Using either electron or energy response function
-  bool using_electron_response, using_energy_response;
-  std::vector<std::vector<double>> Energy_Response_PE;
 	std::vector<unsigned int> S2_bin_ranges;
 	double R_S2_Bin(unsigned int S2_1, unsigned int S2_2, const DM_Particle& DM, DM_Distribution& DM_distr, std::vector<double> electron_spectrum = {});
-	double R_S2_Bin(unsigned int S2_1, unsigned int S2_2, const DM_Particle& DM, DM_Distribution& DM_distr, std::vector<std::vector<double>>& energy_response);
 	std::vector<double> DM_Signals_PE_Bins(const DM_Particle& DM, DM_Distribution& DM_distr);
 
   public:
@@ -73,7 +69,6 @@ class DM_Detector_Ionization : public DM_Detector
 	double R_S2(unsigned int S2, const DM_Particle& DM, DM_Distribution& DM_distr, double W, const Nucleus& nucleus, Atomic_Electron& shell, std::vector<double> electron_spectrum = {});
 	double R_S2(unsigned int S2, const DM_Particle& DM, DM_Distribution& DM_distr, Atom& atom, std::vector<double> electron_spectrum = {});
 	double R_S2(unsigned int S2, const DM_Particle& DM, DM_Distribution& DM_distr, std::vector<double> electron_spectrum = {});
-	double R_S2(unsigned int S2, const DM_Particle& DM, DM_Distribution& DM_distr, std::vector<std::vector<double>>& energy_response);
 
 	// (a) Poisson: PE threshold (S2)
 	void Use_PE_Threshold(double S2mu, double S2sigma, unsigned int nPE_thr, unsigned int nPE_max);
