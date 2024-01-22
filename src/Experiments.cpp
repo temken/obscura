@@ -230,7 +230,7 @@ DM_Detector_Ionization_ER LZ_S2_ER()
 
   //TODO : There is not enough info in the experiment to reproduce the S1-S2 signal
 
-  std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::LZ_S2_Migdal(): Not implemented." << std::endl;
+  std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::LZ_S2_ER(): Not implemented." << std::endl;
   std::exit(EXIT_FAILURE);
 
   return detector;
