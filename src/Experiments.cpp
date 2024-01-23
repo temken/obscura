@@ -205,7 +205,7 @@ DM_Detector_Ionization_ER PandaX_4T_S2_ER()
 {
   // Source: arXiv:2308.01540
   std::string target_name          = "Xe";
-  double exposure                  = 550 * kg * day;
+  double exposure                  = 550 * kg * year;
   std::vector<unsigned long int> observed_event_bins = {34, 14, 13, 7, 11, 12, 14};
   std::vector<double> bkg_event_bins = {57.5609, 25.1404, 23.1201, 20.1953, 17.5385, 16.9677, 13.702};
 
@@ -435,7 +435,7 @@ DM_Detector_Ionization_Migdal PandaX_4T_S2_Migdal()
 {
   // Source: arXiv:2308.01540
   std::string target_name          = "Xe";
-  double exposure                  = 550 * kg * day;
+  double exposure                  = 550 * kg * year;
   std::vector<unsigned long int> observed_event_bins = {34, 14, 13, 7, 11, 12, 14};
   std::vector<double> bkg_event_bins = {57.5609, 25.1404, 23.1201, 20.1953, 17.5385, 16.9677, 13.702};
 
