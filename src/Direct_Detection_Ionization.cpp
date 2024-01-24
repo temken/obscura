@@ -396,10 +396,10 @@ void DM_Detector_Ionization::Print_Summary(int MPI_rank) const
 			  << "\tPE (S2) bins:\t\t" << (using_S2_bins ? "[x]" : "[ ]") << std::endl;
 	if(using_S2_bins || using_S2_threshold)
 	{
-		std::cout << "\tmu_PE:\t\t" << S2_mu << std::endl
-				  << "\tsigma_PE:\t" << S2_sigma << std::endl
-				  << "\tImported trigger efficiencies:\t" << (Trigger_Efficiency_PE.empty() ? "[ ]" : "[x]") << std::endl
-				  << "\tImported acc. efficiencies:\t" << (Acceptance_Efficiency_PE.empty() ? "[ ]" : "[x]") << std::endl;
+    std::cout << "\tmu_PE:\t\t" << S2_mu << std::endl
+          << "\tsigma_PE:\t" << S2_sigma << std::endl
+          << "\tImported trigger efficiencies:\t" << (Trigger_Efficiency_PE.empty() ? "[ ]" : "[x]") << std::endl
+          << "\tImported acc. efficiencies:\t" << (Acceptance_Efficiency_PE.empty() ? "[ ]" : "[x]") << std::endl;
 		if(using_S2_bins)
 		{
 			std::cout << "\n\t\tBin\tBin range [S2]" << std::endl;

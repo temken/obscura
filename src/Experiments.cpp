@@ -185,6 +185,57 @@ DM_Detector_Ionization_ER DarkSide50_S2_ER()
 	return detector;
 }
 
+DM_Detector_Ionization_ER DarkSide50_S2_ER_2023()
+{
+  // Source: arXiv:2207.11968
+  std::string target_name               = "Ar";
+  double exposure                       = 12306 * kg * day;
+  unsigned int ne_threshold             = 4;
+  // Digitised from Figure 1 (x Ne x 0.25 x exposure)
+  std::vector<unsigned long int> observed_event_bins = {298, 372, 456, 488, 583, 775, 965, 1053, 1182, 1644, 1723, 1992, \
+                                                        2408, 2397, 2735, 3139, 3366};
+  DM_Detector_Ionization_ER detector("DarkSide-50_S2_2023", exposure, target_name);
+  detector.Use_Electron_Bins(ne_threshold, 17);
+  detector.Set_Observed_Events(observed_event_bins);
+
+  return detector;
+}
+
+DM_Detector_Ionization_ER PandaX_4T_S2_ER()
+{
+  // Source: arXiv:2308.01540
+  std::string target_name          = "Xe";
+  double exposure                  = 550 * kg * year;
+  std::vector<unsigned long int> observed_event_bins = {34, 14, 13, 7, 11, 12, 14};
+  std::vector<double> bkg_event_bins = {57.5609, 25.1404, 23.1201, 20.1953, 17.5385, 16.9677, 13.702};
+
+  // Here we assume that the PE response matches indentically to number of electrons
+  double ne_threshold = 4;
+
+  DM_Detector_Ionization_ER detector("PandaX-4T_S2", exposure, target_name);
+  detector.Use_Electron_Bins(ne_threshold, 7);
+  detector.Set_Observed_Events(observed_event_bins);
+  detector.Set_Expected_Background(bkg_event_bins);
+
+  return detector;
+}
+
+DM_Detector_Ionization_ER LZ_S2_ER()
+{
+  // Source: arXiv:2307.15753
+  std::string target_name          = "Ar";
+  double exposure                  = 550 * kg * day;
+
+  DM_Detector_Ionization_ER detector("LZ_S2", exposure, target_name);
+
+  //TODO : There is not enough info in the experiment to reproduce the S1-S2 signal
+
+  std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::LZ_S2_ER(): Not implemented." << std::endl;
+  std::exit(EXIT_FAILURE);
+
+  return detector;
+}
+
 //3. Electron recoil experiments - Semiconductor
 DM_Detector_Crystal protoSENSEI_at_Surface()
 {
@@ -271,6 +322,23 @@ DM_Detector_Crystal CDMS_HVeV_2020()
 	return detector;
 }
 
+DM_Detector_Crystal DAMIC_M_2023()
+{
+  // Source: arXiv:2302.02372
+  // Paper only reports 40% of the data, so scale exposure accordingly
+  double DAMIC_M_exposure = 0.4 * 85.23 * gram * day;
+  unsigned int DAMIC_M_Q_threshold = 1;
+  unsigned int DAMIC_M_N_bins = 3;
+  std::vector<unsigned long int> DAMIC_M_observed_events = {4216354, 11345, 19};
+
+  DM_Detector_Crystal detector("DAMIC-M_2023", DAMIC_M_exposure, "Si");
+  detector.Use_Q_Bins(DAMIC_M_Q_threshold, DAMIC_M_N_bins);
+  detector.Set_Observed_Events(DAMIC_M_observed_events);
+
+  return detector;
+}
+
+
 //4. Migdal experiments - Ionization
 DM_Detector_Ionization_Migdal XENON10_S2_Migdal()
 {
@@ -316,7 +384,7 @@ DM_Detector_Ionization_Migdal XENON100_S2_Migdal()
 
 DM_Detector_Ionization_Migdal XENON1T_S2_Migdal()
 {
-	// Source: arXiv:1907.11485
+	// Source: arXiv:1907.11485, arXiv:1907.12771
 	std::string target_name							   = "Xe";
 	double exposure									   = 80755.2 * kg * day;
 	std::vector<unsigned long int> observed_event_bins = {8, 7, 2, 1};
@@ -344,6 +412,56 @@ DM_Detector_Ionization_Migdal DarkSide50_S2_Migdal()
 	DM_Detector_Ionization_Migdal detector("DarkSide-50_S2", exposure, target_name);
 	detector.Use_Electron_Bins(ne_threshold, 13);
 	detector.Set_Observed_Events(observed_event_bins);
+
+	return detector;
+}
+
+
+DM_Detector_Ionization_Migdal DarkSide50_S2_Migdal_2023()
+{
+	// Source: arXiv:2207.11967
+	std::string target_name                = "Ar";
+	double exposure                        = 6786.0 * kg * day;
+	unsigned int ne_threshold						   = 4;
+  std::vector<unsigned long int> observed_event_bins = {74, 74, 76, 70, 73, 86, 96, 96, 99, 126, 123, 133, 151, 141, 152, 165, 168};
+  DM_Detector_Ionization_Migdal detector("DarkSide-50_S2_2023", exposure, target_name);
+  detector.Use_Electron_Bins(ne_threshold, 17);
+  detector.Set_Observed_Events(observed_event_bins);
+
+	return detector;
+}
+
+DM_Detector_Ionization_Migdal PandaX_4T_S2_Migdal()
+{
+  // Source: arXiv:2308.01540
+  std::string target_name          = "Xe";
+  double exposure                  = 550 * kg * year;
+  std::vector<unsigned long int> observed_event_bins = {34, 14, 13, 7, 11, 12, 14};
+  std::vector<double> bkg_event_bins = {57.5609, 25.1404, 23.1201, 20.1953, 17.5385, 16.9677, 13.702};
+
+  // Here we assume that the PE response matches indentically to number of electrons
+  double ne_threshold = 4;
+
+  DM_Detector_Ionization_Migdal detector("PandaX-4T_S2", exposure, target_name);
+  detector.Use_Electron_Bins(ne_threshold, 7);
+  detector.Set_Observed_Events(observed_event_bins);
+  detector.Set_Expected_Background(bkg_event_bins);
+
+  return detector;
+}
+
+DM_Detector_Ionization_Migdal LZ_S2_Migdal()
+{
+  // Source: arXiv:2307.15753
+  std::string target_name          = "Ar";
+  double exposure                  = 550 * kg * day;
+
+  DM_Detector_Ionization_Migdal detector("LZ_S2", exposure, target_name);
+
+  //TODO : There is not enough info in the experiment to reproduce the S1-S2 signal
+
+  std::cerr << libphysica::Formatted_String("Error", "Red", true) << " in obscura::LZ_S2_Migdal(): Not implemented." << std::endl;
+  std::exit(EXIT_FAILURE);
 
 	return detector;
 }
