@@ -191,12 +191,14 @@ DM_Detector_Ionization_ER DarkSide50_S2_ER_2023()
   std::string target_name               = "Ar";
   double exposure                       = 12306 * kg * day;
   unsigned int ne_threshold             = 4;
-  // Digitised from Figure 1 (x Ne x 0.25 x exposure)
-  std::vector<unsigned long int> observed_event_bins = {298, 372, 456, 488, 583, 775, 965, 1053, 1182, 1644, 1723, 1992, \
-                                                        2408, 2397, 2735, 3139, 3366};
+  // Digitised from Figure 1 (rebinned to bins of size 1)
+  std::vector<unsigned long int> observed_event_bins = {284, 324, 292, 285, 287, 360};
+  std::vector<double> bkg_event_bins = {271.314, 284.115, 301.652, 318.913, 342.763, 369.199};
+
   DM_Detector_Ionization_ER detector("DarkSide-50_S2_2023", exposure, target_name);
-  detector.Use_Electron_Bins(ne_threshold, 17);
+  detector.Use_Electron_Bins(ne_threshold, 6);
   detector.Set_Observed_Events(observed_event_bins);
+  detector.Set_Expected_Background(bkg_event_bins);
 
   return detector;
 }
@@ -205,17 +207,18 @@ DM_Detector_Ionization_ER PandaX_4T_S2_ER()
 {
   // Source: arXiv:2308.01540
   std::string target_name          = "Xe";
-  double exposure                  = 550 * kg * year;
+  double exposure                  = 0.55 * tonne * year;
+  double flat_efficiency           = 0.14;
   std::vector<unsigned long int> observed_event_bins = {34, 14, 13, 7, 11, 12, 14};
-  std::vector<double> bkg_event_bins = {57.5609, 25.1404, 23.1201, 20.1953, 17.5385, 16.9677, 13.702};
+//  std::vector<double> bkg_event_bins = {31.6585, 13.8272, 12.7161, 11.1074, 9.64618, 9.33224, 7.5361};
 
   // Here we assume that the PE response matches indentically to number of electrons
   double ne_threshold = 4;
-
   DM_Detector_Ionization_ER detector("PandaX-4T_S2", exposure, target_name);
   detector.Use_Electron_Bins(ne_threshold, 7);
+  detector.Set_Flat_Efficiency(flat_efficiency);
   detector.Set_Observed_Events(observed_event_bins);
-  detector.Set_Expected_Background(bkg_event_bins);
+//  detector.Set_Expected_Background(bkg_event_bins);
 
   return detector;
 }
@@ -420,13 +423,17 @@ DM_Detector_Ionization_Migdal DarkSide50_S2_Migdal()
 DM_Detector_Ionization_Migdal DarkSide50_S2_Migdal_2023()
 {
 	// Source: arXiv:2207.11967
-	std::string target_name                = "Ar";
-	double exposure                        = 6786.0 * kg * day;
-	unsigned int ne_threshold						   = 4;
-  std::vector<unsigned long int> observed_event_bins = {74, 74, 76, 70, 73, 86, 96, 96, 99, 126, 123, 133, 151, 141, 152, 165, 168};
+  std::string target_name               = "Ar";
+  double exposure                       = 12306 * kg * day;
+  unsigned int ne_threshold             = 4;
+  // Digitised from Figure 1 (rebinned to bins of size 1)
+  std::vector<unsigned long int> observed_event_bins = {284, 324, 292, 285, 287, 360};
+  std::vector<double> bkg_event_bins = {271.314, 284.115, 301.652, 318.913, 342.763, 369.199};
+
   DM_Detector_Ionization_Migdal detector("DarkSide-50_S2_2023", exposure, target_name);
-  detector.Use_Electron_Bins(ne_threshold, 17);
+  detector.Use_Electron_Bins(ne_threshold, 6);
   detector.Set_Observed_Events(observed_event_bins);
+  detector.Set_Expected_Background(bkg_event_bins);
 
 	return detector;
 }
@@ -435,17 +442,18 @@ DM_Detector_Ionization_Migdal PandaX_4T_S2_Migdal()
 {
   // Source: arXiv:2308.01540
   std::string target_name          = "Xe";
-  double exposure                  = 550 * kg * year;
+  double exposure                  = 0.55 * tonne * year;
+  double flat_efficiency           = 0.14;
   std::vector<unsigned long int> observed_event_bins = {34, 14, 13, 7, 11, 12, 14};
-  std::vector<double> bkg_event_bins = {57.5609, 25.1404, 23.1201, 20.1953, 17.5385, 16.9677, 13.702};
+//  std::vector<double> bkg_event_bins = {31.6585, 13.8272, 12.7161, 11.1074, 9.64618, 9.33224, 7.5361};
 
   // Here we assume that the PE response matches indentically to number of electrons
   double ne_threshold = 4;
-
   DM_Detector_Ionization_Migdal detector("PandaX-4T_S2", exposure, target_name);
   detector.Use_Electron_Bins(ne_threshold, 7);
+  detector.Set_Flat_Efficiency(flat_efficiency);
   detector.Set_Observed_Events(observed_event_bins);
-  detector.Set_Expected_Background(bkg_event_bins);
+//  detector.Set_Expected_Background(bkg_event_bins);
 
   return detector;
 }
