@@ -153,21 +153,19 @@ DM_Detector_Ionization_ER XENON100_S2_ER()
 
 DM_Detector_Ionization_ER XENON1T_S2_ER()
 {
-	// Source: arXiv:1907.11485
-	std::string target_name							   = "Xe";
-	double exposure									   = 80755.2 * kg * day;
-	std::vector<unsigned long int> observed_event_bins = {8, 7, 2, 1};
-	double muPE										   = 33.0;
-	double sigPE									   = 7.0;
-	std::vector<unsigned int> S2_bin_ranges			   = {150, 200, 250, 300, 350};
-	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON1Te/XENON1T_TotalEfficiency.txt";
+    // Source: arXiv:1907.11485
+    std::string target_name                               = "Xe";
+    double exposure                                       = 0.7 * 21900 * kg * day;
+    unsigned int ne_threshold                           = 5;
+    std::vector<unsigned long int> observed_event_bins = {5, 5, 4, 2, 1, 0};
+    std::vector<double> efficiencies = {0., 2.59712/21.9, 9.76999/21.9, 13.5103/21.9, 15.5974/21.9, 16.9158/21.9};
 
-	DM_Detector_Ionization_ER detector("XENON1T_S2", exposure, target_name);
-	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
-	detector.Set_Observed_Events(observed_event_bins);
-	detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
+    DM_Detector_Ionization_ER detector("XENON1T_S2", exposure, target_name);
+    detector.Use_Electron_Bins(ne_threshold, 6);
+    detector.Set_Observed_Events(observed_event_bins);
+    detector.Set_Bin_Efficiencies(efficiencies);
 
-	return detector;
+    return detector;
 }
 
 DM_Detector_Ionization_ER DarkSide50_S2_ER()
@@ -387,21 +385,19 @@ DM_Detector_Ionization_Migdal XENON100_S2_Migdal()
 
 DM_Detector_Ionization_Migdal XENON1T_S2_Migdal()
 {
-	// Source: arXiv:1907.11485, arXiv:1907.12771
-	std::string target_name							   = "Xe";
-	double exposure									   = 80755.2 * kg * day;
-	std::vector<unsigned long int> observed_event_bins = {8, 7, 2, 1};
-	double muPE										   = 33.0;
-	double sigPE									   = 7.0;
-	std::vector<unsigned int> S2_bin_ranges			   = {150, 200, 250, 300, 350};
-	std::string trigger_efficiency					   = PROJECT_DIR "data/XENON1Te/XENON1T_TotalEfficiency.txt";
+    // Source: arXiv:1907.11485, arXiv:1907.12771
+    std::string target_name                               = "Xe";
+    double exposure                                       = 0.7 * 21900 * kg * day;
+    unsigned int ne_threshold                           = 5;
+    std::vector<unsigned long int> observed_event_bins = {5, 5, 4, 2, 1, 0};
+    std::vector<double> efficiencies = {0., 2.59712/21.9, 9.76999/21.9, 13.5103/21.9, 15.5974/21.9, 16.9158/21.9};
 
-	DM_Detector_Ionization_Migdal detector("XENON1T_S2", exposure, target_name);
-	detector.Use_PE_Bins(muPE, sigPE, S2_bin_ranges);
-	detector.Set_Observed_Events(observed_event_bins);
-	detector.Import_Trigger_Efficiency_PE(trigger_efficiency);
+    DM_Detector_Ionization_Migdal detector("XENON1T_S2", exposure, target_name);
+    detector.Use_Electron_Bins(ne_threshold, 6);
+    detector.Set_Observed_Events(observed_event_bins);
+    detector.Set_Bin_Efficiencies(efficiencies);
 
-	return detector;
+    return detector;
 }
 
 DM_Detector_Ionization_Migdal DarkSide50_S2_Migdal()
