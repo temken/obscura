@@ -82,6 +82,7 @@ The corresponding bibtex entry:
 
 ## VERSION HISTORY
 
+- 29.04.2024: Release of version 1.1.0
 - 10.11.2021: Release of version 1.0.0
 - 23.02.2021: Release of version 0.1.0
 
