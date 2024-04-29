@@ -208,7 +208,6 @@ DM_Detector_Ionization_ER PandaX_4T_S2_ER()
   double exposure                  = 0.55 * tonne * year;
   double flat_efficiency           = 0.14;
   std::vector<unsigned long int> observed_event_bins = {34, 14, 13, 7, 11, 12, 14};
-//  std::vector<double> bkg_event_bins = {31.6585, 13.8272, 12.7161, 11.1074, 9.64618, 9.33224, 7.5361};
 
   // Here we assume that the PE response matches indentically to number of electrons
   double ne_threshold = 4;
@@ -216,7 +215,6 @@ DM_Detector_Ionization_ER PandaX_4T_S2_ER()
   detector.Use_Electron_Bins(ne_threshold, 7);
   detector.Set_Flat_Efficiency(flat_efficiency);
   detector.Set_Observed_Events(observed_event_bins);
-//  detector.Set_Expected_Background(bkg_event_bins);
 
   return detector;
 }
@@ -441,7 +439,6 @@ DM_Detector_Ionization_Migdal PandaX_4T_S2_Migdal()
   double exposure                  = 0.55 * tonne * year;
   double flat_efficiency           = 0.14;
   std::vector<unsigned long int> observed_event_bins = {34, 14, 13, 7, 11, 12, 14};
-//  std::vector<double> bkg_event_bins = {31.6585, 13.8272, 12.7161, 11.1074, 9.64618, 9.33224, 7.5361};
 
   // Here we assume that the PE response matches indentically to number of electrons
   double ne_threshold = 4;
@@ -449,7 +446,6 @@ DM_Detector_Ionization_Migdal PandaX_4T_S2_Migdal()
   detector.Use_Electron_Bins(ne_threshold, 7);
   detector.Set_Flat_Efficiency(flat_efficiency);
   detector.Set_Observed_Events(observed_event_bins);
-//  detector.Set_Expected_Background(bkg_event_bins);
 
   return detector;
 }
